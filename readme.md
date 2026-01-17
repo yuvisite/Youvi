@@ -51,7 +51,7 @@ Only external components are FFmpeg wasm (downloaded) and Lucid Icons (SVG code 
 
  Since I absolutely loooooove the internet I tried to polish the interface as much as possible. That's why the site feels like a real large video hosting service to me. There are lots of different micro-moments, and the overall appearance is great (in my opinion).
 
-## What site can be useful for?
+## What can the site be useful for?
 **Viewing and storing anime (as well as movies, TV shows, and other PGC)**
 Although the site's tags are used for everything, they are primarily focused on anime. Also there are ASS/SRT/SSA subtitles and audio tracks that were added to site because anime.
 
