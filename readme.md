@@ -43,7 +43,7 @@ This is a web application working through File System Access API
 
 There are scripts (in folder named "scripts") for importing comments from YouTube as regular comments and danmaku (import either live chat from streams/premieres or selection of comments with timestamps). You can watch YouTube videos like on Niconico with danmaku! This is one of the reasons why this thing was made. And you can also obviously write comments and danmaku by yourself. 
 
-Only external components are FFmpeg wasm (downloaded) and Lucid Icons (SVG code in files). Everything works from box.
+Only external components are FFmpeg wasm (downloaded) and Lucid Icons (SVG code in files). Everything works out of the box.
 
  Site works without internet. Available in three languages: English, Russian, and Ukrainian.
  
