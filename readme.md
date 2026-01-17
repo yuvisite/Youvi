@@ -7,7 +7,7 @@
 
 > If I encounter a problem that will interfere with me personally, I will fix it, but of course there is no schedule.
 >
-> 8Site name in code - old name. 8Site because it was created at 8 Aug, and i dont have other ideas at that moment.
+> 8Site name in code - old name of the Youvi. 8Site because it was created at 8 Aug, and i dont have other ideas at that moment.
 > 
 Youvi is an offline video library with video hosting interface, featuring danmaku, comments, tags (including aliases and implications), subtitles and more. Fully local and portable (localhost needed for subtitles and multiple audio tracks), works without internet.
 
