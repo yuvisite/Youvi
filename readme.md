@@ -131,7 +131,7 @@ Multiple audio tracks are extracted from MKV files, to extract click the wave bu
 
 ## Danmaku
 
-Danmaku and its input is everywhere in all video modes (even in PIP via Documment-PIP API). For scripts you need yt-dlp. Find the script, open PowerShell and write:
+Danmaku and its input is everywhere in all video modes (even in PIP via Document-PIP API). For scripts you need yt-dlp. Find the script, open PowerShell and write:
 ```bash
 py yt_comments_to_danmaku.py https://www.youtube.com/watch?v=smth
 ```
