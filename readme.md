@@ -14,12 +14,12 @@ Youvi is an offline video library with video hosting interface, featuring danmak
 
 ## Features
 
-- **Danmaku overlays** - Niconico-style comments on videos (including YouTube imports)
-- **Advanced tagging** - 14 tag types with aliases, implications, boolean search
-- **YouTube archival** - Import videos with comments/timestamps as danmaku (and also YT live chat as a danmaku)
-- **Channels & playlists** - Nothing special, just the basic functionality of a typical video hosting service. But it's your personal local “video hosting.”
-- **Subtitle support** - ASS/SRT/SSA with font extraction from MKV (via FFmpeg WASM)
-- **Fully portable** - Works from USB drive, no installation required
+- Danmaku - Niconico-style comments on videos (including YouTube imports)
+- Tagging - 14 tag types with aliases, implications, boolean search
+- YouTube archival - Import videos with comments/timestamps as danmaku (and also YT live chat as a danmaku)
+- Channels & playlists - Nothing special, just the basic functionality of a typical video hosting service. But it's your personal local “video hosting.”
+- Subtitle support - ASS/SRT/SSA with font extraction from MKV (via FFmpeg WASM)
+- Fully portable - Works from USB drive, no installation required
 
 ## Requirements
 
