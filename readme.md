@@ -78,7 +78,7 @@ The site will start processing videos, wait until previews appear. When it finis
 
 **Management** - page for video selection
 
-Why 2 pages? Because the project grew and cutting out core functions from the old main page turned out to be difficult, so I just finished it. (it used to be a 2000s-style video hosting which is visible in the design. Legacy level just like real sites) But now it have PC First "overloaded" (that what i like) but modern UI)
+Why 2 pages? Because the project grew and cutting out core functions from the old main page turned out to be difficult, so I just lefted it. (it used to be a 2000s-style video hosting which is visible in the design. Legacy level just like real sites) But now it have PC First "overloaded" (that what i like) but modern UI)
 
 **Channels** - list of channels
 
