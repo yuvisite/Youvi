@@ -111,7 +111,7 @@ The only mandatory requirement hardcoded is that video must have a ka tag. But f
 
 ## Youvi Main
 
-This is the main page. Huge banner with logo and site mascot - Yuvi. Under the banner are categories. Categories are a tag of type ct, I selected certain categories for classification, videos from which will appear here. Buttons 2-6 - number of cards per row.
+This is the main page. Huge banner with logo and site mascot - Yuvi. Under the banner are categories. Categories are a tag of type ct, I selected certain categories for classification, videos from which will appear here. Buttons 2-7 - number of cards per row.
 
 Sidebar has site categories, tags, everything is clear. First 2 rows - latest playlists with 6 or more videos. Only on page 1 and only in latest mode. Then videos follow.
 
