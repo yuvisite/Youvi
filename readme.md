@@ -155,5 +155,5 @@ The site has a wiki with more detailed technical and user information about the 
 Optimized it a lot so it doesn't lag, on my not-so-powerful computers with 500 videos it works fast.
 
 
-I'm not a professional coder, so the code may be rough. AI-assisted development, 100k+ lines. Full-featured portable "video hosting" with many features. This is my personal project created by me for myself, the most important thing is that it works and satisfies me. This was my first project where I applied programming beyond academic tasks, and since there was no ready-made local first working witohout server mix of YouTube, NicoNico, booru sites and a player with subtitle support on the internet, I made this.
+I'm not a professional coder, so the code may be rough. AI-assisted development, 100k+ lines. Full-featured portable "video hosting" with many features. This is my personal project created by me for myself, the most important thing is that it works and satisfies me. I worked on this project for half a year. This was my first project where I applied programming beyond academic tasks, and since there was no ready-made local first working witohout server mix of YouTube, NicoNico, booru sites and a player with subtitle support on the internet, I made this.
 
