@@ -53,7 +53,7 @@ Only external components are FFmpeg wasm (downloaded) and Lucid Icons (SVG code 
 
 ## What can the site be useful for?
 **Viewing and storing anime (as well as movies, TV shows, and other PGC)**
-Although the site's tags are used for everything, they are primarily focused on anime. Also there are ASS/SRT/SSA subtitles and audio tracks that were added to site because anime.
+Although the site's tags are used for everything, they are primarily designed for anime. Also there are ASS/SRT/SSA subtitles and audio tracks that were added to site because anime.
 
 **YouTube archival:** 
 You can preserve complete channel backups including video files (via yt-dlp), all comments with timestamps, description - creating a fully offline mirror of YouTube content with a browseable interface. For example - some tech tutorial with comments about some techincal moments that wasnt mention in videos. (someone if want can write scripts to scrap NicoNico and BiliBili danmaku and convert it into Youvi JSON files via some downloader like yt-dlp or special things or from API, whatever, like YT ones, so no only YT archival)
