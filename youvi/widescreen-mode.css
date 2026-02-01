@@ -65,20 +65,20 @@ body.wide-screen-mode .widescreen-left-column .video-info {
 }
 
 .widescreen-right-column {
-    width: 325px;
+    width: 402px;
     flex-shrink: 0;
 }
 
 /* Match right-sidebar responsive widths */
 @media (min-width: 1400px) {
     .widescreen-right-column {
-        width: 325px;
+        width: 402px;
     }
 }
 
 @media (min-width: 1600px) {
     .widescreen-right-column {
-        width: 325px;
+        width: 402px;
     }
 }
 
@@ -123,6 +123,6 @@ body.wide-screen-mode .sidebar-section-right {
         flex-direction: column;
     }
     .widescreen-right-column {
-        width: 100%;
+        width: 402px;
     }
 }

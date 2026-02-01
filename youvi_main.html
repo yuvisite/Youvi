@@ -19,7 +19,6 @@
         })();
     </script>
     <style>
-
         
         :root {
             --latest-cols: 6;
@@ -3428,7 +3427,7 @@ async function saveVideoMetadata(dirHandle, fileName, metadata) {
             cleanup();
             debug.warn(`Timeout generating preview for ${video.name}`);
             resolve({ preview: null, duration: '0:00' });
-          }, 10000);
+          }, 5000); // Уменьшен таймаут для быстрого отказа
           
           el.addEventListener('error', (e) => {
             clearTimeout(timeout);
@@ -3453,7 +3452,7 @@ async function saveVideoMetadata(dirHandle, fileName, metadata) {
               el.addEventListener('seeked', async () => {
                 try {
                   const canvas = document.createElement('canvas');
-                  canvas.width = 240; canvas.height = 140;
+                  canvas.width = 160; canvas.height = 90; // Уменьшен размер для быстрой генерации
                   const ctx = canvas.getContext('2d');
                   
                   if (el.videoWidth === 0 || el.videoHeight === 0) {
@@ -4042,7 +4041,7 @@ async function loadAllVideosProgressive(){
   const videoMap = new Map(cachedVideos.map(v => [v.name, v]));
   const currentVideoNames = new Set();
 
-  const BATCH_SIZE = 100;
+  const BATCH_SIZE = 200; // Увеличено для быстрой обработки
   let videosToSave = [];
   let processedCount = 0;
 

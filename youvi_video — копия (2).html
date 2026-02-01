@@ -829,93 +829,14 @@
             align-items: center
         }
 
-        .recommendations-tabs {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            padding: 0 10px 0 0;
-            background: transparent;
-            border-radius: 6px;
-            border: none;
-            margin-bottom: 2px;
-        }
-
-        .recs-tab-btn {
-            border: 1px solid #eee;
-            background: #fff;
-            color: #555;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 6px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-            box-shadow: none;
-            max-width: 100%;
-        }
-
-        #recsChannelBtnText {
-            max-width: 180px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: inline-block;
-            vertical-align: bottom;
-        }
-
-        .recs-tab-btn:hover {
-            background: rgba(255, 105, 180, 0.12);
-            color: #333;
-        }
-
-        .recs-tab-btn.active {
-            background: #ff69b4;
-            color: #fff;
-            box-shadow: none;
-        }
-
-        .recs-tab-btn.disabled {
-            opacity: 0.55;
-            cursor: default;
-            pointer-events: none;
-        }
-
         #recommendationsSidebar {
             background: transparent !important;
-            border: none !important;
-            margin-top: -6px;
-            padding: 0;
+            border: none !important
         }
 
         #recommendationsSidebar .section-title-right {
             background: transparent !important;
             border-bottom: none !important
-        }
-
-        .dark-theme .recommendations-tabs {
-            background: transparent;
-            border-color: transparent;
-        }
-
-        .dark-theme .recs-tab-btn {
-            background: #2a2a2a;
-            color: #888;
-            border-color: #444;
-            box-shadow: none;
-        }
-
-        .dark-theme .recs-tab-btn:hover {
-            background: #333;
-            color: #fff;
-        }
-
-        .dark-theme .recs-tab-btn.active {
-            background: #ff69b4;
-            color: #fff;
-            border-color: #ff69b4;
         }
 
         .sidebar-panel-combined {
@@ -1316,19 +1237,6 @@
             background: transparent;
             box-shadow: none
         }
-
-        #recommendationsSidebar .related-video {
-            padding-left: 0;
-        }
-
-        #recommendationsSidebar .related-video:hover {
-            background: transparent !important;
-        }
-
-        #recommendationsSidebar .related-video:hover .related-title {
-            color: #a6265a !important;
-        }
-
 
         .related-video:hover {
             background: #f8f8f8 !important;
@@ -3123,10 +3031,13 @@
             cursor: pointer;
         }
 
-        body.small-screen.sidebar-open:not(.cinema-mode) #sidebarOverlay,
-        body.cinema-mode.sidebar-open #sidebarOverlay,
-        html.cinema-mode.sidebar-open #sidebarOverlay {
+        body.small-screen.sidebar-open:not(.cinema-mode) #sidebarOverlay {
             display: block !important;
+        }
+
+        body.cinema-mode #sidebarOverlay,
+        html.cinema-mode #sidebarOverlay {
+            display: none !important;
         }
 
         /* Auto-collapse sidebar on small screens (13-14" laptops) */
@@ -4267,10 +4178,6 @@
             z-index: 1400;
         }
 
-        body.cinema-mode.sidebar-open::before {
-            content: none;
-        }
-
         body.cinema-mode .right-sidebar,
         body.cinema-mode .video-right-sidebar,
         body.cinema-mode .playlist-section-header,
@@ -4874,15 +4781,11 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            position: relative;
-            z-index: 3;
         }
 
         .channel-link {
             text-decoration: none;
             display: block;
-            position: relative;
-            z-index: 3;
         }
 
         .channel-avatar {
@@ -4916,8 +4819,6 @@
             line-height: 1.2;
             margin: 0;
             padding: 0;
-            position: relative;
-            z-index: 3;
         }
 
         .related-channel:hover {
@@ -4930,8 +4831,16 @@
             border-color: transparent;
         }
 
-        .related-video:hover .related-title {
-            color: #a6265a;
+        .related-video:hover .related-title,
+        .related-video:hover .related-meta,
+        .related-video:hover .related-channel {
+            color: #7a3c55;
+        }
+
+        .related-video:hover .related-title,
+        .related-video:hover .related-meta,
+        .related-video:hover .related-channel {
+            color: #7a3c55;
         }
 
         .video-carousel .video-card:hover {
@@ -4940,7 +4849,7 @@
 
         .video-carousel .video-card:hover .video-card-title,
         .video-carousel .video-card:hover .video-playlist a {
-            color: #a6265a;
+            color: #7a3c55;
         }
 
         .video-container #danmakuOverlay,
@@ -6288,7 +6197,7 @@
                     }
 
                     .pc-video-title a:hover {
-                        color: #a6265a;
+                        color: #ff69b4;
                     }
 
                     .pc-video-info {
@@ -6303,23 +6212,17 @@
                         overflow: hidden;
                         text-overflow: ellipsis;
                         cursor: pointer;
-                        transition: color 0.2s;
-                        position: relative;
-                        z-index: 3;
+                        transition: opacity 0.2s;
                     }
 
                     .pc-video-channel:hover {
-                        color: #ff1493;
+                        opacity: 0.8;
                         text-decoration: underline;
                     }
 
                     .pc-video-views {
                         font-size: 11px;
-                        color: #888;
-                    }
-
-                    .pc-video-card:hover .pc-video-title a {
-                        color: #a6265a;
+                        color: #666;
                     }
 
                     .pc-remove-btn {
@@ -6462,20 +6365,10 @@
 
                     .dark-theme .pc-video-channel {
                         color: #ff69b4;
-                        background: transparent;
                     }
 
                     .dark-theme .pc-video-views {
                         color: #888;
-                    }
-
-                    .dark-theme .channel-row {
-                        background: transparent !important;
-                        border: none !important;
-                    }
-
-                    .dark-theme .related-channel {
-                        background: transparent !important;
                     }
 
                     .dark-theme .pc-remove-btn {
@@ -6953,16 +6846,6 @@
                     </div>
                 </div>
 
-                <!-- Recommendations Tabs -->
-                <div class="recommendations-tabs" id="recommendationsTabs">
-                    <button class="recs-tab-btn active" data-mode="similar" id="recsSimilarBtn">
-                        <span data-i18n="video.recsSimilar">Похожие</span>
-                    </button>
-                    <button class="recs-tab-btn" data-mode="channel" id="recsChannelBtn">
-                        <span id="recsChannelBtnText" data-i18n="video.recsFromAuthor">От автора</span>
-                    </button>
-                </div>
-
                 <!-- Recommendations -->
                 <div class="sidebar-section-right" id="recommendationsSidebar">
                     <div class="section-title-right" data-i18n="video.relatedVideos" style="display: none;">Похожие видео</div>
@@ -7108,7 +6991,6 @@
                 overlay.id = 'sidebarOverlay';
                 overlay.addEventListener('click', () => {
                     document.body.classList.remove('sidebar-open');
-                    overlay.style.display = 'none';
                 });
                 document.body.appendChild(overlay);
             }
@@ -7147,15 +7029,14 @@
                 ensureSidebarOverlay();
                 document.body.classList.remove('sidebar-collapsed');
                 document.documentElement.classList.remove('sidebar-collapsed');
+                localStorage.setItem('sidebarCollapsed', 'false');
                 const overlay = document.getElementById('sidebarOverlay');
                 if (overlay && document.body.classList.contains('sidebar-open')) {
                     overlay.style.display = 'block';
                 }
             } else {
                 const overlay = document.getElementById('sidebarOverlay');
-                if (overlay) {
-                    overlay.style.display = (isCinemaMode && document.body.classList.contains('sidebar-open')) ? 'block' : 'none';
-                }
+                if (overlay) overlay.style.display = 'none';
             }
             updateUiTopOffset();
             console.log('[Sidebar] updateSmallScreenClass', {
@@ -7175,14 +7056,16 @@
                 // В cinema-mode и на маленьких экранах переключаем sidebar-open
                 body.classList.remove('sidebar-collapsed');
                 document.documentElement.classList.remove('sidebar-collapsed');
-                body.classList.toggle('sidebar-open');
-                if (isCinemaMode && body.classList.contains('sidebar-open')) {
-                    const sidebarEl = document.querySelector('.sidebar');
-                    if (sidebarEl) sidebarEl.scrollTop = 0;
+                if (isSmallScreen) {
+                    localStorage.setItem('sidebarCollapsed', 'false');
                 }
-                const overlay = ensureSidebarOverlay();
-                if (overlay) {
+                body.classList.toggle('sidebar-open');
+                if (isSmallScreen && !isCinemaMode) {
+                    const overlay = ensureSidebarOverlay();
                     overlay.style.display = body.classList.contains('sidebar-open') ? 'block' : 'none';
+                } else {
+                    const overlay = document.getElementById('sidebarOverlay');
+                    if (overlay) overlay.style.display = 'none';
                 }
                 console.log('[Sidebar] toggleSidebar', {
                     isCinemaMode,
@@ -7192,16 +7075,13 @@
                 });
             } else {
                 // На больших экранах обычная логика с sidebar-collapsed
-                const html = document.documentElement;
-                const isCollapsed = body.classList.contains('sidebar-collapsed') || html.classList.contains('sidebar-collapsed');
+                const isCollapsed = body.classList.contains('sidebar-collapsed');
 
                 if (isCollapsed) {
                     body.classList.remove('sidebar-collapsed');
-                    html.classList.remove('sidebar-collapsed');
                     localStorage.setItem('sidebarCollapsed', 'false');
                 } else {
                     body.classList.add('sidebar-collapsed');
-                    html.classList.add('sidebar-collapsed');
                     localStorage.setItem('sidebarCollapsed', 'true');
                 }
             }
@@ -7229,6 +7109,7 @@
             } else {
                 document.body.classList.remove('sidebar-collapsed');
                 document.documentElement.classList.remove('sidebar-collapsed');
+                localStorage.setItem('sidebarCollapsed', 'false');
             }
         }
 
@@ -7250,8 +7131,6 @@
             if ((isCinemaMode || isSmallScreen) && isSidebarOpen && sidebar && sidebarToggle) {
                 if (!sidebar.contains(e.target) && e.target !== sidebarToggle && !sidebarToggle.contains(e.target)) {
                     body.classList.remove('sidebar-open');
-                    const overlay = document.getElementById('sidebarOverlay');
-                    if (overlay) overlay.style.display = 'none';
                     console.log('[Sidebar] close on outside click', {
                         isCinemaMode,
                         isSmallScreen,
@@ -8993,7 +8872,7 @@
 
                         if (window.VirtualPlaylistRenderer) {
                             virtualPlaylistRenderer = new window.VirtualPlaylistRenderer(playlistContent, {
-                                itemHeight: 112,
+                                itemHeight: 90,
                                 bufferSize: 5,
                                 onVideoClick: (video) => {
                                     window._openPlaylistTabOnLoad = true;
@@ -9183,16 +9062,6 @@
             requestIdleCallback(() => {
                 (async () => {
                     try {
-                        if (!video || (!video.handle && !video.file)) {
-                            const thumbElement = relatedVideo.querySelector('.related-thumb');
-                            const lazyElement = thumbElement?.querySelector('.lazy-thumb');
-                            if (lazyElement) {
-                                lazyElement.className = 'lazy-thumb';
-                                lazyElement.textContent = 'Нет превью';
-                            }
-                            return;
-                        }
-
                         const { preview, duration } = await getPreviewAndDuration(video);
                         const thumbElement = relatedVideo.querySelector('.related-thumb');
                         const lazyElement = thumbElement?.querySelector('.lazy-thumb');
@@ -9223,7 +9092,7 @@
                         const lazyElement = relatedVideo.querySelector('.lazy-thumb');
                         if (lazyElement) {
                             lazyElement.className = 'lazy-thumb';
-                            lazyElement.textContent = 'Нет превью';
+                            lazyElement.textContent = 'Ошибка загрузки';
                         }
                     }
                 })();
@@ -9538,16 +9407,6 @@
             await renderCombinedPlaylist(currentVideo?._playlistId, dirHandle, currentVideoName);
         }
 
-        function resolveVideoForPreview(video) {
-            if (!video) return video;
-            if (video.handle || video.file) return video;
-            const match = Array.isArray(allVideos)
-                ? allVideos.find(v => v && v.name === video.name && (v.handle || v.file))
-                : null;
-            if (!match) return video;
-            return { ...video, ...match };
-        }
-
         async function renderRandomRecommendations() {
             const numRecommendations = 12;
             let otherVideos = allVideos.filter(video => video.name !== currentVideo.name);
@@ -9587,8 +9446,7 @@
                         }
                     }
                 } catch (_) { }
-                const resolvedVideo = resolveVideoForPreview(video);
-                const relatedVideo = createPlaylistVideoElement(resolvedVideo, currentVideo?.name, false);
+                const relatedVideo = createPlaylistVideoElement(video, currentVideo?.name, false);
                 relatedVideo.addEventListener('click', () => {
                     const currentPlaylistId = new URLSearchParams(window.location.search).get('playlist');
                     let newUrl;
@@ -9610,105 +9468,8 @@
             }
         }
 
-        const RECS_MODE_KEY = 'youvi_recs_mode';
-        let recommendationsMode = localStorage.getItem(RECS_MODE_KEY) || 'similar';
-        const channelNameCache = new Map();
-
-        function getRecommendationsSourceVideos() {
-            const liveList = Array.isArray(allVideos) ? allVideos : [];
-            const cachedList = Array.isArray(window._cachedAllVideos) ? window._cachedAllVideos : [];
-            if (cachedList.length > liveList.length) {
-                return { list: cachedList, source: 'cached' };
-            }
-            return { list: liveList, source: 'live' };
-        }
-
-        function getVideoChannelName(video) {
-            if (!video) return '';
-            if (video.channelName) return video.channelName;
-            if (video.name && channelNameCache.has(video.name)) {
-                return channelNameCache.get(video.name) || '';
-            }
-            let channelName = '';
-            try {
-                if (Array.isArray(video.tags)) {
-                    if (window.TagTypes) {
-                        channelName = window.TagTypes.getChannelFromTags(video.tags) || '';
-                    } else {
-                        const chTags = video.tags.filter(t => typeof t === 'string' && t.endsWith(' (ка)'));
-                        if (chTags.length > 0) channelName = chTags.map(t => t.replace(' (ка)', '')).join(', ');
-                    }
-                }
-            } catch (_) { }
-            if (video.name) channelNameCache.set(video.name, channelName);
-            return channelName;
-        }
-
-        function getCurrentVideoChannelName() {
-            if (!currentVideo) return '';
-            if (currentVideo.channelName) return currentVideo.channelName;
-            const channelName = getVideoChannelName(currentVideo);
-            if (channelName) currentVideo.channelName = channelName;
-            return channelName || '';
-        }
-
-        function updateRecommendationsTabs() {
-            const similarBtn = document.getElementById('recsSimilarBtn');
-            const channelBtn = document.getElementById('recsChannelBtn');
-            const channelBtnText = document.getElementById('recsChannelBtnText');
-
-            const channelName = getCurrentVideoChannelName();
-            if (channelBtnText) {
-                const baseText = typeof i18n !== 'undefined'
-                    ? i18n.t('video.recsFromAuthor', 'От автора')
-                    : 'От автора';
-                channelBtnText.textContent = channelName ? `${baseText}: ${channelName}` : baseText;
-            }
-
-            if (channelBtn) {
-                channelBtn.classList.toggle('disabled', !channelName);
-            }
-
-            if (similarBtn) similarBtn.classList.toggle('active', recommendationsMode === 'similar');
-            if (channelBtn) channelBtn.classList.toggle('active', recommendationsMode === 'channel');
-        }
-
-        function setRecommendationsMode(mode) {
-            recommendationsMode = mode === 'channel' ? 'channel' : 'similar';
-            localStorage.setItem(RECS_MODE_KEY, recommendationsMode);
-            updateRecommendationsTabs();
-            renderRecommendationsSidebarEfficient();
-        }
-
-        async function loadCachedVideosForRecommendations() {
-            try {
-                const cachedVideos = await getVideosFromDB();
-                if (!Array.isArray(cachedVideos) || cachedVideos.length === 0) return;
-
-                const seen = new Set();
-                const deduped = [];
-                for (const v of cachedVideos) {
-                    if (!v || !v.name || seen.has(v.name)) continue;
-                    seen.add(v.name);
-                    deduped.push({
-                        ...v,
-                        handle: null,
-                        file: null,
-                        dirHandle: null
-                    });
-                }
-
-                window._cachedAllVideos = deduped;
-                debug.log('[Recommendations] Cached videos loaded:', deduped.length);
-                updateRecommendationsDebounced();
-            } catch (e) {
-                debug.warn('[Recommendations] Failed to load cached videos:', e);
-            }
-        }
-
         let recsUpdateTimer = null;
         let lastRecsVideoCount = 0;
-        let lastRecsSourceType = null;
         function updateRecommendationsDebounced() {
             if (recsUpdateTimer) {
                 clearTimeout(recsUpdateTimer);
@@ -9716,20 +9477,18 @@
             
             recsUpdateTimer = setTimeout(() => {
                 try {
-                    const recsSource = getRecommendationsSourceVideos();
-                    if (!window.YouviRecommendations || !Array.isArray(recsSource.list) || !currentVideo) {
+                    if (!window.YouviRecommendations || !Array.isArray(allVideos) || !currentVideo) {
                         return;
                     }
-                    const sourceChanged = recsSource.source !== lastRecsSourceType;
-                    const needsUpdate = sourceChanged || (window.YouviRecommendations.needsRebuild 
-                        ? window.YouviRecommendations.needsRebuild(recsSource.list)
-                        : recsSource.list.length !== lastRecsVideoCount);
+                    
+                    const needsUpdate = window.YouviRecommendations.needsRebuild 
+                        ? window.YouviRecommendations.needsRebuild(allVideos)
+                        : allVideos.length !== lastRecsVideoCount;
                     
                     if (needsUpdate) {
-                        window.YouviRecommendations.onAllVideosUpdated(recsSource.list);
-                        lastRecsVideoCount = recsSource.list.length;
-                        lastRecsSourceType = recsSource.source;
-                        debug.log('[Recommendations] Index updated:', recsSource.list.length, 'videos');
+                        window.YouviRecommendations.onAllVideosUpdated(allVideos);
+                        lastRecsVideoCount = allVideos.length;
+                        debug.log('[Recommendations] Index updated:', allVideos.length, 'videos');
                     }
                     
                     renderRecommendationsSidebarEfficient();
@@ -9746,8 +9505,6 @@
             const title = sidebarSection.querySelector('.section-title-right');
             
             const fragment = document.createDocumentFragment();
-
-            updateRecommendationsTabs();
             
             if (!window.YouviRecommendations || !currentVideo) {
                 const loading = document.createElement('div');
@@ -9759,27 +9516,7 @@
                 sidebarSection.appendChild(fragment);
                 return;
             }
-            const limit = 15;
-            const channelName = getCurrentVideoChannelName();
-            let recs = [];
-
-            if (recommendationsMode === 'channel') {
-                if (!channelName) {
-                    setRecommendationsMode('similar');
-                } else {
-                    const source = getRecommendationsSourceVideos();
-                    recs = source.list.filter(v => v && v.name !== currentVideo.name && getVideoChannelName(v) === channelName);
-                    if (recs.length > limit) recs = recs.slice(0, limit);
-                    if (recs.length === 0) {
-                        setRecommendationsMode('similar');
-                    }
-                }
-            }
-
-            if (recommendationsMode === 'similar') {
-                recs = window.YouviRecommendations.recommendFor(currentVideo, { limit }) || [];
-            }
-
+            const recs = window.YouviRecommendations.recommendFor(currentVideo, { limit: 15 }) || [];
             if (recs.length === 0) {
                 const noRecommendations = document.createElement('div');
                 noRecommendations.textContent = 'Нет рекомендаций';
@@ -9801,8 +9538,7 @@
                         }
                     }
                 } catch (_) { }
-                const resolvedVideo = resolveVideoForPreview(video);
-                const relatedVideo = createPlaylistVideoElement(resolvedVideo, currentVideo?.name, false);
+                const relatedVideo = createPlaylistVideoElement(video, currentVideo?.name, false);
                 relatedVideo.addEventListener('click', () => {
                     const currentPlaylistId = new URLSearchParams(window.location.search).get('playlist');
                     let newUrl;
@@ -10702,10 +10438,6 @@
                     void body.offsetHeight;
                     body.classList.add('cinema-mode');
                     body.classList.remove('sidebar-open');
-                    try {
-                        const sidebarEl = document.querySelector('.sidebar');
-                        if (sidebarEl) sidebarEl.scrollTop = 0;
-                    } catch (_) { }
                     setTimeout(() => {
                         body.classList.remove('cinema-mode-entering');
                     }, 100);
@@ -12322,17 +12054,6 @@
                 overlay.style.opacity = '1';
             }
 
-            const recsTabs = document.getElementById('recommendationsTabs');
-            if (recsTabs) {
-                recsTabs.querySelectorAll('.recs-tab-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const mode = btn.dataset.mode;
-                        if (mode) setRecommendationsMode(mode);
-                    });
-                });
-                updateRecommendationsTabs();
-            }
-
             if (!supportsFS) {
                 showErrorState(typeof i18n !== 'undefined' ? i18n.t('video.fsNotSupported', 'File System API не поддерживается в этом браузере. Используйте Chrome/Edge.') : 'File System API не поддерживается в этом браузере. Используйте Chrome/Edge.', 'notfound');
                 return;
@@ -12361,8 +12082,6 @@
                         if (videoName) {
                             await loadCurrentPlaylistVideos();
                         }
-
-                        await loadCachedVideosForRecommendations();
 
                         await loadVideoAndPlay();
                         updateRecommendationsDebounced();

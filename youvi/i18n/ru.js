@@ -334,6 +334,8 @@ window.ru = {
         channelAuthor: 'Канал автора',
         noChannel: 'Без канала',
         relatedVideos: 'Похожие видео',
+        recsSimilar: 'Похожие',
+        recsFromAuthor: 'От автора',
         currentPlaylist: 'Текущий плейлист',
         folderPlaylist: 'Плейлист из папки',
         playlist: 'Плейлист',

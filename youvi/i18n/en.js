@@ -346,6 +346,8 @@ window.en = {
         channelAuthor: 'Channel author',
         noChannel: 'No channel',
         relatedVideos: 'Related videos',
+        recsSimilar: 'Recommended',
+        recsFromAuthor: 'From author',
         currentPlaylist: 'Current playlist',
         folderPlaylist: 'Folder playlist',
         playlist: 'Playlist',

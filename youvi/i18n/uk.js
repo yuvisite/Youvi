@@ -343,6 +343,8 @@ window.uk = {
         channelAuthor: 'Канал автора',
         noChannel: 'Без каналу',
         relatedVideos: 'Схожі відео',
+        recsSimilar: 'Рекомендовані',
+        recsFromAuthor: 'Від автора',
         currentPlaylist: 'Поточний плейліст',
         folderPlaylist: 'Плейліст з папки',
         playlist: 'Плейліст',

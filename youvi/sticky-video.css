@@ -60,6 +60,7 @@ body.cinema-mode.sidebar-open .sidebar {
     transform: translateX(0) !important;
 }
 
+
 /* Cinema mode: header stays fixed with proper z-index */
 body.cinema-mode .header {
     position: fixed !important;

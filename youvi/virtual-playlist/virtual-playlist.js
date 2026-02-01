@@ -103,6 +103,17 @@ class VirtualPlaylistRenderer {
         
         const channelInitial = video.channelName ? video.channelName.charAt(0).toUpperCase() : '?';
         const avatarId = `relatedAvatar_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+
+        const danmakuCount = video.danmakuCount || (window.DanmakuCounter ? window.DanmakuCounter.get(video.name) : 0);
+        const createdDateObj = video.created ? new Date(video.created) : null;
+        const dateStr = createdDateObj ? `${String(createdDateObj.getDate()).padStart(2,'0')}/${String(createdDateObj.getMonth()+1).padStart(2,'0')}/${createdDateObj.getFullYear()}` : '';
+        const viewsSvg = `<svg width="12" height="12" viewBox="0 0 24 24" style="display:inline;vertical-align:-2px;"><path fill="#888" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`;
+        const danmakuSvg = `<svg width="12" height="12" viewBox="0 0 24 24" style="display:inline;vertical-align:-2px;"><path fill="#888" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>`;
+        const metaParts = [];
+        if (dateStr) metaParts.push(dateStr);
+        metaParts.push(`${viewsSvg} ${(video.views || 0).toLocaleString()}`);
+        metaParts.push(`${danmakuSvg} ${danmakuCount}`);
+        const relatedMetaLine = metaParts.join(' • ');
         
         element.innerHTML = `
             <a href="${videoUrl}" class="related-video-link" title="${this.escapeHtml(this.getFileNameWithoutExtension(video.name))}"></a>
@@ -112,14 +123,12 @@ class VirtualPlaylistRenderer {
             </div>
             <div class="related-info">
                 <div class="related-title">${this.escapeHtml(this.getFileNameWithoutExtension(video.name))}</div>
-                <div class="related-meta-row">
+                <div class="related-meta">${relatedMetaLine}</div>
+                <div class="channel-row">
                     <a href="youvi_ch_view.html?channel=${encodeURIComponent(video.channelName || '')}" class="channel-link" onclick="event.stopPropagation()">
                         <div class="channel-avatar" id="${avatarId}">${channelInitial}</div>
                     </a>
-                    <div class="related-channel-info">
-                        <a href="youvi_ch_view.html?channel=${encodeURIComponent(video.channelName || '')}" class="related-channel" onclick="event.stopPropagation()">${video.channelName || (typeof i18n !== 'undefined' ? i18n.t('video.noChannel', 'No channel') : 'No channel')}</a>
-                        <div class="related-meta">${video.views || 0} ${typeof i18n !== 'undefined' ? i18n.t('video.views', 'views') : 'views'}</div>
-                    </div>
+                    <a href="youvi_ch_view.html?channel=${encodeURIComponent(video.channelName || '')}" class="related-channel" onclick="event.stopPropagation()">${video.channelName || (typeof i18n !== 'undefined' ? i18n.t('video.noChannel', 'No channel') : 'No channel')}</a>
                 </div>
             </div>
         `;

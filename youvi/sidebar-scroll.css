@@ -17,6 +17,11 @@
   flex-shrink: 0;
 }
 
+body.cinema-mode .sidebar:not(.chats-sidebar)::after,
+html.cinema-mode .sidebar:not(.chats-sidebar)::after {
+  height: 0;
+}
+
 /* Скрываем скроллбар - только для nav sidebar */
 .sidebar:not(.chats-sidebar)::-webkit-scrollbar {
   width: 0;

@@ -12,6 +12,12 @@
     let savedScrollTop = null;
     
     function updateSidebarHeight() {
+      if (document.body.classList.contains('cinema-mode')) {
+        sidebar.style.setProperty('--sidebar-max-height', '100vh');
+        lastOverlap = 0;
+        savedScrollTop = null;
+        return;
+      }
       const footerRect = footer.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       
