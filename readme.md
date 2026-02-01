@@ -7,6 +7,7 @@
 
 > If I encounter a problem that will interfere with me personally, I will fix it, but of course there is no schedule.
 >
+> 8Site name in code - old name of Youvi. 8Site because it was created at 8 Aug, and i dont have other ideas at that moment.
 > 
 Youvi is an offline video library with video hosting interface, featuring danmaku, comments, tags (including aliases and implications), subtitles and more. Fully local and portable (localhost needed for subtitles and multiple audio tracks), works without internet.
 
@@ -14,12 +15,12 @@ Youvi is an offline video library with video hosting interface, featuring danmak
 
 ## Features
 
-- **Danmaku overlays** - Niconico-style comments on videos (including YouTube imports)
-- **Advanced tagging** - 14 tag types with aliases, implications, boolean search
-- **YouTube archival** - Import videos with comments/timestamps as danmaku (and also YT live chat as a danmaku)
-- **Channels & playlists** - Nothing special, just the basic functionality of a typical video hosting service. But it's your personal local “video hosting.”
-- **Subtitle support** - ASS/SRT/SSA with font extraction from MKV (via FFmpeg WASM)
-- **Fully portable** - Works from USB drive, no installation required
+- Danmaku - Niconico-style comments on videos (including YouTube imports)
+- Tagging - 14 tag types with aliases, implications, boolean search
+- YouTube archival - Import videos with comments/timestamps as danmaku (and also YT live chat as a danmaku)
+- Channels & playlists - Nothing special, just the basic functionality of a typical video hosting service. But it's your personal local “video hosting.”
+- Subtitle support - ASS/SRT/SSA with font extraction from MKV (via FFmpeg WASM)
+- Fully portable - Works from USB drive, no installation required
 
 ## Requirements
 
@@ -43,7 +44,7 @@ This is a web application working through File System Access API
 
 There are scripts (in folder named "scripts") for importing comments from YouTube as regular comments and danmaku (import either live chat from streams/premieres or selection of comments with timestamps). You can watch YouTube videos like on Niconico with danmaku! This is one of the reasons why this thing was made. And you can also obviously write comments and danmaku by yourself. 
 
-Only external dependencies are FFmpeg wasm (downloaded) and Lucid Icons (SVG code in files). Everything works from box.
+Only external components are FFmpeg wasm (downloaded) and Lucid Icons (SVG code in files). Everything works out of the box.
 
  Site works without internet. Available in three languages: English, Russian, and Ukrainian.
  
@@ -51,9 +52,9 @@ Only external dependencies are FFmpeg wasm (downloaded) and Lucid Icons (SVG cod
 
  Since I absolutely loooooove the internet I tried to polish the interface as much as possible. That's why the site feels like a real large video hosting service to me. There are lots of different micro-moments, and the overall appearance is great (in my opinion).
 
-## What site can be useful for?
+## What can the site be useful for?
 **Viewing and storing anime (as well as movies, TV shows, and other PGC)**
-Although the site's tags are used for everything, they are primarily focused on anime. Also there are ASS/SRT/SSA subtitles and audio tracks that were added to site because anime.
+Although the site's tags are used for everything, they are primarily designed for anime. Also there are ASS/SRT/SSA subtitles and audio tracks that were added to site because anime.
 
 **YouTube archival:** 
 You can preserve complete channel backups including video files (via yt-dlp), all comments with timestamps, description - creating a fully offline mirror of YouTube content with a browseable interface. For example - some tech tutorial with comments about some techincal moments that wasnt mention in videos. (someone if want can write scripts to scrap NicoNico and BiliBili danmaku and convert it into Youvi JSON files via some downloader like yt-dlp or special things or from API, whatever, like YT ones, so no only YT archival)
@@ -78,7 +79,7 @@ The site will start processing videos, wait until previews appear. When it finis
 
 **Management** - page for video selection
 
-Why 2 pages? Because the project grew and cutting out core functions from the old main page turned out to be difficult, so I just finished it. (it used to be a 2000s-style video hosting which is visible in the design. Legacy level just like real sites) But now it have PC First "overloaded" (that what i like) but modern UI)
+Why 2 pages? Because the project grew and cutting out core functions from the old main page turned out to be difficult, so I just lefted it. (it used to be a 2000s-style video hosting which is visible in the design. Legacy level just like real sites) But now it have PC First "overloaded" (that what i like) but modern UI)
 
 **Channels** - list of channels
 
@@ -111,7 +112,7 @@ The only mandatory requirement hardcoded is that video must have a ka tag. But f
 
 ## Youvi Main
 
-This is the main page. Huge banner with logo and site mascot - Yuvi. Under the banner are categories. Categories are a tag of type ct, I selected certain categories for classification, videos from which will appear here. Buttons 2-6 - number of cards per row.
+This is the main page. Huge banner with logo and site mascot - Yuvi. Under the banner are categories. Categories are a tag of type ct, I selected certain categories for classification, videos from which will appear here. Buttons 2-7 - number of cards per row.
 
 Sidebar has site categories, tags, everything is clear. First 2 rows - latest playlists with 6 or more videos. Only on page 1 and only in latest mode. Then videos follow.
 
@@ -131,7 +132,7 @@ Multiple audio tracks are extracted from MKV files, to extract click the wave bu
 
 ## Danmaku
 
-Danmaku and its input is everywhere in all video modes (even in PIP via Documment-PIP API). For scripts you need yt-dlp. Find the script, open PowerShell and write:
+Danmaku and its input is everywhere in all video modes (even in PIP via Document-PIP API). For scripts you need yt-dlp. Find the script, open PowerShell and write:
 ```bash
 py yt_comments_to_danmaku.py https://www.youtube.com/watch?v=smth
 ```
@@ -154,6 +155,7 @@ The site has a wiki with more detailed technical and user information about the 
 
 Optimized it a lot so it doesn't lag, on my not-so-powerful computers with 500 videos it works fast.
 
+I'm not a professional coder, so the code may be rough. AI-assisted development, 100k+ lines. Full-featured portable "video hosting" with many features. This is my personal project created by me for myself, the most important thing is that it works and satisfies me. I worked on this project for half a year. This was my first project where I applied programming beyond academic tasks, and since there was no ready-made local first working witohout server mix of YouTube, NicoNico, booru sites and a player with subtitle support on the internet, I made this.
 
-I'm not a professional coder, so the code may be rough. AI-assisted development, 100k+ lines. Full-featured portable "video hosting" with many features. This is my personal project created by me for myself, the most important thing is that it works and satisfies me. This was my first project where I applied programming beyond academic tasks, and since there was no ready-made local first working witohout server mix of YouTube, NicoNico, booru sites and a player with subtitle support on the internet, I made this.
-
+## License
+MIT License - see LICENSE file for details
