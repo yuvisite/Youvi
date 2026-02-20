@@ -670,7 +670,8 @@ body.dark-theme input.search-input::placeholder {
       <a href="index.html" data-i18n="nav.management">Управление</a>
       <a href="youvi_ch_list.html" data-i18n="nav.channels">Каналы</a>
       <a href="youvi_playlists_list.html" data-i18n="nav.playlists">Плейлисты</a>
-      <a href="youvi_feed_all.html" data-i18n="nav.feed">Feed</a> 
+      <a href="forum/forum.html" data-i18n="nav.forums">Forums</a> 
+      <a href="download/youvi_download.html" data-i18n="nav.download">Download</a> 
       <a href="wiki/index.html" data-i18n="nav.wiki">Wiki</a>
       <div class="lang-switcher">
         <select id="langSwitcher" class="lang-select">
@@ -731,14 +732,7 @@ body.dark-theme input.search-input::placeholder {
           </svg>
           <span data-i18n="sidebar.home">Главная</span>
         </a>
-        <a href="youvi_feed_all.html" class="sidebar-item nav-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
-            <path d="M4 11a9 9 0 0 1 9 9"/>
-            <path d="M4 4a16 16 0 0 1 16 16"/>
-            <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-          </svg>
-          <span data-i18n="sidebar.feed">Feed</span>
-        </a>
+
                 <a href="youvi_tags.html" class="sidebar-item nav-item active">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
                      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
@@ -890,7 +884,7 @@ body.dark-theme input.search-input::placeholder {
                         <ul>
                             <li><a href="youvi_main.html" data-i18n="footer.video">Видео</a></li>
                             <li><a href="youvi_tags.html" data-i18n="sidebar.tags">Теги</a></li>
-                            <li><a href="youvi_feed_all.html" data-i18n="nav.feed">Feed</a></li>
+                            <li><a href="forum/forum.html">Форумы</a></li>
                             <li><a href="index.html" data-i18n="nav.management">Управление</a></li>
                         </ul>
                     </div>
@@ -1090,9 +1084,25 @@ async function writeJSONFile(dirHandle, fileName, data) {
 }
 
 async function saveVideoMetadata(dirHandle, fileName, metadata) {
-  const metaDir = await dirHandle.getDirectoryHandle('.metadata', { create: true });
-  const metaFileName = fileName + '.meta.json';
-  await writeJSONFile(metaDir, metaFileName, metadata);
+  try {
+    // Read existing metadata to preserve created timestamp
+    const existingMeta = await getVideoMetadata(dirHandle, fileName);
+    
+    // Merge with existing, preserving created field
+    const safeMeta = {
+      ...existingMeta,
+      ...metadata,
+      // CRITICAL: Always preserve the original created timestamp
+      created: existingMeta.created || metadata.created || Date.now(),
+      fileCreated: existingMeta.fileCreated || metadata.fileCreated
+    };
+    
+    const metaDir = await dirHandle.getDirectoryHandle('.metadata', { create: true });
+    const metaFileName = fileName + '.meta.json';
+    await writeJSONFile(metaDir, metaFileName, safeMeta);
+  } catch (e) {
+    console.error('Error saving video metadata:', e);
+  }
 }
 
 window.videoManager = {

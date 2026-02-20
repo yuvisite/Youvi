@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<title>Миграция форума в YouVi</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;background:#f5f5f5}
+.container{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+h1{color:#d94b88;margin-bottom:20px}
+.step{margin:20px 0;padding:15px;background:#f9f9f9;border-left:4px solid #ff69b4;border-radius:4px}
+.step h3{margin:0 0 10px 0;color:#333}
+.step p{margin:5px 0;color:#666;font-size:14px}
+button{background:#ff69b4;color:#fff;border:none;padding:12px 24px;border-radius:4px;cursor:pointer;font-size:14px;font-weight:600;margin:10px 5px 0 0}
+button:hover{background:#e91e63}
+button:disabled{background:#ccc;cursor:not-allowed}
+.log{margin-top:20px;padding:15px;background:#f0f0f0;border-radius:4px;font-family:monospace;font-size:12px;max-height:300px;overflow-y:auto;white-space:pre-wrap}
+.success{color:#4caf50;font-weight:600}
+.error{color:#f44336;font-weight:600}
+.warning{color:#ff9800;font-weight:600}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🔄 Миграция форума в YouVi</h1>
+  
+  <div class="step">
+    <h3>Шаг 1: Выберите папку YouVi</h3>
+    <p>Выберите главную папку с видео (где будет создана папка forum)</p>
+    <button id="selectFolder">Выбрать папку</button>
+    <p id="folderStatus" style="margin-top:10px"></p>
+  </div>
+  
+  <div class="step">
+    <h3>Шаг 2: Миграция данных</h3>
+    <p>Перенос пользователей из forum/users в .channels</p>
+    <button id="migrateBtn" disabled>Начать миграцию</button>
+  </div>
+  
+  <div id="logContainer" style="display:none">
+    <h3>Лог миграции:</h3>
+    <div class="log" id="log"></div>
+  </div>
+</div>
+
+<script src="../youvi_shared.js"></script>
+<script>
+'use strict';
+
+const { 
+  openYouviDB, 
+  getFromYouviDB, 
+  saveToYouviDB,
+  getYouviDirectory,
+  getForumDirectory,
+  getChannelsDirectory,
+  readJSONFile,
+  writeJSONFile,
+  saveUserProfile
+} = window.YouviShared || {};
+
+let youviDirHandle = null;
+const logEl = document.getElementById('log');
+const logContainer = document.getElementById('logContainer');
+
+function log(msg, type = 'info') {
+  const timestamp = new Date().toLocaleTimeString();
+  const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : type === 'warning' ? '⚠' : 'ℹ';
+  logEl.innerHTML += `<span class="${type}">[${timestamp}] ${prefix} ${msg}</span>\n`;
+  logEl.scrollTop = logEl.scrollHeight;
+  console.log(`[${type}] ${msg}`);
+}
+
+document.getElementById('selectFolder').addEventListener('click', async () => {
+  try {
+    youviDirHandle = await window.showDirectoryPicker();
+    const db = await openYouviDB();
+    await saveToYouviDB(db, 'videoDirectoryHandle', youviDirHandle);
+    
+    document.getElementById('folderStatus').innerHTML = `<span class="success">✓ Выбрана папка: ${youviDirHandle.name}</span>`;
+    document.getElementById('migrateBtn').disabled = false;
+    log(`Папка выбрана: ${youviDirHandle.name}`, 'success');
+  } catch (e) {
+    document.getElementById('folderStatus').innerHTML = `<span class="error">✗ Ошибка: ${e.message}</span>`;
+    log(`Ошибка выбора папки: ${e.message}`, 'error');
+  }
+});
+
+document.getElementById('migrateBtn').addEventListener('click', async () => {
+  logContainer.style.display = 'block';
+  document.getElementById('migrateBtn').disabled = true;
+  
+  try {
+    log('Начало миграции...', 'info');
+    
+    // Get directories
+    const forumDir = await getForumDirectory();
+    if (!forumDir) {
+      log('Папка forum не найдена, создаю...', 'warning');
+    }
+    
+    const channelsDir = await getChannelsDirectory();
+    log('Папка .channels готова', 'success');
+    
+    // Check if old users directory exists
+    let usersDir;
+    try {
+      usersDir = await forumDir.getDirectoryHandle('users', { create: false });
+      log('Найдена папка forum/users', 'info');
+    } catch (e) {
+      log('Папка forum/users не найдена - миграция не требуется', 'warning');
+      log('Миграция завершена', 'success');
+      return;
+    }
+    
+    // Migrate users
+    let migratedCount = 0;
+    let skippedCount = 0;
+    let errorCount = 0;
+    
+    for await (const [userName, handle] of usersDir.entries()) {
+      if (handle.kind !== 'directory' || userName.startsWith('.')) {
+        continue;
+      }
+      
+      try {
+        log(`Обработка пользователя: ${userName}`, 'info');
+        
+        // Read old profile
+        const oldProfile = await readJSONFile(handle, 'profile.json', {});
+        
+        // Check if user already exists in channels
+        let userChannelDir;
+        try {
+          userChannelDir = await channelsDir.getDirectoryHandle(userName, { create: false });
+          const existingProfile = await readJSONFile(userChannelDir, 'channel.json', null);
+          if (existingProfile) {
+            log(`  Пользователь ${userName} уже существует в .channels, пропускаю`, 'warning');
+            skippedCount++;
+            continue;
+          }
+        } catch (e) {
+          // User doesn't exist, create
+          userChannelDir = await channelsDir.getDirectoryHandle(userName, { create: true });
+        }
+        
+        // Convert profile.json to channel.json format
+        const channelData = {
+          name: userName,
+          description: oldProfile.bio || oldProfile.description || '',
+          avatar: oldProfile.avatarFileName || oldProfile.avatarThumbFileName || null,
+          stats: {
+            videos: 0,
+            forumPosts: oldProfile.postsCount || 0
+          },
+          joinedAt: oldProfile.joinedAt || Date.now(),
+          forumBio: oldProfile.bio || ''
+        };
+        
+        await writeJSONFile(userChannelDir, 'channel.json', channelData);
+        log(`  ✓ Создан channel.json для ${userName}`, 'success');
+        
+        // Copy avatar if exists
+        if (oldProfile.avatarFileName) {
+          try {
+            const avatarHandle = await handle.getFileHandle(oldProfile.avatarFileName);
+            const avatarFile = await avatarHandle.getFile();
+            const avatarBuffer = await avatarFile.arrayBuffer();
+            
+            const newAvatarHandle = await userChannelDir.getFileHandle(oldProfile.avatarFileName, { create: true });
+            const writable = await newAvatarHandle.createWritable();
+            await writable.write(avatarBuffer);
+            await writable.close();
+            
+            log(`  ✓ Скопирована аватарка для ${userName}`, 'success');
+          } catch (e) {
+            log(`  ⚠ Не удалось скопировать аватарку: ${e.message}`, 'warning');
+          }
+        }
+        
+        // Copy thumbnail if exists and different from avatar
+        if (oldProfile.avatarThumbFileName && oldProfile.avatarThumbFileName !== oldProfile.avatarFileName) {
+          try {
+            const thumbHandle = await handle.getFileHandle(oldProfile.avatarThumbFileName);
+            const thumbFile = await thumbHandle.getFile();
+            const thumbBuffer = await thumbFile.arrayBuffer();
+            
+            const newThumbHandle = await userChannelDir.getFileHandle(oldProfile.avatarThumbFileName, { create: true });
+            const writable = await newThumbHandle.createWritable();
+            await writable.write(thumbBuffer);
+            await writable.close();
+            
+            log(`  ✓ Скопирована миниатюра для ${userName}`, 'success');
+          } catch (e) {
+            log(`  ⚠ Не удалось скопировать миниатюру: ${e.message}`, 'warning');
+          }
+        }
+        
+        migratedCount++;
+        log(`  ✓ Пользователь ${userName} успешно мигрирован`, 'success');
+        
+      } catch (e) {
+        errorCount++;
+        log(`  ✗ Ошибка миграции ${userName}: ${e.message}`, 'error');
+      }
+    }
+    
+    log('', 'info');
+    log('=== ИТОГИ МИГРАЦИИ ===', 'info');
+    log(`Успешно мигрировано: ${migratedCount}`, 'success');
+    log(`Пропущено (уже существуют): ${skippedCount}`, 'warning');
+    log(`Ошибок: ${errorCount}`, errorCount > 0 ? 'error' : 'info');
+    log('', 'info');
+    log('Миграция завершена!', 'success');
+    log('Теперь можно удалить папку forum/users вручную', 'info');
+    
+  } catch (e) {
+    log(`Критическая ошибка: ${e.message}`, 'error');
+    console.error(e);
+  }
+});
+</script>
+</body>
+</html>

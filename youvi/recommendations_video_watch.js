@@ -167,13 +167,15 @@
 		if (curTags.length && candTags.length){
 			const candTagMap = new Map();
 			for (let i = 0; i < candTags.length; i++) {
-				candTagMap.set(candTags[i], candTagTypes[i] || null);
+				const key = candTags[i] + '|' + (candTagTypes[i] || '');
+				candTagMap.set(key, candTagTypes[i] || null);
 			}
 			for (let i = 0; i < curTags.length; i++) {
 				const tg = curTags[i];
-				if (candTagMap.has(tg)) {
-					const curType = curTagTypes[i] || null;
-					const candType = candTagMap.get(tg);
+				const curType = curTagTypes[i] || null;
+				const key = tg + '|' + (curType || '');
+				if (candTagMap.has(key)) {
+					const candType = candTagMap.get(key);
 					const isLowWeight = (curType && LOW_WEIGHT_TAG_TYPES.has(curType)) || 
 					                    (candType && LOW_WEIGHT_TAG_TYPES.has(candType));
 					tagScore += isLowWeight ? LOW_WEIGHT_MULTIPLIER : 1;

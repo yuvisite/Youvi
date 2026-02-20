@@ -566,7 +566,7 @@
         }
 
         .chronological-list .video-card-title {
-            font-size: 18px;
+            font-size: 16px !important;
             -webkit-line-clamp: 2;
             line-clamp: 2;
             display: -webkit-box;
@@ -580,17 +580,17 @@
         .chronological-list .video-views-line,
         .chronological-list .video-likes-line,
         .chronological-list .video-dates-line {
-            font-size: 13px;
+            font-size: 14px;
             color: #666;
         }
 
         .chronological-list .video-views {
-            font-size: 12px;
+            font-size: 14px;
             color: #666;
         }
 
         .chronological-list .video-desc {
-            font-size: 13px;
+            font-size: 14px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -1268,13 +1268,13 @@
             }
 
             .chronological-list .video-card-title {
-                font-size: 14px;
+                font-size: 15px;
             }
 
             .chronological-list .video-meta-line,
             .chronological-list .video-dates-line,
             .chronological-list .video-desc {
-                font-size: 12px;
+                font-size: 13px;
             }
 
             .date-group-title {
@@ -1302,13 +1302,13 @@
             }
 
             .chronological-list .video-card-title {
-                font-size: 13px;
+                font-size: 14px;
             }
 
             .chronological-list .video-meta-line,
             .chronological-list .video-dates-line,
             .chronological-list .video-desc {
-                font-size: 11px;
+                font-size: 12px;
             }
 
             .chronological-list .video-channel-row {
@@ -1411,7 +1411,8 @@
       <a href="index.html" data-i18n="nav.management">Управление</a>
       <a href="youvi_ch_list.html" data-i18n="nav.channels">Каналы</a>
       <a href="youvi_playlists_list.html" data-i18n="nav.playlists">Плейлисты</a>
-      <a href="youvi_feed_all.html" data-i18n="nav.feed">Feed</a> 
+      <a href="forum/forum.html" data-i18n="nav.forums">Forums</a> 
+      <a href="download/youvi_download.html" data-i18n="nav.download">Download</a> 
       <a href="wiki/index.html" data-i18n="nav.wiki">Wiki</a>
       <div class="lang-switcher">
         <select id="langSwitcher" class="lang-select">
@@ -1476,14 +1477,7 @@
                     </svg>
                     <span data-i18n="sidebar.home">Главная</span>
                 </a>
-                <a href="youvi_feed_all.html" class="sidebar-item nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
-                        <path d="M4 11a9 9 0 0 1 9 9"/>
-                        <path d="M4 4a16 16 0 0 1 16 16"/>
-                        <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                    </svg>
-                    <span data-i18n="sidebar.feed">Feed</span>
-                </a>
+
                 <a href="youvi_tags.html" class="sidebar-item nav-item">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
                      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
@@ -1629,7 +1623,7 @@
                         <ul>
                             <li><a href="youvi_main.html" data-i18n="footer.video">Видео</a></li>
                             <li><a href="youvi_tags.html" data-i18n="sidebar.tags">Теги</a></li>
-                            <li><a href="youvi_feed_all.html" data-i18n="nav.feed">Feed</a></li>
+                            <li><a href="forum/forum.html">Форумы</a></li>
                             <li><a href="index.html" data-i18n="nav.management">Управление</a></li>
                         </ul>
                     </div>
@@ -2542,7 +2536,10 @@
               ...metadata,
               views: Math.max(existingMeta.views || 0, metadata.views || 0),
               quality: metadata.quality || existingMeta.quality,
-              tags: metadata.tags || existingMeta.tags || []
+              tags: metadata.tags || existingMeta.tags || [],
+              // CRITICAL: Always preserve the original created timestamp
+              created: existingMeta.created || metadata.created || Date.now(),
+              fileCreated: existingMeta.fileCreated || metadata.fileCreated
             };
             
             const metaDir = await dirHandle.getDirectoryHandle('.metadata', { create: true });
@@ -3160,7 +3157,7 @@
                 const danmakuCount = v.danmakuCount || (window.DanmakuCounter ? window.DanmakuCounter.get(v.name) : 0);
                 const viewsSvg = `<svg width="12" height="12" viewBox="0 0 24 24" style="display:inline;vertical-align:-2px;"><path fill="#888" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`;
                 const danmakuSvg = `<svg width="12" height="12" viewBox="0 0 24 24" style="display:inline;vertical-align:-2px;"><path fill="#888" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>`;
-                const statsLine = `<div class="video-meta-line" style="color:#888;font-size:12px;">${dateStr ? dateStr + ' • ' : ''}${viewsSvg} ${viewsCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}</div>`;
+                const statsLine = `<div class="video-meta-line" style="color:#888;font-size:14px;">${dateStr ? dateStr + ' • ' : ''}${viewsSvg} ${viewsCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}</div>`;
 
                 const descText = Array.isArray(v.tags) ? v.tags.filter(t => !t.includes('(ка)')).join(', ') : '';
                 const descLine = descText ? `<div class="video-desc">${escapeHtml(descText)}</div>` : '';

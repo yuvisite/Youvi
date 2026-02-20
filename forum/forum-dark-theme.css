@@ -1,0 +1,1489 @@
+/* Dark Theme for Forum Pages */
+body.dark-theme {
+    background-color: #0D0D0D !important;
+    color: #fff !important;
+}
+
+/* CRITICAL: Allow custom wallpapers in dark theme */
+body.dark-theme.custom-background {
+    background-color: transparent !important;
+}
+
+body.dark-theme.custom-background::before {
+    /* The ::before pseudo-element from main CSS will handle the background */
+}
+
+/* Sidebar */
+body.dark-theme .sidebar {
+    background: #111 !important;
+}
+
+/* Top Navigation Bar - EXACT MATCH TO PORTAL */
+body.dark-theme .top-nav {
+    background: #d94b88 !important;
+    border-bottom: 1px solid #c2185b !important;
+}
+
+body.dark-theme .top-nav a {
+    color: #fff !important;
+}
+
+body.dark-theme .top-nav a:hover,
+body.dark-theme .top-nav a.active {
+    color: #ffd6ea !important;
+}
+
+/* Header */
+body.dark-theme .header {
+    background: #2c1810 !important;
+    border-bottom: 1px solid #444 !important;
+}
+
+body.dark-theme .nav-links a {
+    color: #fff !important;
+}
+
+body.dark-theme .settings-btn {
+    color: #fff !important;
+}
+
+body.dark-theme .settings-btn:hover {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .theme-dropdown {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+}
+
+body.dark-theme .theme-dropdown-item {
+    color: #fff !important;
+}
+
+body.dark-theme .theme-dropdown-item:hover {
+    background: #333 !important;
+}
+
+/* User Actions */
+body.dark-theme .user-actions a {
+    color: #fff !important;
+}
+
+body.dark-theme .user-actions a:hover {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .search-input {
+    background: #4a3a34 !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
+
+body.dark-theme .search-input::placeholder {
+    color: #888 !important;
+}
+
+body.dark-theme .search-btn {
+    background: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .sync-status {
+    color: #aaa !important;
+}
+
+/* Inline style overrides */
+body.dark-theme #boardInfo {
+    color: #aaa !important;
+}
+
+body.dark-theme #threadTitle {
+    color: #fff !important;
+}
+
+body.dark-theme .author-avatar img {
+    border-radius: 0 !important;
+}
+
+body.dark-theme .post-body img {
+    border-radius: 6px !important;
+}
+
+/* Reply prefix styling */
+body.dark-theme .last-post-title a:first-child {
+    color: #ff69b4 !important;
+}
+
+/* Override inline styles */
+body.dark-theme section[style*="background:#fff"] {
+    background: #0D0D0D !important;
+}
+
+/* Make sections use standard dark color when custom background is active */
+body.dark-theme.custom-background section[style*="background:#fff"] {
+    background: #0D0D0D !important;
+}
+
+body.dark-theme .thread-meta {
+    color: #aaa !important;
+}
+
+/* Additional overrides for hardcoded colors */
+body.dark-theme .author-avatar {
+    background: linear-gradient(135deg, #ff85b4, #ff69b4) !important;
+}
+
+body.dark-theme .post.highlighted {
+    background-color: #2a1f0a !important;
+    border: 2px solid #ffc107 !important;
+}
+
+body.dark-theme .post.highlighted .post-body mark {
+    background-color: #ffeb3b !important;
+    color: #000 !important;
+}
+
+/* Forum Categories */
+body.dark-theme .category-group {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .category-header {
+    background: #222 !important;
+    color: #fff !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.dark-theme .boards-list {
+    background: #0D0D0D !important;
+}
+
+body.dark-theme .boards-header {
+    background: #222 !important;
+    color: #aaa !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.dark-theme .board-item {
+    background: #1a1a1a !important;
+    border-bottom: 1px solid #333 !important;
+    color: #fff !important;
+    padding: 8px 16px !important;
+}
+
+body.dark-theme .board-item:hover {
+    background: #222 !important;
+}
+
+body.dark-theme .board-title {
+    color: #fff !important;
+}
+
+body.dark-theme .board-description {
+    color: #aaa !important;
+}
+
+body.dark-theme .board-stats {
+    color: #888 !important;
+}
+
+body.dark-theme .last-post {
+    color: #aaa !important;
+}
+
+body.dark-theme .last-post a {
+    color: #ff69b4 !important;
+}
+
+/* Main Content */
+body.dark-theme .main-content-header {
+    color: #fff !important;
+}
+
+body.dark-theme .section-title {
+    color: #fff !important;
+}
+
+body.dark-theme .forum-stats {
+    color: #aaa !important;
+}
+
+/* Footer */
+body.dark-theme .footer {
+    background: #1a1a1a !important;
+    color: #fff !important;
+}
+
+body.dark-theme .footer-section h3 {
+    color: #fff !important;
+}
+
+body.dark-theme .footer-section a {
+    color: #aaa !important;
+}
+
+body.dark-theme .footer-section a:hover {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .footer-bottom {
+    border-top: 1px solid #333 !important;
+    color: #888 !important;
+}
+
+/* Thread/Post Styles */
+body.dark-theme .thread-item {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .thread-item:hover {
+    background: #222 !important;
+}
+
+body.dark-theme .thread-title {
+    color: #fff !important;
+}
+
+body.dark-theme .thread-meta {
+    color: #aaa !important;
+}
+
+body.dark-theme .post {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .post-header {
+    background: #222 !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.dark-theme .post-author {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .post-content {
+    background: transparent !important;
+    color: #fff !important;
+}
+
+body.dark-theme .post-meta {
+    color: #888 !important;
+}
+
+/* Breadcrumbs */
+body.dark-theme .breadcrumbs {
+    color: #aaa !important;
+}
+
+body.dark-theme .breadcrumbs a {
+    color: #aaa !important;
+}
+
+body.dark-theme .breadcrumbs a:hover {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .breadcrumb-separator {
+    color: #666 !important;
+}
+
+/* Banner Section - Preserve custom wallpapers */
+body.dark-theme .banner-section {
+    /* Don't override background - let custom wallpapers show through */
+}
+
+/* Main Content Areas */
+body.dark-theme .main-content {
+    background: #0D0D0D !important;
+    color: #fff !important;
+}
+
+/* Make main-content use standard dark color when custom background is active */
+body.dark-theme.custom-background .main-content {
+    background: #0D0D0D !important;
+}
+
+/* Thread List (forum_board.html) */
+body.dark-theme .thread-list {
+    background: #0D0D0D !important;
+}
+
+/* Make thread-list use standard dark color when custom background is active */
+body.dark-theme.custom-background .thread-list {
+    background: #0D0D0D !important;
+}
+
+/* Make boards-list use standard dark color when custom background is active */
+body.dark-theme.custom-background .boards-list {
+    background: #0D0D0D !important;
+}
+
+/* Make posts-container use standard dark color when custom background is active */
+body.dark-theme.custom-background .posts-container {
+    background: #0D0D0D !important;
+}
+
+body.dark-theme .boards-header {
+    background: #222 !important;
+    color: #aaa !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.dark-theme .board-item {
+    background: #1a1a1a !important;
+    border-bottom: 1px solid #333 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .board-item:hover {
+    background: #222 !important;
+}
+
+body.dark-theme .board-title {
+    color: #fff !important;
+}
+
+body.dark-theme .board-description {
+    color: #aaa !important;
+}
+
+body.dark-theme .board-description a {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .board-description a:hover {
+    color: #e91e63 !important;
+}
+
+body.dark-theme .posts-stats {
+    color: #fff !important;
+}
+
+body.dark-theme .board-stats {
+    color: #fff !important;
+}
+
+body.dark-theme .last-post {
+    color: #aaa !important;
+}
+
+body.dark-theme .last-post-title a {
+    color: #fff !important;
+}
+
+body.dark-theme .last-post-title a:hover {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .last-post-author {
+    color: #888 !important;
+}
+
+body.dark-theme .last-post-author a {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .last-post-author a:hover {
+    color: #e91e63 !important;
+}
+
+body.dark-theme .last-post-time {
+    color: #999 !important;
+}
+
+body.dark-theme .thread-link {
+    color: #fff !important;
+}
+
+body.dark-theme .thread-link:hover {
+    color: #ff69b4 !important;
+}
+
+/* Create Thread Form */
+body.dark-theme .create-thread {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .thread-create-panel {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .thread-create-row label {
+    color: #fff !important;
+}
+
+body.dark-theme .thread-create-row input,
+body.dark-theme .thread-create-row textarea {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .thread-create-row input::placeholder,
+body.dark-theme .thread-create-row textarea::placeholder {
+    color: #888 !important;
+}
+
+body.dark-theme .form-row label {
+    color: #fff !important;
+}
+
+body.dark-theme .form-row input,
+body.dark-theme .form-row textarea {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .form-row input::placeholder,
+body.dark-theme .form-row textarea::placeholder {
+    color: #888 !important;
+}
+
+/* Buttons */
+body.dark-theme .btn {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .btn:hover {
+    background: #333 !important;
+    border-color: #ff69b4 !important;
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .btn.primary {
+    background: #ff69b4 !important;
+    border-color: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .btn.primary:hover {
+    background: #e91e63 !important;
+    border-color: #e91e63 !important;
+}
+
+body.dark-theme .small-btn {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .small-btn:hover {
+    background: #333 !important;
+    color: #ff69b4 !important;
+}
+
+/* Pagination */
+body.dark-theme .pagination {
+    color: #fff !important;
+}
+
+body.dark-theme .pagination-info {
+    color: #aaa !important;
+}
+
+body.dark-theme .pagination-btn {
+    background: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .pagination-btn.active {
+    background: #d94b88 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .pagination-btn:disabled {
+    background: #333 !important;
+    color: #666 !important;
+}
+
+/* Board Settings Popover */
+body.dark-theme #boardSettingsPopover {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme #boardSettingsPopover .pop-header {
+    background: #222 !important;
+    border-bottom: 1px solid #333 !important;
+    color: #fff !important;
+}
+
+body.dark-theme #boardSettingsPopover .pop-body {
+    color: #fff !important;
+}
+
+body.dark-theme #boardSettingsPopover input[type="file"] {
+    color: #fff !important;
+}
+
+/* Topic Header (forum_thread.html) */
+body.dark-theme .topic-header {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .topic-title {
+    color: #fff !important;
+}
+
+body.dark-theme .topic-info {
+    color: #aaa !important;
+}
+
+body.dark-theme .action-button {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .action-button:hover {
+    background: #333 !important;
+    border-color: #ff69b4 !important;
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .action-button.primary {
+    background: #ff69b4 !important;
+    border-color: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .action-button.primary:hover {
+    background: #e91e63 !important;
+    border-color: #e91e63 !important;
+}
+
+body.dark-theme .action-button.bookmarked {
+    background: #d94b88 !important;
+    border-color: #d94b88 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .action-button.bookmarked:hover {
+    background: #c2185b !important;
+    border-color: #c2185b !important;
+}
+
+/* Posts Container */
+body.dark-theme .posts-container {
+    background: #0D0D0D !important;
+}
+
+body.dark-theme .post {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .post.op {
+    background: #1a0f14 !important;
+    border-left: 4px solid #ff69b4 !important;
+}
+
+body.dark-theme .post .post-header {
+    background: transparent !important;
+}
+
+body.dark-theme .post-author {
+    background: #222 !important;
+    border-right: 1px solid #333 !important;
+}
+
+body.dark-theme .author-name {
+    color: #fff !important;
+}
+
+body.dark-theme .author-name a {
+    color: #fff !important;
+}
+
+body.dark-theme .author-role {
+    background: #333 !important;
+    color: #aaa !important;
+}
+
+/* Fix registration data and message count visibility */
+body.dark-theme .post-author div[style*="color:#666"] {
+    color: #ccc !important;
+}
+
+body.dark-theme .post-author div[style*="font-size:11px"] {
+    color: #ccc !important;
+}
+
+body.dark-theme .post-header {
+    background: transparent !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.dark-theme .post-footer {
+    border-top: 1px solid #333 !important;
+}
+
+body.dark-theme .post-date {
+    color: #888 !important;
+}
+
+body.dark-theme .post-number {
+    color: #999 !important;
+}
+
+body.dark-theme .post-number:hover {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .post-body {
+    color: #fff !important;
+}
+
+body.dark-theme .post-body .quote {
+    background: #222 !important;
+    border-left: 3px solid #444 !important;
+    color: #aaa !important;
+}
+
+body.dark-theme .post-body .quote .quote-author {
+    color: #888 !important;
+}
+
+body.dark-theme .post-footer {
+    border-top: 1px solid #333 !important;
+}
+
+body.dark-theme .post-action {
+    color: #888 !important;
+}
+
+body.dark-theme .post-action:hover {
+    color: #ff69b4 !important;
+}
+
+/* Reply Form */
+body.dark-theme .reply-form {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .form-title {
+    color: #fff !important;
+}
+
+body.dark-theme .form-label {
+    color: #fff !important;
+}
+
+body.dark-theme .form-input,
+body.dark-theme .form-textarea {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .form-input:focus,
+body.dark-theme .form-textarea:focus {
+    border-color: #ff69b4 !important;
+}
+
+body.dark-theme .form-input::placeholder,
+body.dark-theme .form-textarea::placeholder {
+    color: #888 !important;
+}
+
+body.dark-theme .submit-btn {
+    background: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .submit-btn:hover {
+    background: #e91e63 !important;
+}
+
+body.dark-theme .cancel-btn {
+    background: transparent !important;
+    color: #aaa !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme .cancel-btn:hover {
+    background: #222 !important;
+    border-color: #666 !important;
+}
+
+/* Edit Form */
+body.dark-theme .edit-form-container {
+    background: #1a0f14 !important;
+    border: 1px solid #ff69b4 !important;
+}
+
+body.dark-theme .edit-form-container .form-title {
+    color: #fff !important;
+}
+
+body.dark-theme .edit-form-container .form-label {
+    color: #fff !important;
+}
+
+body.dark-theme .edit-form-container .form-textarea {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .edit-form-container .form-textarea:focus {
+    border-color: #ff69b4 !important;
+}
+
+body.dark-theme .edit-form-container .submit-btn {
+    background: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .edit-form-container .submit-btn:hover {
+    background: #e91e63 !important;
+}
+
+body.dark-theme .edit-form-container .cancel-btn {
+    background: transparent !important;
+    color: #aaa !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme .edit-form-container .cancel-btn:hover {
+    background: #222 !important;
+    border-color: #666 !important;
+}
+
+/* Image Overlay */
+body.dark-theme .img-overlay {
+    background: rgba(13,13,13,0.95) !important;
+}
+
+/* Search Highlight */
+body.dark-theme .post.highlighted {
+    background-color: #2a1f0a !important;
+    border: 2px solid #ffc107 !important;
+}
+
+body.dark-theme .post.highlighted .post-body mark {
+    background-color: #ffeb3b !important;
+    color: #000 !important;
+}
+
+/* Loading States */
+body.dark-theme .loading-skeleton {
+    background: linear-gradient(90deg, #222 25%, #333 50%, #222 75%) !important;
+}
+
+body.dark-theme .loading-indicator {
+    color: #aaa !important;
+}
+
+body.dark-theme .loading-spinner {
+    border: 2px solid #333 !important;
+    border-top: 2px solid #ff69b4 !important;
+}
+
+/* Forum Main Page Specific Fixes */
+body.dark-theme .category-group {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .category-header {
+    background: #222 !important;
+    color: #fff !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.dark-theme .boards-list {
+    background: #0D0D0D !important;
+}
+
+body.dark-theme .boards-header {
+    background: #222 !important;
+    color: #aaa !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.dark-theme .board-item {
+    background: #1a1a1a !important;
+    border-bottom: 1px solid #333 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .board-item:hover {
+    background: #222 !important;
+}
+
+body.dark-theme .board-title {
+    color: #fff !important;
+}
+
+body.dark-theme .board-description {
+    color: #aaa !important;
+}
+
+body.dark-theme .board-stats {
+    color: #fff !important;
+}
+
+body.dark-theme .posts-stats {
+    color: #fff !important;
+}
+
+body.dark-theme .last-post {
+    color: #aaa !important;
+}
+
+body.dark-theme .last-post-title a {
+    color: #fff !important;
+}
+
+body.dark-theme .last-post-title a:hover {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .last-post-author {
+    color: #888 !important;
+}
+
+body.dark-theme .last-post-author a {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .last-post-author a:hover {
+    color: #e91e63 !important;
+}
+
+body.dark-theme .last-post-time {
+    color: #999 !important;
+}
+
+/* Additional fixes for specific visibility issues */
+body.dark-theme .stats-box {
+    color: #fff !important;
+}
+
+body.dark-theme .action-btn {
+    color: #fff !important;
+}
+
+body.dark-theme .action-btn:hover {
+    color: #ff69b4 !important;
+}
+
+/* Fix for post date/time visibility */
+body.dark-theme .post-date {
+    color: #ccc !important;
+}
+
+/* Fix for post number visibility */
+body.dark-theme .post-number {
+    color: #ccc !important;
+}
+
+body.dark-theme .post-number:hover {
+    color: #ff69b4 !important;
+}
+
+/* Scrollbar Styles */
+body.dark-theme ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Disable animations in dark theme EXCEPT sidebar */
+body.dark-theme *:not(.sidebar):not(.sidebar *):not(.sidebar-item):not(.sidebar-item *) {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Re-enable sidebar animations in dark theme */
+body.dark-theme .sidebar {
+    transition: width 0.2s ease, padding 0.2s ease !important;
+}
+
+body.dark-theme .sidebar-item {
+    transition: color 0.2s, border-left-color 0.2s, padding 0.2s ease, gap 0.2s ease !important;
+}
+
+body.dark-theme .sidebar-item svg {
+    transition: width 0.2s ease, height 0.2s ease, stroke 0.2s !important;
+}
+
+body.dark-theme .sidebar-item span {
+    transition: opacity 0.2s ease !important;
+}
+
+/* Additional animation fixes for specific elements */
+body.dark-theme .bookmark-icon-btn,
+body.dark-theme .bookmark-icon-btn:hover,
+body.dark-theme .bookmark-icon-btn:active {
+    transition: none !important;
+    transform: none !important;
+}
+
+/* Fix vertical alignment for settings container */
+.settings-container {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+}
+
+.settings-btn {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+    padding: 5px 0 !important;
+}
+
+/* Forum Favorites Page - Fix spacing */
+body.dark-theme .page-header {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    margin-bottom: 16px !important;
+}
+
+/* Add spacing between page header and thread list in favorites */
+body.dark-theme .main-content > .page-header {
+    margin-bottom: 20px !important;
+}
+
+body.dark-theme .page-title {
+    color: #fff !important;
+}
+
+body.dark-theme .page-desc {
+    color: #aaa !important;
+}
+
+body.dark-theme .thread-list {
+    background: #1a1a1a !important;
+}
+
+body.dark-theme .boards-header {
+    background: #222 !important;
+    color: #fff !important;
+    border-bottom: 1px solid #333 !important;
+    padding: 8px 16px !important;
+}
+
+body.dark-theme .board-item {
+    background: #1a1a1a !important;
+    border-bottom: 1px solid #333 !important;
+    padding: 8px 16px !important;
+}
+
+body.dark-theme .board-item:hover {
+    background: #222 !important;
+}
+
+body.dark-theme .board-title {
+    color: #fff !important;
+}
+
+body.dark-theme .board-description {
+    color: #aaa !important;
+}
+
+body.dark-theme .posts-stats {
+    color: #fff !important;
+}
+
+body.dark-theme .last-post-time {
+    color: #888 !important;
+}
+
+body.dark-theme .bookmark-icon-btn {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .bookmark-icon-btn:hover {
+    background: #333 !important;
+    border-color: #555 !important;
+}
+
+body.dark-theme .bookmark-icon-btn.bookmarked {
+    background: #d94b88 !important;
+    border-color: #d94b88 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .bookmark-icon-btn.bookmarked:hover {
+    background: #c2185b !important;
+    border-color: #c2185b !important;
+}
+
+body.dark-theme .empty {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #aaa !important;
+}
+
+/* Forum Members Page - Remove gray line and fix background */
+body.dark-theme .section-title {
+    color: #fff !important;
+}
+
+body.dark-theme .search {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+/* Remove gray line between members title and search */
+body.dark-theme .page-header {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    background: transparent !important;
+}
+
+/* Fix container background for members page */
+body.dark-theme .container {
+    background: #0D0D0D !important;
+}
+
+/* Make container transparent when custom background wallpaper is active */
+body.dark-theme.custom-background .container {
+    background: transparent !important;
+}
+
+body.dark-theme .card {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .card:hover {
+    background: #222 !important;
+}
+
+body.dark-theme .avatar {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .nick {
+    color: #fff !important;
+}
+
+body.dark-theme .meta {
+    color: #aaa !important;
+}
+
+/* Forum Search Page */
+body.dark-theme .search-panel {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .search-title {
+    color: #fff !important;
+}
+
+body.dark-theme .search-row input,
+body.dark-theme .search-row select {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .search-row label {
+    color: #fff !important;
+}
+
+body.dark-theme .btn {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .btn:hover {
+    background: #333 !important;
+    border-color: #555 !important;
+}
+
+body.dark-theme .btn.primary {
+    background: #ff69b4 !important;
+    border-color: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .btn.primary:hover {
+    background: #e91e63 !important;
+    border-color: #e91e63 !important;
+}
+
+body.dark-theme .results-count {
+    color: #fff !important;
+}
+
+body.dark-theme .tab {
+    color: #aaa !important;
+}
+
+body.dark-theme .tab.active {
+    color: #fff !important;
+    border-bottom-color: #ff69b4 !important;
+}
+
+body.dark-theme .tab:hover {
+    color: #fff !important;
+}
+
+body.dark-theme .result-item {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .result-item:hover {
+    background: #222 !important;
+}
+
+body.dark-theme .result-title {
+    color: #fff !important;
+}
+
+body.dark-theme .result-meta {
+    color: #aaa !important;
+}
+
+body.dark-theme .result-preview {
+    color: #ccc !important;
+}
+
+body.dark-theme .author-avatar {
+    background: #222 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .no-results {
+    color: #aaa !important;
+}
+
+body.dark-theme .loading {
+    color: #aaa !important;
+}
+
+body.dark-theme .pagination-info {
+    color: #aaa !important;
+}
+
+body.dark-theme .pagination-btn {
+    background: #222 !important;
+    color: #fff !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme .pagination-btn:hover {
+    background: #333 !important;
+    border-color: #555 !important;
+}
+
+body.dark-theme .pagination-btn.active {
+    background: #ff69b4 !important;
+    border-color: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .pagination-btn:disabled {
+    background: #1a1a1a !important;
+    color: #666 !important;
+    border-color: #333 !important;
+}
+
+/* Forum Recent Activity Page */
+body.dark-theme .posts-container {
+    background: transparent !important;
+}
+
+body.dark-theme .post {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .post.op {
+    background: #1a0f14 !important;
+    border-left: 4px solid #ff69b4 !important;
+}
+
+body.dark-theme .post-author {
+    background: #222 !important;
+    border-right: 1px solid #333 !important;
+}
+
+body.dark-theme .author-avatar {
+    background: linear-gradient(135deg, #ff85b4, #ff69b4) !important;
+    color: #fff !important;
+}
+
+body.dark-theme .author-name {
+    color: #fff !important;
+}
+
+body.dark-theme .post-content {
+    background: transparent !important;
+}
+
+body.dark-theme .post-title {
+    color: #fff !important;
+}
+
+body.dark-theme .post-date {
+    color: #aaa !important;
+}
+
+body.dark-theme .post-number {
+    color: #aaa !important;
+}
+
+body.dark-theme .post-number:hover {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .post-body {
+    color: #ccc !important;
+}
+
+body.dark-theme .post-body .quote {
+    background: #222 !important;
+    border-left: 3px solid #444 !important;
+    color: #aaa !important;
+}
+
+body.dark-theme .post-body .quote .quote-author {
+    color: #888 !important;
+}
+
+body.dark-theme .post-footer {
+    border-top: 1px solid #333 !important;
+}
+
+body.dark-theme .post-action {
+    color: #aaa !important;
+}
+
+body.dark-theme .post-action:hover {
+    color: #ff69b4 !important;
+}
+
+/* Forum Rules Page */
+body.dark-theme .rules-section {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .rules-section h2 {
+    color: #fff !important;
+}
+
+body.dark-theme .rules-section h3 {
+    color: #fff !important;
+}
+
+body.dark-theme .rules-section p {
+    color: #ccc !important;
+}
+
+body.dark-theme .rules-section li {
+    color: #ccc !important;
+}
+
+body.dark-theme .callout {
+    background: #2a1a1a !important;
+    border: 1px solid #ff69b4 !important;
+    color: #ffb3d1 !important;
+}
+
+/* Forum Help Page */
+body.dark-theme .help-section {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .help-section h2 {
+    color: #fff !important;
+}
+
+body.dark-theme .help-section h3 {
+    color: #fff !important;
+}
+
+body.dark-theme .help-section h4 {
+    color: #fff !important;
+}
+
+body.dark-theme .help-section p {
+    color: #ccc !important;
+}
+
+body.dark-theme .help-section li {
+    color: #ccc !important;
+}
+
+body.dark-theme .toc {
+    background: #1a1a1a !important;
+    border: 1px dashed #444 !important;
+}
+
+body.dark-theme .toc a {
+    color: #fff !important;
+}
+
+body.dark-theme .toc a:hover {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .empty {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #aaa !important;
+}
+
+/* Profile Activity Page */
+body.dark-theme .page-header {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .page-title {
+    color: #fff !important;
+}
+
+body.dark-theme .page-desc {
+    color: #aaa !important;
+}
+
+body.dark-theme .posts-container {
+    background: transparent !important;
+}
+
+body.dark-theme .post-item {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .post-item:hover {
+    background: #222 !important;
+}
+
+body.dark-theme .post-header {
+    border-bottom: 1px solid #333 !important;
+}
+
+body.dark-theme .post-board {
+    color: #aaa !important;
+}
+
+body.dark-theme .post-date {
+    color: #888 !important;
+}
+
+body.dark-theme .post-content {
+    color: #fff !important;
+}
+
+body.dark-theme .post-link {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .post-link:hover {
+    color: #e91e63 !important;
+}
+
+/* Profile Page */
+body.dark-theme .breadcrumbs {
+    color: #aaa !important;
+}
+
+body.dark-theme .breadcrumbs a {
+    color: #aaa !important;
+}
+
+body.dark-theme .breadcrumbs a:hover {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .breadcrumb-separator {
+    color: #666 !important;
+}
+
+body.dark-theme .profile-card {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .avatar {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .profile-nick {
+    color: #fff !important;
+}
+
+body.dark-theme .profile-meta {
+    color: #aaa !important;
+}
+
+body.dark-theme .info {
+    color: #888 !important;
+}
+
+body.dark-theme .recent-posts-section {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .recent-posts-title {
+    color: #fff !important;
+}
+
+body.dark-theme .recent-post-item {
+    background: #222 !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .recent-post-board {
+    color: #aaa !important;
+}
+
+body.dark-theme .recent-post-date {
+    color: #888 !important;
+}
+
+body.dark-theme .recent-post-content {
+    color: #ccc !important;
+}
+
+body.dark-theme .recent-post-link {
+    color: #ff69b4 !important;
+}
+

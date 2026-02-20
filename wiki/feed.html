@@ -317,7 +317,7 @@ body.dark-theme .breadcrumbs span{color:#fff}
             <a href="../index.html">Management</a>
             <a href="../youvi_ch_list.html">Channels</a>
             <a href="../youvi_playlists_list.html">Playlists</a>
-            <a href="../youvi_feed_all.html">Feed</a> 
+            <a href="../forum/forum.html">Forums</a>
             <a href="index.html" class="active">Wiki</a>
         </div>
     </div>
@@ -372,13 +372,11 @@ body.dark-theme .breadcrumbs span{color:#fff}
                     </svg>
                     <span>Home</span>
                 </a>
-                <a href="../youvi_feed_all.html" class="sidebar-item nav-item">
+                <a href="../forum/forum.html" class="sidebar-item nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
-                        <path d="M4 11a9 9 0 0 1 9 9"/>
-                        <path d="M4 4a16 16 0 0 1 16 16"/>
-                        <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                     </svg>
-                    <span>Feed</span>
+                    <span>Forums</span>
                 </a>
 
                 <a href="../youvi_tags.html" class="sidebar-item nav-item">
@@ -445,7 +443,7 @@ body.dark-theme .breadcrumbs span{color:#fff}
                 <a href="tags/allias.html" class="sidebar-item library-item">Tags: Aliases</a>
                 <a href="tags/implication.html" class="sidebar-item library-item">Tags: Implications</a>
                 <a href="tags/rules.html" class="sidebar-item library-item">Tags: Tagging Rules</a>
-                <a href="feed.html" class="sidebar-item library-item active">Feed</a>
+                <a href="feed.html" class="sidebar-item library-item active">Forums</a>
             </div>
             
             <div class="sidebar-section">
@@ -463,11 +461,11 @@ body.dark-theme .breadcrumbs span{color:#fff}
             <main class="main-content">
                 <div class="breadcrumbs">
                     <a href="index.html">Wiki</a> › 
-                    <span>Feed</span>
+                    <span>Forums</span>
                 </div>
 <div class="page-header">
-        <div class="page-title">Feed — Social System</div>
-        <div class="page-desc">Complete guide to Feed system in Youvi — channels as communities, posts, comments with 10 nesting levels</div>
+        <div class="page-title">Forums — Discussion System</div>
+        <div class="page-desc">Complete guide to Forums in Youvi — discussion boards, threads, posts, and community interaction</div>
       </div>
 
       <div class="page-body">
@@ -475,200 +473,189 @@ body.dark-theme .breadcrumbs span{color:#fff}
           <h2>Contents</h2>
           <div class="toc">
             <ul>
-              <li><a href="#overview">What is Feed</a></li>
-              <li><a href="#channels">Channels and subscriptions</a></li>
-              <li><a href="#posts">How to create posts</a></li>
-              <li><a href="#replies">Comments and discussions</a></li>
-              <li><a href="#view-modes">Display modes</a></li>
-              <li><a href="#sorting">Post sorting</a></li>
-              <li><a href="#editor">Content editor</a></li>
-              <li><a href="#images">Working with images</a></li>
+              <li><a href="#overview">What are Forums</a></li>
+              <li><a href="#boards">Boards and categories</a></li>
+              <li><a href="#threads">Creating threads</a></li>
+              <li><a href="#posts">Posts and replies</a></li>
+              <li><a href="#navigation">Forum navigation</a></li>
+              <li><a href="#features">Forum features</a></li>
               <li><a href="#technical">Technical information</a></li>
             </ul>
           </div>
         </div>
 
         <section class="tech-section" id="overview">
-          <h2>What is Feed</h2>
-          <p>Feed is a social system in Youvi where each channel works as a separate community with its own post feed. You can create posts, comment on them, like them, and subscribe to interesting channels.</p>
+          <h2>What are Forums</h2>
+          <p>Forums is a discussion system in Youvi organized into topic-based boards. Each board contains threads where users can discuss various topics, share ideas, and interact with the community.</p>
           <div class="callout">
-            <strong>Main point:</strong> Each channel is a separate community with its own feed. The general feed shows posts from all channels at once.
+            <strong>Main point:</strong> Forums are organized into boards by category (Main, Media, Creative, IRL, Technology). Each board contains discussion threads with posts and replies.
           </div>
           <h3>Main features</h3>
           <ul>
-            <li><strong>Channels</strong> — subscribe to interesting communities</li>
-            <li><strong>Posts</strong> — publish text with formatting and images</li>
-            <li><strong>Comments</strong> — discuss posts with up to 10 nesting levels</li>
-            <li><strong>Likes</strong> — rate posts and comments</li>
-            <li><strong>General feed</strong> — view all posts in one place</li>
+            <li><strong>Boards</strong> — topic-based discussion areas organized by category</li>
+            <li><strong>Threads</strong> — individual discussion topics within boards</li>
+            <li><strong>Posts</strong> — messages within threads with text and images</li>
+            <li><strong>Search</strong> — find threads and posts across all boards</li>
+            <li><strong>Favorites</strong> — bookmark interesting threads</li>
+            <li><strong>Members</strong> — view forum participants and profiles</li>
           </ul>
-          <h3>Where to find Feed</h3>
+          <h3>Where to find Forums</h3>
           <ul>
-            <li><strong>General feed</strong> — Feed in top menu or sidebar</li>
-            <li><strong>Channel feed</strong> — "Feed" tab on channel page</li>
-            <li><strong>Channel list</strong> — Channels → select channel → Feed</li>
-            <li><strong>Subscriptions</strong> — "Subscriptions" filter in general feed</li>
+            <li><strong>Main page</strong> — <a href="../forum/forum.html">forum/forum.html</a> shows all boards</li>
+            <li><strong>Top menu</strong> — "Forums" link in navigation bar</li>
+            <li><strong>Recent activity</strong> — view latest posts across all boards</li>
+            <li><strong>Board pages</strong> — browse threads in specific boards</li>
           </ul>
         </section>
 
-        <section class="tech-section" id="channels">
-          <h2>Channels and subscriptions</h2>
-          <p>Each channel is a separate community with its own post feed. Subscribe to interesting channels to not miss new publications.</p>
+        <section class="tech-section" id="boards">
+          <h2>Boards and categories</h2>
+          <p>Forums are organized into boards grouped by categories. Each board focuses on a specific topic area.</p>
           
-          <h3>How to subscribe to a channel</h3>
+          <h3>Board categories</h3>
           <ul>
-            <li>Open channel page</li>
-            <li>Click "Subscribe" button in channel header</li>
-            <li>Channel will appear in subscriptions list</li>
+            <li><strong>Main</strong> — General discussion, Images, Site news</li>
+            <li><strong>Media</strong> — Anime, Video games, TV & Cinema, Music</li>
+            <li><strong>Creative</strong> — 2D art, 3D modeling, Worldbuilding, Tutorials</li>
+            <li><strong>IRL</strong> — Study, Everyday life, City, Notes</li>
+            <li><strong>Technology</strong> — Internet, Gadgets, Technology, Companies</li>
           </ul>
           
-          <h3>Where to view channel posts</h3>
+          <h3>Board structure</h3>
+          <p>Each board displays:</p>
           <ul>
-            <li><strong>Channel feed</strong> — "Feed" tab on channel page</li>
-            <li><strong>General feed</strong> — all posts from all channels</li>
-            <li><strong>"Subscriptions" filter</strong> — only posts from your subscriptions</li>
+            <li><strong>Board name and description</strong> — topic focus</li>
+            <li><strong>Thread count</strong> — number of discussions</li>
+            <li><strong>Post count</strong> — total messages in board</li>
+            <li><strong>Last post</strong> — most recent activity with thread title, author, and time</li>
           </ul>
           
-          <h3>"Author" badge</h3>
-          <p>Posts from channel owner are marked with a pink "Author" badge. This helps distinguish official publications from other users' comments.</p>
+          <h3>Accessing boards</h3>
+          <ul>
+            <li>Click board name on main forum page</li>
+            <li>View all threads in that board</li>
+            <li>Create new threads or reply to existing ones</li>
+          </ul>
         </section>
 
+        <section class="tech-section" id="threads">
+          <h2>Creating threads</h2>
+          <p>Threads are discussion topics within boards. Anyone can create a new thread to start a conversation.</p>
+          
+          <h3>How to create a thread</h3>
+          <ul>
+            <li>Navigate to desired board</li>
+            <li>Click "New Thread" or similar button</li>
+            <li>Enter thread title and first post content</li>
+            <li>Add images if desired</li>
+            <li>Submit to create the thread</li>
+          </ul>
+          
+          <h3>Thread information</h3>
+          <p>Each thread displays:</p>
+          <ul>
+            <li><strong>Title</strong> — thread topic</li>
+            <li><strong>Author</strong> — thread creator</li>
+            <li><strong>Post count</strong> — number of replies</li>
+            <li><strong>Last activity</strong> — most recent post time</li>
+            <li><strong>Views</strong> — thread view count</li>
+          </ul>
+          
+          <h3>Thread actions</h3>
+          <ul>
+            <li><strong>Reply</strong> — add post to discussion</li>
+            <li><strong>Favorite</strong> — bookmark thread for later</li>
+            <li><strong>Share</strong> — link to thread</li>
+          </ul>
+        </section>
         <section class="tech-section" id="posts">
-          <h2>How to create posts</h2>
-          <p>Posts are created on channel page. Open channel, go to "Feed" tab and use post creation form.</p>
+          <h2>Posts and replies</h2>
+          <p>Posts are messages within threads. Reply to threads to participate in discussions.</p>
           
-          <h3>Post creation steps</h3>
+          <h3>How to post</h3>
           <ul>
-            <li>Open channel page → "Feed" tab</li>
-            <li>Enter text in editor</li>
-            <li>Use formatting buttons (bold, italic, headers)</li>
-            <li>Add images via "img" button</li>
-            <li>Click "Publish" or Ctrl+Enter</li>
+            <li>Open a thread</li>
+            <li>Scroll to reply form at bottom</li>
+            <li>Enter your message</li>
+            <li>Use formatting tools if available</li>
+            <li>Click "Reply" or "Post" to submit</li>
           </ul>
           
-          <h3>Publishing methods</h3>
+          <h3>Post features</h3>
           <ul>
-            <li><strong>"Author" button</strong> — post on behalf of channel (with pink badge)</li>
-            <li><strong>"Publish" button</strong> — post from your nickname</li>
-            <li><strong>Ctrl+Enter</strong> — quick publish</li>
+            <li><strong>Text formatting</strong> — bold, italic, links</li>
+            <li><strong>Images</strong> — attach images to posts</li>
+            <li><strong>Quotes</strong> — quote previous posts</li>
+            <li><strong>Nicknames</strong> — post with custom username</li>
           </ul>
           
-          <h3>Text formatting</h3>
-          <p>Use toolbar above editor:</p>
+          <h3>Post information</h3>
+          <p>Each post shows:</p>
           <ul>
-            <li><strong>B</strong> — bold text</li>
-            <li><strong>I</strong> — italic</li>
-            <li><strong>U</strong> — underline</li>
-            <li><strong>H</strong> — header</li>
-            <li><strong>🔗</strong> — insert link</li>
-            <li><strong>img</strong> — add image</li>
-            <li><strong>⌘</strong> — center image</li>
-          </ul>
-        </section>
-   
-        <section class="tech-section" id="replies">
-          <h2>Comments and discussions</h2>
-          <p>In Feed you can comment on posts with up to 10 nesting levels — create full discussions with replies to replies.</p>
-          
-          <h3>How to comment</h3>
-          <ul>
-            <li>Click "Open" on post in feed</li>
-            <li>Post page with all comments will open</li>
-            <li>Enter text in form at bottom</li>
-            <li>Click "Reply" or use "Author" button</li>
-          </ul>
-          
-          <h3>Replies to comments</h3>
-          <ul>
-            <li>Click "Reply" under any comment</li>
-            <li>Reply form will open</li>
-            <li>Enter text and click "Reply"</li>
-            <li>Your reply will appear indented under comment</li>
-          </ul>
-          
-          <h3>Comment actions</h3>
-          <ul>
-            <li><strong>Reply</strong> — write reply to comment</li>
-            <li><strong>Like/Dislike</strong> — rate comment</li>
-            <li><strong>Collapse</strong> — hide nested replies</li>
-            <li><strong>Report</strong> — delete comment</li>
-          </ul>
-          
-          <h3>Comment nesting</h3>
-          <p>System supports up to 10 nesting levels. Each level is displayed with left indent. When 10th level is reached, message about maximum depth appears.</p>
-        </section>
-
-        <section class="tech-section" id="view-modes">
-          <h2>Display modes</h2>
-          <p>Feed can be viewed in two modes — compact and social. Choose the one convenient for you.</p>
-          
-          <h3>How to switch mode</h3>
-          <ul>
-            <li>Open sidebar</li>
-            <li>Find "View mode" section</li>
-            <li>Select "Compact" or "Timeline"</li>
-            <li>Mode will be saved automatically</li>
-          </ul>
-          
-          <h3>Compact mode</h3>
-          <ul>
-            <li>Posts as speech bubbles</li>
-            <li>Avatar on left with "tail"</li>
-            <li>Small images</li>
-            <li>More posts on screen</li>
-          </ul>
-          
-          <h3>Social mode (Timeline)</h3>
-          <ul>
-            <li>Posts in social media style</li>
-            <li>Full-width images</li>
-            <li>Large avatars</li>
-            <li>Floating banner (B key)</li>
+            <li><strong>Author</strong> — poster's nickname</li>
+            <li><strong>Timestamp</strong> — when posted</li>
+            <li><strong>Post number</strong> — position in thread</li>
+            <li><strong>Content</strong> — message text and images</li>
           </ul>
         </section>
 
-        <section class="tech-section" id="sorting">
-          <h2>Post sorting</h2>
-          <p>Posts in feed can be sorted in different ways. Choose convenient display order.</p>
+        <section class="tech-section" id="navigation">
+          <h2>Forum navigation</h2>
+          <p>Forums provide several ways to browse and find content.</p>
           
-          <h3>How to change sorting</h3>
+          <h3>Main navigation</h3>
           <ul>
-            <li>Open sidebar</li>
-            <li>Find "Sorting" section</li>
-            <li>Select needed option</li>
-            <li>Posts will be resorted instantly</li>
+            <li><strong>Main page</strong> — view all boards and categories</li>
+            <li><strong>Recent</strong> — latest posts across all boards</li>
+            <li><strong>Search</strong> — find specific threads or posts</li>
+            <li><strong>Favorites</strong> — bookmarked threads</li>
+            <li><strong>Members</strong> — forum user profiles</li>
           </ul>
           
-          <h3>Sorting options</h3>
+          <h3>Sidebar navigation</h3>
+          <p>Left sidebar provides quick access to:</p>
           <ul>
-            <li><strong>New</strong> — fresh posts first</li>
-            <li><strong>Best</strong> — by number of likes</li>
-            <li><strong>Worst</strong> — by number of dislikes</li>
-            <li><strong>Old</strong> — old posts first</li>
-            <li><strong>Random</strong> — in random order</li>
+            <li>Forum home</li>
+            <li>Recent activity stream</li>
+            <li>Search functionality</li>
+            <li>Your favorites</li>
+            <li>Member directory</li>
           </ul>
+          
+          <h3>Breadcrumbs</h3>
+          <p>Track your location: Forums → Board → Thread</p>
         </section>
 
-
-
-        <section class="tech-section" id="images">
-          <h2>Working with images</h2>
-          <p>You can add images to posts and comments. They are displayed directly in feed.</p>
+        <section class="tech-section" id="features">
+          <h2>Forum features</h2>
           
-          <h3>How to add image</h3>
+          <h3>Search</h3>
+          <p>Search across all boards and threads:</p>
           <ul>
-            <li>Click "img" button in editor</li>
-            <li>Select one or more images</li>
-            <li>Images will appear in post text</li>
-            <li>Use "⌘" button for centering</li>
+            <li>Search by keywords</li>
+            <li>Filter by board</li>
+            <li>Sort by relevance or date</li>
           </ul>
           
-          <h3>Viewing images</h3>
+          <h3>Favorites</h3>
+          <p>Bookmark threads to track discussions:</p>
           <ul>
-            <li><strong>Compact mode:</strong> small previews, "Image" button for full size</li>
-            <li><strong>Social mode:</strong> full-width images</li>
-            <li><strong>In comments:</strong> images embedded in text</li>
+            <li>Click favorite icon on thread</li>
+            <li>Access from Favorites page</li>
+            <li>Get notified of new posts</li>
           </ul>
+          
+          <h3>Member profiles</h3>
+          <p>View user activity and information:</p>
+          <ul>
+            <li>Post history</li>
+            <li>Thread count</li>
+            <li>Join date</li>
+            <li>Activity timeline</li>
+          </ul>
+          
+          <h3>Theme support</h3>
+          <p>Forums support light and dark themes matching the rest of Youvi.</p>
         </section>
 
         <section class="tech-section" id="technical">
@@ -676,99 +663,104 @@ body.dark-theme .breadcrumbs span{color:#fff}
           
           <h3>Architecture and data storage</h3>
           
-          <h4>Channel structure</h4>
-          <pre style="background:#f5f5f5;padding:10px;border-radius:4px;font-size:11px;overflow-x:auto">.channels/
-├── {channel_slug}/
-│   ├── channel.json      # name, description, stats
-│   ├── avatar.jpg        # Channel avatar
-│   └── posts/
-│       └── {post_id}/
-│           ├── post.json # Post + replies + nestedReplies
-│           ├── images/   # Original images
-│           └── images.json</pre>
+          <h4>Forum structure</h4>
+          <pre style="background:#f5f5f5;padding:10px;border-radius:4px;font-size:11px;overflow-x:auto">.forum/
+├── {board_id}/              # Board folder (e.g., 'general', 'anime')
+│   └── {thread_id}/         # Thread folder (unique ID)
+│       ├── thread.json      # Thread data with all posts
+│       └── assets/          # Thread attachments (images, files)
+│           └── {filename}   # Uploaded files</pre>
           
-          <h4>Subscriptions</h4>
-          <p>Stored in IndexedDB (database <code>8SiteDB</code>, store <code>subscriptions</code>).</p>
+          <h4>Thread data format</h4>
+          <p>File <code>thread.json</code> contains:</p>
+          <ul>
+            <li><code>title</code> — thread title</li>
+            <li><code>author</code> — thread creator</li>
+            <li><code>createdAt</code> — creation timestamp</li>
+            <li><code>posts</code> — array of all posts in thread</li>
+            <li><code>totalPosts</code> — post count</li>
+            <li><code>lastPostDate</code> — last activity time</li>
+            <li><code>lastPostAuthor</code> — last poster</li>
+          </ul>
+          
+          <h4>Board categories</h4>
+          <p>Predefined boards organized by category:</p>
+          <ul>
+            <li><strong>Main:</strong> general, images, news</li>
+            <li><strong>Media:</strong> anime, videogames, tv-and-cinema, music</li>
+            <li><strong>Creative:</strong> 2d, 3d, worldbuilding, tutorials, creative-other</li>
+            <li><strong>IRL:</strong> study, everyday, city, notes</li>
+            <li><strong>Technology:</strong> internet, gadgets, technology, companies</li>
+          </ul>
           
           <h4>Settings</h4>
           <p>localStorage:</p>
           <ul>
-            <li><code>youvi_view_mode</code> — display mode (compact/social)</li>
-            <li><code>youvi_theme</code> — theme (light/dark)</li>
+            <li><code>youvi-theme</code> — theme (light/dark)</li>
+            <li><code>sidebarCollapsed</code> — sidebar state</li>
           </ul>
           
           <h4>Caching</h4>
           <ul>
-            <li>Channel data cache (30 sec)</li>
-            <li>Avatar cache (Map)</li>
-            <li>Image cache (100 elements)</li>
+            <li>Board statistics cache (30 seconds TTL)</li>
+            <li>Thread list caching per board</li>
+            <li>Image blob URL caching</li>
           </ul>
         </section>
    
         <section class="tech-section">
           <h3>Performance optimization</h3>
           
-          <h4>Batch rendering</h4>
-          <p>Posts are rendered in batches of 30 to prevent UI blocking:</p>
+          <h4>Lazy loading</h4>
+          <p>Threads and posts load on demand:</p>
           <ul>
-            <li>First batch renders immediately</li>
-            <li>Next batches via <code>requestAnimationFrame</code></li>
-            <li>Loading indicator between batches</li>
+            <li>Board statistics cached for 30 seconds</li>
+            <li>Thread lists loaded per board</li>
+            <li>Images load when visible in viewport</li>
           </ul>
           
-          <h4>Lazy image loading</h4>
-          <p>Images load only when appearing in viewport using Intersection Observer:</p>
+          <h4>File System API integration</h4>
+          <p>Forums use File System Access API for data storage:</p>
           <ul>
-            <li>Visibility threshold: 200px from screen edge</li>
-            <li>Blob URL cache (100 elements)</li>
-            <li>Automatic revocation of old URLs</li>
+            <li>Direct folder access for forum data</li>
+            <li>Efficient file reading and writing</li>
+            <li>Persistent folder handle storage</li>
           </ul>
           
-          <h4>Post loading optimization</h4>
-          <p>Parallel loading of posts from all channels:</p>
+          <h4>Parallel processing</h4>
+          <p>Board statistics load in parallel:</p>
           <ul>
-            <li>Channels processed in parallel</li>
-            <li>Minimal console logging</li>
-            <li>Empty folder skipping</li>
-            <li>Channel metadata caching</li>
+            <li>All boards processed simultaneously</li>
+            <li>Minimal blocking operations</li>
+            <li>Cached results for quick access</li>
           </ul>
-          
-          <h4>Infinite scroll</h4>
-          <p>Automatic loading of next post batch when reaching page end (500px threshold).</p>
         </section>
 
         <section class="tech-section">
           <h3>System pages</h3>
           <ul>
-            <li><code>youvi_feed_all.html</code> — general feed of all posts</li>
-            <li><code>youvi_ch_feed.html</code> — specific channel feed</li>
-            <li><code>youvi_ch_feed_rep.html</code> — post page with comments</li>
-            <li><code>youvi_ch_list.html</code> — list of all channels</li>
-            <li><code>youvi_subscriptions.html</code> — user subscriptions</li>
+            <li><code>forum/forum.html</code> — main forum page with all boards</li>
+            <li><code>forum/forum_main.html</code> — forum home (redirects from forum.html)</li>
+            <li><code>forum/forum_board.html</code> — board view with thread list</li>
+            <li><code>forum/forum_thread.html</code> — thread view with posts</li>
+            <li><code>forum/forum_recent.html</code> — recent activity stream</li>
+            <li><code>forum/forum_search.html</code> — forum search</li>
+            <li><code>forum/forum_fav.html</code> — favorite threads</li>
+            <li><code>forum/forum_members.html</code> — member directory</li>
+            <li><code>forum/forum_profile.html</code> — user profile page</li>
           </ul>
         </section>
 
         <section class="tech-section">
-          <h3>Parameter summary table</h3>
-          <table style="width:100%;border-collapse:collapse;font-size:13px">
-            <thead>
-              <tr style="background:#f5f5f5">
-                <th style="padding:8px;text-align:left;border:1px solid #ddd">Parameter</th>
-                <th style="padding:8px;text-align:left;border:1px solid #ddd">Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td style="padding:8px;border:1px solid #ddd">Maximum comment nesting</td><td style="padding:8px;border:1px solid #ddd">10 levels</td></tr>
-              <tr><td style="padding:8px;border:1px solid #ddd">Display modes</td><td style="padding:8px;border:1px solid #ddd">Compact, Timeline</td></tr>
-              <tr><td style="padding:8px;border:1px solid #ddd">Sorting options</td><td style="padding:8px;border:1px solid #ddd">New, Best, Worst, Old, Random</td></tr>
-              <tr><td style="padding:8px;border:1px solid #ddd">Filtering</td><td style="padding:8px;border:1px solid #ddd">All, Subscriptions</td></tr>
-              <tr><td style="padding:8px;border:1px solid #ddd">Render batch</td><td style="padding:8px;border:1px solid #ddd">30 posts</td></tr>
-              <tr><td style="padding:8px;border:1px solid #ddd">Image cache</td><td style="padding:8px;border:1px solid #ddd">100 URLs</td></tr>
-              <tr><td style="padding:8px;border:1px solid #ddd">Channel cache</td><td style="padding:8px;border:1px solid #ddd">30 seconds</td></tr>
-              <tr><td style="padding:8px;border:1px solid #ddd">Timeline width</td><td style="padding:8px;border:1px solid #ddd">740px</td></tr>
-              <tr><td style="padding:8px;border:1px solid #ddd">Hotkeys</td><td style="padding:8px;border:1px solid #ddd">B (banner), Ctrl+Enter (publish)</td></tr>
-            </tbody>
-          </table>
+          <h3>Integration with Youvi</h3>
+          <p>Forums integrate seamlessly with Youvi:</p>
+          <ul>
+            <li>Shared header and navigation</li>
+            <li>Unified theme system (light/dark)</li>
+            <li>Consistent sidebar behavior</li>
+            <li>Same folder selection system</li>
+            <li>Integrated search functionality</li>
+          </ul>
         </section>
 
 
@@ -790,7 +782,7 @@ body.dark-theme .breadcrumbs span{color:#fff}
             <ul>
               <li><a href="../youvi_main.html">Videos</a></li>
               <li><a href="../youvi_tags.html">Tags</a></li>
-              <li><a href="../youvi_feed_all.html">Feed</a></li>
+              <li><a href="../forum/forum.html">Forums</a></li>
               <li><a href="../index.html">Management</a></li>
             </ul>
           </div>

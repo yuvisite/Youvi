@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Помощь | Youvi Forums</title>
+<link rel="stylesheet" href="forum-dark-theme.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial, sans-serif;background:#fff;color:#111;--header-height:88px;--footer-height:220px}
+.top-nav{background:#d94b88;border-bottom:1px solid #c2185b;padding:4px 0}
+.top-nav-content{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;gap:20px;align-items:center}
+.top-nav a{color:#fff;text-decoration:none;font-size:12px;padding:2px 0;transition:color .2s}
+.top-nav a:hover,.top-nav a.active{color:#ffd6ea}
+.header{background:#FFE7F4;padding:0;border-bottom:1px solid #f2cfe1;min-height:40px;width:100%}
+.header-content-wrapper{display:flex;align-items:center;position:relative;box-sizing:border-box;max-width:1400px;margin:0 auto;padding:0 20px;width:100%;min-height:40px}
+.nav-bar{display:flex;align-items:center;width:100%;justify-content:space-between;height:100%}
+.nav-links{display:flex;gap:20px;margin-left:calc(200px + 20px + 20px)}
+.nav-links a{color:#111;text-decoration:none;font-size:13px;padding:5px 0}
+.logo{height:30px;display:flex;align-items:center;justify-content:center;width:auto;flex-shrink:0;position:absolute;left:40px;top:5px;z-index:10}
+.logo img{height:100%;width:auto;max-width:100%}
+.search-area{display:flex;gap:10px}
+.search-input{padding:8px 12px;border:none;border-radius:4px;width:200px}
+.search-btn{padding:8px 15px;background:#ff69b4;color:white;border:none;border-radius:4px;cursor:pointer}
+.user-actions{display:flex;gap:10px;align-items:center}
+.user-actions a{color:#111;text-decoration:none;font-size:13px;transition:color .2s}
+.user-actions a:hover{color:#ff69b4}
+.container{display:flex;max-width:1400px;margin:0 auto;gap:0;padding:0 20px;align-items:stretch;min-height:calc(100vh - var(--header-height) - var(--footer-height))}
+.main-content{flex:1;display:flex;flex-direction:column;min-height:0;padding-top:0}
+.main-content > .page-header,
+.main-content > .page-body{ margin-left:20px; margin-right:20px }
+.page-header{background:#fafafa;border:1px solid #e0e0e0;border-radius:6px;padding:16px 18px;margin:12px 0}
+.page-title{font-size:21px;font-weight:600;color:#111;margin-bottom:6px}
+.page-desc{font-size:13px;color:#666}
+.help-section{background:#fff;border:1px solid #e6e6e6;border-radius:6px;padding:16px 18px;margin:12px 0}
+.help-section h2{font-size:18px;margin:0 0 10px 0;color:#111}
+.help-section h3{font-size:14px;margin:14px 0 8px 0;color:#333}
+.help-section h4{font-size:13px;margin:10px 0 6px 0;color:#444}
+.help-section p{font-size:14px;color:#333;line-height:1.75;margin:8px 0;text-align:justify}
+.help-section ul{margin:8px 0 8px 20px}
+.help-section li{font-size:14px;line-height:1.6;margin:6px 0;color:#333}
+.callout{background:#fff5f9;border:1px solid #ffd6ea;border-radius:6px;padding:12px;margin:12px 0;color:#7a3c55}
+.toc{background:#fafafa;border:1px dashed #e0e0e0;border-radius:6px;padding:12px;margin:12px 0}
+.toc a{color:#111;text-decoration:none}
+.toc a:hover{color:#ff69b4;text-decoration:underline}
+.settings-container{position:relative;display:inline-block}
+.theme-dropdown{position:absolute;top:100%;right:0;background:#fff;border:1px solid #ddd;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.1);z-index:1000;min-width:120px;display:none}
+.theme-dropdown.show{display:block}
+.theme-dropdown-item{display:block;width:100%;padding:8px 12px;border:none;background:none;text-align:left;cursor:pointer;font-size:13px;color:#333;transition:background-color .2s}
+.theme-dropdown-item:hover{background:#f5f5f5}
+.footer{background:#2c2c2c;color:#fff;padding:25px 0 15px 0;margin-top:auto}
+.footer-content{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;gap:30px;align-items:flex-start}
+.footer-main{display:flex;gap:30px;flex:1}
+.footer-logo{flex-shrink:0;width:200px}
+.footer-logo img{height:40px;width:auto}
+.footer-logo p{margin-top:8px;font-size:11px;color:#ccc;line-height:1.3}
+.footer-sections{display:flex;gap:30px;flex:1}
+.footer-right{display:flex;gap:20px;align-items:flex-start}
+.footer-mascot{flex-shrink:0}
+.footer-mascot img{height:180px;width:auto}
+.footer-section{flex:1}
+.footer-section h3{font-size:13px;margin-bottom:10px;color:#fff;font-weight:600}
+.footer-section ul{list-style:none;padding:0;margin:0}
+.footer-section li{margin-bottom:6px}
+.footer-section a{color:#ccc;text-decoration:none;font-size:11px;transition:color .2s}
+.footer-section a:hover{color:#ff69b4}
+.footer-bottom{border-top:1px solid #444;margin-top:20px;padding-top:15px;text-align:center;color:#999;font-size:10px}
+@media (max-width:768px){.container{flex-direction:column;padding:10px}.footer-content{flex-direction:column;gap:20px}.footer-sections{flex-direction:column;gap:15px}.footer-section{text-align:center}.footer-mascot img{height:120px}}
+</style>
+</head>
+<link rel="icon" href="favicon/imgboard/favicon.ico" type="image/x-icon">
+<body>
+  <div class="top-nav">
+    <div class="top-nav-content">
+      <a href="youvi_main.html">Видео</a>
+      <a href="index.html">Управление</a>
+      <a href="youvi_ch_list.html">Каналы</a>
+      <a href="youvi_playlists_list.html">Плейлисты</a>
+      <a href="youvi_feed_all.html">Feed</a> 
+      <a href="forum.html" class="active">Форумы</a>
+      <a href="forum_qms.html">QMS</a>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-content-wrapper">
+      <div class="logo">
+        <a href="forum.html"><img src="images/logo_forum.png" alt="Forum Logo" style="max-height: 30px;"></a>
+      </div>
+      <nav class="nav-bar">
+        <div class="nav-links">
+          <a href="forum.html">Главная</a>
+          <a href="forum_recent.html">Поток</a>
+          <a href="forum_search.html">Поиск</a>
+          <a href="forum_fav.html">Избранное</a>
+          <a href="forum_members.html">Участники</a>
+          <a href="forum_qms.html">QMS</a>
+          <div class="settings-container">
+            <a href="#" class="settings-btn">Тема</a>
+            <div class="theme-dropdown">
+              <button class="theme-dropdown-item" data-theme="light">Белая</button>
+              <button class="theme-dropdown-item" data-theme="dark">Черная</button>
+            </div>
+          </div>
+        </div>
+        <div class="user-actions">
+          <div class="search-area">
+            <input type="text" class="search-input" placeholder="Поиск...">
+            <button class="search-btn">Поиск</button>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <main class="main-content">
+      <div class="page-header">
+        <div class="page-title">Справка по Youvi Forums</div>
+        <div class="page-desc">Подробное водянистое описание всех основных страниц и функций Youvi Forums.</div>
+      </div>
+
+      <div class="page-body">
+        <div class="help-section">
+          <h2>Содержание</h2>
+          <div class="toc">
+            <ul>
+              <li><a href="#main">Главная Youvi Forums</a></li>
+              <li><a href="#board">Страница раздела</a></li>
+              <li><a href="#thread">Страница темы</a></li>
+              <li><a href="#profile">Профиль пользователя</a></li>
+              <li><a href="#members">Список участников</a></li>
+              <li><a href="#features">Дополнительные функции</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <section class="help-section" id="main">
+          <h2>Главная Youvi Forums (forum_main.html)</h2>
+          <p>Главная страница — это отправная точка, где собраны все разделы, их описания, статистика и последнее сообщение. Дизайн выровнен по сетке сайта, с верхним меню, заголовком и футером в фирменных цветах. Здесь вы выбираете направление общения и находите актуальные темы.</p>
+          <div class="callout">Подсказка: используйте поиск по шапке, чтобы быстро перейти к результатам по всему Youvi Forums.</div>
+        </section>
+
+        <section class="help-section" id="board">
+          <h2>Страница раздела (forum_board.html)</h2>
+          <p>Внутри раздела отображается список тем с количеством сообщений и блоком последнего поста. Добавление новой темы производится через компактную панель над списком. Пагинация и легкая сортировка обеспечивают быстрый доступ к активным тредам.</p>
+          <ul>
+            <li>Создание темы — через форму «Новая тема».</li>
+            <li>Счётчик сообщений учитывает стартовый пост.</li>
+            <li>Футер не «липнет» к контенту благодаря адаптивным отступам.</li>
+          </ul>
+        </section>
+
+        <section class="help-section" id="thread">
+          <h2>Страница темы (forum_thread.html)</h2>
+          <p>Страница темы отображает сообщения в хронологическом порядке. Для каждого поста выводится аватар, ник, дата и содержимое. Поддерживаются цитирование, предпросмотр изображений и открытие оригинала по клику с затемнением фона.</p>
+          <ul>
+            <li>Кнопка «Ответить» под каждым постом — для быстрого цитирования.</li>
+            <li>Цитаты оформляются блоками, вложенные цитаты не подтягиваются.</li>
+            <li>Изображения подгружаются лениво, полные версии — по требованию.</li>
+          </ul>
+        </section>
+
+        <section class="help-section" id="profile">
+          <h2>Профиль пользователя (forum_profile.html)</h2>
+          <p>Профиль содержит основную информацию, статистику постов и дату регистрации, а также загрузку аватара с клиентским уменьшением. Отображение метаданных приведено к единому виду.</p>
+        </section>
+
+        <section class="help-section" id="members">
+          <h2>Список участников (forum_members.html)</h2>
+          <p>Каталог пользователей с аватарами, никнеймами и базовой статистикой. Поиск и динамическая «прокладка» снизу предотвращают прилипания футера при малом количестве карточек.</p>
+        </section>
+
+        <section class="help-section" id="features">
+          <h2>Дополнительные функции</h2>
+          <ul>
+            <li>Кэширование файловых операций и параллельные загрузки.</li>
+            <li>Ленивая загрузка изображений и миниатюры для вложений.</li>
+            <li>Аккуратное управление blob-URL и освобождение памяти на выгрузке.</li>
+          </ul>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-main">
+        <div class="footer-logo">
+          <img src="images/logo_forum.png" alt="Forum Logo">
+          <p>Youvi Forums — платформа для общения и обсуждений. Делитесь мыслями и идеями.</p>
+        </div>
+        <div class="footer-sections">
+          <div class="footer-section">
+            <h3>Разделы</h3>
+            <ul>
+              <li><a href="index.html">Видео</a></li>
+              <li><a href="channels.html">Каналы</a></li>
+              <li><a href="playlists_page.html">Плейлисты</a></li>
+              <li><a href="forum.html">Форумы</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Аккаунт</h3>
+            <ul>
+              <li><a href="#">Регистрация</a></li>
+              <li><a href="#">Вход</a></li>
+              <li><a href="#">Профиль</a></li>
+              <li><a href="#">Настройки</a></li>
+              <li><a href="#">Избранное</a></li>
+              <li><a href="#">История</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Поддержка</h3>
+            <ul>
+              <li><a href="forum_help.html">Помощь</a></li>
+              <li><a href="forum_help.html">FAQ</a></li>
+              <li><a href="#">Обратная связь</a></li>
+              <li><a href="#">Сообщить о проблеме</a></li>
+              <li><a href="#">Контакты</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Правовая информация</h3>
+            <ul>
+              <li><a href="forum_rules.html">Условия использования</a></li>
+              <li><a href="#">Политика конфиденциальности</a></li>
+              <li><a href="#">Правила сообщества</a></li>
+              <li><a href="#">DMCA</a></li>
+              <li><a href="#">Cookie Policy</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-right">
+        <div class="footer-mascot">
+          <img src="images/mascot1.png" alt="Mascot">
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 8Site Internet LLC. Все права защищены.</p>
+    </div>
+  </footer>
+
+<script>
+// Header search -> redirect to forum_search.html?q=...
+try {
+  const input = document.querySelector('.search-input');
+  const btn = document.querySelector('.search-btn');
+  if (btn && input) {
+    const go = () => {
+      const q = (input.value || '').trim();
+      const url = q ? `forum_search.html?q=${encodeURIComponent(q)}` : 'forum_search.html';
+      location.href = url;
+    };
+    btn.addEventListener('click', go);
+    input.addEventListener('keyup', (e) => { if (e.key === 'Enter') go(); });
+  }
+} catch(_) {}
+
+// Theme System
+(function() {
+  // Load saved theme
+  const savedTheme = localStorage.getItem('forum-theme') || 'light';
+  document.body.classList.toggle('dark-theme', savedTheme === 'dark');
+
+  // Theme dropdown toggle
+  const settingsBtn = document.querySelector('.settings-btn');
+  const themeDropdown = document.querySelector('.theme-dropdown');
+  
+  if (settingsBtn && themeDropdown) {
+    settingsBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      themeDropdown.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.settings-container')) {
+        themeDropdown.classList.remove('show');
+      }
+    });
+
+    // Theme selection
+    const themeItems = document.querySelectorAll('.theme-dropdown-item');
+    themeItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        const theme = e.target.dataset.theme;
+        localStorage.setItem('forum-theme', theme);
+        document.body.classList.toggle('dark-theme', theme === 'dark');
+        themeDropdown.classList.remove('show');
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

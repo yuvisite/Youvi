@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Главная | Youvi Forums</title>
+<link rel="stylesheet" href="forum-dark-theme.css">
+<link rel="stylesheet" href="../youvi/header/youvi-header.css">
+<link rel="stylesheet" href="../youvi/sidebar-scroll.css">
+<link rel="stylesheet" href="../youvi/sidebar.css">
+<link rel="stylesheet" href="../youvi/themes/theme-dropdown.css">
+<script>
+  (function() {
+    var theme = localStorage.getItem('youvi-theme');
+    var sidebar = localStorage.getItem('sidebarCollapsed');
+    
+    var htmlClasses = [];
+    if (theme === 'dark') htmlClasses.push('dark-theme');
+    if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+    if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
+  })();
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial, sans-serif;background:#fff;color:#111;--header-height:84px;--footer-height:220px}
+.top-nav{background:#d94b88;border-bottom:1px solid #c2185b;padding:4px 0}
+.top-nav-content{max-width:none !important;margin:0 !important;padding:0 20px;display:flex;gap:20px;align-items:center}
+.top-nav a{color:#fff;text-decoration:none;font-size:12px;padding:2px 0;transition:color .2s}
+.top-nav a:hover,.top-nav a.active{color:#ffd6ea}
+.header{background:#FFE7F4;padding:0;border-bottom:1px solid #f2cfe1;min-height:40px;width:100%;position:sticky;top:0;z-index:100}
+.header-content-wrapper{display:flex;align-items:center;position:relative;box-sizing:border-box;max-width:none !important;margin:0 !important;padding:0 20px;width:100%;min-height:40px}
+.header-left{display:flex;align-items:center;gap:15px;flex-shrink:0}
+.header-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;z-index:1}
+.header-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.search-area{display:flex;gap:6px;align-items:center;width:530px;position:relative}
+.search-input{width:450px;padding:6px 12px;border-radius:4px;border:1px solid rgba(0,0,0,0.1);font-size:13px;height:32px;box-sizing:border-box}
+.search-btn{width:70px;height:32px;padding:0;background:#ff69b4;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;flex-shrink:0;white-space:nowrap;box-sizing:border-box;transition:background-color .2s}
+.search-btn:hover{background:#ff85c3}
+.container{width:100%;margin:0;padding:0 20px 0 20px;display:flex;gap:20px;align-items:stretch;min-height:calc(100vh - var(--header-height) - var(--footer-height))}
+.content-wrapper{display:flex;flex:1;max-width:1500px;margin:0 auto;gap:20px;background:#fff}
+body.dark-theme .content-wrapper{background:#111}
+.main-content{flex:1;display:flex;flex-direction:column;min-height:0;padding-top:0}
+.user-actions{display:flex;gap:8px;align-items:center;margin-left:0;flex-shrink:0}
+.user-actions a{color:#111;text-decoration:none;font-size:13px;font-weight:500;padding:4px 8px;border-radius:4px;transition:background .2s}
+.user-actions a:hover{color:#ff69b4}
+.logo{display:flex;align-items:center;justify-content:center;margin-right:0;flex-shrink:0;height:40px}
+.logo img{height:30px;width:auto;max-height:30px}
+.main-content{flex:1;display:flex;flex-direction:column;min-height:0;padding-top:0}
+.main-content-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;margin-top:5px}
+.section-title{font-size:24px;color:#111;margin:0}
+.forum-stats{font-size:14px;color:#666}
+.forum-categories{display:flex;flex-direction:column;gap:0}
+.category-group{background:#fff;border:1px solid #e0e0e0;margin-bottom:15px}
+.category-header{background:#f5f5f5;color:#333;padding:6px 10px;font-size:12px;font-weight:600;border-bottom:1px solid #e0e0e0;display:flex;align-items:center;gap:6px}
+.boards-list{background:#fafafa}
+.boards-header{display:grid;grid-template-columns:1fr 120px 120px 280px;gap:0;background:#f0f0f0;color:#666;font-size:12px;padding:8px 16px;border-bottom:1px solid #e0e0e0}
+.boards-header div:nth-child(2),.boards-header div:nth-child(3){text-align:center}
+.board-item{display:grid;grid-template-columns:1fr 120px 120px 280px;gap:0;align-items:center;padding:14px 16px;border-bottom:1px solid #e8e8e8;transition:background-color .15s;text-decoration:none;color:inherit}
+.board-item:last-child{border-bottom:none}
+.board-item:hover{background:#f0f0f0}
+.board-item.disabled{opacity:0.5;cursor:not-allowed;pointer-events:none}
+.board-item.disabled .board-title{color:#999}
+.board-item.disabled .board-description{color:#bbb}
+.board-icon{width:36px;height:36px;background:linear-gradient(135deg,#ff85b4,#ff69b4);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-right:14px;flex-shrink:0}
+.board-icon svg{width:20px;height:20px}
+.board-icon svg *{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.board-info{display:flex;gap:14px;align-items:center;min-width:0}
+.board-title{font-size:15px;font-weight:500;color:#111;margin-bottom:2px;line-height:1.3}
+.board-description{font-size:12px;color:#666;line-height:1.3}
+.board-stats{font-size:13px;color:#333;text-align:center}
+.posts-stats{font-size:13px;color:#333;text-align:center}
+.last-post{font-size:12px;color:#666;line-height:1.2;overflow:hidden}
+.last-post-title{display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;word-break:break-word;overflow-wrap:anywhere;margin-bottom:2px}
+.last-post-title a{color:inherit;text-decoration:none;transition:color .2s}
+.last-post-title a:hover{color:#ff69b4}
+.last-post-author{color:#888}
+.last-post-author a{color:#ff69b4;text-decoration:none;transition:color .2s}
+.last-post-author a:hover{color:#e91e63}
+.last-post-time{color:#999}
+.stats-box{padding-left:10px;font-size:13px;color:#333;flex:1}
+.action-btn{display:block;width:100%;background:transparent;color:#333;text-decoration:none;border:none;border-radius:0;font-size:13px;padding:8px 0;padding-left:10px;text-align:left;cursor:pointer;transition:color .15s ease}
+.action-btn:hover{color:#c2185b}
+.footer{background:#2c2c2c;color:#fff;padding:25px 0 15px 0;margin-top:auto}
+.footer-content{max-width:1400px !important;margin:0 auto !important;padding:0 20px !important;display:flex;gap:30px;align-items:flex-start}
+.footer-main{display:flex;gap:30px;flex:1}
+.footer-logo{flex-shrink:0;width:200px}
+.footer-logo img{height:40px;width:auto}
+.footer-logo p{margin-top:8px;font-size:11px;color:#ccc;line-height:1.3}
+.footer-sections{display:flex;gap:30px;flex:1}
+.footer-right{display:flex;gap:20px;align-items:flex-start}
+.footer-mascot{flex-shrink:0}
+.footer-mascot img{height:180px;width:auto}
+.footer-section{flex:1}
+.footer-section h3{font-size:13px;margin-bottom:10px;color:#fff;font-weight:600}
+.footer-section ul{list-style:none;padding:0;margin:0}
+.footer-section li{margin-bottom:6px}
+.footer-section a{color:#ccc;text-decoration:none;font-size:11px;transition:color .2s}
+.footer-section a:hover{color:#ff69b4}
+.footer-bottom{border-top:1px solid #444;margin-top:20px;padding-top:15px;text-align:center;color:#999;font-size:10px}
+@media (max-width:768px){.footer-content{flex-direction:column;gap:20px}.footer-sections{flex-direction:column;gap:15px}.footer-section{text-align:center}.footer-mascot img{height:120px}}
+@media (max-width:1024px){ }
+@media (max-width:768px){.container{flex-direction:column;padding:10px}.sidebar{width:100%;display:flex;overflow-x:auto;gap:20px;padding:10px 0;margin-bottom:20px}.board-stats{display:none}.footer-content{flex-direction:column;gap:20px}}
+/* PC Adaptive Styling */
+@media (min-width: 1700px) {
+    .content-wrapper{max-width:1600px}
+    .footer-content{max-width:1700px !important}
+    .banner-section{height:250px !important}
+}
+@media (min-width: 2000px) {
+    .content-wrapper{max-width:1850px}
+    .footer-content{max-width:1900px !important}
+    .banner-section{height:280px !important}
+}
+@media (min-width: 2400px) {
+    .content-wrapper{max-width:2200px}
+    .footer-content{max-width:2200px !important}
+    .banner-section{height:300px !important}
+}
+@media (min-width: 2800px) {
+    .content-wrapper{max-width:2500px}
+    .footer-content{max-width:2500px !important}
+    .banner-section{height:320px !important}
+}
+/* Sidebar collapsed adaptations */
+@media (min-width: 1700px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 1700px !important;
+    }
+}
+@media (min-width: 2000px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 1950px !important;
+    }
+}
+@media (min-width: 2400px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 2300px !important;
+    }
+}
+@media (min-width: 2800px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 2600px !important;
+    }
+}
+/* helpers */
+.sync-status{font-size:11px;color:#7a3c55;margin-left:6px}
+.ml8{margin-left:8px}
+/* Sidebar offset for sticky header */
+.sidebar:not(.chats-sidebar) {
+    top: 40px !important;
+    max-height: calc(100vh - 40px) !important;
+    min-height: calc(100vh - 40px) !important;
+}
+/* Dark theme additions */
+body.dark-theme .header {
+    background: #2c1810 !important;
+    border-bottom: 1px solid #444 !important;
+}
+body.dark-theme .sidebar-toggle-btn {
+    color: #fff !important;
+}
+body.dark-theme .sidebar-toggle-btn svg {
+    fill: #fff !important;
+}
+body.dark-theme .user-actions a {
+    color: #fff !important;
+}
+body.dark-theme .user-actions a:hover {
+    color: #ff69b4 !important;
+}
+body.dark-theme .search-input {
+    background: #4a3a34 !important;
+    border-color: #555;
+    color: #fff;
+}
+body.dark-theme .search-input::placeholder {
+    color: #999;
+}
+/* Banner styles */
+.banner-section{background:center/cover no-repeat;margin:0 20px 5px 20px;overflow:hidden;height:215px}
+/* Thin separator line under banner (no buttons) */
+.management-section{margin:0 20px 3px 20px;border-bottom:2px solid #ff69b4;padding-bottom:5px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+</style>
+</head>
+<link rel="icon" href="../favicon/youvi/favicon.ico" type="image/x-icon">
+<body>
+<script src="../youvi_shared.js"></script>
+<script src="forum_youvi_integration.js"></script>
+<script src="../youvi/themes/theme-toggle.js"></script>
+  <div class="top-nav">
+    <div class="top-nav-content">
+      <a href="../youvi_main.html">Видео</a>
+      <a href="../index.html">Управление</a>
+      <a href="../youvi_ch_list.html">Каналы</a>
+      <a href="../youvi_playlists_list.html">Плейлисты</a>
+      <a href="forum.html" class="active">Форумы</a>
+      <a href="../wiki/index.html" data-i18n="nav.wiki">Wiki</a>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-content-wrapper">
+      <div class="header-left">
+        <button id="sidebarToggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
+        
+        <div class="logo">
+          <a href="forum.html"><img src="../images/logo_youvi_ind.png" alt="Forum Logo"></a>
+        </div>
+      </div>
+      
+      <div class="header-center">
+        <div class="search-area">
+          <input type="text" class="search-input" id="forumHeaderSearchInput" placeholder="Поиск в форуме...">
+          <button class="search-btn" id="forumHeaderSearchBtn">Поиск</button>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <div class="user-actions">
+          <div class="settings-container">
+            <a href="#" class="settings-btn">⚙</a>
+            <div class="theme-dropdown">
+              <button class="theme-dropdown-item" data-theme="light">Белая</button>
+              <button class="theme-dropdown-item" data-theme="dark">Черная</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Навигация</div>
+        <a href="../youvi_main.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+          <span>Главная</span>
+        </a>
+        <a href="../youvi_tags.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          <span>Все теги</span>
+        </a>
+      </div>
+      
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Форум</div>
+        <a href="forum.html" class="sidebar-item nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Главная</span>
+        </a>
+        <a href="forum_recent.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M4 11a9 9 0 0 1 9 9"/>
+            <path d="M4 4a16 16 0 0 1 16 16"/>
+            <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+          </svg>
+          <span>Поток</span>
+        </a>
+        <a href="forum_search.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <span>Поиск</span>
+        </a>
+        <a href="forum_fav.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span>Избранное</span>
+        </a>
+        <a href="forum_members.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 1-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Участники</span>
+        </a>
+
+      </div>
+    </aside>
+
+    <!-- Content Wrapper (centered) -->
+    <div class="content-wrapper">
+      <main class="main-content">
+
+      <div id="topForumContainer">
+        <section class="banner-section" id="forumBannerSection"></section>
+        <section class="management-section" id="forumManagementSection"></section>
+      </div>
+
+      <div class="forum-categories" id="boardsContainer" style="margin: 0 20px; padding: 0;">
+        <div id="boardsList"></div>
+      </div>
+    </main>
+    </div><!-- /content-wrapper -->
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-main">
+        <div class="footer-logo">
+          <img src="../images/logo_youvi_ind_ex.png" alt="Youvi">
+          <p>Платформа для общения и обсуждений. Делитесь мыслями и идеями.</p>
+        </div>
+        <div class="footer-sections">
+          <div class="footer-section">
+            <h3>Разделы</h3>
+            <ul>
+              <li><a href="../youvi_main.html">Видео</a></li>
+              <li><a href="../youvi_tags.html">Теги</a></li>
+              <li><a href="../forum/forum.html">Форум</a></li>
+              <li><a href="../index.html">Управление</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Библиотека</h3>
+            <ul>
+              <li><a href="../youvi_ch_list.html">Каналы</a></li>
+              <li><a href="../youvi_playlists_list.html">Плейлисты</a></li>
+              <li><a href="../youvi_subscriptions.html">Подписки</a></li>
+              <li><a href="../youvi_fav.html">Избранное</a></li>
+              <li><a href="../youvi_history.html">История</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Wiki</h3>
+            <ul>
+              <li><a href="../wiki/index.html">Главная</a></li>
+              <li><a href="../wiki/player.html">Плеер</a></li>
+              <li><a href="../wiki/danmaku.html">Данмаку</a></li>
+              <li><a href="../wiki/tags/general.html">Теги</a></li>
+              <li><a href="../wiki/tags/rules.html">Правила тегирования</a></li>
+              <li><a href="../wiki/search/general.html">Поиск</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>PGC</h3>
+            <ul>
+              <li><a href="../youvi_main.html?tag=Anime (ct)">Anime</a></li>
+              <li><a href="../youvi_main.html?tag=Animation (ct)">Animation</a></li>
+              <li><a href="../youvi_main.html?tag=Movies (ct)">Movies</a></li>
+              <li><a href="../youvi_main.html?tag=Series (ct)">Series</a></li>
+              <li><a href="../youvi_main.html?tag=Music (ct)">Music</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>UGC</h3>
+            <ul>
+              <li><a href="../youvi_main.html?tag=Games (ct)">Games</a></li>
+              <li><a href="../youvi_main.html?tag=Technology (ct)">Technology</a></li>
+              <li><a href="../youvi_main.html?tag=Entertainment (ct)">Entertainment</a></li>
+              <li><a href="../youvi_main.html?tag=IRL (ct)">IRL</a></li>
+              <li><a href="../youvi_main.html?tag=TV (ct)">TV</a></li>
+              <li><a href="../youvi_main.html?tag=Education (ct)">Education</a></li>
+              <li><a href="../youvi_main.html?tag=Other (ct)">Other</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>О сайте</h3>
+            <ul>
+              <li><a href="../wiki/about.html">Про сайт</a></li>
+              <li><a href="../wiki/docs.html">Документация</a></li>
+              <li><a href="../wiki/tech.html">Технологии</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-right">
+        <div class="footer-mascot">
+          <img src="../images/mascot1.png" alt="Yuvi">
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+// Use YouVi shared functions via window.YouviShared
+let forumDirectoryHandle = null;
+
+// Simple in-memory cache for board stats to avoid repeated FS walks
+const BOARD_STATS_TTL_MS = 30000; // 30s
+const boardStatsCache = new Map(); // key: boardId, value: { at:number, data:{threadCount,postsCount,last} }
+
+const BOARDS = [
+  // Главное
+  { id: 'general', name: 'Общее', desc: 'Случайные темы', category: 'Главное' },
+  { id: 'images', name: 'Картинки', desc: 'Обмен изображениями и артами', category: 'Главное' },
+  { id: 'news', name: 'Новости сайта', desc: 'Обновления и объявления', category: 'Главное' },
+  // Медиа
+  { id: 'anime', name: 'Аниме', desc: 'Аниме и манга', category: 'Медиа' },
+  { id: 'videogames', name: 'Видеоигры', desc: 'Обсуждение игр', category: 'Медиа' },
+  { id: 'tv-and-cinema', name: 'Кино и ТВ', desc: 'Фильмы и сериалы', category: 'Медиа' },
+  { id: 'music', name: 'Музыка', desc: 'Музыка и музыканты', category: 'Медиа' },
+  // Творчество
+  { id: '2d', name: '2Д', desc: 'Рисование и 2D графика', category: 'Творчество' },
+  { id: '3d', name: '3Д', desc: '3D моделирование и анимация', category: 'Творчество' },
+  { id: 'worldbuilding', name: 'Создание миров', desc: 'Worldbuilding и дизайн миров', category: 'Творчество' },
+  { id: 'tutorials', name: 'Туториалы', desc: 'Обучающие материалы', category: 'Творчество' },
+  { id: 'creative-other', name: 'Другое', desc: 'Прочее творчество', category: 'Творчество' },
+  // ИРЛ
+  { id: 'study', name: 'Учёба', desc: 'Заметки про учебу', category: 'ИРЛ' },
+  { id: 'everyday', name: 'Повседневность', desc: 'Разные жизненные мелочи', category: 'ИРЛ' },
+  { id: 'city', name: 'Город', desc: 'Новости, история и будущее города', category: 'ИРЛ' },
+  { id: 'notes', name: 'Заметки', desc: 'Личные заметки', category: 'ИРЛ' },
+  // Технологии
+  { id: 'internet', name: 'Интернет', desc: 'Сети и веб', category: 'Технологии' },
+  { id: 'gadgets', name: 'Гаджеты', desc: 'Устройства и аксессуары', category: 'Технологии' },
+  { id: 'technology', name: 'Технологии', desc: 'Все что связано с технологиями', category: 'Технологии' },
+  { id: 'companies', name: 'Компании', desc: 'Новости IT-компаний', category: 'Технологии' }
+];
+
+// Database functions removed - using youvi_shared.js
+
+// File System API functions
+async function createBoardStructure() {
+  if (!forumDirectoryHandle) return;
+  
+  try {
+    for (const board of BOARDS) {
+      await forumDirectoryHandle.getDirectoryHandle(board.id, { create: true });
+    }
+  } catch (e) {
+    console.error('Error creating board structure:', e);
+  }
+}
+
+// File functions removed - using youvi_shared.js
+
+// Thematic SVG icon per board id
+function getBoardIconSvg(boardId){
+  const icons = {
+    'general': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v10H7l-3 3V4z"/></svg>',
+    'images': '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
+    'news': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h14v14H6a2 2 0 0 1-2-2V5zm3 3h8M7 11h8M7 15h6"/></svg>',
+    'anime': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12c0-4 3-7 8-7s8 3 8 7-3 7-8 7-8-3-8-7zm5-2h.01M15 10h.01M8 14c2 1.5 6 1.5 8 0"/></svg>',
+    'videogames': '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="8" rx="3"/><path d="M8 12H6M7 11v2"/><circle cx="16.5" cy="12" r="1.2"/></svg>',
+    'tv-and-cinema': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v9H4zM8 4l4 3 4-3"/></svg>',
+    'music': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16v-5M12 16v-8M16 16v-6"/></svg>',
+    '2d': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>',
+    '3d': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></svg>',
+    'worldbuilding': '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18M3 12h18"/><path d="M8 6c2 3 2 9 0 12M16 6c-2 3-2 9 0 12"/></svg>',
+    'tutorials': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>',
+    'creative-other': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2 7h7l-5.5 4.5L18 21l-6-4.5L6 21l2.5-7.5L3 9h7z"/></svg>',
+    'study': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M7 12v6"/></svg>',
+    'everyday': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.65-7 10-7 10"/></svg>',
+    'city': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M6 21V9h5v12M14 21V5h4v16M9 12h1M9 15h1M9 18h1M16 8h1M16 11h1M16 14h1M16 17h1"/></svg>',
+    'notes': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l5 5v13H6zM15 3v5h5M8 12h8M8 16h5"/></svg>',
+    'internet': '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4a16 16 0 0 1 0 16M12 4a16 16 0 0 0 0 16"/></svg>',
+    'gadgets': '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 6h4M11 18h2"/></svg>',
+    'technology': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v3H9zM4 8h16v8H4zM8 19h8"/></svg>',
+    'companies': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V7h6v13M14 20V4h6v16"/><path d="M6 10h2M6 13h2M6 16h2M16 7h2M16 10h2M16 13h2"/></svg>'
+  };
+  return icons[boardId] || '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h6l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg>';
+}
+
+// Removed custom boards support
+
+// slugifyId removed (custom boards disabled)
+
+async function getBoardStats(boardId) {
+  if (!forumDirectoryHandle) return { threadCount: 0, postsCount: 0, last: null };
+  try {
+    const cached = boardStatsCache.get(boardId);
+    if (cached && (Date.now() - cached.at) < BOARD_STATS_TTL_MS) {
+      return cached.data;
+    }
+  } catch(_) {}
+  
+  try {
+    const boardDir = await forumDirectoryHandle.getDirectoryHandle(boardId);
+    let threadCount = 0;
+    let postsCount = 0;
+    let last = null;
+    
+    for await (const [name, handle] of boardDir.entries()) {
+      if (handle.kind === 'directory') {
+        if (name === 'assets' || name.startsWith('.')) continue;
+        threadCount++;
+        try {
+          const threadDir = await boardDir.getDirectoryHandle(name);
+          const jsonFile = await threadDir.getFileHandle('thread.json');
+          const file = await jsonFile.getFile();
+          const data = JSON.parse(await file.text());
+          
+          const total = Number(
+            (Array.isArray(data.posts) ? data.posts.length : undefined) ??
+            data.totalPosts ??
+            data.messagesCount ??
+            0
+          );
+          postsCount += isNaN(total) ? 0 : total;
+          let lastDate = data.lastPostDate || data.updatedAt || data.lastActivity || null;
+          let lastAuthor = data.lastPostAuthor || data.lastAuthor || null;
+          if (!lastDate && Array.isArray(data.posts) && data.posts.length > 0) {
+            const lastPost = data.posts[data.posts.length - 1];
+            lastDate = lastPost.date || null;
+            lastAuthor = lastPost.nick || lastAuthor;
+          }
+          // Если нет автора, но есть посты, берем автора последнего поста
+          if (!lastAuthor && Array.isArray(data.posts) && data.posts.length > 0) {
+            const lastPost = data.posts[data.posts.length - 1];
+            lastAuthor = lastPost.nick || 'Аноним';
+          }
+          if (lastDate && (!last || lastDate > last.lastPostDate)) {
+            last = {
+              lastPostDate: lastDate,
+              lastPostTitle: data.lastPostTitle || data.title || '',
+              lastPostAuthor: lastAuthor || '—',
+              threadId: name,
+              postCount: total
+            };
+          }
+        } catch (e) {
+          // Ignore errors for individual threads
+        }
+      }
+    }
+    const result = { threadCount, postsCount, last };
+    try { boardStatsCache.set(boardId, { at: Date.now(), data: result }); } catch(_) {}
+    return result;
+  } catch (e) {
+    return { threadCount: 0, postsCount: 0, last: null };
+  }
+}
+
+async function render() {
+  const list = document.getElementById('boardsList');
+  const customList = document.getElementById('customBoardsList');
+  
+  list.innerHTML = '';
+
+  const order = ['Главное', 'Медиа', 'Творчество', 'ИРЛ', 'Технологии'];
+  for (const category of order) {
+    const inCategory = BOARDS.filter(b => b.category === category);
+    if (inCategory.length === 0) continue;
+
+    const group = document.createElement('div');
+    group.className = 'category-group';
+    const header = document.createElement('div');
+    header.className = 'category-header';
+    header.textContent = category;
+    const boardsWrap = document.createElement('div');
+    boardsWrap.className = 'boards-list';
+    const head = document.createElement('div');
+    head.className = 'boards-header';
+    head.innerHTML = '<div>Раздел</div><div>Темы</div><div>Сообщения</div><div>Последнее сообщение</div>';
+    boardsWrap.appendChild(head);
+
+    if (!forumDirectoryHandle) {
+      // Show boards as disabled when no folder selected
+      inCategory.forEach((board) => {
+        const a = document.createElement('a');
+        a.className = 'board-item disabled';
+        a.href = '#';
+        a.innerHTML = `
+          <div class="board-info">
+            <div class="board-icon">${getBoardIconSvg(board.id)}</div>
+            <div>
+              <div class="board-title">${board.name}</div>
+              <div class="board-description">${board.desc}</div>
+            </div>
+          </div>
+          <div class="board-stats">—</div>
+          <div class="posts-stats">—</div>
+          <div class="last-post">Выберите папку на index.html</div>`;
+        boardsWrap.appendChild(a);
+      });
+    } else {
+      // Load stats in parallel for the category
+      const statsArray = await Promise.all(inCategory.map(b => getBoardStats(b.id)));
+      inCategory.forEach((board, idx) => {
+        const stats = statsArray[idx] || { threadCount: 0, postsCount: 0, last: null };
+        const a = document.createElement('a');
+        a.className = 'board-item';
+        a.href = `forum_board.html?id=${board.id}`;
+        a.innerHTML = `
+          <div class="board-info">
+            <div class="board-icon">${getBoardIconSvg(board.id)}</div>
+            <div>
+              <div class="board-title">${board.name}</div>
+              <div class="board-description">${board.desc}</div>
+            </div>
+          </div>
+          <div class="board-stats">${stats.threadCount}</div>
+          <div class="posts-stats">${stats.postsCount}</div>
+          <div class="last-post">${stats.last ? `
+              <div class=\"last-post-title\"><a href="forum_thread.html?board=${board.id}&id=${stats.last.threadId}&highlight=last" style="color:inherit;text-decoration:none">${(stats.last.postCount > 1 ? 'Re: ' : '') + (stats.last.lastPostTitle || 'Последнее сообщение')}</a></div>
+              <div class=\"last-post-author\">от ${stats.last.lastPostAuthor && stats.last.lastPostAuthor !== '—' ? 
+                `<a href="forum_profile.html?nick=${encodeURIComponent(stats.last.lastPostAuthor.toLowerCase().replace(/\s+/g, '_'))}">${stats.last.lastPostAuthor}</a>` : 
+                '—'}</div>
+              <div class=\"last-post-time\">${stats.last.lastPostDate ? new Date(stats.last.lastPostDate).toLocaleString() : ''}</div>
+            ` : 'Нет активности'}</div>`;
+        boardsWrap.appendChild(a);
+      });
+    }
+
+    group.appendChild(header);
+    group.appendChild(boardsWrap);
+    list.appendChild(group);
+  }
+
+  // Custom boards removed
+}
+
+// Folder selection removed - using YouVi directory
+
+document.querySelector('.logo').addEventListener('click', () => { 
+  location.href = 'forum.html'; 
+});
+
+// Initialize - use YouVi directory
+(async () => {
+  try {
+    // Get forum directory from YouVi
+    forumDirectoryHandle = await window.YouviShared.getForumDirectory();
+    
+    if (forumDirectoryHandle) {
+      await createBoardStructure();
+      render();
+    } else {
+      // No YouVi directory selected
+      console.warn('No YouVi directory selected. Please select folder on index.html');
+      render(); // Show disabled boards with message
+    }
+  } catch (e) {
+    console.error('Error loading saved forum directory:', e);
+    render(); // Show disabled boards
+  }
+})();
+
+// Set forum banner image similar to photos.html
+(() => {
+  try {
+    const banner = document.getElementById('forumBannerSection');
+    if (banner) {
+      banner.style.backgroundImage = `url('../images/banners/forum_banner.png')`;
+    }
+  } catch (_) {}
+})();
+
+// Header search -> redirect to forum_search.html?q=...
+try {
+  const input = document.getElementById('forumHeaderSearchInput');
+  const btn = document.getElementById('forumHeaderSearchBtn');
+  if (btn && input) {
+    const go = () => {
+      const q = (input.value || '').trim();
+      const url = q ? `forum_search.html?q=${encodeURIComponent(q)}` : 'forum_search.html';
+      location.href = url;
+    };
+    btn.addEventListener('click', go);
+    input.addEventListener('keyup', (e) => { if (e.key === 'Enter') go(); });
+  }
+} catch(_) {}
+
+// Theme System - handled by theme-toggle.js
+// Just keep the initial theme loading
+(function() {
+  const savedTheme = localStorage.getItem('youvi-theme') || 'light';
+  if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark-theme');
+    document.body.classList.add('dark-theme');
+  }
+})();
+
+// Sidebar Toggle
+(function() {
+  const toggleBtn = document.getElementById('sidebarToggle');
+  const savedState = localStorage.getItem('sidebarCollapsed');
+  
+  if (savedState === 'true') {
+    document.body.classList.add('sidebar-collapsed');
+    document.documentElement.classList.add('sidebar-collapsed');
+  }
+  
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const isCollapsed = document.body.classList.contains('sidebar-collapsed') || document.documentElement.classList.contains('sidebar-collapsed');
+      
+      if (isCollapsed) {
+        document.body.classList.remove('sidebar-collapsed');
+        document.documentElement.classList.remove('sidebar-collapsed');
+        localStorage.setItem('sidebarCollapsed', 'false');
+      } else {
+        document.body.classList.add('sidebar-collapsed');
+        document.documentElement.classList.add('sidebar-collapsed');
+        localStorage.setItem('sidebarCollapsed', 'true');
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

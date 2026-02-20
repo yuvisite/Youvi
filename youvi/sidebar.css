@@ -236,6 +236,7 @@ html.sidebar-collapsed .sidebar {
     overflow-x: hidden;
 }
 
+/* Container/main shift when left sidebar is collapsed */
 .sidebar-collapsed .container {
     padding-left: 20px;
 }
@@ -244,12 +245,12 @@ html.sidebar-collapsed .sidebar {
     margin-left: 0;
 }
 
-/* Hide text in collapsed mode */
-.sidebar-collapsed .sidebar-title {
+/* Hide text in collapsed mode - only left .sidebar, not .sidebar-right (tags) */
+.sidebar-collapsed .sidebar .sidebar-title {
     display: none;
 }
 
-.sidebar-collapsed .sidebar-item {
+.sidebar-collapsed .sidebar .sidebar-item {
     padding: 8px !important;
     padding-left: 5px !important;
     padding-right: 8px !important;
@@ -258,89 +259,89 @@ html.sidebar-collapsed .sidebar {
     border-radius: 4px;
 }
 
-.sidebar-collapsed .sidebar-item:hover {
+.sidebar-collapsed .sidebar .sidebar-item:hover {
     background: rgba(255, 105, 180, 0.1);
 }
 
-.sidebar-collapsed .sidebar-item.active {
+.sidebar-collapsed .sidebar .sidebar-item.active {
     background: rgba(255, 105, 180, 0.15);
 }
 
 /* Hide text, show only icons */
-.sidebar-collapsed .sidebar-item svg,
-.sidebar-collapsed .sidebar-item img {
+.sidebar-collapsed .sidebar .sidebar-item svg,
+.sidebar-collapsed .sidebar .sidebar-item img {
     margin: 0;
 }
 
-.sidebar-collapsed .sidebar-item svg {
+.sidebar-collapsed .sidebar .sidebar-item svg {
     width: 20px;
     height: 20px;
 }
 
 /* Hide all text nodes in sidebar items */
-.sidebar-collapsed .sidebar-item {
+.sidebar-collapsed .sidebar .sidebar-item {
     font-size: 0;
 }
 
-.sidebar-collapsed .sidebar-item svg,
-.sidebar-collapsed .sidebar-item img {
+.sidebar-collapsed .sidebar .sidebar-item svg,
+.sidebar-collapsed .sidebar .sidebar-item img {
     font-size: 16px;
 }
 
 
 /* Autoplay toggle in collapsed mode */
-.sidebar-collapsed #autoplayToggle {
+.sidebar-collapsed .sidebar #autoplayToggle {
     padding: 8px !important;
     justify-content: center !important;
 }
 
-.sidebar-collapsed #autoplayToggle svg {
+.sidebar-collapsed .sidebar #autoplayToggle svg {
     width: 20px;
     height: 20px;
     margin: 0;
 }
 
-.sidebar-collapsed #autoplayStatus {
+.sidebar-collapsed .sidebar #autoplayStatus {
     display: none;
 }
 
 /* Subscribed channels avatars in collapsed mode */
-.sidebar-collapsed #subscribedChannelsContainer .sidebar-item {
+.sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item {
     justify-content: center !important;
 }
 
-.sidebar-collapsed #subscribedChannelsContainer .sidebar-item span {
+.sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item span {
     display: none;
 }
 
-.sidebar-collapsed #subscribedChannelsContainer .sidebar-item div {
+.sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item div {
     margin: 0 !important;
 }
 
 /* Library items in collapsed mode - same alignment as subscriptions */
-.sidebar-collapsed .library-item {
+.sidebar-collapsed .sidebar .library-item {
     justify-content: center !important;
     gap: 0 !important;
 }
 
-.sidebar-collapsed .library-item span {
+.sidebar-collapsed .sidebar .library-item span {
     display: none;
 }
 
-.sidebar-collapsed .library-item svg {
+.sidebar-collapsed .sidebar .library-item svg {
     margin: 0 !important;
 }
 
 /* Nav items in collapsed mode - same alignment as subscriptions */
-.sidebar-collapsed .nav-item {
+.sidebar-collapsed .sidebar .nav-item {
     justify-content: center !important;
     gap: 0 !important;
 }
 
-.sidebar-collapsed .nav-item span {
+.sidebar-collapsed .sidebar .nav-item span {
     display: none;
 }
 
-.sidebar-collapsed .nav-item svg {
+.sidebar-collapsed .sidebar .nav-item svg {
     margin: 0 !important;
 }

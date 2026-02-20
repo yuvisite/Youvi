@@ -120,7 +120,8 @@
       <a href="index.html" data-i18n="nav.management">Управление</a>
       <a href="youvi_ch_list.html" class="active" data-i18n="nav.channels">Каналы</a>
       <a href="youvi_playlists_list.html" data-i18n="nav.playlists">Плейлисты</a>
-      <a href="youvi_feed_all.html" data-i18n="nav.feed">Feed</a> 
+      <a href="forum/forum.html" data-i18n="nav.forums">Forums</a> 
+      <a href="download/youvi_download.html" data-i18n="nav.download">Download</a> 
       <a href="wiki/index.html" data-i18n="nav.wiki">Wiki</a>
       <div class="lang-switcher">
         <select id="langSwitcher" class="lang-select">
@@ -182,14 +183,6 @@
                         <polyline points="9,22 9,12 15,12 15,22"/>
                     </svg>
                     <span data-i18n="sidebar.home">Главная</span>
-                </a>
-                <a href="youvi_feed_all.html" class="sidebar-item nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
-                        <path d="M4 11a9 9 0 0 1 9 9"/>
-                        <path d="M4 4a16 16 0 0 1 16 16"/>
-                        <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                    </svg>
-                    <span data-i18n="sidebar.feed">Feed</span>
                 </a>
                 <a href="youvi_tags.html" class="sidebar-item nav-item">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
@@ -328,7 +321,7 @@
                 <button class="tab active" data-tab="home" data-i18n="channelView.tabHome">Главная</button>
                 <button class="tab" data-tab="videos" data-i18n="channelView.tabVideos">Видео</button>
                 <button class="tab" data-tab="analytics" data-i18n="channelView.tabAnalytics">Аналитика</button>
-                <button class="tab" data-tab="feed" data-i18n="channelView.tabFeed">Лента</button>
+                <button class="tab" data-tab="feed" data-i18n="channelView.tabFeed">Форумы</button>
                 <button class="tab" data-tab="playlists" data-i18n="channelView.tabPlaylists">Плейлисты</button>
                 <button class="tab" data-tab="description" data-i18n="channelView.tabDescription">Описание</button>
             </div>
@@ -630,7 +623,7 @@
             <ul>
               <li><a href="youvi_main.html" data-i18n="footer.video">Видео</a></li>
               <li><a href="youvi_tags.html" data-i18n="footer.tags">Теги</a></li>
-              <li><a href="youvi_feed_all.html" data-i18n="footer.feed">Feed</a></li>
+              <li><a href="forum/forum.html" >Форумы</a></li>
               <li><a href="index.html" data-i18n="footer.management">Управление</a></li>
             </ul>
           </div>
@@ -3572,11 +3565,23 @@ async function loadChannelVideos() {
 
         async function saveVideoMetadata(dirHandle, fileName, metadata) {
             try {
+                // Read existing metadata to preserve created timestamp
+                const existingMeta = await getVideoMetadata(dirHandle, fileName);
+                
+                // Merge with existing, preserving created field
+                const safeMeta = {
+                    ...existingMeta,
+                    ...metadata,
+                    // CRITICAL: Always preserve the original created timestamp
+                    created: existingMeta.created || metadata.created || Date.now(),
+                    fileCreated: existingMeta.fileCreated || metadata.fileCreated
+                };
+                
                 const metaDir = await dirHandle.getDirectoryHandle('.metadata', { create: true });
                 const metaFileName = fileName + '.meta.json';
                 const fileHandle = await metaDir.getFileHandle(metaFileName, { create: true });
                 const writable = await fileHandle.createWritable();
-                await writable.write(JSON.stringify(metadata, null, 2));
+                await writable.write(JSON.stringify(safeMeta, null, 2));
                 await writable.close();
             } catch (e) {
                 console.error('Error saving video metadata:', e);
@@ -4251,7 +4256,7 @@ async function loadChannelVideos() {
                 const targetTab = tab.dataset.tab;
                 
                 if (targetTab === 'feed') {
-                    window.location.href = 'youvi_ch_feed.html?channel=' + encodeURIComponent(currentChannelName);
+                    window.location.href = 'forum/forum_profile.html?nick=' + encodeURIComponent(currentChannelName);
                     return;
                 }
                 

@@ -19,7 +19,7 @@ window.en = {
         tabHome: 'Home',
         tabVideos: 'Videos',
         tabAnalytics: 'Analytics',
-        tabFeed: 'Feed',
+        tabFeed: 'Forum',
         tabPlaylists: 'Playlists',
         tabDescription: 'Description',
         pinnedVideo: 'Pinned Video',
@@ -152,10 +152,13 @@ window.en = {
         management: 'Management',
         channels: 'Channels',
         playlists: 'Playlists',
+        images: 'Images',
+        gifs: 'GIFs',
         feed: 'Feed',
         forums: 'Forums',
         qms: 'QMS',
         wiki: 'Wiki',
+        download: 'Download',
         chooseLang: 'Choose a language'
     },
     
@@ -205,7 +208,11 @@ window.en = {
         allTagsLink: 'All Tags',
         autoplay: 'Autoplay',
         noSubscriptions: 'No subscriptions',
-        loadingError: 'Loading error'
+        loadingError: 'Loading error',
+        cleanView: 'Clean view',
+        cleanViewTitle: 'Hide right sidebar for more space',
+        forumActivity: 'Forum activity',
+        forumActivityAll: 'All'
     },
     
     main: {
@@ -447,7 +454,7 @@ window.en = {
         tabHome: 'Home',
         tabVideos: 'Videos',
         tabAnalytics: 'Analytics',
-        tabFeed: 'Feed',
+        tabFeed: 'Forum',
         tabPlaylists: 'Playlists',
         tabDescription: 'Description',
         editorBold: 'Bold',
@@ -956,5 +963,49 @@ window.en = {
         multiviewToggle: 'Open/Close Multiview',
         multiviewFullscreen: 'Fullscreen (in Multiview)',
         multiviewClose: 'Close Multiview'
+    },
+    
+    download: {
+        pageTitle: 'Download Manager | Youvi',
+        title: 'Download Video',
+        platform: 'Platform',
+        videoUrl: 'Video URL',
+        videoUrlPlaceholder: 'https://youtube.com/watch?v=...',
+        videoUrlHelp: 'Paste video URL from selected platform',
+        tags: 'Tags (comma separated)',
+        tagsPlaceholder: 'music, tutorial, gaming',
+        downloadOptions: 'Download Options',
+        optionVideo: 'Video (yt-dlp)',
+        optionComments: 'Comments (JSON)',
+        optionDanmaku: 'Danmaku (from comments)',
+        optionLiveChat: 'Live Chat (as danmaku)',
+        optionDescription: 'Description (TXT)',
+        videoQuality: 'Video Quality',
+        qualityBest: 'Best Quality',
+        quality1080p: '1080p',
+        quality720p: '720p (recommended)',
+        quality480p: '480p',
+        quality360p: '360p',
+        qualityAudio: 'Audio Only',
+        qualityHelp: 'Select video quality for yt-dlp downloads',
+        saveLocation: 'Save Location (absolute path)',
+        saveLocationPlaceholder: 'F:\\Videos\\Other\\Music',
+        saveLocationHelp: 'Enter a full path. The browser folder picker cannot provide it.',
+        downloadButton: 'Download',
+        progressVideo: 'Downloading video...',
+        progressDone: 'Done',
+        serverOnline: 'Server Online',
+        serverOffline: 'Server Offline',
+        checkingServer: 'Checking server...',
+        tools: 'Tools',
+        search: 'Search'
+    },
+    
+    widgets: {
+        forumPosts: 'Posts',
+        topUsers: 'Authors',
+        loading: 'Loading...',
+        viewAllPosts: 'All posts →',
+        viewAllChannels: 'All channels →'
     }
 };

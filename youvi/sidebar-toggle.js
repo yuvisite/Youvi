@@ -30,6 +30,9 @@
                 html.classList.add('sidebar-collapsed');
                 localStorage.setItem(SIDEBAR_STATE_KEY, 'true');
             }
+            try {
+                window.dispatchEvent(new CustomEvent('youvi-sidebar-toggle', { detail: { collapsed: !isCollapsed } }));
+            } catch (e) {}
         }
     }
     
