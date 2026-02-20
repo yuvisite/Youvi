@@ -275,11 +275,11 @@
         .results-list .video-card { align-items:stretch; }
         .results-list .video-thumbnail { flex: 0 0 280px; height: 158px; aspect-ratio:auto; border-radius:6px; }
         .results-list .video-info { padding:0 0 0 4px; display:flex; flex-direction:column; gap:6px; overflow:hidden; min-width:0; }
-        .results-list .video-card-title { font-size:18px; -webkit-line-clamp: 2; line-clamp: 2; }
-        .results-list .video-desc { font-size:13px; display:-webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow:hidden; line-clamp: 2; }
-        .results-list .video-meta-line, .results-list .video-views-line, .results-list .video-likes-line, .results-list .video-dates-line { font-size:13px; }
-        .results-list .video-views { font-size:12px; }
-        .results-list .playlist-channel { font-size:13px; }
+        .results-list .video-card-title { font-size:16px; -webkit-line-clamp: 2; line-clamp: 2; }
+        .results-list .video-desc { font-size:14px; display:-webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow:hidden; line-clamp: 2; }
+        .results-list .video-meta-line, .results-list .video-views-line, .results-list .video-likes-line, .results-list .video-dates-line { font-size:14px; }
+        .results-list .video-views { font-size:14px; }
+        .results-list .playlist-channel { font-size:14px; }
         .results-list .video-channel-row { gap:10px; }
         .results-list .video-channel-row .channel-avatar-mini { width:20px; height:20px; font-size:12px; }
         .results-list .video-channel-row .playlist-channel-link { font-size:14px; }
@@ -296,11 +296,11 @@
         @media (max-width: 768px) {
             .latest-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
         }
-        .results-compact .video-card-title { font-size:13px; -webkit-line-clamp: 2; line-clamp: 2; }
-        .results-compact .video-desc { font-size:11px; display:-webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow:hidden; line-clamp: 1; }
-        .results-compact .video-meta-line, .results-compact .video-views-line, .results-compact .video-likes-line, .results-compact .video-dates-line { font-size:11px; }
-        .results-compact .video-views { font-size:10px; }
-        .results-compact .playlist-channel { font-size:11px; }
+        .results-compact .video-card-title { font-size:14px; -webkit-line-clamp: 2; line-clamp: 2; }
+        .results-compact .video-desc { font-size:12px; display:-webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow:hidden; line-clamp: 1; }
+        .results-compact .video-meta-line, .results-compact .video-views-line, .results-compact .video-likes-line, .results-compact .video-dates-line { font-size:12px; }
+        .results-compact .video-views { font-size:12px; }
+        .results-compact .playlist-channel { font-size:12px; }
         .results-compact .video-channel-row { gap:8px; }
         .results-compact .video-channel-row .channel-avatar-mini { width:18px; height:18px; font-size:11px; }
         .results-compact .video-channel-row .playlist-channel-link { font-size:12px; }
@@ -721,7 +721,8 @@
       <a href="index.html" data-i18n="nav.management">Управление</a>
       <a href="youvi_ch_list.html" data-i18n="nav.channels">Каналы</a>
       <a href="youvi_playlists_list.html" data-i18n="nav.playlists">Плейлисты</a>
-      <a href="youvi_feed_all.html" data-i18n="nav.feed">Feed</a> 
+      <a href="forum/forum.html" data-i18n="nav.forums">Forums</a> 
+      <a href="download/youvi_download.html" data-i18n="nav.download">Download</a> 
       <a href="wiki/index.html" data-i18n="nav.wiki">Wiki</a>
       <div class="lang-switcher">
         <select id="langSwitcher" class="lang-select">
@@ -782,10 +783,6 @@
                 <a href="youvi_main.html" class="sidebar-item nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
                     <span data-i18n="sidebar.home">Главная</span>
-                </a>
-                <a href="youvi_feed_all.html" class="sidebar-item nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
-                    <span data-i18n="sidebar.feed">Feed</span>
                 </a>
                 <a href="youvi_tags.html" class="sidebar-item nav-item">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
@@ -892,6 +889,7 @@
                     <button class="type-btn" data-type="videos" id="typeBtnVideos" data-i18n="searchPage.videos">Видео</button>
                     <button class="type-btn" data-type="playlists" id="typeBtnPlaylists" data-i18n="searchPage.playlists">Плейлисты</button>
                     <button class="type-btn" data-type="channels" id="typeBtnChannels" data-i18n="searchPage.channels">Каналы</button>
+                    <a href="forum/forum_search.html" class="type-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">Форум</a>
                 </div>
                 <div class="view-switcher">
                     <button class="view-btn" data-view="grid" id="viewBtnGrid" data-i18n="searchPage.grid">Сетка</button>
@@ -1501,11 +1499,12 @@ async function loadChannelIndex(){
         let metaLine;
         if (currentView === 'list' || currentView === 'compact') {
             // List/Compact: all in one line
-            metaLine = `<div class="video-meta-line" style="color:#888;font-size:12px;">${dateStr ? dateStr + ' • ' : ''}${viewsSvg} ${viewsCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}</div>`;
+            const fontSize = currentView === 'compact' ? '12px' : '14px';
+            metaLine = `<div class="video-meta-line" style="color:#888;font-size:${fontSize};">${dateStr ? dateStr + ' • ' : ''}${viewsSvg} ${viewsCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}</div>`;
         } else {
             // Grid: separate lines
-            const dateLine = dateStr ? `<div class="video-meta-line" style="color:#888;font-size:12px;">${dateStr}</div>` : '';
-            const statsLine = `<div class="video-meta-line" style="color:#888;font-size:12px;">${viewsSvg} ${viewsCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}</div>`;
+            const dateLine = dateStr ? `<div class="video-meta-line" style="color:#888;font-size:14px;">${dateStr}</div>` : '';
+            const statsLine = `<div class="video-meta-line" style="color:#888;font-size:14px;">${viewsSvg} ${viewsCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}</div>`;
             metaLine = dateLine + statsLine;
         }
 
@@ -1600,6 +1599,21 @@ async function loadChannelIndex(){
     }
 
     document.addEventListener('DOMContentLoaded', async ()=>{
+      // Read search query from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryFromUrl = urlParams.get('q');
+      if (queryFromUrl) {
+        const searchInput = document.getElementById('headerSearchInput');
+        if (searchInput) {
+          searchInput.value = queryFromUrl;
+          // Trigger search after data loads
+          setTimeout(() => {
+            const searchBtn = document.getElementById('headerSearchBtn');
+            if (searchBtn) searchBtn.click();
+          }, 1000);
+        }
+      }
+      
       if (!supportsFS){ document.getElementById('resultsGrid').innerHTML = '<div class="empty-state" style="color:red"><strong>File System API не поддерживается в этом браузере. Используйте Chrome/Edge.</strong></div>'; return; }
       try{
         db = await openDB();
@@ -2002,7 +2016,7 @@ async function loadChannelIndex(){
                         <ul>
                             <li><a href="youvi_main.html" data-i18n="footer.video">Видео</a></li>
                             <li><a href="youvi_tags.html" data-i18n="sidebar.tags">Теги</a></li>
-                            <li><a href="youvi_feed_all.html" data-i18n="nav.feed">Feed</a></li>
+                            <li><a href="forum/forum.html" >Форумы</a></li>
                             <li><a href="index.html" data-i18n="nav.management">Управление</a></li>
                         </ul>
                     </div>
@@ -2088,6 +2102,26 @@ async function loadChannelIndex(){
     
     <!-- Language Switcher Handler -->
     <script>
+        // Transfer search query between pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const forumBtn = document.querySelector('.type-switcher a[href*="forum"]');
+            const searchInput = document.getElementById('headerSearchInput');
+            
+            if (forumBtn && searchInput) {
+                forumBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const query = searchInput.value.trim();
+                    const baseUrl = forumBtn.getAttribute('href');
+                    
+                    if (query) {
+                        window.location.href = `${baseUrl}?q=${encodeURIComponent(query)}`;
+                    } else {
+                        window.location.href = baseUrl;
+                    }
+                });
+            }
+        });
+        
         document.addEventListener('DOMContentLoaded', function() {
             const langSwitcher = document.getElementById('langSwitcher');
             if (langSwitcher) {

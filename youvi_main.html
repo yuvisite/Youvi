@@ -10,19 +10,21 @@
         (function() {
             var theme = localStorage.getItem('youvi-theme');
             var sidebar = localStorage.getItem('sidebarCollapsed');
+            var cleanView = localStorage.getItem('youvi_clean_view');
             
             var htmlClasses = [];
             if (theme === 'dark') htmlClasses.push('dark-theme');
             else if (theme === 'skeuo') htmlClasses.push('skeuo-theme');
             if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+            if (cleanView === 'true') htmlClasses.push('clean-view');
             if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
         })();
     </script>
     <style>
         
         :root {
-            --latest-cols: 6;
-            --playlist-cols: 6;
+            --latest-cols: 5;
+            --playlist-cols: 5;
         }
         
         * {
@@ -126,11 +128,6 @@
             background: #f5f5f5 !important;
         }
 
-        .sidebar-collapsed .sidebar-section:has(#sidebarTagsContainer),
-        html.sidebar-collapsed .sidebar-section:has(#sidebarTagsContainer) {
-            display: none !important;
-        }
-
         body.dark-theme .sidebar-collapsed .sidebar,
         body.dark-theme html.sidebar-collapsed .sidebar,
         html.dark-theme .sidebar-collapsed .sidebar,
@@ -156,13 +153,14 @@
         
 
 
-        .sidebar-collapsed .sidebar-title,
-        html.sidebar-collapsed .sidebar-title {
+        /* Collapsed styles apply only to left .sidebar, not .sidebar-right (tags) */
+        .sidebar-collapsed .sidebar .sidebar-title,
+        html.sidebar-collapsed .sidebar .sidebar-title {
             display: none !important;
         }
 
-        .sidebar-collapsed .sidebar-item,
-        html.sidebar-collapsed .sidebar-item {
+        .sidebar-collapsed .sidebar .sidebar-item,
+        html.sidebar-collapsed .sidebar .sidebar-item {
             padding: 8px !important;
             padding-left: 5px !important;
             padding-right: 8px !important;
@@ -172,60 +170,60 @@
             font-size: 0 !important;
         }
 
-        .sidebar-collapsed .sidebar-item:hover,
-        html.sidebar-collapsed .sidebar-item:hover {
+        .sidebar-collapsed .sidebar .sidebar-item:hover,
+        html.sidebar-collapsed .sidebar .sidebar-item:hover {
             background: rgba(255, 105, 180, 0.1);
         }
 
-        .sidebar-collapsed .sidebar-item.active,
-        html.sidebar-collapsed .sidebar-item.active {
+        .sidebar-collapsed .sidebar .sidebar-item.active,
+        html.sidebar-collapsed .sidebar .sidebar-item.active {
             background: rgba(255, 105, 180, 0.15);
         }
 
-        .sidebar-collapsed .sidebar-item svg,
-        .sidebar-collapsed .sidebar-item img,
-        html.sidebar-collapsed .sidebar-item svg,
-        html.sidebar-collapsed .sidebar-item img {
+        .sidebar-collapsed .sidebar .sidebar-item svg,
+        .sidebar-collapsed .sidebar .sidebar-item img,
+        html.sidebar-collapsed .sidebar .sidebar-item svg,
+        html.sidebar-collapsed .sidebar .sidebar-item img {
             margin: 0 !important;
             width: 20px !important;
             height: 20px !important;
             font-size: 16px !important;
         }
 
-        .sidebar-collapsed #subscribedChannelsContainer .sidebar-item,
-        html.sidebar-collapsed #subscribedChannelsContainer .sidebar-item {
+        .sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item,
+        html.sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item {
             justify-content: center !important;
         }
 
-        .sidebar-collapsed #subscribedChannelsContainer .sidebar-item span,
-        html.sidebar-collapsed #subscribedChannelsContainer .sidebar-item span {
+        .sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item span,
+        html.sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item span {
             display: none !important;
         }
 
-        .sidebar-collapsed #subscribedChannelsContainer .sidebar-item div,
-        html.sidebar-collapsed #subscribedChannelsContainer .sidebar-item div {
+        .sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item div,
+        html.sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item div {
             margin: 0 !important;
         }
 
-        .sidebar-collapsed .library-item,
-        .sidebar-collapsed .nav-item,
-        html.sidebar-collapsed .library-item,
-        html.sidebar-collapsed .nav-item {
+        .sidebar-collapsed .sidebar .library-item,
+        .sidebar-collapsed .sidebar .nav-item,
+        html.sidebar-collapsed .sidebar .library-item,
+        html.sidebar-collapsed .sidebar .nav-item {
             justify-content: center !important;
             gap: 0 !important;
         }
 
-        .sidebar-collapsed .library-item span,
-        .sidebar-collapsed .nav-item span,
-        html.sidebar-collapsed .library-item span,
-        html.sidebar-collapsed .nav-item span {
+        .sidebar-collapsed .sidebar .library-item span,
+        .sidebar-collapsed .sidebar .nav-item span,
+        html.sidebar-collapsed .sidebar .library-item span,
+        html.sidebar-collapsed .sidebar .nav-item span {
             display: none !important;
         }
 
-        .sidebar-collapsed .library-item svg,
-        .sidebar-collapsed .nav-item svg,
-        html.sidebar-collapsed .library-item svg,
-        html.sidebar-collapsed .nav-item svg {
+        .sidebar-collapsed .sidebar .library-item svg,
+        .sidebar-collapsed .sidebar .nav-item svg,
+        html.sidebar-collapsed .sidebar .library-item svg,
+        html.sidebar-collapsed .sidebar .nav-item svg {
             margin: 0 !important;
         }
 
@@ -260,10 +258,177 @@
         
         .content-wrapper {
             display: flex;
+            flex-direction: column;
             flex: 1;
             max-width: 1500px;
             margin: 0 auto;
+            gap: 15px;
+        }
+        .content-with-sidebar {
+            display: flex;
+            flex: 1;
             gap: 20px;
+            min-width: 0;
+        }
+        .content-with-sidebar .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Right sidebar (tags only) - under banner/categories */
+        .sidebar-right {
+            width: 280px;
+            flex-shrink: 0;
+            background: transparent;
+            padding: 10px 12px 0 10px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border-left: 1px solid #eee;
+        }
+        body.dark-theme .sidebar-right {
+            background: transparent;
+            border-left-color: #333;
+        }
+        .sidebar-right .sidebar-section {
+            margin-bottom: 15px;
+        }
+        .sidebar-right .sidebar-title {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        .sidebar-right .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            text-decoration: none;
+            padding: 6px 0 6px 10px;
+            font-size: 13px;
+            border-left: 3px solid transparent;
+            transition: color 0.2s, border-left-color 0.2s;
+            cursor: pointer;
+        }
+        .sidebar-right .sidebar-item:hover {
+            color: #c2185b;
+            border-left-color: #ff85b4;
+        }
+        .sidebar-right .sidebar-item.active {
+            color: #000;
+            border-left-color: #ff69b4;
+        }
+        body.dark-theme .sidebar-right .sidebar-item {
+            color: #aaa;
+        }
+        body.dark-theme .sidebar-right .sidebar-item:hover {
+            color: #ff85b4;
+        }
+        body.dark-theme .sidebar-right .sidebar-item.active {
+            color: #fff;
+        }
+        .sidebar-right #sidebarTagsContainer {
+            max-height: none;
+        }
+        html.clean-view .sidebar-right,
+        body.clean-view .sidebar-right {
+            display: none !important;
+        }
+        html.clean-view .content-with-sidebar,
+        body.clean-view .content-with-sidebar {
+            gap: 0;
+        }
+        .sidebar-banner-placeholder .sidebar-banner-box {
+            min-height: 80px;
+            overflow: hidden;
+            display: block;
+            margin-left: 10px;
+            width: calc(100% - 10px);
+        }
+        .sidebar-banner-placeholder .sidebar-banner-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            vertical-align: top;
+        }
+        .sidebar-forum-threads {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .sidebar-forum-thread-link {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 3px solid transparent;
+            padding-left: 8px;
+            transition: color 0.2s, border-left-color 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .sidebar-forum-thread-link:hover {
+            color: #ff69b4;
+            border-left-color: #ff85b4;
+        }
+        body.dark-theme .sidebar-forum-thread-link {
+            color: #aaa;
+        }
+        body.dark-theme .sidebar-forum-thread-link:hover {
+            color: #ff85b4;
+        }
+        .sidebar-forum-threads-loading,
+        .sidebar-forum-threads-empty {
+            font-size: 12px;
+            color: #999;
+            padding: 8px 0;
+            min-height: 24px;
+        }
+        .sidebar-forum-threads-empty a {
+            color: #ff69b4;
+            text-decoration: none;
+        }
+        .sidebar-forum-threads-empty a:hover {
+            text-decoration: underline;
+        }
+        .sidebar-forum-thread-item {
+            display: block;
+            padding: 6px 0 8px 8px;
+            border-left: 3px solid transparent;
+            transition: border-left-color 0.2s;
+        }
+        .sidebar-forum-thread-item:hover {
+            border-left-color: #ff85b4;
+        }
+        .sidebar-forum-thread-item .sidebar-forum-thread-link {
+            padding: 0;
+            margin-bottom: 2px;
+        }
+        .sidebar-forum-meta {
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+        }
+        body.dark-theme .sidebar-forum-meta {
+            color: #777;
+        }
+        .sidebar-forum-last-user {
+            color: #ff69b4;
+            text-decoration: none;
+        }
+        .sidebar-forum-last-user:hover {
+            text-decoration: underline;
+        }
+        body.dark-theme .sidebar-forum-last-user {
+            color: #ff85b4;
+        }
+        @media (max-width: 1400px) {
+            .sidebar-right { width: 240px; }
+        }
+        @media (max-width: 1200px) {
+            .sidebar-right { width: 220px; }
         }
         
         
@@ -371,6 +536,12 @@
             display: flex; 
             flex-direction: column; 
         }
+
+
+
+
+
+
 
         .video-player {
             width: 100%;
@@ -828,7 +999,7 @@
         }
         .latest-grid {
             display: grid;
-            grid-template-columns: repeat(var(--latest-cols, 6), 1fr);
+            grid-template-columns: repeat(var(--latest-cols, 5), 1fr);
             gap: 12px;
             padding: 0 20px 0 20px;
             flex: 1; 
@@ -1045,7 +1216,7 @@
             }
             
             :root {
-                --latest-cols: 8;
+                --latest-cols: 6;
             }
         }
 
@@ -1059,13 +1230,13 @@
             }
             
             :root {
-                --latest-cols: 9;
+                --latest-cols: 7;
             }
         }
         
         @media (min-width: 1400px) and (max-width: 1999px) {
             :root {
-                --latest-cols: 6;
+                --latest-cols: 5;
             }
         }
         
@@ -1164,6 +1335,16 @@
             .sidebar-right {
                 display: none;
             }
+            
+            .right-sidebar {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .right-sidebar {
+                display: none;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1171,6 +1352,10 @@
                 flex-direction: column;
                 padding: 0 10px;
                 gap: 10px;
+            }
+            
+            .right-sidebar {
+                display: none;
             }
             
             .banner-section {
@@ -1662,7 +1847,7 @@
 
         .video-carousel {
     display: grid;
-    grid-template-columns: repeat(var(--latest-cols, 6), 1fr);
+    grid-template-columns: repeat(var(--latest-cols, 5), 1fr);
     gap: 8px;
     width: 100%;
     align-content: start;
@@ -2059,9 +2244,8 @@
     <!-- Adaptive Grid System -->
     <link rel="stylesheet" href="youvi/adaptive-grid.css">
     
-    <!-- Adaptive Grid System -->
-    <link rel="stylesheet" href="youvi/adaptive-grid.css">
-    
+    <!-- Shared (forum dir, DB) for sidebar forum block -->
+    <script src="youvi_shared.js"></script>
     <!-- YouVi Hover Preview System -->
     <script src="youvi/hover/hover-preview-queue.js"></script>
     <script src="youvi/hover/hover-preview.js"></script>
@@ -2113,8 +2297,11 @@
       <a href="index.html" data-i18n="nav.management">Управление</a>
       <a href="youvi_ch_list.html" data-i18n="nav.channels">Каналы</a>
       <a href="youvi_playlists_list.html" data-i18n="nav.playlists">Плейлисты</a>
-      <a href="youvi_feed_all.html" data-i18n="nav.feed">Feed</a> 
+      <a href="forum/forum.html" data-i18n="nav.forums">Forums</a> 
+      <a href="download/youvi_download.html" data-i18n="nav.download">Download</a> 
       <a href="wiki/index.html" data-i18n="nav.wiki">Wiki</a>
+
+					
       <div class="lang-switcher">
         <select id="langSwitcher" class="lang-select">
           <option value="ru">RU</option>
@@ -2180,20 +2367,21 @@
                     </svg>
                     <span data-i18n="sidebar.home">Главная</span>
                 </a>
-                <a href="youvi_feed_all.html" class="sidebar-item nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
-                        <path d="M4 11a9 9 0 0 1 9 9"/>
-                        <path d="M4 4a16 16 0 0 1 16 16"/>
-                        <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                    </svg>
-                    <span data-i18n="sidebar.feed">Feed</span>
-                </a>
+              
                 <a href="youvi_tags.html" class="sidebar-item nav-item">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
                      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
                   <line x1="7" y1="7" x2="7.01" y2="7"/>
                  </svg>
                     <span data-i18n="sidebar.allTags">Все теги</span>
+                </a>
+                <a href="#" id="cleanViewToggle" class="sidebar-item nav-item" role="button" aria-pressed="false" title="Скрыть правую панель, 6 видео в ряд" data-i18n-title="sidebar.cleanViewTitle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <line x1="3" y1="9" x2="21" y2="9"/>
+                        <line x1="9" y1="21" x2="9" y2="9"/>
+                    </svg>
+                    <span data-i18n="sidebar.cleanView">Чистый вид</span>
                 </a>
             </div>
             <div class="sidebar-section">
@@ -2301,26 +2489,100 @@
                 </a>
                 </div>
             </div>
-                
+
             <div class="sidebar-section">
-                <div class="sidebar-title" data-i18n="sidebar.tags">Теги</div>
-                <a href="#" class="sidebar-item active" id="allPlaylistsLink" data-i18n="sidebar.allTagsLink">Все теги</a> <!-- Renamed and moved -->
-                <div id="sidebarTagsContainer"></div>
+              <div class="sidebar-section">
+                <div class="sidebar-title">Форум</div>
+                <a href="forum/forum.html" class="sidebar-item nav-item ">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  <span>Главная</span>
+                </a>
+                <a href="forum/forum_recent.html" class="sidebar-item nav-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                    <path d="M4 11a9 9 0 0 1 9 9"/>
+                    <path d="M4 4a16 16 0 0 1 16 16"/>
+                    <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                  </svg>
+                  <span>Поток</span>
+                </a>
+                <a href="forum/forum_search.html" class="sidebar-item nav-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                  <span>Поиск</span>
+                </a>
+                <a href="forum/forum_fav.html" class="sidebar-item library-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                  <span>Избранное</span>
+                </a>
+                <a href="forum/forum_members.html" class="sidebar-item library-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 1-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                  <span>Участники</span>
+                </a>
+            </div>
+          </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title" data-i18n="nav.download">Загрузки</div>
+                <a href="download/youvi_download.html" class="sidebar-item nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    <span data-i18n="nav.download">Загрузки</span>
+                </a>
+                <a href="download/youvi_download.html?platform=youtube" class="sidebar-item library-item">YouTube</a>
+                <a href="download/youvi_download.html?platform=niconico" class="sidebar-item library-item">Niconico</a>
+                <a href="download/youvi_download.html?platform=bilibili" class="sidebar-item library-item">Bilibili</a>
+                <a href="download/youvi_download.html?platform=tiktok" class="sidebar-item library-item">TikTok</a>
+                <a href="download/youvi_download.html?platform=odysee" class="sidebar-item library-item">Odysee</a>
+                <a href="download/youvi_download.html?platform=vimeo" class="sidebar-item library-item">Vimeo</a>
+                <a href="download/youvi_download.html?platform=dailymotion" class="sidebar-item library-item">Dailymotion</a>
+                <a href="download/youvi_download.html?platform=mover" class="sidebar-item library-item">Mover.uz</a>
             </div>
         </aside>
 
-        <!-- Content Wrapper (centered) -->
+        <!-- Content Wrapper: banner/categories full width, then content + right sidebar -->
         <div class="content-wrapper">
-        <!-- Main Content -->
-        <main class="main-content">
             <div id="topPlaylistsContainer"></div>
-            <section class="latest-section">
-                <h2 class="latest-title" id="latestTitle" data-i18n="main.latestVideos">Свежие видео</h2>
-                <div id="latestGrid" class="latest-grid"></div>
-            </section>
-        </main>
+            <div class="content-with-sidebar">
+                <main class="main-content">
+                    <div id="playlistsContainer" class="playlists-reserved-space"></div>
+                    <section class="latest-section">
+                        <h2 class="latest-title" id="latestTitle" data-i18n="main.latestVideos">Свежие видео</h2>
+                        <div id="latestGrid" class="latest-grid"></div>
+                    </section>
+                </main>
+                <aside class="sidebar-right" id="rightSidebar">
+                    <div class="sidebar-section">
+                        <div class="sidebar-title" data-i18n="sidebar.tags">Теги</div>
+                        <a href="#" class="sidebar-item active" id="allPlaylistsLink" data-i18n="sidebar.allTagsLink">Все теги</a>
+                        <div id="sidebarTagsContainer"></div>
+                    </div>
+                    <div class="sidebar-section sidebar-banner-placeholder">
+                        <div class="sidebar-banner-box" aria-hidden="true">
+                            <img src="images/banner.png" alt="" class="sidebar-banner-img">
+                        </div>
+                    </div>
+                    <div class="sidebar-section sidebar-forum-activity">
+                        <div class="sidebar-title" data-i18n="sidebar.forumActivity">Активность форума</div>
+                        <a href="forum/forum_recent.html" class="sidebar-item nav-item" style="margin-bottom:8px" data-i18n="sidebar.forumActivityAll">Все</a>
+                        <div id="sidebarForumActivity" class="sidebar-forum-threads"></div>
+                    </div>
+                </aside>
+            </div>
         </div><!-- /content-wrapper -->
-
     </div>
 
             <!-- Footer -->
@@ -2337,7 +2599,7 @@
                             <ul>
               <li><a href="youvi_main.html" data-i18n="footer.video">Видео</a></li>
               <li><a href="youvi_tags.html" data-i18n="sidebar.tags">Теги</a></li>
-              <li><a href="youvi_feed_all.html" data-i18n="nav.feed">Feed</a></li>
+              <li>  <a href="forum/forum.html" ">Форумы</a> </li>
               <li><a href="index.html" data-i18n="nav.management">Управление</a></li>
             </ul>
           </div>
@@ -2594,8 +2856,8 @@
       }
 
       function reservePlaylistSpace() {
-        const topContainer = document.getElementById('topPlaylistsContainer');
-        if (!topContainer) return;
+        const playlistsContainer = document.getElementById('playlistsContainer');
+        if (!playlistsContainer) return;
 
         const playlistPlaceholder = document.createElement('div');
         playlistPlaceholder.className = 'playlist-loading-placeholder';
@@ -2612,7 +2874,7 @@
           font-size: 14px;
         `;
         playlistPlaceholder.innerHTML = typeof i18n !== 'undefined' ? i18n.t('main.loadingPlaylists', 'Загрузка плейлистов...') : 'Загрузка плейлистов...';
-        topContainer.appendChild(playlistPlaceholder);
+        playlistsContainer.appendChild(playlistPlaceholder);
       }
 
       function removePlaylistPlaceholder() {
@@ -2632,7 +2894,7 @@
         if (typeof adaptiveGrid !== 'undefined') {
           cols = adaptiveGrid.getCurrentColumns('video');
         } else {
-          cols = Number(localStorage.getItem('youvi_latest_cols')) || 6;
+          cols = Number(localStorage.getItem('youvi_latest_cols')) || 5;
         }
 
         const skeletonCount = 48;
@@ -2700,7 +2962,7 @@
                   try {
                     const file = await handle.getFile();
                     const meta = await getVideoMetadata(dir, name);
-                    const videoCreated = meta.created || createdTimestamp++;
+                    const videoCreated = meta.created || file.lastModified;
                     const videoData = {
                       name, 
                       size: file.size,
@@ -3069,8 +3331,15 @@
 
           if (pendingMetadataCreation.has(fileName)) {
             debug.log(`[GetMetadata] ⏳ Creation pending for: ${fileName}`);
-
-            return { views: 0, likes: 0, dislikes: 0, tags: [], created: Date.now(), _temporary: true };
+            
+            // Try to get file timestamp even for pending creation
+            try {
+              const fileHandle = await dirHandle.getFileHandle(fileName);
+              const file = await fileHandle.getFile();
+              return { views: 0, likes: 0, dislikes: 0, tags: [], created: file.lastModified, _temporary: true };
+            } catch {
+              return { views: 0, likes: 0, dislikes: 0, tags: [], created: Date.now(), _temporary: true };
+            }
           }
 
           try {
@@ -3081,7 +3350,7 @@
               likes:0, 
               dislikes:0, 
               tags:[], 
-              created: Date.now(),
+              created: file.lastModified,
               fileCreated: file.lastModified,
               modified: file.lastModified, 
               size: file.size 
@@ -3119,6 +3388,7 @@
           } catch(_) {
 
             debug.warn(`[GetMetadata] ⚠️ Cannot access video file ${fileName}, returning temporary metadata`);
+            // Use current time only as last resort when file is inaccessible
             const fallbackMetadata = { views:0, likes:0, dislikes:0, tags:[], created:Date.now(), _temporary: true };
 
             return fallbackMetadata;
@@ -3184,7 +3454,14 @@ async function getVideoMetadataOptimized(dirHandle, fileName, cache) {
         return cache.get(cacheKey);
       }
 
-      return { views: 0, likes: 0, dislikes: 0, tags: [], created: Date.now(), _temporary: true };
+      // Try to get file timestamp even for pending creation
+      try {
+        const fileHandle = await dirHandle.getFileHandle(fileName);
+        const file = await fileHandle.getFile();
+        return { views: 0, likes: 0, dislikes: 0, tags: [], created: file.lastModified, _temporary: true };
+      } catch {
+        return { views: 0, likes: 0, dislikes: 0, tags: [], created: Date.now(), _temporary: true };
+      }
     }
 
     try {
@@ -3195,7 +3472,7 @@ async function getVideoMetadataOptimized(dirHandle, fileName, cache) {
         likes: 0, 
         dislikes: 0, 
         tags: [], 
-        created: Date.now(),
+        created: file.lastModified,
         fileCreated: file.lastModified,
         modified: file.lastModified, 
         size: file.size 
@@ -3245,6 +3522,7 @@ async function getVideoMetadataOptimized(dirHandle, fileName, cache) {
       
       debug.warn(`[MetadataOptimized] ⚠️ Cannot access video file ${fileName}, returning temporary metadata`);
       
+      // Use current time only as last resort when file is inaccessible
       const fallbackMetadata = { views: 0, likes: 0, dislikes: 0, tags: [], created: Date.now(), _temporary: true };
     
       return fallbackMetadata;
@@ -4129,7 +4407,7 @@ async function loadAllVideosProgressive(){
                   
                   if (shouldRefresh) {
                     const meta = await getVideoMetadataOptimized(dir, name, metadataCache);
-                    const videoCreated = meta.created || (cachedVideo?.created) || tempCreatedTimestamp++;
+                    const videoCreated = meta.created || (cachedVideo?.created) || file.lastModified;
                     const videoData = {
                       name,
                       size: file.size,
@@ -4294,7 +4572,7 @@ async function loadAllVideosProgressive(){
 
               if (shouldRefresh) {
                 const meta = await getVideoMetadataOptimized(dir, name, metadataCache);
-                const videoCreated = meta.created || (cachedVideo?.created) || createdTimestamp++;
+                const videoCreated = meta.created || (cachedVideo?.created) || file.lastModified;
                 const videoData = {
                   name, 
                   size: file.size,
@@ -4444,6 +4722,16 @@ async function loadAllVideosProgressive(){
 
       let renderMixedContentTimeout = null;
 
+      function getEffectiveVideoCols() {
+        const val = getComputedStyle(document.documentElement).getPropertyValue('--latest-cols').trim();
+        const n = parseInt(val, 10);
+        return (isFinite(n) && n >= 1) ? n : 5;
+      }
+
+      function getPlaylistCarouselCols() {
+        if (typeof adaptiveGrid !== 'undefined') return adaptiveGrid.getCurrentColumns('video');
+        return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--latest-cols').trim(), 10) || 5;
+      }
 
       function renderMixedContent() {
 
@@ -4478,6 +4766,14 @@ async function loadAllVideosProgressive(){
           }
           
           topContainer.innerHTML = '';
+          const playlistsContainerEl = document.getElementById('playlistsContainer');
+          if (playlistsContainerEl) {
+            playlistsContainerEl.innerHTML = '';
+            const showPlaylists = currentPage === 1 && currentFilter === 'all' && currentSort === 'new' && !currentSearchQuery;
+            if (!showPlaylists) {
+              playlistsContainerEl.style.cssText = 'min-height: 0; margin: 0; padding: 0;';
+            }
+          }
 
         {
 
@@ -4505,14 +4801,19 @@ async function loadAllVideosProgressive(){
           const tagsSection = document.createElement('section');
           tagsSection.className = 'tags-section';
 
-          let currentCols;
+          let currentCols = getEffectiveVideoCols();
           if (typeof adaptiveGrid !== 'undefined') {
             currentCols = adaptiveGrid.getCurrentColumns('video');
+            document.documentElement.style.setProperty('--latest-cols', currentCols);
+            if (document.documentElement.classList.contains('clean-view')) {
+              setTimeout(() => adaptiveGrid.refreshAfterLayoutChange(), 150);
+            }
           } else {
-            currentCols = Number(localStorage.getItem('youvi_latest_cols')) || 6;
+            if (!document.documentElement.classList.contains('clean-view')) {
+              currentCols = Number(localStorage.getItem('youvi_latest_cols')) || 5;
+              document.documentElement.style.setProperty('--latest-cols', currentCols);
+            }
           }
-
-          document.documentElement.style.setProperty('--latest-cols', currentCols);
 
           const t = (key, def) => typeof i18n !== 'undefined' ? i18n.t(key, def) : def;
           
@@ -4634,6 +4935,9 @@ async function loadAllVideosProgressive(){
               applyFiltersAndRender();
               updateSectionTitle();
               updatePageTitle();
+              if (typeof adaptiveGrid !== 'undefined') {
+                setTimeout(() => adaptiveGrid.refreshAfterLayoutChange(), 100);
+              }
             } catch (e) { debug.warn('filterByTag error', e); }
           }
   
@@ -4646,28 +4950,28 @@ async function loadAllVideosProgressive(){
 
           if (currentPage === 1 && currentFilter === 'all' && currentSort === 'new' && !currentSearchQuery) {
 
-            if (allPlaylistsSorted.length > 0) {
+            const playlistsContainer = document.getElementById('playlistsContainer');
+            if (playlistsContainer) {
+              playlistsContainer.innerHTML = '';
+              const containerHeight = allPlaylistsSorted.length > 0 ? '160px' : '0px';
+              playlistsContainer.style.cssText = `
+                min-height: ${containerHeight};
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+              `;
+            }
+
+            if (playlistsContainer && allPlaylistsSorted.length > 0) {
               const playlistsHeader = document.createElement('section');
               playlistsHeader.className = 'playlists-header-section';
               const latestPlaylistsText = typeof i18n !== 'undefined' ? i18n.t('main.latestPlaylists', 'Свежие плейлисты') : 'Свежие плейлисты';
               playlistsHeader.innerHTML = `
                 <h2 class="playlists-header-title" data-i18n="main.latestPlaylists">${latestPlaylistsText}</h2>
               `;
-              topContainer.appendChild(playlistsHeader);
+              playlistsContainer.appendChild(playlistsHeader);
             }
-
-            const playlistsContainer = document.createElement('div');
-            playlistsContainer.className = 'playlists-reserved-space';
-
-            const containerHeight = allPlaylistsSorted.length > 0 ? '160px' : '0px';
-            playlistsContainer.style.cssText = `
-              min-height: ${containerHeight};
-              position: relative;
-              display: flex;
-              flex-direction: column;
-              gap: 10px;
-            `;
-            topContainer.appendChild(playlistsContainer);
 
             const untitledText = typeof i18n !== 'undefined' ? i18n.t('main.untitled', 'Без названия') : 'Без названия';
             const openAllText = typeof i18n !== 'undefined' ? i18n.t('main.openAll', 'Открыть все') : 'Открыть все';
@@ -4685,14 +4989,14 @@ async function loadAllVideosProgressive(){
                 <div class="video-carousel-wrapper">
                   <div class="video-carousel" id="${uniqueCarouselId}"></div>
                 </div>`;
-              playlistsContainer.appendChild(section);
+              if (playlistsContainer) playlistsContainer.appendChild(section);
 
               requestAnimationFrame(() => {
                 renderPlaylistCarousel(playlist, uniqueCarouselId);
               });
             }
 
-            if (allPlaylistsSorted.length > 1) {
+            if (allPlaylistsSorted.length > 1 && playlistsContainer) {
               const playlist = allPlaylistsSorted[1];
               const uniqueCarouselId = `mixed-carousel-${playlist.id}-1`;
               const section = document.createElement('section');
@@ -4711,7 +5015,7 @@ async function loadAllVideosProgressive(){
                 renderPlaylistCarousel(playlist, uniqueCarouselId);
               });
             }
-          }
+            }
 
           attachTagClickListeners();
 
@@ -4739,12 +5043,7 @@ async function loadAllVideosProgressive(){
 
         const observer = initPreviewObserver();
 
-        let cols;
-        if (typeof adaptiveGrid !== 'undefined') {
-          cols = adaptiveGrid.getCurrentColumns('video');
-        } else {
-          cols = Number(localStorage.getItem('youvi_latest_cols')) || 6;
-        }
+        const cols = getPlaylistCarouselCols();
         const videosToShow = (playlist.videos || []).slice(0, Math.max(1, cols));
         
         for (const video of videosToShow) {
@@ -6260,19 +6559,19 @@ function sortVideos(videos) {
         categoriesContainer.innerHTML = '';
 
         const tagTypeConfig = {
-          'ct': { limit: 3, color: '#67c5d6', label: 'Категории' },
-          'gt': { limit: 15, color: '#6b7280', label: 'Общие' },
-          'au': { limit: 3, color: '#ef6c7d', label: 'Авторы' },
-          'st': { limit: 3, color: '#f28b8b', label: 'Студии' },
-          'yr': { limit: 4, color: '#eab676', label: 'Годы' },
-          'at': { limit: 3, color: '#a78bdb', label: 'Аниме' },
-          'ser': { limit: 1, color: '#8db8d6', label: 'Сериалы' },
-          'mt': { limit: 1, color: '#d4a373', label: 'Фильмы' },
-          'nat': { limit: 1, color: '#9dd6a8', label: 'Анимация' },
-          'ra': { limit: 3, color: '#f5a3c7', label: 'Рейтинг' },
-          'ge': { limit: 0, color: '#6b9bd1', label: 'Жанры' },
-          'tp': { limit: 0, color: '#f59e6c', label: 'Типы' },
-          'ch': { limit: 0, color: '#6b9e4d', label: 'Персонажи' }
+          'ct': { limit: 5, color: '#67c5d6', label: 'Категории' },
+          'gt': { limit: 35, color: '#6b7280', label: 'Общие' },
+          'au': { limit: 8, color: '#ef6c7d', label: 'Авторы' },
+          'st': { limit: 6, color: '#f28b8b', label: 'Студии' },
+          'yr': { limit: 8, color: '#eab676', label: 'Годы' },
+          'at': { limit: 6, color: '#a78bdb', label: 'Аниме' },
+          'ser': { limit: 3, color: '#8db8d6', label: 'Сериалы' },
+          'mt': { limit: 3, color: '#d4a373', label: 'Фильмы' },
+          'nat': { limit: 3, color: '#9dd6a8', label: 'Анимация' },
+          'ra': { limit: 6, color: '#f5a3c7', label: 'Рейтинг' },
+          'ge': { limit: 12, color: '#6b9bd1', label: 'Жанры' },
+          'tp': { limit: 12, color: '#f59e6c', label: 'Типы' },
+          'ch': { limit: 10, color: '#6b9e4d', label: 'Персонажи' }
         };
 
         function parseTagType(tagString) {
@@ -6370,6 +6669,169 @@ function sortVideos(videos) {
         }
       }
 
+      const SIDEBAR_FORUM_LAST_THREADS = 10;
+      const SIDEBAR_FORUM_CACHE_TTL_MS = 10 * 60 * 1000;
+
+      function slugifyNick(nick) {
+        if (window.YouviShared && typeof window.YouviShared.slugifyNick === 'function') {
+          return window.YouviShared.slugifyNick(nick);
+        }
+        return (nick || 'anon').toLowerCase().trim().replace(/\s+/g, '_').replace(/[^a-z0-9_\-\.а-я]/gi, '');
+      }
+
+      function loadSidebarForumActivity() {
+        const container = document.getElementById('sidebarForumActivity');
+        if (!container) return;
+        container.innerHTML = '<span class="sidebar-forum-threads-loading">Загрузка…</span>';
+        const setEmpty = () => { container.innerHTML = '<span class="sidebar-forum-threads-empty">Выберите папку YouVi на <a href="index.html">index.html</a> или откройте <a href="forum/forum_recent.html">форум</a>.</span>'; };
+        const render = (threads) => {
+          container.innerHTML = '';
+          threads.forEach(t => {
+            const item = document.createElement('div');
+            item.className = 'sidebar-forum-thread-item';
+            const a = document.createElement('a');
+            a.className = 'sidebar-forum-thread-link';
+            a.href = `forum/forum_thread.html?board=${encodeURIComponent(t.boardId)}&id=${encodeURIComponent(t.threadId)}`;
+            a.title = t.threadTitle;
+            a.textContent = t.threadTitle.length > 40 ? t.threadTitle.slice(0, 39) + '…' : t.threadTitle;
+            item.appendChild(a);
+            const meta = document.createElement('div');
+            meta.className = 'sidebar-forum-meta';
+            const dateStr = t.date ? new Date(t.date).toLocaleString(undefined, { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+            const lastNick = t.lastReplyNick || t.lastReplyUser || '';
+            if (dateStr) meta.appendChild(document.createTextNode(dateStr));
+            if (lastNick) {
+              if (dateStr) meta.appendChild(document.createTextNode(' · от '));
+              else meta.appendChild(document.createTextNode('от '));
+              const userLink = document.createElement('a');
+              userLink.className = 'sidebar-forum-last-user';
+              userLink.href = `forum/forum_profile.html?nick=${encodeURIComponent(slugifyNick(lastNick))}`;
+              userLink.textContent = lastNick;
+              meta.appendChild(userLink);
+            }
+            item.appendChild(meta);
+            container.appendChild(item);
+          });
+        };
+
+        async function scanForumForLastThreads() {
+          const getForumDir = window.YouviShared && typeof window.YouviShared.getForumDirectory === 'function' && window.YouviShared.getForumDirectory;
+          if (!getForumDir) return null;
+          let forumHandle;
+          try {
+            forumHandle = await getForumDir();
+          } catch (e) {
+            return null;
+          }
+          if (!forumHandle) return null;
+          const collected = [];
+          const yieldUi = () => new Promise(r => requestAnimationFrame(r));
+          try {
+            for await (const [boardId, boardHandle] of forumHandle.entries()) {
+              if (boardHandle.kind !== 'directory' || boardId.startsWith('.') || boardId === 'assets') continue;
+              await yieldUi();
+              try {
+                for await (const [threadName, threadHandle] of boardHandle.entries()) {
+                  if (threadHandle.kind !== 'directory' || threadName.startsWith('.')) continue;
+                  try {
+                    const fh = await threadHandle.getFileHandle('thread.json');
+                    const file = await fh.getFile();
+                    const threadData = JSON.parse(await file.text());
+                    const posts = threadData && threadData.posts;
+                    const lastPost = posts && posts.length ? posts[posts.length - 1] : null;
+                    const lastDate = lastPost ? (lastPost.date || 0) : 0;
+                    const lastNick = lastPost ? (lastPost.nick || '') : '';
+                    collected.push({
+                      boardId,
+                      threadId: threadName,
+                      threadTitle: (threadData && threadData.title) || 'Тема',
+                      date: lastDate,
+                      lastReplyNick: lastNick || undefined,
+                      lastReplyUser: lastNick || undefined
+                    });
+                  } catch (err) { /* skip thread */ }
+                }
+              } catch (err) { /* skip board */ }
+            }
+          } catch (err) {
+            return null;
+          }
+          return collected.sort((a, b) => (b.date || 0) - (a.date || 0)).slice(0, SIDEBAR_FORUM_LAST_THREADS);
+        }
+
+        (async function run() {
+          const now = Date.now();
+          const req = indexedDB.open('8SiteDB', 1);
+          req.onsuccess = () => {
+            const idb = req.result;
+            if (!idb.objectStoreNames.contains('postIndex')) {
+              idb.close();
+              loadFromScan();
+              return;
+            }
+            const tx = idb.transaction('postIndex', 'readonly');
+            const store = tx.objectStore('postIndex');
+            store.get('sidebarLastThreads').onsuccess = function () {
+              const data = this.result;
+              if (data && data.threads && data.threads.length > 0 && data.timestamp && (now - data.timestamp) <= SIDEBAR_FORUM_CACHE_TTL_MS) {
+                idb.close();
+                render(data.threads);
+                return;
+              }
+              store.get('allPosts').onsuccess = function () {
+                const allData = this.result;
+                idb.close();
+                if (allData && allData.posts && allData.posts.length > 0 && allData.timestamp && (now - allData.timestamp) <= SIDEBAR_FORUM_CACHE_TTL_MS) {
+                  const byThread = new Map();
+                  allData.posts.forEach(p => {
+                    const key = p.boardId + '\0' + p.threadId;
+                    const prev = byThread.get(key);
+                    if (!prev || (p.date && p.date > prev.date)) {
+                      byThread.set(key, {
+                        boardId: p.boardId,
+                        threadId: p.threadId,
+                        threadTitle: p.threadTitle || 'Тема',
+                        date: p.date || 0,
+                        lastReplyNick: p.nick || '',
+                        lastReplyUser: p.nick || ''
+                      });
+                    }
+                  });
+                  const list = Array.from(byThread.values()).sort((a, b) => (b.date || 0) - (a.date || 0)).slice(0, SIDEBAR_FORUM_LAST_THREADS);
+                  render(list);
+                  idb.close();
+                  return;
+                }
+                idb.close();
+                loadFromScan();
+              };
+            };
+          };
+          req.onerror = () => loadFromScan();
+
+          async function loadFromScan() {
+            const threads = await scanForumForLastThreads();
+            if (threads && threads.length > 0) {
+              render(threads);
+              try {
+                const db = await new Promise((res, rej) => {
+                  const r = indexedDB.open('8SiteDB', 1);
+                  r.onsuccess = () => res(r.result);
+                  r.onerror = () => rej(r.error);
+                });
+                if (db.objectStoreNames.contains('postIndex')) {
+                  const tx = db.transaction('postIndex', 'readwrite');
+                  tx.objectStore('postIndex').put({ threads, timestamp: Date.now() }, 'sidebarLastThreads');
+                }
+                db.close();
+              } catch (e) { /* ignore */ }
+            } else {
+              setEmpty();
+            }
+          }
+        })();
+      }
+
       function filterPlaylistsByCategory(category) {
         document.querySelectorAll('#sidebarTagsContainer .sidebar-item').forEach(item => item.classList.remove('active'));
         document.getElementById('allPlaylistsLink').classList.remove('active');
@@ -6455,9 +6917,22 @@ function sortVideos(videos) {
                 activeTagElement.classList.add('active');
             }
         }
+        
+        // Update user rating widget after filtering
+        if (typeof loadUserRating === 'function') {
+            loadUserRating();
+        }
       }
 
       document.addEventListener('DOMContentLoaded', async ()=>{
+
+        if (typeof loadSidebarForumActivity === 'function') {
+          if (typeof requestIdleCallback !== 'undefined') {
+            requestIdleCallback(() => loadSidebarForumActivity(), { timeout: 2000 });
+          } else {
+            setTimeout(loadSidebarForumActivity, 500);
+          }
+        }
 
         const langSwitcher = document.getElementById('langSwitcher');
         if (langSwitcher && typeof i18n !== 'undefined') {
@@ -6473,7 +6948,32 @@ function sortVideos(videos) {
             updatePageTitle();
           });
         }
-        
+
+        const cleanViewToggle = document.getElementById('cleanViewToggle');
+        if (cleanViewToggle) {
+          const isClean = () => localStorage.getItem('youvi_clean_view') === 'true';
+          cleanViewToggle.setAttribute('aria-pressed', isClean() ? 'true' : 'false');
+          cleanViewToggle.classList.toggle('active', isClean());
+          cleanViewToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const next = !isClean();
+            localStorage.setItem('youvi_clean_view', next ? 'true' : 'false');
+            document.documentElement.classList.toggle('clean-view', next);
+            cleanViewToggle.setAttribute('aria-pressed', next ? 'true' : 'false');
+            cleanViewToggle.classList.toggle('active', next);
+            window.dispatchEvent(new CustomEvent('youvi-clean-view-toggle', { detail: { clean: next } }));
+            setTimeout(() => {
+              if (typeof renderMixedContent === 'function') renderMixedContent();
+            }, 50);
+          });
+        }
+
+        window.addEventListener('youvi-sidebar-toggle', () => {
+          setTimeout(() => {
+            if (typeof renderMixedContent === 'function') renderMixedContent();
+          }, 100);
+        });
+
         if (!supportsFS){
           const container = document.getElementById('playlistsContainer');
           if (container) {
@@ -6526,6 +7026,8 @@ function sortVideos(videos) {
               requestIdleCallback(() => loadAllDanmakuCounts(), { timeout: 2000 });
 
               renderSubscribedChannelsList();
+              
+              // Right sidebar removed
 
               const searchInput = document.getElementById('globalSearch');
               debug.log('[Autocomplete Init] searchInput:', searchInput);
@@ -6779,6 +7281,14 @@ function sortVideos(videos) {
         requestAnimationFrame(() => {
           avatarLoadManager.reapplyAllCached();
         });
+        if (typeof loadSidebarForumActivity === 'function') {
+          const runForum = () => loadSidebarForumActivity();
+          if (typeof requestIdleCallback !== 'undefined') {
+            requestIdleCallback(runForum, { timeout: 2000 });
+          } else {
+            setTimeout(runForum, 300);
+          }
+        }
       });
 
       function updateUrlParameter(param, value) {
@@ -7041,6 +7551,111 @@ function sortVideos(videos) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
+      // Right Sidebar Widget Functions
+      
+      // Load user rating by video count
+      async function loadUserRating() {
+        const container = document.getElementById('userRatingContainer');
+        if (!container) return;
+        
+        try {
+          // Get all videos and count by channel
+          const videosByChannel = new Map();
+          
+          allVideos.forEach(video => {
+            const channel = video.metadata?.channel || 'Unknown';
+            if (channel !== 'Unknown') {
+              videosByChannel.set(channel, (videosByChannel.get(channel) || 0) + 1);
+            }
+          });
+          
+          if (videosByChannel.size === 0) {
+            container.innerHTML = '<div style="text-align: center; color: #999; padding: 20px; font-size: 13px;">Нет данных</div>';
+            return;
+          }
+          
+          // Sort by video count and get top 10
+          const topUsers = Array.from(videosByChannel.entries())
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10);
+          
+          container.innerHTML = '';
+          topUsers.forEach(([channel, count], index) => {
+            const userItem = document.createElement('div');
+            userItem.className = 'user-rating-item';
+            
+            const rank = document.createElement('div');
+            rank.className = `user-rank ${index < 3 ? 'top-' + (index + 1) : ''}`;
+            rank.textContent = (index + 1);
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'user-avatar';
+            avatar.textContent = channel.charAt(0).toUpperCase();
+            avatar.title = channel;
+            
+            // Load channel avatar if available
+            if (videoDirectoryHandle) {
+              loadChannelAvatar(channel, videoDirectoryHandle).then(avatarUrl => {
+                if (avatarUrl) {
+                  avatar.style.backgroundImage = `url(${avatarUrl})`;
+                  avatar.style.backgroundSize = 'cover';
+                  avatar.style.backgroundPosition = 'center';
+                  avatar.textContent = '';
+                }
+              });
+            }
+            
+            const userInfo = document.createElement('div');
+            userInfo.className = 'user-info';
+            
+            const userName = document.createElement('a');
+            userName.href = `youvi_ch_view.html?channel=${encodeURIComponent(channel)}`;
+            userName.className = 'user-name';
+            userName.textContent = channel;
+            userName.style.textDecoration = 'none';
+            
+            const videoCount = document.createElement('div');
+            videoCount.className = 'user-video-count';
+            videoCount.textContent = `${count} ${pluralize(count, 'видео', 'видео', 'видео')}`;
+            
+            userInfo.appendChild(userName);
+            userInfo.appendChild(videoCount);
+            
+            userItem.appendChild(rank);
+            userItem.appendChild(avatar);
+            userItem.appendChild(userInfo);
+            container.appendChild(userItem);
+          });
+        } catch (e) {
+          debug.error('Error loading user rating:', e);
+          container.innerHTML = '<div style="text-align: center; color: #999; padding: 20px; font-size: 13px;">Ошибка загрузки рейтинга</div>';
+        }
+      }
+      
+      // Helper function to format time ago
+      function getTimeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000);
+        
+        if (diff < 60) return `${diff}с назад`;
+        if (diff < 3600) return `${Math.floor(diff / 60)}м назад`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)}ч назад`;
+        if (diff < 604800) return `${Math.floor(diff / 86400)}д назад`;
+        if (diff < 2592000) return `${Math.floor(diff / 604800)}н назад`;
+        return `${Math.floor(diff / 2592000)}мес назад`;
+      }
+      
+      // Helper function for pluralization
+      function pluralize(n, one, few, many) {
+        n = Math.abs(n) % 100;
+        const n1 = n % 10;
+        if (n > 10 && n < 20) return many;
+        if (n1 > 1 && n1 < 5) return few;
+        if (n1 === 1) return one;
+        return many;
+      }
+
 
     </script>
     
@@ -7054,14 +7669,7 @@ function sortVideos(videos) {
             <span>Главная</span>
         </a>
         
-        <a href="youvi_feed_all.html" class="mobile-nav-item">
-            <svg viewBox="0 0 24 24" stroke-width="1.5">
-                <path d="M4 11a9 9 0 0 1 9 9"/>
-                <path d="M4 4a16 16 0 0 1 16 16"/>
-                <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-            </svg>
-            <span>Feed</span>
-        </a>
+
 
         <!-- Central Action / Upload Button -->
         <a href="#" class="mobile-nav-item upload-btn">

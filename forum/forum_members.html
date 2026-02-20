@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Участники | Youvi Forums</title>
+<script>
+  (function() {
+    var theme = localStorage.getItem('youvi-theme');
+    var sidebar = localStorage.getItem('sidebarCollapsed');
+    
+    var htmlClasses = [];
+    if (theme === 'dark') htmlClasses.push('dark-theme');
+    if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+    if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
+  })();
+</script>
+<script src="../youvi/sidebar-toggle.js"></script>
+<link rel="stylesheet" href="forum-dark-theme.css">
+<link rel="stylesheet" href="../youvi/header/youvi-header.css">
+<link rel="stylesheet" href="../youvi/sidebar.css">
+<link rel="stylesheet" href="../youvi/sidebar-scroll.css">
+<link rel="stylesheet" href="../youvi/themes/theme-dropdown.css">
+<script src="../youvi/sidebar-toggle.js"></script>
+<script>
+  (function() {
+    var theme = localStorage.getItem('youvi-theme');
+    var sidebar = localStorage.getItem('sidebarCollapsed');
+    
+    var htmlClasses = [];
+    if (theme === 'dark') htmlClasses.push('dark-theme');
+    if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+    if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
+  })();
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial, sans-serif;background:#fff;color:#111;--header-height:84px;--footer-height:220px}
+.top-nav{background:#d94b88;border-bottom:1px solid #c2185b;padding:4px 0}
+.top-nav-content{max-width:none !important;margin:0 !important;padding:0 20px;display:flex;gap:20px;align-items:center}
+.top-nav a{color:#fff;text-decoration:none;font-size:12px;padding:2px 0;transition:color .2s}
+.top-nav a:hover,.top-nav a.active{color:#ffd6ea}
+.header{background:#FFE7F4;padding:0;border-bottom:1px solid #f2cfe1;min-height:40px;width:100%;position:sticky;top:0;z-index:100}
+.header-content-wrapper{display:flex;align-items:center;position:relative;box-sizing:border-box;max-width:none !important;margin:0 !important;padding:0 20px;width:100%;min-height:40px}
+.header-left{display:flex;align-items:center;gap:15px;flex-shrink:0}
+.header-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;z-index:1}
+.header-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.search-area{display:flex;gap:6px;align-items:center;width:530px;position:relative}
+.search-input{width:450px;padding:6px 12px;border-radius:4px;border:1px solid rgba(0,0,0,0.1);font-size:13px;height:32px;box-sizing:border-box}
+.search-btn{width:70px;height:32px;padding:0;background:#ff69b4;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;flex-shrink:0;white-space:nowrap;box-sizing:border-box;transition:background-color .2s}
+.search-btn:hover{background:#ff85c3}
+.container{width:100%;margin:0;padding:0 20px 0 20px;display:flex;gap:20px;align-items:stretch;min-height:calc(100vh - 40px - 40px)}
+.content-wrapper{display:flex;flex:1;max-width:1500px;margin:0 auto;gap:20px}
+.main-content{flex:1;display:flex;flex-direction:column;min-height:0;padding-top:0}
+.user-actions{display:flex;gap:8px;align-items:center;margin-left:0;flex-shrink:0}
+.user-actions a{color:#111;text-decoration:none;font-size:13px;font-weight:500;padding:4px 8px;border-radius:4px;transition:background .2s}
+.user-actions a:hover{color:#ff69b4}
+.logo{display:flex;align-items:center;justify-content:center;margin-right:0;flex-shrink:0;height:40px}
+.logo img{height:30px;width:auto;max-height:30px}
+/* Forum-specific sidebar adjustments - only positioning, not layout */
+.sidebar {
+    top: 40px !important;
+    max-height: calc(100vh - 40px) !important;
+    min-height: calc(100vh - 40px) !important;
+}
+.breadcrumbs{display:flex;align-items:center;gap:4px;font-size:13px;color:#666;margin:20px 20px 10px 20px;flex-wrap:wrap}
+.breadcrumbs a{color:#666;text-decoration:none;transition:color .2s}
+.breadcrumbs a:hover{color:#ff69b4}
+.breadcrumb-separator{color:#999}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin:0 20px 10px 20px}
+.section-title{font-size:22px;font-weight:700}
+.toolbar{display:flex;gap:8px;align-items:center}
+.search{padding:6px 10px;border:1px solid #ddd;border-radius:4px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:0 20px;margin-top:10px;margin-bottom:40px}
+.card{background:#fafafa;border:1px solid #e0e0e0;border-radius:8px;padding:12px;display:flex;gap:12px;align-items:center}
+.avatar{width:64px;height:64px;border-radius:6px;background:linear-gradient(135deg,#ff85b4,#ff69b4);border:none;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:28px}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:6px;display:block}
+.card-body{min-width:0}
+.nick{font-size:16px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{font-size:12px;color:#666}
+.nick a{color:inherit;text-decoration:none}
+.nick a:hover{text-decoration:underline}
+.footer{background:#2c2c2c;color:#fff;padding:25px 0 15px 0;margin-top:auto}
+.footer-content{max-width:1400px !important;margin:0 auto !important;padding:0 20px !important;display:flex;gap:30px;align-items:flex-start}
+.footer-main{display:flex;gap:30px;flex:1}
+.footer-logo{flex-shrink:0;width:200px}
+.footer-logo img{height:40px;width:auto}
+.footer-logo p{margin-top:8px;font-size:11px;color:#ccc;line-height:1.3}
+.footer-sections{display:flex;gap:30px;flex:1}
+.footer-right{display:flex;gap:20px;align-items:flex-start}
+.footer-mascot{flex-shrink:0}
+.footer-mascot img{height:180px;width:auto}
+.footer-section{flex:1}
+.footer-section h3{font-size:13px;margin-bottom:10px;color:#fff;font-weight:600}
+.footer-section ul{list-style:none;padding:0;margin:0}
+.footer-section li{margin-bottom:6px}
+.footer-section a{color:#ccc;text-decoration:none;font-size:11px;transition:color .2s}
+.footer-section a:hover{color:#ff69b4}
+.footer-bottom{border-top:1px solid #444;margin-top:20px;padding-top:15px;text-align:center;color:#999;font-size:10px}
+
+/* PC Adaptive Styling */
+@media (min-width: 1700px) {
+    .content-wrapper{max-width:1600px}
+    .footer-content{max-width:1700px !important}
+}
+@media (min-width: 2000px) {
+    .content-wrapper{max-width:1850px}
+    .footer-content{max-width:1900px !important}
+}
+@media (min-width: 2400px) {
+    .content-wrapper{max-width:2200px}
+    .footer-content{max-width:2200px !important}
+}
+@media (min-width: 2800px) {
+    .content-wrapper{max-width:2500px}
+    .footer-content{max-width:2500px !important}
+}
+/* Sidebar collapsed adaptations */
+@media (min-width: 1700px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 1700px !important;
+    }
+}
+@media (min-width: 2000px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 1950px !important;
+    }
+}
+@media (min-width: 2400px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 2300px !important;
+    }
+}
+@media (min-width: 2800px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 2600px !important;
+    }
+}
+/* Dark theme additions */
+body.dark-theme .header {
+    background: #2c1810 !important;
+    border-bottom: 1px solid #444 !important;
+}
+body.dark-theme .sidebar-toggle-btn {
+    color: #fff !important;
+}
+body.dark-theme .sidebar-toggle-btn svg {
+    fill: #fff !important;
+}
+body.dark-theme .user-actions a {
+    color: #fff !important;
+}
+body.dark-theme .user-actions a:hover {
+    color: #ff69b4 !important;
+}
+body.dark-theme .search-input {
+    background: #4a3a34 !important;
+    border-color: #555;
+    color: #fff;
+}
+body.dark-theme .search-input::placeholder {
+    color: #999;
+}
+
+/* Sidebar styles now loaded from ../youvi/sidebar.css */
+
+/* Adaptive grid columns */
+@media (max-width: 1600px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 1200px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<link rel="icon" href="../favicon/youvi/favicon.ico" type="image/x-icon">
+<body>
+<script src="../youvi_shared.js"></script>
+<script src="forum_youvi_integration.js"></script>
+<script src="../youvi/themes/theme-toggle.js"></script>
+  <div class="top-nav">
+    <div class="top-nav-content">
+      <a href="../youvi_main.html">Видео</a>
+      <a href="../index.html">Управление</a>
+      <a href="../youvi_ch_list.html">Каналы</a>
+      <a href="../youvi_playlists_list.html">Плейлисты</a>
+      <a href="forum_main.html" class="active">Форумы</a>
+      <a href="../wiki/index.html" data-i18n="nav.wiki">Wiki</a>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-content-wrapper">
+      <div class="header-left">
+        <button id="sidebarToggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
+        
+        <div class="logo">
+          <a href="forum.html"><img src="../images/logo_youvi_ind.png" alt="Forum Logo"></a>
+        </div>
+      </div>
+      
+      <div class="header-center">
+        <div class="search-area">
+          <input type="text" class="search-input" id="forumHeaderSearchInput" placeholder="Поиск в форуме...">
+          <button class="search-btn" id="forumHeaderSearchBtn">Поиск</button>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <div class="user-actions">
+          <div class="settings-container">
+            <a href="#" class="settings-btn">⚙</a>
+            <div class="theme-dropdown">
+              <button class="theme-dropdown-item" data-theme="light">Белая</button>
+              <button class="theme-dropdown-item" data-theme="dark">Черная</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Навигация</div>
+        <a href="../youvi_main.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+          <span>Главная</span>
+        </a>
+        <a href="../youvi_tags.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          <span>Все теги</span>
+        </a>
+      </div>
+      
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Форум</div>
+        <a href="forum.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Главная</span>
+        </a>
+        <a href="forum_recent.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M4 11a9 9 0 0 1 9 9"/>
+            <path d="M4 4a16 16 0 0 1 16 16"/>
+            <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+          </svg>
+          <span>Поток</span>
+        </a>
+        <a href="forum_search.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <span>Поиск</span>
+        </a>
+        <a href="forum_fav.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span>Избранное</span>
+        </a>
+        <a href="forum_members.html" class="sidebar-item library-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 1-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Участники</span>
+        </a>
+
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Сортировка</div>
+        <a href="#" class="sidebar-item library-item active" id="sortPosts">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <span>По постам</span>
+        </a>
+        <a href="#" class="sidebar-item library-item" id="sortNew">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12,6 12,12 16,14"/>
+          </svg>
+          <span>Новые</span>
+        </a>
+        <a href="#" class="sidebar-item library-item" id="sortAlphabetical">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M4 16L8 6l4 10"/>
+            <line x1="5" y1="13" x2="11" y2="13"/>
+            <path d="M14 6h6"/>
+            <path d="M14 12h6"/>
+            <path d="M14 18h6"/>
+          </svg>
+          <span>По алфавиту</span>
+        </a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Фильтры</div>
+        <div class="sidebar-item library-item" id="filterWithPosts" style="cursor:pointer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+          <span>Только с постами</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Content Wrapper (centered) -->
+    <div class="content-wrapper">
+    <main class="main-content">
+      <div class="breadcrumbs">
+        <a href="forum_main.html">Форум</a>
+        <span class="breadcrumb-separator">→</span>
+        <span style="font-weight:600">Участники</span>
+      </div>
+      <div class="page-header">
+        <div class="section-title">Участники</div>
+        <div class="toolbar">
+          <input id="searchInput" class="search" placeholder="Поиск по нику...">
+          <span id="count" style="font-size:12px;color:#666"></span>
+        </div>
+      </div>
+      <div id="list" class="grid"></div>
+    </main>
+    </div><!-- /content-wrapper -->
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-main">
+        <div class="footer-logo">
+          <img src="../images/logo_youvi_ind_ex.png" alt="Youvi">
+          <p>Платформа для общения и обсуждений. Делитесь мыслями и идеями.</p>
+        </div>
+        <div class="footer-sections">
+          <div class="footer-section">
+            <h3>Разделы</h3>
+            <ul>
+              <li><a href="../youvi_main.html">Видео</a></li>
+              <li><a href="../youvi_tags.html">Теги</a></li>
+              <li><a href="forum.html">Форум</a></li>
+              <li><a href="../index.html">Управление</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Библиотека</h3>
+            <ul>
+              <li><a href="../youvi_ch_list.html">Каналы</a></li>
+              <li><a href="../youvi_playlists_list.html">Плейлисты</a></li>
+              <li><a href="../youvi_subscriptions.html">Подписки</a></li>
+              <li><a href="../youvi_fav.html">Избранное</a></li>
+              <li><a href="../youvi_history.html">История</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Wiki</h3>
+            <ul>
+              <li><a href="../wiki/index.html">Главная</a></li>
+              <li><a href="../wiki/player.html">Плеер</a></li>
+              <li><a href="../wiki/danmaku.html">Данмаку</a></li>
+              <li><a href="../wiki/tags/general.html">Теги</a></li>
+              <li><a href="../wiki/tags/rules.html">Правила тегирования</a></li>
+              <li><a href="../wiki/search/general.html">Поиск</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>PGC</h3>
+            <ul>
+              <li><a href="../youvi_main.html?tag=Anime (ct)">Anime</a></li>
+              <li><a href="../youvi_main.html?tag=Animation (ct)">Animation</a></li>
+              <li><a href="../youvi_main.html?tag=Movies (ct)">Movies</a></li>
+              <li><a href="../youvi_main.html?tag=Series (ct)">Series</a></li>
+              <li><a href="../youvi_main.html?tag=Music (ct)">Music</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>UGC</h3>
+            <ul>
+              <li><a href="../youvi_main.html?tag=Games (ct)">Games</a></li>
+              <li><a href="../youvi_main.html?tag=Technology (ct)">Technology</a></li>
+              <li><a href="../youvi_main.html?tag=Entertainment (ct)">Entertainment</a></li>
+              <li><a href="../youvi_main.html?tag=IRL (ct)">IRL</a></li>
+              <li><a href="../youvi_main.html?tag=TV (ct)">TV</a></li>
+              <li><a href="../youvi_main.html?tag=Education (ct)">Education</a></li>
+              <li><a href="../youvi_main.html?tag=Other (ct)">Other</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>О сайте</h3>
+            <ul>
+              <li><a href="../wiki/about.html">Про сайт</a></li>
+              <li><a href="../wiki/docs.html">Документация</a></li>
+              <li><a href="../wiki/tech.html">Технологии</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-right">
+        <div class="footer-mascot">
+          <img src="../images/mascot1.png" alt="Yuvi">
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+// Use YouviShared functions via window object (already loaded by youvi_shared.js)
+
+let createdUrls = [];
+let allUsers = []; // Store all users for filtering/sorting
+let currentSort = 'posts'; // Default sort
+
+// Performance optimizations
+const avatarCache = new Map();
+const filterCache = new Map();
+const AVATAR_CACHE_TTL = 300000; // 5 minutes
+const RENDER_THROTTLE = 100; // ms
+let lastRenderTime = 0;
+
+function trackURL(u){ try{ createdUrls.push(u); }catch(_){} return u; }
+
+// Cached avatar loading
+async function loadCachedAvatar(userName, avatarFileName) {
+  const cacheKey = `avatar_${userName}`;
+  
+  // Check cache
+  if (avatarCache.has(cacheKey)) {
+    const cached = avatarCache.get(cacheKey);
+    if (Date.now() - cached.timestamp < AVATAR_CACHE_TTL) {
+      return cached.url;
+    }
+    // Cache expired, revoke old URL
+    if (cached.url && cached.url.startsWith('blob:')) {
+      URL.revokeObjectURL(cached.url);
+    }
+    avatarCache.delete(cacheKey);
+  }
+  
+  try {
+    const avatarUrl = await window.YouviShared.getUserAvatar(userName);
+    if (avatarUrl) {
+      avatarCache.set(cacheKey, {
+        url: avatarUrl,
+        timestamp: Date.now()
+      });
+      trackURL(avatarUrl);
+      return avatarUrl;
+    }
+  } catch (e) {
+    console.warn('Error loading avatar:', e);
+  }
+  
+  // Cache null result to avoid repeated failures
+  avatarCache.set(cacheKey, {
+    url: null,
+    timestamp: Date.now()
+  });
+  
+  return null;
+}
+window.addEventListener('beforeunload', ()=>{ try{ createdUrls.forEach(u=>URL.revokeObjectURL(u)); }catch(_){} });
+
+// Транслитерация для поиска
+const translitMap = {
+  'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh',
+  'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
+  'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'ts',
+  'ч': 'ch', 'ш': 'sh', 'щ': 'sch', 'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
+  'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Е': 'E', 'Ё': 'Yo', 'Ж': 'Zh',
+  'З': 'Z', 'И': 'I', 'Й': 'Y', 'К': 'K', 'Л': 'L', 'М': 'M', 'Н': 'N', 'О': 'O',
+  'П': 'P', 'Р': 'R', 'С': 'S', 'Т': 'T', 'У': 'U', 'Ф': 'F', 'Х': 'H', 'Ц': 'Ts',
+  'Ч': 'Ch', 'Ш': 'Sh', 'Щ': 'Sch', 'Ъ': '', 'Ы': 'Y', 'Ь': '', 'Э': 'E', 'Ю': 'Yu', 'Я': 'Ya'
+};
+
+// Обратная транслитерация (английский -> кириллица)
+const reverseTranslitMap = {
+  'a': 'а', 'b': 'б', 'v': 'в', 'g': 'г', 'd': 'д', 'e': 'е', 'yo': 'ё', 'zh': 'ж',
+  'z': 'з', 'i': 'и', 'y': 'й', 'k': 'к', 'l': 'л', 'm': 'м', 'n': 'н', 'o': 'о',
+  'p': 'п', 'r': 'р', 's': 'с', 't': 'т', 'u': 'у', 'f': 'ф', 'h': 'х', 'ts': 'ц',
+  'ch': 'ч', 'sh': 'ш', 'sch': 'щ', 'yu': 'ю', 'ya': 'я'
+};
+
+function transliterateToLatin(text) {
+  return text.split('').map(char => translitMap[char] || char).join('');
+}
+
+function transliterateToCyrillic(text) {
+  let result = text.toLowerCase();
+  // Сначала заменяем длинные комбинации
+  for (const [lat, cyr] of Object.entries(reverseTranslitMap)) {
+    result = result.replace(new RegExp(lat, 'g'), cyr);
+  }
+  return result;
+}
+
+function createSearchVariants(query) {
+  const variants = [query];
+  
+  // Добавляем транслитерацию в обе стороны
+  const latin = transliterateToLatin(query);
+  const cyrillic = transliterateToCyrillic(query);
+  
+  if (latin !== query) variants.push(latin);
+  if (cyrillic !== query) variants.push(cyrillic);
+  
+  return variants;
+}
+
+async function loadUsers(){
+  const list = document.getElementById('list');
+  const counter = document.getElementById('count');
+  list.innerHTML = '<div style="grid-column:1/-1;padding:16px;color:#666">Загрузка...</div>';
+  
+  const channelsDir = await window.YouviShared.getChannelsDirectory();
+  if (!channelsDir){ 
+    list.innerHTML = '<div style="grid-column:1/-1;padding:16px;color:#666">Нет доступа к папке. Выберите папку на <a href="../index.html">главной странице</a></div>'; 
+    return; 
+  }
+  
+  try{
+    const startTime = performance.now();
+    const records = [];
+    const userNames = await window.YouviShared.getAllUsers();
+    
+    console.log(`Найдено пользователей: ${userNames.length}`);
+    
+    // Batch processing for better performance
+    const BATCH_SIZE = 10;
+    for (let i = 0; i < userNames.length; i += BATCH_SIZE) {
+      const batch = userNames.slice(i, i + BATCH_SIZE);
+      
+      await Promise.all(batch.map(async (userName) => {
+        try{
+          const profile = await window.YouviShared.getUserProfile(userName);
+          if (!profile) return;
+          
+          const nick = profile.name || userName;
+          let avatarUrl = '';
+          
+          // Load avatar with caching
+          if (profile.avatar) {
+            avatarUrl = await loadCachedAvatar(userName, profile.avatar);
+          }
+          
+          const postsCount = profile.stats?.forumPosts || 0;
+          const joinedAt = profile.joinedAt;
+          
+          records.push({ slug: userName, nick, avatarUrl, postsCount, joinedAt });
+        }catch(e){ 
+          console.warn('Error loading user:', userName, e);
+        }
+      }));
+    }
+    
+    const endTime = performance.now();
+    console.log(`Загружено ${records.length} пользователей за ${(endTime - startTime).toFixed(0)}мс`);
+    
+    // Store all users for filtering/sorting
+    allUsers = records;
+    
+    const input = document.getElementById('searchInput');
+    const filterBtn = document.getElementById('filterWithPosts');
+    let filterActive = false;
+    let searchTimeout = null;
+    
+    function apply(){
+      const q = (input.value||'').toLowerCase().trim();
+      
+      // Создаем варианты поиска с транслитерацией
+      const searchVariants = q ? createSearchVariants(q) : [q];
+      
+      let filtered = q ? records.filter(r => {
+        // Проверяем ник и slug с транслитерацией
+        const nickMatch = searchVariants.some(searchVariant => 
+          r.nick.toLowerCase().includes(searchVariant.toLowerCase())
+        );
+        
+        const slugMatch = searchVariants.some(searchVariant => 
+          r.slug.toLowerCase().includes(searchVariant.toLowerCase())
+        );
+        
+        return nickMatch || slugMatch;
+      }) : records;
+      
+      // Применяем фильтр "только с постами"
+      if (filterActive) {
+        filtered = filtered.filter(r => (r.postsCount || 0) > 0);
+      }
+      
+      counter.textContent = `${filtered.length} участник(ов)`;
+      list.innerHTML = '';
+      
+      // Apply sorting
+      switch(currentSort) {
+        case 'posts':
+          filtered.sort((a,b) => (b.postsCount || 0) - (a.postsCount || 0));
+          break;
+        case 'new':
+          filtered.sort((a,b) => (b.joinedAt || 0) - (a.joinedAt || 0));
+          break;
+        case 'alphabetical':
+          filtered.sort((a,b) => a.nick.localeCompare(b.nick,'ru'));
+          break;
+        default:
+          filtered.sort((a,b) => (b.postsCount || 0) - (a.postsCount || 0));
+      }
+      
+      for (const r of filtered){
+        const card = document.createElement('div');
+        card.className = 'card';
+        const av = document.createElement('div');
+        av.className = 'avatar';
+        if (r.avatarUrl){ av.innerHTML = `<img src="${r.avatarUrl}" alt="avatar" loading="lazy">`; } else { av.textContent = (r.nick||'?').trim().charAt(0).toUpperCase(); }
+        const body = document.createElement('div');
+        body.className = 'card-body';
+        const postsLine = r.postsCount != null ? `Постов: ${r.postsCount}` : '';
+        const joinedLine = r.joinedAt ? `С нами с: ${new Date(r.joinedAt).toLocaleDateString()}` : '';
+        const extra = (postsLine||joinedLine) ? `<div class="meta">${[postsLine, joinedLine].filter(Boolean).join('<br>')}</div>` : '';
+        body.innerHTML = `<div class="nick"><a href="forum_profile.html?nick=${encodeURIComponent(r.slug)}">${window.YouviShared.escapeHtml(r.nick)}</a></div><div class="meta">@${window.YouviShared.escapeHtml(r.slug)}</div>${extra}`;
+        card.appendChild(av); card.appendChild(body);
+        list.appendChild(card);
+      }
+      // Spacer removed - not needed with new layout
+    }
+    input.addEventListener('input', ()=>{
+      if (searchTimeout) clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => apply(), 300);
+    });
+    
+    filterBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      filterActive = !filterActive;
+      const svg = filterBtn.querySelector('svg');
+      if (filterActive) {
+        svg.setAttribute('stroke', '#ff69b4');
+        filterBtn.classList.add('active');
+      } else {
+        svg.setAttribute('stroke', '#666');
+        filterBtn.classList.remove('active');
+      }
+      apply();
+    });
+    
+    apply();
+  }catch(e){
+    list.innerHTML = '<div style="grid-column:1/-1;padding:16px;color:#a33">Ошибка загрузки списка участников</div>';
+  }
+}
+
+(async ()=>{
+  await loadUsers();
+})();
+
+// Sort event listeners
+document.getElementById('sortPosts').addEventListener('click', (e) => {
+  e.preventDefault();
+  currentSort = 'posts';
+  document.querySelectorAll('.sidebar-section:last-child .sidebar-item').forEach(item => {
+    item.classList.remove('active');
+    item.querySelector('svg').setAttribute('stroke', '#666');
+  });
+  e.currentTarget.classList.add('active');
+  e.currentTarget.querySelector('svg').setAttribute('stroke', '#ff69b4');
+  
+  // Re-apply current filter with new sort
+  const input = document.getElementById('searchInput');
+  input.dispatchEvent(new Event('input'));
+});
+
+document.getElementById('sortNew').addEventListener('click', (e) => {
+  e.preventDefault();
+  currentSort = 'new';
+  document.querySelectorAll('.sidebar-section:last-child .sidebar-item').forEach(item => {
+    item.classList.remove('active');
+    item.querySelector('svg').setAttribute('stroke', '#666');
+  });
+  e.currentTarget.classList.add('active');
+  e.currentTarget.querySelector('svg').setAttribute('stroke', '#ff69b4');
+  
+  const input = document.getElementById('searchInput');
+  input.dispatchEvent(new Event('input'));
+});
+
+document.getElementById('sortAlphabetical').addEventListener('click', (e) => {
+  e.preventDefault();
+  currentSort = 'alphabetical';
+  document.querySelectorAll('.sidebar-section:last-child .sidebar-item').forEach(item => {
+    item.classList.remove('active');
+    item.querySelector('svg').setAttribute('stroke', '#666');
+  });
+  e.currentTarget.classList.add('active');
+  e.currentTarget.querySelector('svg').setAttribute('stroke', '#ff69b4');
+  
+  const input = document.getElementById('searchInput');
+  input.dispatchEvent(new Event('input'));
+});
+
+// Header search -> redirect to forum_search.html?q=...
+try {
+  const input = document.querySelector('#forumHeaderSearchInput');
+  const btn = document.querySelector('#forumHeaderSearchBtn');
+  if (btn && input) {
+    const go = () => {
+      const q = (input.value || '').trim();
+      const url = q ? `forum_search.html?q=${encodeURIComponent(q)}` : 'forum_search.html';
+      location.href = url;
+    };
+    btn.addEventListener('click', go);
+    input.addEventListener('keyup', (e) => { if (e.key === 'Enter') go(); });
+  }
+} catch(_) {}
+
+// Theme system is handled by theme-toggle.js
+
+</script>
+<script src="../youvi/sidebar-toggle.js"></script>
+<script src="../youvi/sidebar-scroll.js"></script>
+</body>
+</html>
+

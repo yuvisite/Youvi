@@ -557,7 +557,8 @@ body.dark-theme.default-background {
       <a href="index.html" class="active" data-i18n="nav.management">Управление</a>
       <a href="youvi_ch_list.html" data-i18n="nav.channels">Каналы</a>
       <a href="youvi_playlists_list.html" data-i18n="nav.playlists">Плейлисты</a>
-      <a href="youvi_feed_all.html" data-i18n="nav.feed">Feed</a> 
+      <a href="forum/forum.html" data-i18n="nav.forums">Forums</a> 
+      <a href="download/youvi_download.html" data-i18n="nav.download">Download</a> 
       <a href="wiki/index.html" data-i18n="nav.wiki">Wiki</a>
       <span style="flex: 1;"></span>
       <span style="color: #fff; font-size: 11px; margin-right: 8px;">Выбери язык / Choose language -----></span>
@@ -1082,9 +1083,21 @@ async function getCachedPreview(videoName) {
 
 async function saveVideoMetadata(dirHandle, fileName, metadata) {
   try {
+    // Read existing metadata to preserve created timestamp
+    const existingMeta = await getVideoMetadata(dirHandle, fileName);
+    
+    // Merge with existing, preserving created field
+    const safeMeta = {
+      ...existingMeta,
+      ...metadata,
+      // CRITICAL: Always preserve the original created timestamp
+      created: existingMeta.created || metadata.created || Date.now(),
+      fileCreated: existingMeta.fileCreated || metadata.fileCreated
+    };
+    
     const metaDir = await dirHandle.getDirectoryHandle('.metadata', { create: true });
     const metaFileName = fileName + '.meta.json';
-    await writeJSONFile(metaDir, metaFileName, metadata);
+    await writeJSONFile(metaDir, metaFileName, safeMeta);
   } catch (e) {
     debug.error('Error saving video metadata:', e);
   }

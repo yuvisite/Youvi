@@ -1306,13 +1306,13 @@
 
         .related-video {
             display: flex;
-            padding: 10px;
+            padding: 3px;
             gap: 8px;
             border-bottom: none;
             cursor: pointer;
             transition: background-color 0.2s;
             border-radius: 6px;
-            margin-bottom: 8px;
+            margin-bottom: 1px !important;
             background: transparent;
             box-shadow: none
         }
@@ -2751,8 +2751,8 @@
 
         .related-video {
             position: relative;
-            margin-bottom: 4px;
-            padding: 6px;
+            margin-bottom: 0px !important;
+            padding: 2px;
             border-radius: 4px;
             border: 2px solid transparent;
             cursor: pointer;
@@ -5285,9 +5285,10 @@
             <a href="index.html" data-i18n="nav.management">Управление</a>
             <a href="youvi_ch_list.html" data-i18n="nav.channels">Каналы</a>
             <a href="youvi_playlists_list.html" data-i18n="nav.playlists">Плейлисты</a>
-            <a href="youvi_feed_all.html">Feed</a>
+            <a href="forum/forum.html" data-i18n="nav.forums">Forums</a> 
+            <a href="download/youvi_download.html" data-i18n="nav.download">Download</a> 
             <a href="wiki/index.html" data-i18n="nav.wiki">Wiki</a>
-            <div class="lang-switcher" style="margin-left:auto;">
+            <div class="lang-switcher">
                 <select id="langSwitcher" class="lang-select">
                     <option value="ru">RU</option>
                     <option value="en">EN</option>
@@ -5396,14 +5397,7 @@
                     </svg>
                     <span data-i18n="sidebar.home">Главная</span>
                 </a>
-                <a href="youvi_feed_all.html" class="sidebar-item nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
-                        <path d="M4 11a9 9 0 0 1 9 9" />
-                        <path d="M4 4a16 16 0 0 1 16 16" />
-                        <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-                    </svg>
-                    Feed
-                </a>
+
 
                 <a href="youvi_tags.html" class="sidebar-item nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
@@ -7766,9 +7760,21 @@
 
         async function saveVideoMetadata(dirHandle, fileName, metadata) {
             try {
+                // Read existing metadata to preserve created timestamp
+                const existingMeta = await getVideoMetadata(dirHandle, fileName);
+                
+                // Merge with existing, preserving created field
+                const safeMeta = {
+                    ...existingMeta,
+                    ...metadata,
+                    // CRITICAL: Always preserve the original created timestamp
+                    created: existingMeta.created || metadata.created || Date.now(),
+                    fileCreated: existingMeta.fileCreated || metadata.fileCreated
+                };
+                
                 const metaDir = await dirHandle.getDirectoryHandle('.metadata', { create: true });
                 const metaFileName = fileName + '.meta.json';
-                await writeJSONFile(metaDir, metaFileName, metadata);
+                await writeJSONFile(metaDir, metaFileName, safeMeta);
             } catch (e) {
                 debug.error('Error saving video metadata:', e);
             }
@@ -7780,7 +7786,7 @@
             try {
                 const db = await openDB();
                 const cached = await getFromDB(db, `preview_${video.name}`);
-                if (cached && cached.preview && cached.duration &&
+                if (cached && cached.preview && cached.duration && video.file &&
                     cached.size === video.file.size && cached.modified === video.file.lastModified) {
                     video.preview = cached.preview;
                     video.duration = cached.duration;
@@ -7788,6 +7794,23 @@
                 }
             } catch (e) {
                 debug.warn('IndexedDB cache miss:', e);
+            }
+
+            if (!video.file) {
+                // No file handle — try to return cached metadata from .meta.json
+                if (dirHandle) {
+                    try {
+                        const meta = await getVideoMetadata(dirHandle, video.name);
+                        if (meta.preview || meta.duration) {
+                            video.preview = meta.preview || '';
+                            video.duration = meta.duration || '0:00';
+                            return { preview: meta.preview || '', duration: meta.duration || '0:00' };
+                        }
+                    } catch (e) {
+                        debug.warn('No file and no meta for video:', video.name);
+                    }
+                }
+                return { preview: '', duration: '0:00' };
             }
 
             const meta = await getVideoMetadata(dirHandle, video.name);
@@ -7812,11 +7835,6 @@
                     });
                 }
                 return { preview: meta.preview, duration: meta.duration };
-            }
-
-            if (!video.file) {
-                debug.warn('No file available for video:', video.name);
-                return { preview: '', duration: '0:00' };
             }
 
             requestIdleCallback(() => {
@@ -12393,6 +12411,15 @@
                                 await loadAllVideos();
                                 debug.log('✅ All videos loaded:', allVideos.length);
 
+                                // Re-render parent/child carousels now that all videos (including other folders) are available
+                                if (typeof window.renderParentChildCarousels === 'function') {
+                                    try {
+                                        window.renderParentChildCarousels();
+                                    } catch (e) {
+                                        debug.warn('[ParentChild] Failed to re-render after full load:', e);
+                                    }
+                                }
+
                                 // Load danmaku counts
                                 if (window.DanmakuCounter) {
                                     await window.DanmakuCounter.load(videoDirectoryHandle, allVideos);
@@ -12605,10 +12632,22 @@
 
             let processedText = String(description || '').replace(/[&<>]/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[s]));
 
-            chapters.forEach(chapter => {
-                const timeCodeRegex = new RegExp(`(${chapter.timeStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'g');
-                processedText = processedText.replace(timeCodeRegex, `<button class="time-code" data-time="${chapter.time}">$1</button>`);
-            });
+            // Single-pass replacement to avoid nested replacements (e.g. "4:00" inside already wrapped "24:00")
+            const chapterMap = new Map();
+            chapters.forEach(ch => chapterMap.set(ch.timeStr, ch.time));
+
+            // Longest first so alternation prefers longer matches (24:00 before 4:00)
+            const timeStrs = [...chapterMap.keys()].sort((a, b) => b.length - a.length);
+            if (timeStrs.length > 0) {
+                const alternation = timeStrs
+                    .map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+                    .join('|');
+                const re = new RegExp(`(${alternation})`, 'g');
+                processedText = processedText.replace(re, (m) => {
+                    const t = chapterMap.get(m);
+                    return (t === undefined) ? m : `<button class="time-code" data-time="${t}">${m}</button>`;
+                });
+            }
 
             processedText = processedText.replace(/\n/g, '<br>');
 
@@ -14200,7 +14239,7 @@
                         <ul>
                             <li><a href="youvi_main.html" data-i18n="footer.video">Видео</a></li>
                             <li><a href="youvi_tags.html" data-i18n="footer.tags">Теги</a></li>
-                            <li><a href="youvi_feed_all.html">Feed</a></li>
+                            <li><a href="forum/forum.html" ">Форумы</a></li>
                             <li><a href="index.html" data-i18n="footer.management">Управление</a></li>
                         </ul>
                     </div>
@@ -15244,6 +15283,114 @@
             } catch (_) { }
         }
 
+        // --- Lazy batch rendering constants ---
+        const COMMENTS_BATCH_SIZE = 20;
+
+        // Event delegation for [data-seek] buttons (single listener instead of thousands)
+        (function setupSeekDelegation() {
+            function handleSeekClick(ev) {
+                const btn = ev.target.closest('[data-seek]');
+                if (!btn) return;
+                ev.preventDefault();
+                ev.stopPropagation();
+                if (window.abSegmentA !== null || window.abSegmentB !== null) {
+                    window.abSegmentA = null;
+                    window.abSegmentB = null;
+                    window.abSegmentMode = 0;
+                    if (typeof window.updateABMarkers === 'function') {
+                        window.updateABMarkers();
+                    }
+                }
+                const time = parseFloat(btn.dataset.seek);
+                if (!isNaN(time)) seekToTime(time);
+            }
+            // Attach once the container exists
+            function attach() {
+                const cl = document.getElementById('commentsList');
+                if (cl && !cl._seekDelegated) {
+                    cl.addEventListener('click', handleSeekClick);
+                    cl._seekDelegated = true;
+                }
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', attach);
+            } else {
+                attach();
+            }
+            // Re-attach after dynamic rebuild
+            window._attachSeekDelegation = attach;
+        })();
+
+        // Pre-load unique channel avatars in parallel
+        async function _prefetchAvatars(commentsList) {
+            const channelNickRe = /\s\((ка|ka)\)$/;
+            const uniqueNicks = new Set();
+            for (const c of commentsList) {
+                if (channelNickRe.test(c.nick)) {
+                    uniqueNicks.add(c.nick.replace(channelNickRe, ''));
+                }
+                if (c.replies) {
+                    (function collectReplies(replies) {
+                        for (const r of replies) {
+                            if (channelNickRe.test(r.nick)) {
+                                uniqueNicks.add(r.nick.replace(channelNickRe, ''));
+                            }
+                            if (r.replies) collectReplies(r.replies);
+                        }
+                    })(c.replies);
+                }
+            }
+            if (uniqueNicks.size === 0) return;
+            // Load all unique avatars in parallel (cache inside loadChannelAvatar handles dedup)
+            const promises = [];
+            for (const name of uniqueNicks) {
+                promises.push(loadChannelAvatar(name).catch(() => null));
+            }
+            await Promise.all(promises);
+        }
+
+        // Render a batch of comments into a DocumentFragment
+        async function _renderBatch(sortedComments, startIdx, count) {
+            const frag = document.createDocumentFragment();
+            const end = Math.min(startIdx + count, sortedComments.length);
+            for (let i = startIdx; i < end; i++) {
+                const commentElement = await createCommentElement(sortedComments[i]);
+                frag.appendChild(commentElement);
+            }
+            return { frag, rendered: end };
+        }
+
+        // Create / update the "Show More" button
+        function _ensureShowMoreBtn(commentsList, sortedComments, renderedCount, uiState) {
+            let btn = commentsList.parentElement && commentsList.parentElement.querySelector('.comments-show-more-lazy');
+            if (renderedCount >= sortedComments.length) {
+                if (btn) btn.remove();
+                return;
+            }
+            if (!btn) {
+                btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'comments-show-more comments-show-more-lazy';
+                btn.style.display = 'block';
+                btn.style.margin = '12px auto 16px auto';
+                (commentsList.parentElement || commentsList).appendChild(btn);
+            }
+            const remaining = sortedComments.length - renderedCount;
+            btn.textContent = `Показать ещё (${remaining})`;
+            // Replace handler
+            const newBtn = btn.cloneNode(true);
+            btn.replaceWith(newBtn);
+            newBtn.addEventListener('click', async () => {
+                newBtn.disabled = true;
+                newBtn.textContent = 'Загрузка...';
+                const { frag, rendered } = await _renderBatch(sortedComments, renderedCount, COMMENTS_BATCH_SIZE);
+                commentsList.appendChild(frag);
+                setupChannelInputHandlers();
+                if (uiState) restoreCommentsUIState(uiState);
+                _ensureShowMoreBtn(commentsList, sortedComments, rendered, uiState);
+            }, { once: true });
+        }
+
         window.renderComments = async function renderComments(desiredState) {
             const commentsList = document.getElementById('commentsList');
             if (!commentsList) return;
@@ -15285,46 +15432,53 @@
                     }
                     window._commentsCache.lists[order] = sortedComments;
                 }
-                commentsList.innerHTML = '';
-                for (const comment of sortedComments) {
-                    const commentElement = await createCommentElement(comment);
-                    commentsList.appendChild(commentElement);
-                    commentElement.querySelectorAll('[data-seek]').forEach(btn => {
-                        btn.addEventListener('click', (ev) => {
-                            ev.preventDefault();
-                            ev.stopPropagation();
 
-                            if (window.abSegmentA !== null || window.abSegmentB !== null) {
-                                window.abSegmentA = null;
-                                window.abSegmentB = null;
-                                window.abSegmentMode = 0;
-                                if (typeof window.updateABMarkers === 'function') {
-                                    window.updateABMarkers();
-                                }
-                            }
-
-                            const time = parseFloat(btn.dataset.seek);
-                            if (!isNaN(time)) {
-                                seekToTime(time);
-                            }
-                        });
-                    });
+                // Detach the MutationObserver paginator if present to avoid per-append overhead
+                if (commentsList.parentElement && commentsList.parentElement._commentsPaginationObserver) {
+                    commentsList.parentElement._commentsPaginationObserver.disconnect();
                 }
+                const commentsContainer = document.getElementById('commentsContainer');
+                if (commentsContainer && commentsContainer._commentsPaginationObserver) {
+                    commentsContainer._commentsPaginationObserver.disconnect();
+                }
+
+                // Remove old show-more button
+                const oldBtn = commentsList.parentElement && commentsList.parentElement.querySelector('.comments-show-more-lazy');
+                if (oldBtn) oldBtn.remove();
+
+                // Pre-fetch avatars for the first batch in parallel
+                const firstBatchComments = sortedComments.slice(0, COMMENTS_BATCH_SIZE);
+                await _prefetchAvatars(firstBatchComments);
+
+                // Render only the first batch
+                commentsList.innerHTML = '';
+                const { frag, rendered } = await _renderBatch(sortedComments, 0, COMMENTS_BATCH_SIZE);
+                commentsList.appendChild(frag);
+
+                // Re-attach seek delegation
+                if (window._attachSeekDelegation) window._attachSeekDelegation();
+
                 setupChannelInputHandlers();
                 restoreCommentsUIState(__uiState);
 
-                if (window.YouviCommentsPagination && window.YouviCommentsPagination.paginateList) {
-                    setTimeout(() => {
-                        window.YouviCommentsPagination.paginateList(commentsList);
-                        window.scrollTo(0, scrollY);
-                    }, 0);
-                } else {
-                    window.scrollTo(0, scrollY);
-                }
+                // Show "Load More" button if there are remaining comments
+                _ensureShowMoreBtn(commentsList, sortedComments, rendered, __uiState);
+
+                window.scrollTo(0, scrollY);
             } finally {
                 window._renderingComments = false;
             }
         }
+
+        // Helper: escape an ID for use in CSS selectors (YouTube IDs contain dots etc.)
+        function _escId(id) {
+            return CSS.escape(id);
+        }
+        // Helper: escape an ID for safe use in inline onclick="fn('...')" HTML attributes
+        function _escAttr(id) {
+            return String(id).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        }
+
         async function createCommentElement(comment) {
             const div = document.createElement('div');
             div.className = 'comment-item';
@@ -15384,20 +15538,20 @@
                         <div class="comment-text">${processCommentText(comment.text)}</div>
                         ${imagesHtml}
                         <div class="comment-actions">
-                            <button onclick="toggleLike('${comment.id}')" class="like-btn" title="${i18n.t('comments.like', 'Лайк')}">
+                            <button onclick="toggleLike('${_escAttr(comment.id)}')" class="like-btn" title="${i18n.t('comments.like', 'Лайк')}">
                                 <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M12 4l-8 8h6v8h4v-8h6l-8-8z" fill="currentColor"/>
                                 </svg>
                                 <span class="like-count">${comment.likes || 0}</span>
                             </button>
-                            <button onclick="toggleDislike('${comment.id}')" class="dislike-btn" title="${i18n.t('comments.dislike', 'Дизлайк')}">
+                            <button onclick="toggleDislike('${_escAttr(comment.id)}')" class="dislike-btn" title="${i18n.t('comments.dislike', 'Дизлайк')}">
                                 <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M12 20l8-8h-6V4h-4v8H4l8 8z" fill="currentColor"/>
                                 </svg>
                                 <span class="dislike-count">${comment.dislikes || 0}</span>
                             </button>
-                            <button onclick="toggleReplyForm('${comment.id}')" class="reply-btn">${i18n.t('comments.reply', 'Ответить')}</button>
-                            <button onclick="deleteComment('${comment.id}')" class="delete-btn" title="${i18n.t('comments.delete', 'Удалить')}">${i18n.t('comments.report', 'Пожаловаться')}</button>
+                            <button onclick="toggleReplyForm('${_escAttr(comment.id)}')" class="reply-btn">${i18n.t('comments.reply', 'Ответить')}</button>
+                            <button onclick="deleteComment('${_escAttr(comment.id)}')" class="delete-btn" title="${i18n.t('comments.delete', 'Удалить')}">${i18n.t('comments.report', 'Пожаловаться')}</button>
                         </div>
                     </div>
                     <div class="reply-form" id="replyForm_${comment.id}" style="display: none;">
@@ -15406,13 +15560,13 @@
                         <textarea class="reply-textarea" id="replyText_${comment.id}" placeholder="${i18n.t('comments.addReply', 'Добавьте ответ...')}"></textarea>
                         <div id="replyImagePreview_${comment.id}" class="comment-image-preview" style="display:none;"></div>
                         <div class="reply-actions">
-                            <button onclick="toggleReplyForm('${comment.id}')" class="reply-cancel-btn">${i18n.t('comments.cancel', 'Отмена')}</button>
-                            <button onclick="insertReplyImage('${comment.id}')" class="reply-image-btn" title="${i18n.t('comments.addImage', 'Добавить изображение')}">
+                            <button onclick="toggleReplyForm('${_escAttr(comment.id)}')" class="reply-cancel-btn">${i18n.t('comments.cancel', 'Отмена')}</button>
+                            <button onclick="insertReplyImage('${_escAttr(comment.id)}')" class="reply-image-btn" title="${i18n.t('comments.addImage', 'Добавить изображение')}">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
                                 </svg>
                             </button>
-                            <button onclick="addReply('${comment.id}')" class="reply-submit-btn">${i18n.t('comments.reply', 'Ответить')}</button>
+                            <button onclick="addReply('${_escAttr(comment.id)}')" class="reply-submit-btn">${i18n.t('comments.reply', 'Ответить')}</button>
                         </div>
                     </div>
                     ${comment.replies && comment.replies.length > 0 ? `
@@ -15425,8 +15579,8 @@
             `;
 
             if (comment.replies && comment.replies.length > 0) {
-                const repliesContainer = div.querySelector(`#replies_${comment.id}`);
-                const toggleBtn = div.querySelector(`#repliesToggle_${comment.id}`);
+                const repliesContainer = div.querySelector(`#${_escId('replies_' + comment.id)}`);
+                const toggleBtn = div.querySelector(`#${_escId('repliesToggle_' + comment.id)}`);
                 if (repliesContainer) {
                     for (const reply of comment.replies) {
                         const replyElement = document.createElement('div');
@@ -15443,18 +15597,6 @@
                             toggleBtn.dataset.open = isHidden ? '1' : '0';
                             toggleBtn.textContent = (isHidden ? i18n.t('comments.hideReplies', 'Скрыть ответы') : i18n.t('comments.showReplies', 'Показать ответы')) + ` (${comment.replies.length})`;
                             toggleBtn.classList.toggle('open', isHidden);
-
-                            const nestedContainers = repliesContainer.querySelectorAll('.replies-container');
-                            const nestedToggles = repliesContainer.querySelectorAll('.replies-toggle');
-                            nestedContainers.forEach(container => {
-                                container.style.display = isHidden ? '' : 'none';
-                            });
-                            nestedToggles.forEach(toggle => {
-                                toggle.dataset.open = isHidden ? '1' : '0';
-                                const count = toggle.textContent.match(/\((\d+)\)/)?.[1] || '0';
-                                toggle.textContent = (isHidden ? i18n.t('comments.hideReplies', 'Скрыть ответы') : i18n.t('comments.showReplies', 'Показать ответы')) + ` (${count})`;
-                                toggle.classList.toggle('open', isHidden);
-                            });
                         });
                     }
                 }
@@ -15535,20 +15677,20 @@
                         <div class="reply-text">${processCommentText(reply.text)}</div>
                         ${imagesHtml}
                         <div class="reply-actions">
-                            <button onclick="toggleReplyLike('${reply.id}')" class="like-btn" title="${i18n.t('comments.like', 'Лайк')}">
+                            <button onclick="toggleReplyLike('${_escAttr(reply.id)}')" class="like-btn" title="${i18n.t('comments.like', 'Лайк')}">
                                 <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M12 4l-8 8h6v8h4v-8h6l-8-8z" fill="currentColor"/>
                                 </svg>
                                 <span class="like-count">${reply.likes || 0}</span>
                             </button>
-                            <button onclick="toggleReplyDislike('${reply.id}')" class="dislike-btn" title="${i18n.t('comments.dislike', 'Дизлайк')}">
+                            <button onclick="toggleReplyDislike('${_escAttr(reply.id)}')" class="dislike-btn" title="${i18n.t('comments.dislike', 'Дизлайк')}">
                                 <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M12 20l8-8h-6V4h-4v8H4l8 8z" fill="currentColor"/>
                                 </svg>
                                 <span class="dislike-count">${reply.dislikes || 0}</span>
                             </button>
-                            <button onclick="toggleReplyToReplyForm('${reply.id}')" class="reply-btn">${i18n.t('comments.reply', 'Ответить')}</button>
-                            <button onclick="deleteReply('${reply.id}')" class="delete-btn" title="${i18n.t('comments.delete', 'Удалить')}">${i18n.t('comments.report', 'Пожаловаться')}</button>
+                            <button onclick="toggleReplyToReplyForm('${_escAttr(reply.id)}')" class="reply-btn">${i18n.t('comments.reply', 'Ответить')}</button>
+                            <button onclick="deleteReply('${_escAttr(reply.id)}')" class="delete-btn" title="${i18n.t('comments.delete', 'Удалить')}">${i18n.t('comments.report', 'Пожаловаться')}</button>
                         </div>
                         
                         
@@ -15558,13 +15700,13 @@
                             <textarea class="reply-textarea" id="replyToReplyText_${reply.id}" placeholder="${i18n.t('comments.replyTo', 'Ответить @{nick}...').replace('{nick}', escapeHtml(replyChannelName || reply.nick))}"></textarea>
                             <div id="nestedReplyImagePreview_${reply.id}" class="comment-image-preview" style="display:none;"></div>
                             <div class="reply-actions">
-                                <button onclick="toggleReplyToReplyForm('${reply.id}')" class="reply-cancel-btn">${i18n.t('comments.cancel', 'Отмена')}</button>
-                                <button onclick="insertNestedReplyImage('${reply.id}')" class="reply-image-btn" title="${i18n.t('comments.addImage', 'Добавить изображение')}">
+                                <button onclick="toggleReplyToReplyForm('${_escAttr(reply.id)}')" class="reply-cancel-btn">${i18n.t('comments.cancel', 'Отмена')}</button>
+                                <button onclick="insertNestedReplyImage('${_escAttr(reply.id)}')" class="reply-image-btn" title="${i18n.t('comments.addImage', 'Добавить изображение')}">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
                                     </svg>
                                 </button>
-                                <button onclick="addReplyToReply('${reply.id}')" class="reply-submit-btn">${i18n.t('comments.reply', 'Ответить')}</button>
+                                <button onclick="addReplyToReply('${_escAttr(reply.id)}')" class="reply-submit-btn">${i18n.t('comments.reply', 'Ответить')}</button>
                             </div>
                         </div>
                         ${nestedRepliesHtml}
@@ -15576,8 +15718,8 @@
         async function loadNestedReplies(parentElement, reply, depth) {
             if (!reply.replies || reply.replies.length === 0) return;
 
-            const repliesContainer = parentElement.querySelector(`#replies_${reply.id}`);
-            const toggleBtn = parentElement.querySelector(`#repliesToggle_${reply.id}`);
+            const repliesContainer = parentElement.querySelector(`#${_escId('replies_' + reply.id)}`);
+            const toggleBtn = parentElement.querySelector(`#${_escId('repliesToggle_' + reply.id)}`);
 
             if (repliesContainer && reply.replies.length > 0) {
                 for (const nestedReply of reply.replies) {
@@ -15600,18 +15742,6 @@
                         toggleBtn.dataset.open = isHidden ? '1' : '0';
                         toggleBtn.textContent = (isHidden ? i18n.t('comments.hideReplies', 'Скрыть ответы') : i18n.t('comments.showReplies', 'Показать ответы')) + ` (${reply.replies.length})`;
                         toggleBtn.classList.toggle('open', isHidden);
-
-                        const nestedContainers = repliesContainer.querySelectorAll('.replies-container');
-                        const nestedToggles = repliesContainer.querySelectorAll('.replies-toggle');
-                        nestedContainers.forEach(container => {
-                            container.style.display = isHidden ? '' : 'none';
-                        });
-                        nestedToggles.forEach(toggle => {
-                            toggle.dataset.open = isHidden ? '1' : '0';
-                            const count = toggle.textContent.match(/\((\d+)\)/)?.[1] || '0';
-                            toggle.textContent = (isHidden ? i18n.t('comments.hideReplies', 'Скрыть ответы') : i18n.t('comments.showReplies', 'Показать ответы')) + ` (${count})`;
-                            toggle.classList.toggle('open', isHidden);
-                        });
                     });
                 }
             }
@@ -15734,7 +15864,7 @@
                         window.CommentImages.clearReplyPreview(commentId);
                     }
 
-                    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                    const commentElement = document.querySelector(`[data-comment-id="${_escAttr(commentId)}"]`);
 
                     if (commentElement) {
                         const replyForm = document.getElementById(`replyForm_${commentId}`);
@@ -15957,7 +16087,7 @@
                     try {
                         await saveAllComments();
 
-                        const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                        const commentElement = document.querySelector(`[data-comment-id="${_escAttr(commentId)}"]`);
                         if (commentElement) {
                             commentElement.remove();
                             updateCommentsCount();
@@ -16144,7 +16274,7 @@
 
             comment.likes++;
 
-            const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+            const commentElement = document.querySelector(`[data-comment-id="${_escAttr(commentId)}"]`);
             if (commentElement) {
                 const likeCountElement = commentElement.querySelector('.like-count');
                 if (likeCountElement) {
@@ -16163,7 +16293,7 @@
 
             comment.dislikes++;
 
-            const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+            const commentElement = document.querySelector(`[data-comment-id="${_escAttr(commentId)}"]`);
             if (commentElement) {
                 const dislikeCountElement = commentElement.querySelector('.dislike-count');
                 if (dislikeCountElement) {
@@ -16195,7 +16325,7 @@
 
                         reply.likes++;
 
-                        const replyElement = document.querySelector(`[data-reply-id="${replyId}"]`);
+                        const replyElement = document.querySelector(`[data-reply-id="${_escAttr(replyId)}"]`);
                         if (replyElement) {
                             const likeCountElement = replyElement.querySelector('.like-count');
                             if (likeCountElement) {
@@ -16219,7 +16349,7 @@
 
                         reply.dislikes++;
 
-                        const replyElement = document.querySelector(`[data-reply-id="${replyId}"]`);
+                        const replyElement = document.querySelector(`[data-reply-id="${_escAttr(replyId)}"]`);
                         if (replyElement) {
                             const dislikeCountElement = replyElement.querySelector('.dislike-count');
                             if (dislikeCountElement) {
@@ -17468,7 +17598,10 @@
                 renderCarousel(els.parentCarousel, pcState.parents, 'parents');
             }
             
-            window.renderParentChildCarousels = renderCarousels;
+            window.renderParentChildCarousels = function() {
+                invalidateVideoCache();
+                renderCarousels();
+            };
             let pcThumbnailObserver = null;
             function getPcThumbnailObserver() {
                 if (!pcThumbnailObserver) {

@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Вся активность | Youvi Forums</title>
+<link rel="stylesheet" href="forum-dark-theme.css">
+<link rel="stylesheet" href="../youvi/header/youvi-header.css">
+<link rel="stylesheet" href="../youvi/sidebar-scroll.css">
+<link rel="stylesheet" href="../youvi/sidebar.css">
+<link rel="stylesheet" href="../youvi/themes/theme-dropdown.css">
+<script>
+  (function() {
+    var theme = localStorage.getItem('youvi-theme');
+    var sidebar = localStorage.getItem('sidebarCollapsed');
+    
+    var htmlClasses = [];
+    if (theme === 'dark') htmlClasses.push('dark-theme');
+    if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+    if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
+  })();
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial, sans-serif;background:#fff;color:#111;--header-height:84px;--footer-height:220px}
+.top-nav{background:#d94b88;border-bottom:1px solid #c2185b;padding:4px 0}
+.top-nav-content{max-width:none !important;margin:0 !important;padding:0 20px;display:flex;gap:20px;align-items:center}
+.top-nav a{color:#fff;text-decoration:none;font-size:12px;padding:2px 0;transition:color .2s}
+.top-nav a:hover,.top-nav a.active{color:#ffd6ea}
+.header{background:#FFE7F4;padding:0;border-bottom:1px solid #f2cfe1;min-height:40px;width:100%;position:sticky;top:0;z-index:100}
+.header-content-wrapper{display:flex;align-items:center;position:relative;box-sizing:border-box;max-width:none !important;margin:0 !important;padding:0 20px;width:100%;min-height:40px}
+.header-left{display:flex;align-items:center;gap:15px;flex-shrink:0}
+.header-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;z-index:1}
+.header-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.search-area{display:flex;gap:6px;align-items:center;width:530px;position:relative}
+.search-input{width:450px;padding:6px 12px;border-radius:4px;border:1px solid rgba(0,0,0,0.1);font-size:13px;height:32px;box-sizing:border-box}
+.search-btn{width:70px;height:32px;padding:0;background:#ff69b4;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;flex-shrink:0;white-space:nowrap;box-sizing:border-box;transition:background-color .2s}
+.search-btn:hover{background:#ff85c3}
+.container{width:100%;margin:0;padding:0 20px 0 20px;display:flex;gap:20px;align-items:stretch;min-height:calc(100vh - 40px - 40px)}
+.content-wrapper{display:flex;flex:1;max-width:1500px;margin:0 auto;gap:20px;background:#fff}
+body.dark-theme .content-wrapper{background:#111}
+.user-actions{display:flex;gap:8px;align-items:center;margin-left:0;flex-shrink:0}
+.user-actions a{color:#111;text-decoration:none;font-size:13px;font-weight:500;padding:4px 8px;border-radius:4px;transition:background .2s}
+.user-actions a:hover{color:#ff69b4}
+.logo{display:flex;align-items:center;justify-content:center;margin-right:0;flex-shrink:0;height:40px}
+.logo img{height:30px;width:auto;max-height:30px}
+.main-content{flex:1;display:flex;flex-direction:column;min-height:0;padding-top:0}
+/* Sidebar offset for sticky header */
+.sidebar:not(.chats-sidebar) {
+    top: 40px !important;
+    max-height: calc(100vh - 40px) !important;
+    min-height: calc(100vh - 40px) !important;
+}
+.breadcrumbs{display:flex;align-items:center;gap:4px;font-size:13px;color:#666;margin:20px 20px 10px 20px;flex-wrap:wrap}
+.breadcrumbs a{color:#666;text-decoration:none;transition:color .2s}
+.breadcrumbs a:hover{color:#ff69b4}
+.breadcrumb-separator{color:#999}
+.page-header{background:#fafafa;border:1px solid #e0e0e0;border-radius:6px;padding:16px 18px;margin:0 20px 16px 20px}
+.page-title{font-size:21px;font-weight:600;color:#111;margin-bottom:6px;line-height:1.3}
+.page-desc{font-size:13px;color:#666}
+.posts-container{display:flex;flex-direction:column;gap:8px;margin:0 20px}
+.post{display:flex;border:1px solid #e0e0e0;background:#fff;border-radius:6px}
+.post.op{background:#fff9fc;border-left:4px solid #ff69b4}
+.post-author{width:170px;flex-shrink:0;background:#f8f8f8;padding:14px;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;align-items:center;text-align:center}
+.author-avatar{width:80px;height:80px;border-radius:0;background:linear-gradient(135deg,#ff85b4,#ff69b4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:600;margin-bottom:6px}
+.author-name{font-size:14px;font-weight:600;color:#111;margin-bottom:4px}
+.author-role{font-size:11px;color:#666;background:#e8e8e8;padding:2px 6px;border-radius:10px;margin-bottom:6px}
+.post-content{flex:1;padding:16px;display:flex;flex-direction:column}
+.post-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #f0f0f0}
+.post-title{font-size:16px;font-weight:600;color:#333;margin-bottom:4px}
+.post-date{font-size:12px;color:#888}
+.post-number{font-size:12px;color:#999;text-decoration:none}
+.post-number:hover{color:#ff69b4}
+.post-body{flex:1;font-size:14px;line-height:1.55;color:#333;margin-bottom:10px}
+.post-body img{max-width:100%;border-radius:6px;margin:8px 0;cursor:pointer;transition:opacity .2s;display:block}
+.post-body .quote{background:#f5f5f5;border-left:3px solid #e0e0e0;padding:10px 12px;border-radius:6px;color:#555;margin:8px 0}
+.post-body .quote .quote-author{color:#777;font-style:italic;margin-bottom:6px;display:block}
+.post-footer{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px;border-top:1px solid #f0f0f0}
+.post-actions{display:flex;gap:10px}
+.post-action{font-size:12px;color:#888;text-decoration:none;transition:color .2s;cursor:pointer}
+.post-action:hover{color:#ff69b4}
+.loading{text-align:center;color:#666;font-size:13px;padding:40px}
+.error{text-align:center;color:#d32f2f;font-size:13px;padding:40px;background:#ffebee;border:1px solid #ffcdd2;border-radius:4px}
+.empty{text-align:center;color:#999;font-size:13px;padding:40px;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:8px}
+.footer{background:#2c2c2c;color:#fff;padding:25px 0 15px 0;margin-top:auto}
+.footer-content{max-width:1400px !important;margin:0 auto !important;padding:0 20px !important;display:flex;gap:30px;align-items:flex-start}
+.footer-main{display:flex;gap:30px;flex:1}
+.footer-logo{flex-shrink:0;width:200px}
+.footer-logo img{height:40px;width:auto}
+.footer-logo p{margin-top:8px;font-size:11px;color:#ccc;line-height:1.3}
+.footer-sections{display:flex;gap:30px;flex:1}
+.footer-right{display:flex;gap:20px;align-items:flex-start}
+.footer-mascot{flex-shrink:0}
+.footer-mascot img{height:180px;width:auto}
+.footer-section{flex:1}
+.footer-section h3{font-size:13px;margin-bottom:10px;color:#fff;font-weight:600}
+.footer-section ul{list-style:none;padding:0;margin:0}
+.footer-section li{margin-bottom:6px}
+.footer-section a{color:#ccc;text-decoration:none;font-size:11px;transition:color .2s}
+.footer-section a:hover{color:#ff69b4}
+.footer-bottom{border-top:1px solid #444;margin-top:20px;padding-top:15px;text-align:center;color:#999;font-size:10px}
+
+/* Pagination styles */
+.pagination{margin:12px 20px 0 20px;padding:12px 0;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;color:#111}
+.pagination-info{font-size:12px;color:#666;margin-right:10px}
+.pagination-btn{min-width:30px;padding:4px 8px;margin:1px;border-radius:4px;cursor:pointer;transition:all .1s;background:#ff69b4;color:#fff;border:none;font-size:12px}
+.pagination-btn.active{background:#d94b88;color:#fff;font-weight:bold}
+.pagination-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;background:#e0e0e0;color:#777}
+
+/* PC Adaptive Styling */
+@media (min-width: 1700px) {
+    .content-wrapper{max-width:1600px}
+    .footer-content{max-width:1700px !important}
+}
+@media (min-width: 2000px) {
+    .content-wrapper{max-width:1850px}
+    .footer-content{max-width:1900px !important}
+}
+@media (min-width: 2400px) {
+    .content-wrapper{max-width:2200px}
+    .footer-content{max-width:2200px !important}
+}
+@media (min-width: 2800px) {
+    .content-wrapper{max-width:2500px}
+    .footer-content{max-width:2500px !important}
+}
+/* Sidebar collapsed adaptations */
+@media (min-width: 1700px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 1700px !important;
+    }
+}
+@media (min-width: 2000px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 1950px !important;
+    }
+}
+@media (min-width: 2400px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 2300px !important;
+    }
+}
+@media (min-width: 2800px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 2600px !important;
+    }
+}
+/* Dark theme additions */
+body.dark-theme .header {
+    background: #2c1810 !important;
+    border-bottom: 1px solid #444 !important;
+}
+body.dark-theme .sidebar-toggle-btn {
+    color: #fff !important;
+}
+body.dark-theme .sidebar-toggle-btn svg {
+    fill: #fff !important;
+}
+body.dark-theme .user-actions a {
+    color: #fff !important;
+}
+body.dark-theme .user-actions a:hover {
+    color: #ff69b4 !important;
+}
+body.dark-theme .search-input {
+    background: #4a3a34 !important;
+    border-color: #555;
+    color: #fff;
+}
+body.dark-theme .search-input::placeholder {
+    color: #999;
+}
+/* Responsive */
+@media (max-width:768px){
+  .container{flex-direction:column;padding:10px}
+  .post{flex-direction:column}
+  .post-author{width:100%;flex-direction:row;align-items:center;text-align:left;gap:15px}
+  .author-avatar{width:48px;height:48px;font-size:18px;margin-bottom:0}
+  .footer-content{flex-direction:column;gap:20px}
+  .footer-sections{flex-direction:column;gap:15px}
+  .footer-section{text-align:center}
+  .footer-mascot img{height:120px}
+}
+</style>
+</head>
+<link rel="icon" href="../favicon/youvi/favicon.ico" type="image/x-icon">
+<body>
+<script src="../youvi_shared.js"></script>
+<script src="forum_youvi_integration.js"></script>
+<script src="../youvi/themes/theme-toggle.js"></script>
+<script src="../youvi/image-viewer.js"></script>
+  <div class="top-nav">
+    <div class="top-nav-content">
+      <a href="youvi_main.html">Видео</a>
+      <a href="index.html">Управление</a>
+      <a href="youvi_ch_list.html">Каналы</a>
+      <a href="youvi_playlists_list.html">Плейлисты</a>
+      <a href="forum.html" class="active">Форумы</a>
+      <a href="../wiki/index.html" data-i18n="nav.wiki">Wiki</a>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-content-wrapper">
+      <div class="header-left">
+        <button id="sidebarToggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
+        
+        <div class="logo">
+          <a href="forum.html"><img src="../images/logo_youvi_ind.png" alt="Forum Logo"></a>
+        </div>
+      </div>
+      
+      <div class="header-center">
+        <div class="search-area">
+          <input type="text" class="search-input" id="forumHeaderSearchInput" placeholder="Поиск в форуме...">
+          <button class="search-btn" id="forumHeaderSearchBtn">Поиск</button>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <div class="user-actions">
+          <div class="settings-container">
+            <a href="#" class="settings-btn">⚙</a>
+            <div class="theme-dropdown">
+              <button class="theme-dropdown-item" data-theme="light">Белая</button>
+              <button class="theme-dropdown-item" data-theme="dark">Черная</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Навигация</div>
+        <a href="../youvi_main.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+          <span>Главная</span>
+        </a>
+        <a href="../youvi_tags.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          <span>Все теги</span>
+        </a>
+      </div>
+      
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Форум</div>
+        <a href="forum.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Главная</span>
+        </a>
+        <a href="forum_recent.html" class="sidebar-item nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
+            <path d="M4 11a9 9 0 0 1 9 9"/>
+            <path d="M4 4a16 16 0 0 1 16 16"/>
+            <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+          </svg>
+          <span>Поток</span>
+        </a>
+        <a href="forum_search.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <span>Поиск</span>
+        </a>
+        <a href="forum_fav.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span>Избранное</span>
+        </a>
+        <a href="forum_members.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 1-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Участники</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Content Wrapper (centered) -->
+    <div class="content-wrapper">
+    <main class="main-content">
+      <div class="breadcrumbs">
+        <a href="forum_main.html">Форум</a>
+        <span class="breadcrumb-separator">→</span>
+        <span style="font-weight:600">Вся активность</span>
+      </div>
+
+      <div class="page-header">
+        <h1 class="page-title">Вся активность форума</h1>
+        <div class="page-desc">Все сообщения форума в хронологическом порядке</div>
+      </div>
+
+      <div class="posts-container" id="postsContainer">
+        <div class="loading">Загрузка сообщений...</div>
+      </div>
+
+      <div id="pagination" class="pagination" style="display:none"></div>
+    </main>
+    </div><!-- /content-wrapper -->
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-main">
+        <div class="footer-logo">
+          <img src="../images/logo_youvi_ind_ex.png" alt="Youvi">
+          <p>Платформа для общения и обсуждений. Делитесь мыслями и идеями.</p>
+        </div>
+        <div class="footer-sections">
+          <div class="footer-section">
+            <h3>Разделы</h3>
+            <ul>
+              <li><a href="../youvi_main.html">Видео</a></li>
+              <li><a href="../youvi_tags.html">Теги</a></li>
+              <li><a href="forum.html">Форум</a></li>
+              <li><a href="../index.html">Управление</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Библиотека</h3>
+            <ul>
+              <li><a href="../youvi_ch_list.html">Каналы</a></li>
+              <li><a href="../youvi_playlists_list.html">Плейлисты</a></li>
+              <li><a href="../youvi_subscriptions.html">Подписки</a></li>
+              <li><a href="../youvi_fav.html">Избранное</a></li>
+              <li><a href="../youvi_history.html">История</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Wiki</h3>
+            <ul>
+              <li><a href="../wiki/index.html">Главная</a></li>
+              <li><a href="../wiki/player.html">Плеер</a></li>
+              <li><a href="../wiki/danmaku.html">Данмаку</a></li>
+              <li><a href="../wiki/tags/general.html">Теги</a></li>
+              <li><a href="../wiki/tags/rules.html">Правила тегирования</a></li>
+              <li><a href="../wiki/search/general.html">Поиск</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>PGC</h3>
+            <ul>
+              <li><a href="../youvi_main.html?tag=Anime (ct)">Anime</a></li>
+              <li><a href="../youvi_main.html?tag=Animation (ct)">Animation</a></li>
+              <li><a href="../youvi_main.html?tag=Movies (ct)">Movies</a></li>
+              <li><a href="../youvi_main.html?tag=Series (ct)">Series</a></li>
+              <li><a href="../youvi_main.html?tag=Music (ct)">Music</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>UGC</h3>
+            <ul>
+              <li><a href="../youvi_main.html?tag=Games (ct)">Games</a></li>
+              <li><a href="../youvi_main.html?tag=Technology (ct)">Technology</a></li>
+              <li><a href="../youvi_main.html?tag=Entertainment (ct)">Entertainment</a></li>
+              <li><a href="../youvi_main.html?tag=IRL (ct)">IRL</a></li>
+              <li><a href="../youvi_main.html?tag=TV (ct)">TV</a></li>
+              <li><a href="../youvi_main.html?tag=Education (ct)">Education</a></li>
+              <li><a href="../youvi_main.html?tag=Other (ct)">Other</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>О сайте</h3>
+            <ul>
+              <li><a href="../wiki/about.html">Про сайт</a></li>
+              <li><a href="../wiki/docs.html">Документация</a></li>
+              <li><a href="../wiki/tech.html">Технологии</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-right">
+        <div class="footer-mascot">
+          <img src="../images/mascot1.png" alt="Yuvi">
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+'use strict';
+
+class ForumAllActivity {
+  constructor() {
+    this.cache = new Map();
+    this.imageCache = new Map();
+    this.profileCache = new Map();
+    this.db = null;
+    this.forumHandle = null;
+    this.currentPage = 1;
+    this.isLoading = false;
+    this.abortController = null;
+    
+    this.POSTS_PER_PAGE = 20;
+    this.MAX_CACHE_SIZE = 50;
+    this.MAX_IMAGE_CACHE = 30;
+    this.MAX_PROFILE_CACHE = 100;
+    
+    this.urlParams = new URLSearchParams(location.search);
+    this.currentPage = Math.max(1, parseInt(this.urlParams.get('page')) || 1);
+    
+    this.boards = Object.freeze({
+      'general': 'Общее', 'images': 'Картинки', 'news': 'Новости сайта',
+      'anime': 'Аниме', 'videogames': 'Видеоигры', 'tv-and-cinema': 'Кино и ТВ',
+      'music': 'Музыка', '2d': '2Д', '3d': '3Д', 'worldbuilding': 'Создание миров',
+      'tutorials': 'Туториалы', 'creative-other': 'Другое', 'study': 'Учёба', 
+      'everyday': 'Повседневность', 'city': 'Город', 'notes': 'Заметки', 
+      'internet': 'Интернет', 'gadgets': 'Гаджеты', 'technology': 'Технологии', 
+      'companies': 'Компании'
+    });
+  }
+
+  async init() {
+    this.setupEventListeners();
+    await this.loadDB();
+    await this.loadPostsPage();
+  }
+
+  setupEventListeners() {
+    document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+    window.addEventListener('beforeunload', () => this.cleanup());
+  }
+
+  async loadDB() {
+    if (this.db) return this.db;
+    
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open('8SiteDB', 1);
+      request.onupgradeneeded = () => {
+        const db = request.result;
+        if (!db.objectStoreNames.contains('handles')) {
+          db.createObjectStore('handles');
+        }
+        if (!db.objectStoreNames.contains('postIndex')) {
+          db.createObjectStore('postIndex');
+        }
+      };
+      request.onsuccess = () => {
+        this.db = request.result;
+        resolve(this.db);
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async getFromDB(store, key) {
+    return new Promise((resolve) => {
+      try {
+        const tx = this.db.transaction(store, 'readonly');
+        const request = tx.objectStore(store).get(key);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => resolve(null);
+      } catch (error) {
+        resolve(null);
+      }
+    });
+  }
+
+  async loadPostsPage() {
+    if (this.isLoading) {
+      this.abortController?.abort();
+    }
+    
+    this.abortController = new AbortController();
+    this.isLoading = true;
+    
+    try {
+      this.forumHandle = await window.YouviShared.getForumDirectory();
+      if (!this.forumHandle) {
+        this.showError('Выберите папку на <a href="../index.html">index.html</a>');
+        return;
+      }
+
+      this.showLoading();
+      
+      const indexData = await this.getFromDB('postIndex', 'allPosts');
+      
+      if (indexData && indexData.posts && Date.now() - indexData.timestamp < 300000) {
+        await this.renderPage(indexData.posts);
+      } else {
+        await this.buildAndCacheIndex();
+      }
+      
+    } catch (error) {
+      console.error('Load error:', error);
+      if (!this.abortController.signal.aborted) {
+        this.showError(`Ошибка загрузки: ${error.message}`);
+      }
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async buildAndCacheIndex() {
+    const posts = [];
+    const boardIds = Object.keys(this.boards);
+    
+    for (const boardId of boardIds) {
+      if (this.abortController?.signal.aborted) break;
+      const boardPosts = await this.scanBoard(boardId);
+      posts.push(...boardPosts);
+    }
+    
+    posts.sort((a, b) => b.date - a.date);
+    
+    await this.saveToIndex(posts);
+    await this.renderPage(posts);
+  }
+
+  async scanBoard(boardId) {
+    const posts = [];
+    const boardName = this.boards[boardId];
+    
+    try {
+      const boardDir = await this.forumHandle.getDirectoryHandle(boardId);
+      
+      for await (const [threadName, handle] of boardDir.entries()) {
+        if (this.abortController?.signal.aborted) break;
+        
+        if (handle.kind === 'directory' && !threadName.startsWith('.') && threadName !== 'assets') {
+          const threadPosts = await this.scanThread(boardId, boardName, threadName);
+          posts.push(...threadPosts);
+        }
+      }
+      
+    } catch (error) {
+      console.warn(`Board ${boardId} scan failed:`, error);
+    }
+    
+    return posts;
+  }
+
+  async scanThread(boardId, boardName, threadName) {
+    const cacheKey = `thread_${boardId}_${threadName}`;
+    
+    if (this.cache.has(cacheKey)) {
+      return this.cache.get(cacheKey);
+    }
+    
+    try {
+      const boardDir = await this.forumHandle.getDirectoryHandle(boardId);
+      const threadDir = await boardDir.getDirectoryHandle(threadName);
+      const fileHandle = await threadDir.getFileHandle('thread.json');
+      const file = await fileHandle.getFile();
+      const threadData = JSON.parse(await file.text());
+      
+      const posts = [];
+      if (threadData?.posts) {
+        threadData.posts.forEach((post, index) => {
+          posts.push({
+            boardId,
+            boardName,
+            threadId: threadName,
+            threadTitle: threadData.title || 'Без названия',
+            postIndex: index,
+            postNumber: index + 1,
+            content: post.text || '',
+            date: post.date || Date.now(),
+            nick: post.nick || 'Аноним',
+            imageFileName: post.imageFileName,
+            imageThumbFileName: post.imageThumbFileName
+          });
+        });
+      }
+      
+      if (this.cache.size < this.MAX_CACHE_SIZE) {
+        this.cache.set(cacheKey, posts);
+      }
+      
+      return posts;
+      
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async saveToIndex(posts) {
+    try {
+      const timestamp = Date.now();
+      const tx = this.db.transaction('postIndex', 'readwrite');
+      const store = tx.objectStore('postIndex');
+      
+      store.put({ posts, timestamp }, 'allPosts');
+      
+      const byThread = new Map();
+      posts.forEach(p => {
+        const key = p.boardId + '\0' + p.threadId;
+        const prev = byThread.get(key);
+        if (!prev || (p.date && p.date > prev.date)) {
+          byThread.set(key, { boardId: p.boardId, threadId: p.threadId, threadTitle: p.threadTitle || 'Тема', date: p.date || 0, lastReplyNick: p.nick || '', lastReplyUser: p.nick || '' });
+        }
+      });
+      const lastThreads = Array.from(byThread.values()).sort((a, b) => (b.date || 0) - (a.date || 0)).slice(0, 10);
+      store.put({ threads: lastThreads, timestamp }, 'sidebarLastThreads');
+      
+      await new Promise((resolve, reject) => {
+        tx.oncomplete = resolve;
+        tx.onerror = reject;
+      });
+      
+    } catch (error) {
+      console.warn('Failed to save index:', error);
+    }
+  }
+
+  async renderPage(allPosts) {
+    const totalPages = Math.ceil(allPosts.length / this.POSTS_PER_PAGE);
+    if (this.currentPage > totalPages) this.currentPage = totalPages;
+    if (this.currentPage < 1) this.currentPage = 1;
+    
+    const startIndex = (this.currentPage - 1) * this.POSTS_PER_PAGE;
+    const endIndex = startIndex + this.POSTS_PER_PAGE;
+    const pagePosts = allPosts.slice(startIndex, endIndex);
+    
+    await this.renderPosts(pagePosts);
+    this.createPagination(totalPages, allPosts.length);
+    this.updateURL();
+  }
+
+  async renderPosts(posts) {
+    const container = document.getElementById('postsContainer');
+    const fragment = document.createDocumentFragment();
+    
+    for (const post of posts) {
+      const element = await this.createPostElement(post);
+      fragment.appendChild(element);
+    }
+    
+    container.innerHTML = '';
+    container.appendChild(fragment);
+  }
+
+  async createPostElement(post) {
+    const nick = post.nick || 'Аноним';
+    const initials = nick.charAt(0).toUpperCase();
+    
+    // Load user profile
+    const profile = await this.getUserProfile(nick);
+    const postsCount = profile.stats?.forumPosts || 0;
+    const joinedDate = profile.joinedAt ? new Date(profile.joinedAt).toLocaleDateString() : '';
+    
+    // Load avatar
+    let avatarHtml = `<div class="author-avatar">${this.escapeHtml(initials)}</div>`;
+    if (profile.avatar) {
+      try {
+        const avatarUrl = await this.loadUserAvatar(nick, profile.avatar);
+        if (avatarUrl) {
+          avatarHtml = `
+            <div class="author-avatar" style="background:none">
+              <img src="${avatarUrl}" alt="avatar" style="width:80px;height:80px;object-fit:cover;border-radius:0">
+            </div>
+          `;
+        }
+      } catch (e) {
+        console.warn('Failed to load avatar for', nick);
+      }
+    }
+    
+    // Load post image
+    let imageHtml = '';
+    if (post.imageThumbFileName || post.imageFileName) {
+      try {
+        const imageUrl = await this.loadPostImage(post.boardId, post.threadId, 
+          post.imageThumbFileName || post.imageFileName);
+        if (imageUrl) {
+          const fullName = post.imageFileName || post.imageThumbFileName;
+          imageHtml = `
+            <img src="${imageUrl}" alt="attachment" 
+                 onclick="app.openImage('${post.boardId}', '${post.threadId}', '${encodeURIComponent(fullName)}')"
+                 style="max-width:100%;border-radius:6px;margin:8px 0;cursor:pointer">
+          `;
+        }
+      } catch (e) {
+        console.warn('Failed to load image for post:', e);
+      }
+    }
+    
+    const element = document.createElement('div');
+    element.className = 'post';
+    element.innerHTML = `
+      <div class="post-author">
+        ${avatarHtml}
+        <div class="author-name">
+          <a href="forum_profile.html?nick=${encodeURIComponent(this.slugifyNick(nick))}" style="color:inherit;text-decoration:none">
+            ${this.escapeHtml(nick)}
+          </a>
+        </div>
+        <div style="font-size:11px;color:#666;margin-top:6px">
+          Постов: ${postsCount}
+          ${joinedDate ? `<br>С нами с: ${joinedDate}` : ''}
+        </div>
+      </div>
+      <div class="post-content">
+        <div class="post-header">
+          <div>
+            <div class="post-title">${this.escapeHtml(post.boardName)} → ${this.escapeHtml(post.threadTitle)}</div>
+            <div class="post-date">${new Date(post.date).toLocaleString()}</div>
+          </div>
+          <a class="post-number" href="forum_thread.html?board=${post.boardId}&id=${post.threadId}&highlight=${post.postIndex}">#${post.postNumber}</a>
+        </div>
+        <div class="post-body">
+          ${imageHtml}
+          ${this.renderPostText(post.content, nick)}
+        </div>
+        <div class="post-footer">
+          <div class="post-actions">
+            <a class="post-action" href="forum_thread.html?board=${post.boardId}&id=${post.threadId}&highlight=${post.postIndex}">Перейти к сообщению</a>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    return element;
+  }
+
+  async getUserProfile(nick) {
+    if (this.profileCache.has(nick)) {
+      return this.profileCache.get(nick);
+    }
+    
+    try {
+      const profile = await window.ForumYouViIntegration.getForumUserProfile(nick);
+      
+      if (this.profileCache.size < this.MAX_PROFILE_CACHE) {
+        this.profileCache.set(nick, profile || {});
+      }
+      
+      return profile || {};
+    } catch (e) {
+      const emptyProfile = {};
+      if (this.profileCache.size < this.MAX_PROFILE_CACHE) {
+        this.profileCache.set(nick, emptyProfile);
+      }
+      return emptyProfile;
+    }
+  }
+
+  async loadUserAvatar(nick, fileName) {
+    const cacheKey = `avatar_${nick}_${fileName}`;
+    
+    if (this.imageCache.has(cacheKey)) {
+      return this.imageCache.get(cacheKey);
+    }
+    
+    try {
+      const url = await window.ForumYouViIntegration.loadForumUserAvatar(nick, fileName);
+      
+      if (this.imageCache.size >= this.MAX_IMAGE_CACHE) {
+        const oldestKey = this.imageCache.keys().next().value;
+        const oldUrl = this.imageCache.get(oldestKey);
+        if (oldUrl) URL.revokeObjectURL(oldUrl);
+        this.imageCache.delete(oldestKey);
+      }
+      
+      this.imageCache.set(cacheKey, url);
+      return url;
+    } catch (e) {
+      this.imageCache.set(cacheKey, null);
+      return null;
+    }
+  }
+
+  async loadPostImage(boardId, threadId, fileName) {
+    const cacheKey = `image_${boardId}_${threadId}_${fileName}`;
+    
+    if (this.imageCache.has(cacheKey)) {
+      return this.imageCache.get(cacheKey);
+    }
+    
+    try {
+      const boardDir = await this.forumHandle.getDirectoryHandle(boardId);
+      const threadDir = await boardDir.getDirectoryHandle(threadId);
+      const imagesDir = await threadDir.getDirectoryHandle('images');
+      const fileHandle = await imagesDir.getFileHandle(fileName);
+      const file = await fileHandle.getFile();
+      const buffer = await file.arrayBuffer();
+      
+      // Set MIME type based on filename so opening in new tab renders image
+      const lower = (fileName || '').toLowerCase();
+      let mime = 'application/octet-stream';
+      if (lower.endsWith('.png')) mime = 'image/png';
+      else if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) mime = 'image/jpeg';
+      else if (lower.endsWith('.gif')) mime = 'image/gif';
+      else if (lower.endsWith('.webp')) mime = 'image/webp';
+      const blob = new Blob([buffer], { type: mime });
+      const url = URL.createObjectURL(blob);
+      
+      if (this.imageCache.size >= this.MAX_IMAGE_CACHE) {
+        const oldestKey = this.imageCache.keys().next().value;
+        const oldUrl = this.imageCache.get(oldestKey);
+        if (oldUrl) URL.revokeObjectURL(oldUrl);
+        this.imageCache.delete(oldestKey);
+      }
+      
+      this.imageCache.set(cacheKey, url);
+      return url;
+    } catch (e) {
+      this.imageCache.set(cacheKey, null);
+      return null;
+    }
+  }
+
+  async openImage(boardId, threadId, encodedFileName) {
+    try {
+      const fileName = decodeURIComponent(encodedFileName);
+      const imageUrl = await this.loadPostImage(boardId, threadId, fileName);
+      if (!imageUrl) return;
+      
+      if (window.imageViewer) {
+        window.imageViewer.show(imageUrl, fileName);
+      } else {
+        const overlay = document.createElement('div');
+        overlay.className = 'img-overlay';
+        overlay.onclick = () => document.body.removeChild(overlay);
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.style.maxWidth = '90%';
+        img.style.maxHeight = '90%';
+        img.style.borderRadius = '8px';
+        overlay.appendChild(img);
+        document.body.appendChild(overlay);
+      }
+    } catch (error) {
+      console.error('Error opening image:', error);
+    }
+  }
+
+  renderPostText(text, fallbackAuthor) {
+    const raw = String(text || '');
+    const lines = raw.split('\n');
+    const blocks = [];
+    let currentBlock = [];
+    let inQuote = false;
+    
+    for (const line of lines) {
+      if (line.trim().startsWith('>')) {
+        if (!inQuote) {
+          if (currentBlock.length > 0) {
+            blocks.push({ type: 'text', lines: currentBlock });
+            currentBlock = [];
+          }
+          inQuote = true;
+        }
+        currentBlock.push(line.replace(/^>\s?/, ''));
+      } else {
+        if (inQuote) {
+          blocks.push({ type: 'quote', lines: currentBlock });
+          currentBlock = [];
+          inQuote = false;
+        }
+        currentBlock.push(line);
+      }
+    }
+    
+    if (currentBlock.length > 0) {
+      blocks.push({ type: inQuote ? 'quote' : 'text', lines: currentBlock });
+    }
+    
+    const parts = [];
+    for (const block of blocks) {
+      if (block.type === 'quote') {
+        const first = block.lines[0] || '';
+        let author = fallbackAuthor;
+        let content = block.lines;
+        
+        const match = first.match(/^([^#]+)\s+#(\d+)\s*$/);
+        if (match) {
+          author = match[1].trim();
+          content = block.lines.slice(1);
+        }
+        
+        const html = this.escapeHtml(content.join('\n')).replace(/\n/g, '<br>');
+        parts.push(`
+          <div class="quote">
+            <span class="quote-author">${this.escapeHtml(author)} написал:</span>
+            ${html}
+          </div>
+        `);
+      } else {
+        const html = this.escapeHtml(block.lines.join('\n')).replace(/\n/g, '<br>');
+        if (html.trim()) {
+          parts.push(`<p>${html}</p>`);
+        }
+      }
+    }
+    
+    return parts.join('');
+  }
+
+  createPagination(totalPages, totalItems) {
+    const existing = document.getElementById('pagination');
+    if (existing) existing.remove();
+    
+    if (totalPages <= 1) return;
+    
+    const pagination = document.createElement('div');
+    pagination.id = 'pagination';
+    pagination.className = 'pagination';
+    
+    const info = document.createElement('div');
+    info.className = 'pagination-info';
+    const startItem = (this.currentPage - 1) * this.POSTS_PER_PAGE + 1;
+    const endItem = Math.min(this.currentPage * this.POSTS_PER_PAGE, totalItems);
+    info.textContent = `${startItem}-${endItem} из ${totalItems} (стр. ${this.currentPage} из ${totalPages})`;
+    pagination.appendChild(info);
+    
+    if (this.currentPage > 1) {
+      pagination.appendChild(this.createPageButton('‹ Назад', this.currentPage - 1));
+    }
+    
+    const maxVisible = 5;
+    const startPage = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    const endPage = Math.min(totalPages, startPage + maxVisible - 1);
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pagination.appendChild(this.createPageButton(i.toString(), i));
+    }
+    
+    if (this.currentPage < totalPages) {
+      pagination.appendChild(this.createPageButton('Вперед ›', this.currentPage + 1));
+    }
+    
+    document.getElementById('postsContainer').parentNode.appendChild(pagination);
+  }
+
+  createPageButton(text, page) {
+    const btn = document.createElement('button');
+    btn.className = 'pagination-btn';
+    btn.textContent = text;
+    if (page === this.currentPage) btn.classList.add('active');
+    btn.onclick = () => this.goToPage(page);
+    return btn;
+  }
+
+  goToPage(page) {
+    this.currentPage = page;
+    this.loadPostsPage();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  handleKeyboard(e) {
+    if (e.target.matches('input, textarea')) return;
+    
+    switch (e.key) {
+      case 'ArrowLeft':
+      case 'h':
+        e.preventDefault();
+        if (this.currentPage > 1) this.goToPage(this.currentPage - 1);
+        break;
+      case 'ArrowRight':
+      case 'l':
+        e.preventDefault();
+        this.goToPage(this.currentPage + 1);
+        break;
+    }
+  }
+
+  updateURL() {
+    const url = new URL(window.location);
+    if (this.currentPage > 1) {
+      url.searchParams.set('page', this.currentPage.toString());
+    } else {
+      url.searchParams.delete('page');
+    }
+    window.history.replaceState({}, '', url);
+  }
+
+  showLoading() {
+    document.getElementById('postsContainer').innerHTML = '<div class="loading">Загрузка сообщений...</div>';
+  }
+
+  showError(message) {
+    document.getElementById('postsContainer').innerHTML = `<div class="error">${this.escapeHtml(message)}</div>`;
+  }
+
+  slugifyNick(nick) {
+    return (nick || 'anon').toLowerCase().trim().replace(/\s+/g, '_').replace(/[^a-z0-9_\-\.а-я]/gi, '');
+  }
+
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  cleanup() {
+    this.abortController?.abort();
+    
+    this.imageCache.forEach(url => {
+      if (url) URL.revokeObjectURL(url);
+    });
+    
+    this.cache.clear();
+    this.imageCache.clear();
+    this.profileCache.clear();
+  }
+}
+
+const app = new ForumAllActivity();
+window.app = app; // For onclick handlers
+
+document.readyState === 'loading' 
+  ? document.addEventListener('DOMContentLoaded', () => app.init())
+  : app.init();
+
+// Theme System
+// Theme system is handled by theme-toggle.js
+
+</script>
+
+<script src="../youvi/sidebar-toggle.js"></script>
+<script src="../youvi/sidebar-scroll.js"></script>
+<script src="../youvi/header/youvi-header.js"></script>
+</body>
+</html>

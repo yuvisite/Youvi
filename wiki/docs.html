@@ -535,7 +535,7 @@
             <a href="../index.html">Management</a>
             <a href="../youvi_ch_list.html">Channels</a>
             <a href="../youvi_playlists_list.html">Playlists</a>
-            <a href="../youvi_feed_all.html">Feed</a> 
+            <a href="../forum/forum.html">Forums</a>
             <a href="index.html" class="active">Wiki</a>
         </div>
     </div>
@@ -590,15 +590,6 @@
                     </svg>
                     <span>Home</span>
                 </a>
-                <a href="../youvi_feed_all.html" class="sidebar-item nav-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
-                        <path d="M4 11a9 9 0 0 1 9 9"/>
-                        <path d="M4 4a16 16 0 0 1 16 16"/>
-                        <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                    </svg>
-                    <span>Feed</span>
-                </a>
-
                 <a href="../youvi_tags.html" class="sidebar-item nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
                         <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
@@ -663,7 +654,7 @@
                 <a href="tags/allias.html" class="sidebar-item library-item">Tags: Aliases</a>
                 <a href="tags/implication.html" class="sidebar-item library-item">Tags: Implications</a>
                 <a href="tags/rules.html" class="sidebar-item library-item">Tags: Tagging Rules</a>
-                <a href="feed.html" class="sidebar-item library-item">Feed</a>
+                <a href="feed.html" class="sidebar-item library-item">Forums</a>
             </div>
             
             <div class="sidebar-section">
@@ -741,7 +732,7 @@
           
           <h3>Social features</h3>
           <ul>
-            <li><strong><a href="../youvi_feed_all.html">Feed</a></strong> — post feed from channels (<a href="feed.html">more details</a>)</li>
+            <li><strong><a href="../forum/forum.html">Forums</a></strong> — discussion boards and community forums (<a href="feed.html">more details</a>)</li>
           
             <li><strong><a href="../youvi_ch_list.html">Channels</a></strong> — list of all channels</li>
             <li><strong><a href="../youvi_subscriptions.html">Subscriptions</a></strong> — subscription management</li>
@@ -753,7 +744,7 @@
           <p>Site has several navigation levels for convenient movement between sections.</p>
           
           <h3>Top panel</h3>
-          <p>Quick access to main sections: Videos, Management, Channels, Playlists, Feed</p>
+          <p>Quick access to main sections: Videos, Management, Channels, Playlists, Forums</p>
           
           <h3>Header</h3>
           <ul>
@@ -766,7 +757,7 @@
           <h3>Sidebar</h3>
           <p>Left sidebar contains navigation through sections and library. Can be collapsed with ☰ button.</p>
           <ul>
-            <li><strong>Navigation</strong> — Main, Feed, Tags</li>
+            <li><strong>Navigation</strong> — Main, Tags</li>
             <li><strong>Library</strong> — History, Favorites, Playlists, Channels, Subscriptions</li>
           </ul>
         </section>
@@ -941,7 +932,6 @@
 ├── 📄 youvi_tags.html              # Tag browser
 ├── 📄 youvi_ch_list.html           # Channel list
 ├── 📄 youvi_ch_view.html           # Channel view
-├── 📄 youvi_feed_all.html          # Feed page
 ├── 📄 youvi_playlists_list.html    # Playlist management
 ├── 📄 youvi_playlists_view.html    # Playlist viewer
 ├── 📄 youvi_history.html           # Watch history
@@ -957,15 +947,15 @@
           <p>When you select a video folder, Youvi creates the following structure in your selected video directory:</p>
           <pre style="background:#f5f5f5;padding:10px;border-radius:4px;font-size:12px;overflow-x:auto">📁 Video folder/
 ├── 📁 .youvi/                      # Youvi system data
-├── 📁 .channels/                   # Channel and Feed data
+├── 📁 .channels/                   # Channel data
 │   └── {channel_slug}/
 │       ├── channel.json            # Channel metadata
-│       ├── avatar.jpg              # Channel avatar
-│       ├── replies.json            # Post comments
-│       └── 📁 posts/               # Feed posts
-│           └── post_{id}/
-│               ├── post.json       # Post data
-│               └── {images}        # Post images
+│       └── avatar.jpg              # Channel avatar
+├── 📁 .forum/                      # Forum data
+│   └── {board_id}/
+│       └── {thread_id}/
+│           ├── thread.json         # Thread data and posts
+│           └── assets/             # Thread attachments
 ├── 📁 some_videos/                 # Video folders
 │   ├── 📄 *.mp4, *.webm, *.mkv, etc    # Video files
 │   └── 📁 .metadata/                   # Video metadata
@@ -1005,7 +995,7 @@
           </ul>
           
           <div class="callout">
-            <strong>Important:</strong> All data is stored locally. When deleting <code>.youvi/</code>, <code>.channels/</code> or <code>.metadata/</code> folders, corresponding data will be lost.
+            <strong>Important:</strong> All data is stored locally. When deleting <code>.youvi/</code>, <code>.channels/</code>, <code>.forum/</code> or <code>.metadata/</code> folders, corresponding data will be lost.
           </div>
         </section>
 
@@ -1031,7 +1021,7 @@
           
           <h3>Social features</h3>
           <ul>
-            <li><a href="feed.html"><strong>Feed</strong></a> — posts, comments, subscriptions</li>
+            <li><a href="feed.html"><strong>Forums</strong></a> — discussion boards, threads, and community forums</li>
           </ul>
           
           <h3>Technical information</h3>
@@ -1057,7 +1047,7 @@
               <tr><td style="padding:8px;border:1px solid #ddd">Management</td><td style="padding:8px;border:1px solid #ddd">Select video folder</td><td style="padding:8px;border:1px solid #ddd"><a href="../index.html">Open</a></td></tr>
               <tr><td style="padding:8px;border:1px solid #ddd">Search</td><td style="padding:8px;border:1px solid #ddd">Advanced search with operators</td><td style="padding:8px;border:1px solid #ddd"><a href="../youvi_search.html">Open</a></td></tr>
               <tr><td style="padding:8px;border:1px solid #ddd">Tags</td><td style="padding:8px;border:1px solid #ddd">All tags with categories</td><td style="padding:8px;border:1px solid #ddd"><a href="../youvi_tags.html">Open</a></td></tr>
-              <tr><td style="padding:8px;border:1px solid #ddd">Feed</td><td style="padding:8px;border:1px solid #ddd">Post feed from channels</td><td style="padding:8px;border:1px solid #ddd"><a href="../youvi_feed_all.html">Open</a></td></tr>
+              <tr><td style="padding:8px;border:1px solid #ddd">Forums</td><td style="padding:8px;border:1px solid #ddd"></td><td style="padding:8px;border:1px solid #ddd"><a href="../forum/forum.html">Open</a></td></tr>
              
               <tr><td style="padding:8px;border:1px solid #ddd">Channels</td><td style="padding:8px;border:1px solid #ddd">List of all channels</td><td style="padding:8px;border:1px solid #ddd"><a href="../youvi_ch_list.html">Open</a></td></tr>
               <tr><td style="padding:8px;border:1px solid #ddd">Playlists</td><td style="padding:8px;border:1px solid #ddd">Your playlists</td><td style="padding:8px;border:1px solid #ddd"><a href="../youvi_playlists_list.html">Open</a></td></tr>
@@ -1087,7 +1077,7 @@
               <tr><td style="padding:8px;border:1px solid #ddd">Tags: Implications</td><td style="padding:8px;border:1px solid #ddd">Related tags</td><td style="padding:8px;border:1px solid #ddd"><a href="tags/implication.html">Open</a></td></tr>
               <tr><td style="padding:8px;border:1px solid #ddd">Tags: Rules</td><td style="padding:8px;border:1px solid #ddd">Tagging standards</td><td style="padding:8px;border:1px solid #ddd"><a href="tags/rules.html">Open</a></td></tr>
             
-              <tr><td style="padding:8px;border:1px solid #ddd">Feed</td><td style="padding:8px;border:1px solid #ddd">Posts and comments</td><td style="padding:8px;border:1px solid #ddd"><a href="feed.html">Open</a></td></tr>
+              <tr><td style="padding:8px;border:1px solid #ddd">Forums</td><td style="padding:8px;border:1px solid #ddd"></td><td style="padding:8px;border:1px solid #ddd"><a href="feed.html">Open</a></td></tr>
               <tr><td style="padding:8px;border:1px solid #ddd">Technologies</td><td style="padding:8px;border:1px solid #ddd">Architecture, Web API</td><td style="padding:8px;border:1px solid #ddd"><a href="tech.html">Open</a></td></tr>
             </tbody>
           </table>
@@ -1111,7 +1101,7 @@
             <ul>
               <li><a href="../youvi_main.html">Videos</a></li>
               <li><a href="../youvi_tags.html">Tags</a></li>
-              <li><a href="../youvi_feed_all.html">Feed</a></li>
+              <li><a href="../forum/forum.html">Forums</a></li>
               <li><a href="../index.html">Management</a></li>
             </ul>
           </div>

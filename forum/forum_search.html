@@ -1,0 +1,1864 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Поиск | Youvi Forums</title>
+<link rel="stylesheet" href="forum-dark-theme.css">
+<link rel="stylesheet" href="../youvi/header/youvi-header.css">
+<link rel="stylesheet" href="../youvi/sidebar-scroll.css">
+<link rel="stylesheet" href="../youvi/sidebar.css">
+<link rel="stylesheet" href="../youvi/themes/theme-dropdown.css">
+<script>
+  (function() {
+    var theme = localStorage.getItem('youvi-theme');
+    var sidebar = localStorage.getItem('sidebarCollapsed');
+    
+    var htmlClasses = [];
+    if (theme === 'dark') htmlClasses.push('dark-theme');
+    if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+    if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
+  })();
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial, sans-serif;background:#fff;color:#111;--header-height:84px;--footer-height:220px}
+.top-nav{background:#d94b88;border-bottom:1px solid #c2185b;padding:4px 0}
+.top-nav-content{max-width:none !important;margin:0 !important;padding:0 20px;display:flex;gap:20px;align-items:center}
+.top-nav a{color:#fff;text-decoration:none;font-size:12px;padding:2px 0;transition:color .2s}
+.top-nav a:hover,.top-nav a.active{color:#ffd6ea}
+.header{background:#FFE7F4;padding:0;border-bottom:1px solid #f2cfe1;min-height:40px;width:100%;position:sticky;top:0;z-index:100}
+.header-content-wrapper{display:flex;align-items:center;position:relative;box-sizing:border-box;max-width:none !important;margin:0 !important;padding:0 20px;width:100%;min-height:40px}
+.header-left{display:flex;align-items:center;gap:15px;flex-shrink:0}
+.header-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;z-index:1}
+.header-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.search-area{display:flex;gap:6px;align-items:center;width:530px;position:relative}
+.search-input{width:450px;padding:6px 12px;border-radius:4px;border:1px solid rgba(0,0,0,0.1);font-size:13px;height:32px;box-sizing:border-box}
+.search-btn{width:70px;height:32px;padding:0;background:#ff69b4;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;flex-shrink:0;white-space:nowrap;box-sizing:border-box;transition:background-color .2s}
+.search-btn:hover{background:#ff85c3}
+.container{width:100%;margin:0;padding:0 20px 0 20px;display:flex;gap:20px;align-items:stretch;min-height:calc(100vh - 40px - 40px)}
+.content-wrapper{display:flex;flex:1;max-width:1500px;margin:0 auto;gap:20px;background:#fff}
+body.dark-theme .content-wrapper{background:#111}
+.main-content{flex:1;display:flex;flex-direction:column;min-height:0;padding-top:0}
+.user-actions{display:flex;gap:8px;align-items:center;margin-left:0;flex-shrink:0}
+.user-actions a{color:#111;text-decoration:none;font-size:13px;font-weight:500;padding:4px 8px;border-radius:4px;transition:background .2s}
+.user-actions a:hover{color:#ff69b4}
+.logo{display:flex;align-items:center;justify-content:center;margin-right:0;flex-shrink:0;height:40px}
+.logo img{height:30px;width:auto;max-height:30px}
+/* Sidebar offset for sticky header */
+.sidebar:not(.chats-sidebar) {
+    top: 40px !important;
+    max-height: calc(100vh - 40px) !important;
+    min-height: calc(100vh - 40px) !important;
+}
+.breadcrumbs{display:flex;align-items:center;gap:4px;font-size:13px;color:#666;margin:20px 20px 10px 20px;flex-wrap:wrap}
+.breadcrumbs a{color:#666;text-decoration:none;transition:color .2s}
+.breadcrumbs a:hover{color:#ff69b4}
+.breadcrumb-separator{color:#999}
+/* Management section with search toggle */
+.management-section{margin:0 20px 10px 20px;padding-bottom:5px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.management-container{display:flex;gap:6px;overflow-x:hidden;scrollbar-width:none;-ms-overflow-style:none;padding:1px 0;flex:1;flex-wrap:nowrap}
+.management-btn{color:#666;text-decoration:none;font-size:12px;font-weight:500;padding:4px 8px;border-radius:3px;transition:all .2s;white-space:nowrap;position:relative;line-height:1.2;cursor:pointer;background:transparent;border:1px solid #eee}
+.management-btn:hover{color:#ff69b4;background:rgba(255,105,180,0.1)}
+.management-btn.active{color:#ff69b4;font-weight:600}
+.type-switcher { display:flex; align-items:center; gap:6px; }
+.type-btn { padding:4px 8px; font-size:11px; border:1px solid #eee; background:#fff; color:#333; border-radius:4px; cursor:pointer; }
+.type-btn.active { background:#ff69b4; color:#fff; border-color:#ff69b4; }
+/* Search panel styles (from photos_search.html) */
+.search-panel{background:#fafafa;border:1px solid #e6e6e6;border-radius:6px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 20px 12px 20px}
+.search-header{display:none}
+.search-title{font-size:13px;font-weight:600;color:#444}
+.search-actions-inline{display:flex;gap:6px}
+.search-collapse{border:none;background:transparent;color:#666;cursor:pointer;font-size:14px;padding:2px 4px;border-radius:4px}
+.search-collapse:hover{background:#eee}
+.search-body{grid-column:1/-1;display:flex;flex-direction:column;gap:8px;padding:12px 20px;transition:all 0.3s ease}
+.search-panel.collapsed .search-body{display:none}
+.search-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;width:100%}
+.search-row label{font-size:13px;color:#444;white-space:nowrap;width:100px;flex-shrink:0}
+.search-row input,.search-row select{padding:8px 12px;border:1px solid #ddd;border-radius:4px;font-size:13px;flex:1;min-width:120px}
+/* Hide fields based on search type */
+.search-row.hide-on-members{display:none}
+.search-actions{display:flex;gap:8px;margin-left:auto}
+.btn{padding:4px 8px;border-radius:6px;border:1px solid #ddd;background:#fff;font-weight:600;cursor:pointer;font-size:12px}
+.btn.primary{background:#ff69b4;color:#fff;border-color:#ff69b4}
+.results-section{margin:20px 20px 0 20px}
+.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.results-count{font-size:14px;color:#666}
+.results-tabs{display:flex;gap:0;border-bottom:1px solid #e0e0e0;margin-bottom:20px}
+.tab{padding:10px 20px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-size:14px;color:#666;transition:all .2s}
+.tab.active{color:#111;border-bottom-color:#ff69b4}
+.tab:hover{color:#111}
+.results-list{min-height:200px}
+.result-item{background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:15px;margin-bottom:10px;transition:background-color .2s}
+.result-item:hover{background:#f0f0f0}
+.result-title{font-size:16px;font-weight:600;margin-bottom:8px;color:#111}
+.result-title a{color:inherit;text-decoration:none}
+.result-title a:hover{text-decoration:underline}
+.result-meta{font-size:12px;color:#666;margin-bottom:8px}
+.result-preview{font-size:14px;color:#333;line-height:1.5}
+.result-author{display:inline-flex;align-items:center;gap:8px;margin-top:8px}
+.author-avatar{width:24px;height:24px;border-radius:4px;background:linear-gradient(135deg,#ff85b4,#ff69b4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.author-avatar img{width:100%;height:100%;object-fit:cover;border-radius:4px}
+.no-results{text-align:center;padding:40px;color:#666;font-size:14px}
+.loading{text-align:center;padding:40px;color:#666;font-size:14px}
+/* Pagination styles (скопированы из forum_board.html) */
+.pagination{margin-top:12px;padding:12px 0;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;color:#111}
+.pagination-info{font-size:12px;color:#666;margin-right:10px}
+.pagination-btn{min-width:30px;padding:4px 8px;margin:1px;border-radius:4px;cursor:pointer;transition:all .1s;background:#ff69b4;color:#fff;border:none;font-size:12px}
+.pagination-btn.active{background:#d94b88;color:#fff;font-weight:bold}
+.pagination-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;background:#e0e0e0;color:#777}
+/* Members grid styles (1:1 copy from forum_members.html) */
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:10px}
+.card{background:#fafafa;border:1px solid #e0e0e0;border-radius:8px;padding:12px;display:flex;gap:12px;align-items:center}
+.avatar{width:64px;height:64px;border-radius:6px;background:linear-gradient(135deg,#ff85b4,#ff69b4);border:none;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:28px}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:6px;display:block}
+.card-body{min-width:0}
+.nick{font-size:16px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{font-size:12px;color:#666}
+.nick a{color:inherit;text-decoration:none}
+.nick a:hover{text-decoration:underline}
+.footer{background:#2c2c2c;color:#fff;padding:25px 0 15px 0;margin-top:auto}
+.footer-content{max-width:1400px !important;margin:0 auto !important;padding:0 20px !important;display:flex;gap:30px;align-items:flex-start}
+.footer-main{display:flex;gap:30px;flex:1}
+.footer-logo{flex-shrink:0;width:200px}
+.footer-logo img{height:40px;width:auto}
+.footer-logo p{margin-top:8px;font-size:11px;color:#ccc;line-height:1.3}
+.footer-sections{display:flex;gap:30px;flex:1}
+.footer-right{display:flex;gap:20px;align-items:flex-start}
+.footer-mascot{flex-shrink:0}
+.footer-mascot img{height:180px;width:auto}
+.footer-section{flex:1}
+.footer-section h3{font-size:13px;margin-bottom:10px;color:#fff;font-weight:600}
+.footer-section ul{list-style:none;padding:0;margin:0}
+.footer-section li{margin-bottom:6px}
+.footer-section a{color:#ccc;text-decoration:none;font-size:11px;transition:color .2s}
+.footer-section a:hover{color:#ff69b4}
+.footer-bottom{border-top:1px solid #444;margin-top:20px;padding-top:15px;text-align:center;color:#999;font-size:10px}
+/* PC Adaptive Styling */
+@media (min-width: 1700px) {
+    .content-wrapper{max-width:1600px}
+    .footer-content{max-width:1700px !important}
+}
+@media (min-width: 2000px) {
+    .content-wrapper{max-width:1850px}
+    .footer-content{max-width:1900px !important}
+}
+@media (min-width: 2400px) {
+    .content-wrapper{max-width:2200px}
+    .footer-content{max-width:2200px !important}
+}
+@media (min-width: 2800px) {
+    .content-wrapper{max-width:2500px}
+    .footer-content{max-width:2500px !important}
+}
+/* Sidebar collapsed adaptations */
+@media (min-width: 1700px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 1700px !important;
+    }
+}
+@media (min-width: 2000px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 1950px !important;
+    }
+}
+@media (min-width: 2400px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 2300px !important;
+    }
+}
+@media (min-width: 2800px) {
+    .sidebar-collapsed .content-wrapper,
+    html.sidebar-collapsed .content-wrapper {
+        max-width: 2600px !important;
+    }
+}
+/* Dark theme additions */
+body.dark-theme .header {
+    background: #2c1810 !important;
+    border-bottom: 1px solid #444 !important;
+}
+body.dark-theme .sidebar-toggle-btn {
+    color: #fff !important;
+}
+body.dark-theme .sidebar-toggle-btn svg {
+    fill: #fff !important;
+}
+body.dark-theme .user-actions a {
+    color: #fff !important;
+}
+body.dark-theme .user-actions a:hover {
+    color: #ff69b4 !important;
+}
+body.dark-theme .search-input {
+    background: #4a3a34 !important;
+    border-color: #555;
+    color: #fff;
+}
+body.dark-theme .search-input::placeholder {
+    color: #999;
+}
+@media (max-width:768px){.container{flex-direction:column;padding:10px}.footer-content{flex-direction:column;gap:20px}.footer-sections{flex-direction:column;gap:15px}.footer-section{text-align:center}.footer-mascot img{height:120px}.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){
+  .search-panel{grid-template-columns:1fr}
+  .search-body{padding:10px 15px;gap:6px}
+  .search-row{flex-direction:column;align-items:stretch;gap:6px}
+  .search-row label{margin-bottom:2px}
+  .search-row input,.search-row select{min-width:auto}
+  .search-body > div[style*="display:flex"]{flex-direction:column;gap:8px}
+  .search-body > div[style*="display:flex"] .search-row{flex:1;min-width:auto}
+}
+</style>
+</head>
+<link rel="icon" href="../favicon/youvi/favicon.ico" type="image/x-icon">
+<body>
+<script src="../youvi_shared.js"></script>
+<script src="forum_youvi_integration.js"></script>
+<script src="../youvi/themes/theme-toggle.js"></script>
+  <div class="top-nav">
+    <div class="top-nav-content">
+      <a href="../youvi_main.html">Видео</a>
+      <a href="../index.html">Управление</a>
+      <a href="../youvi_ch_list.html">Каналы</a>
+      <a href="../youvi_playlists_list.html">Плейлисты</a>
+      <a href="forum.html" class="active">Форумы</a>
+      <a href="../wiki/index.html" data-i18n="nav.wiki">Wiki</a>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-content-wrapper">
+      <div class="header-left">
+        <button id="sidebarToggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
+        
+        <div class="logo">
+          <a href="forum.html"><img src="../images/logo_youvi_ind.png" alt="Forum Logo"></a>
+        </div>
+      </div>
+      
+      <div class="header-center">
+        <div class="search-area">
+          <input type="text" class="search-input" id="headerSearchInput" placeholder="Поиск в форуме...">
+          <button class="search-btn" id="headerSearchBtn">Поиск</button>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <div class="user-actions">
+          <div class="settings-container">
+            <a href="#" class="settings-btn">⚙</a>
+            <div class="theme-dropdown">
+              <button class="theme-dropdown-item" data-theme="light">Белая</button>
+              <button class="theme-dropdown-item" data-theme="dark">Черная</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Навигация</div>
+        <a href="../youvi_main.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+          <span>Главная</span>
+        </a>
+        <a href="../youvi_tags.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          <span>Все теги</span>
+        </a>
+      </div>
+      
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Форум</div>
+        <a href="forum.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Главная</span>
+        </a>
+        <a href="forum_recent.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M4 11a9 9 0 0 1 9 9"/>
+            <path d="M4 4a16 16 0 0 1 16 16"/>
+            <path d="M5 20a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+          </svg>
+          <span>Поток</span>
+        </a>
+        <a href="forum_search.html" class="sidebar-item nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <span>Поиск</span>
+        </a>
+        <a href="forum_fav.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span>Избранное</span>
+        </a>
+        <a href="forum_members.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 1-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Участники</span>
+        </a>
+        <a href="forum_help.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <span>Помощь</span>
+        </a>
+        <a href="forum_rules.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10,9 9,9 8,9"/>
+          </svg>
+          <span>Правила</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Content Wrapper (centered) -->
+    <div class="content-wrapper">
+    <main class="main-content">
+      <div class="breadcrumbs">
+        <a href="forum_main.html">Форум</a>
+        <span class="breadcrumb-separator">→</span>
+        <span style="font-weight:600">Поиск</span>
+      </div>
+
+      <div id="topForumContainer">
+        <section class="management-section">
+          <div class="management-container" style="display:flex;align-items:center;justify-content:space-between;">
+            <a href="#" class="management-btn" id="toggleSearchBtn">Расширенный поиск</a>
+            <div class="type-switcher">
+              <a href="../youvi_search.html?type=videos" class="type-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">Видео</a>
+              <a href="../youvi_search.html?type=playlists" class="type-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">Плейлисты</a>
+              <a href="../youvi_search.html?type=channels" class="type-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">Каналы</a>
+              <button class="type-btn active">Форум</button>
+            </div>
+            <div style="width:120px;"></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="search-panel" id="advSearch" aria-label="Расширенный поиск">
+        <div class="search-header">
+          <div class="search-title">Расширенный поиск</div>
+          <div class="search-actions-inline"><button class="search-collapse" id="toggleSearch">▾</button></div>
+        </div>
+        <div class="search-body">
+          <div class="search-row">
+            <label>Запрос:</label>
+            <input type="text" id="searchQuery" placeholder="Введите поисковый запрос...">
+        </div>
+          <div style="display:flex;gap:20px;flex-wrap:wrap">
+            <div class="search-row" style="flex:1;min-width:200px">
+              <label>Тип поиска:</label>
+            <select id="searchType">
+              <option value="all">Везде</option>
+              <option value="posts">Сообщения</option>
+              <option value="threads">Темы</option>
+              <option value="members">Участники</option>
+            </select>
+          </div>
+            <div class="search-row filter-board" style="flex:1;min-width:200px">
+              <label>Раздел:</label>
+            <select id="boardFilter">
+              <option value="all">Все разделы</option>
+            </select>
+          </div>
+            <div class="search-row filter-author" style="flex:1;min-width:200px">
+              <label>Автор:</label>
+              <input type="text" id="authorFilter" placeholder="Имя автора">
+            </div>
+          </div>
+          <div class="search-row" style="justify-content:flex-end;gap:10px;margin-top:8px">
+            <button class="btn" id="resetBtn">Сбросить</button>
+            <button class="btn primary" id="searchBtn">Найти</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="results-section">
+        <div class="results-header">
+          <div class="results-count" id="resultsCount">Введите поисковый запрос</div>
+        </div>
+        <div class="results-tabs">
+          <button class="tab active" data-tab="posts">Сообщения</button>
+          <button class="tab" data-tab="threads">Темы</button>
+          <button class="tab" data-tab="members">Участники</button>
+        </div>
+        <div class="results-list" id="resultsList">
+          <div class="no-results">Введите поисковый запрос для начала поиска</div>
+        </div>
+      </div>
+    </main>
+    </div><!-- /content-wrapper -->
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-main">
+        <div class="footer-logo">
+          <img src="../images/logo_youvi_ind_ex.png" alt="Youvi">
+          <p>Платформа для общения и обсуждений. Делитесь мыслями и идеями.</p>
+        </div>
+        <div class="footer-sections">
+          <div class="footer-section">
+            <h3>Разделы</h3>
+            <ul>
+              <li><a href="../youvi_main.html">Видео</a></li>
+              <li><a href="../youvi_tags.html">Теги</a></li>
+              <li><a href="forum.html">Форум</a></li>
+              <li><a href="../index.html">Управление</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Библиотека</h3>
+            <ul>
+              <li><a href="../youvi_ch_list.html">Каналы</a></li>
+              <li><a href="../youvi_playlists_list.html">Плейлисты</a></li>
+              <li><a href="../youvi_subscriptions.html">Подписки</a></li>
+              <li><a href="../youvi_fav.html">Избранное</a></li>
+              <li><a href="../youvi_history.html">История</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Wiki</h3>
+            <ul>
+              <li><a href="../wiki/index.html">Главная</a></li>
+              <li><a href="../wiki/player.html">Плеер</a></li>
+              <li><a href="../wiki/danmaku.html">Данмаку</a></li>
+              <li><a href="../wiki/tags/general.html">Теги</a></li>
+              <li><a href="../wiki/tags/rules.html">Правила тегирования</a></li>
+              <li><a href="../wiki/search/general.html">Поиск</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>PGC</h3>
+            <ul>
+              <li><a href="../youvi_main.html?tag=Anime (ct)">Anime</a></li>
+              <li><a href="../youvi_main.html?tag=Animation (ct)">Animation</a></li>
+              <li><a href="../youvi_main.html?tag=Movies (ct)">Movies</a></li>
+              <li><a href="../youvi_main.html?tag=Series (ct)">Series</a></li>
+              <li><a href="../youvi_main.html?tag=Music (ct)">Music</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>UGC</h3>
+            <ul>
+              <li><a href="../youvi_main.html?tag=Games (ct)">Games</a></li>
+              <li><a href="../youvi_main.html?tag=Technology (ct)">Technology</a></li>
+              <li><a href="../youvi_main.html?tag=Entertainment (ct)">Entertainment</a></li>
+              <li><a href="../youvi_main.html?tag=IRL (ct)">IRL</a></li>
+              <li><a href="../youvi_main.html?tag=TV (ct)">TV</a></li>
+              <li><a href="../youvi_main.html?tag=Education (ct)">Education</a></li>
+              <li><a href="../youvi_main.html?tag=Other (ct)">Other</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>О сайте</h3>
+            <ul>
+              <li><a href="../wiki/about.html">Про сайт</a></li>
+              <li><a href="../wiki/docs.html">Документация</a></li>
+              <li><a href="../wiki/tech.html">Технологии</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-right">
+        <div class="footer-mascot">
+          <img src="../images/mascot1.png" alt="Yuvi">
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+// Transfer search query between pages
+(function() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const typeButtons = document.querySelectorAll('.type-switcher a.type-btn');
+    const searchInput = document.getElementById('searchQuery');
+    
+    typeButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const query = searchInput ? searchInput.value.trim() : '';
+        const baseUrl = btn.getAttribute('href').split('?')[0];
+        const urlParams = new URLSearchParams(btn.getAttribute('href').split('?')[1] || '');
+        
+        if (query) {
+          urlParams.set('q', query);
+        }
+        
+        const finalUrl = urlParams.toString() ? `${baseUrl}?${urlParams.toString()}` : baseUrl;
+        window.location.href = finalUrl;
+      });
+    });
+  });
+})();
+
+// Sidebar Toggle
+(function() {
+  const toggleBtn = document.getElementById('sidebarToggle');
+  const savedState = localStorage.getItem('sidebarCollapsed');
+  
+  if (savedState === 'true') {
+    document.body.classList.add('sidebar-collapsed');
+    document.documentElement.classList.add('sidebar-collapsed');
+  }
+  
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const isCollapsed = document.body.classList.contains('sidebar-collapsed') || document.documentElement.classList.contains('sidebar-collapsed');
+      
+      if (isCollapsed) {
+        document.body.classList.remove('sidebar-collapsed');
+        document.documentElement.classList.remove('sidebar-collapsed');
+        localStorage.setItem('sidebarCollapsed', 'false');
+      } else {
+        document.body.classList.add('sidebar-collapsed');
+        document.documentElement.classList.add('sidebar-collapsed');
+        localStorage.setItem('sidebarCollapsed', 'true');
+      }
+    });
+  }
+})();
+
+// Оптимизированная система поиска форума
+class ForumSearchEngine {
+  constructor() {
+    this.forumDirectoryHandle = null;
+    this.searchWorker = null;
+    this.searchIndex = new Map();
+    this.searchCache = new LRUCache(50);
+    this.avatarCache = new Map(); // Avatar caching
+    this.currentResults = { posts: [], threads: [], members: [] };
+    this.currentTab = 'posts';
+    this.currentPage = 1;
+    this.isSearching = false;
+    
+    // Константы
+    this.RESULTS_PER_PAGE = 20;
+    this.MAX_RESULTS = 500;
+    this.CACHE_TTL_MS = 60000; // 1 минута
+    this.AVATAR_CACHE_TTL = 300000; // 5 минут
+    this.SEARCH_DEBOUNCE_MS = 300;
+    
+    this.initializeSearchWorker();
+    this.bindEvents();
+  }
+  
+  // Инициализация Web Worker для поиска
+  initializeSearchWorker() {
+    const workerCode = `
+      class SearchWorker {
+        constructor() {
+          this.searchIndex = new Map();
+          this.translitMap = {
+            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e',
+            'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k',
+            'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
+            'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'ts',
+            'ч': 'ch', 'ш': 'sh', 'щ': 'sch', 'ъ': '', 'ы': 'y', 'ь': '',
+            'э': 'e', 'ю': 'yu', 'я': 'ya'
+          };
+          
+          this.reverseTranslitMap = Object.fromEntries(
+            Object.entries(this.translitMap).map(([k, v]) => [v, k])
+          );
+        }
+        
+        createSearchVariants(query) {
+          const variants = [query.toLowerCase()];
+          const latin = this.transliterateToLatin(query.toLowerCase());
+          const cyrillic = this.transliterateToCyrillic(query.toLowerCase());
+          
+          if (latin !== query.toLowerCase()) variants.push(latin);
+          if (cyrillic !== query.toLowerCase()) variants.push(cyrillic);
+          
+          return [...new Set(variants)];
+        }
+        
+        transliterateToLatin(text) {
+          return text.split('').map(char => this.translitMap[char] || char).join('');
+        }
+        
+        transliterateToCyrillic(text) {
+          let result = text.toLowerCase();
+          // Заменяем длинные комбинации сначала
+          const sortedKeys = Object.keys(this.reverseTranslitMap)
+            .sort((a, b) => b.length - a.length);
+          
+          for (const lat of sortedKeys) {
+            result = result.replace(new RegExp(lat, 'g'), this.reverseTranslitMap[lat]);
+          }
+          return result;
+        }
+        
+        searchInText(text, searchVariants) {
+          const lowerText = text.toLowerCase();
+          return searchVariants.some(variant => lowerText.includes(variant));
+        }
+        
+        searchPosts(data, query, boardFilter, authorFilter, page) {
+          const searchVariants = query ? this.createSearchVariants(query) : [];
+          const authorVariants = authorFilter ? this.createSearchVariants(authorFilter) : [];
+          const results = [];
+          
+          for (const [boardId, threads] of Object.entries(data.boards)) {
+            if (boardFilter && boardFilter !== 'all' && boardId !== boardFilter) continue;
+            
+            for (const [threadId, threadData] of Object.entries(threads)) {
+              const posts = threadData.posts || [];
+              
+              for (let postIndex = 0; postIndex < posts.length; postIndex++) {
+                const post = posts[postIndex];
+                
+                // Фильтр по автору
+                if (authorFilter && post.nick) {
+                  const authorMatch = authorVariants.some(variant => 
+                    post.nick.toLowerCase().includes(variant)
+                  );
+                  if (!authorMatch) continue;
+                }
+                
+                // Поиск в тексте (если есть query) или просто добавляем если есть фильтры
+                const matchesText = !query || (post.text && this.searchInText(post.text, searchVariants));
+                if (matchesText) {
+                  results.push({
+                    type: 'post',
+                    board: boardId,
+                    threadId: threadId,
+                    threadTitle: threadData.title || 'Без названия',
+                    post: { ...post, index: postIndex },
+                    preview: post.text ? post.text.substring(0, 200) + (post.text.length > 200 ? '...' : '') : '',
+                    relevance: query ? this.calculateRelevance(post.text, searchVariants) : 0
+                  });
+                }
+              }
+            }
+          }
+          
+          // Сортировка по релевантности
+          results.sort((a, b) => b.relevance - a.relevance);
+          
+          return {
+            results: results.slice((page - 1) * 20, page * 20),
+            totalCount: results.length
+          };
+        }
+        
+        searchThreads(data, query, boardFilter, authorFilter, page) {
+          const searchVariants = query ? this.createSearchVariants(query) : [];
+          const authorVariants = authorFilter ? this.createSearchVariants(authorFilter) : [];
+          const results = [];
+          
+          for (const [boardId, threads] of Object.entries(data.boards)) {
+            if (boardFilter && boardFilter !== 'all' && boardId !== boardFilter) continue;
+            
+            for (const [threadId, threadData] of Object.entries(threads)) {
+              const firstPost = threadData.posts && threadData.posts[0];
+              const threadAuthor = firstPost ? firstPost.nick : '';
+              const title = threadData.title || '';
+              
+              // Фильтр по автору
+              if (authorFilter && threadAuthor) {
+                const authorMatch = authorVariants.some(variant => 
+                  threadAuthor.toLowerCase().includes(variant)
+                );
+                if (!authorMatch) continue;
+              }
+              
+              // Поиск в заголовке и тексте первого поста (если есть query) или просто добавляем если есть фильтры
+              let titleMatch = false;
+              let textMatch = false;
+              
+              if (query) {
+                titleMatch = this.searchInText(title, searchVariants);
+                textMatch = firstPost && firstPost.text ? 
+                  this.searchInText(firstPost.text, searchVariants) : false;
+              }
+              
+              if (!query || titleMatch || textMatch) {
+                let relevance = 0;
+                if (titleMatch) relevance += 10; // Заголовок важнее
+                if (textMatch) relevance += this.calculateRelevance(firstPost.text, searchVariants);
+                
+                results.push({
+                  type: 'thread',
+                  board: boardId,
+                  threadId: threadId,
+                  title: title,
+                  author: threadAuthor,
+                  postsCount: threadData.posts ? threadData.posts.length : 0,
+                  lastPostDate: threadData.lastPostDate || threadData.updatedAt,
+                  preview: firstPost ? firstPost.text.substring(0, 200) + 
+                    (firstPost.text.length > 200 ? '...' : '') : '',
+                  relevance: relevance
+                });
+              }
+            }
+          }
+          
+          // Сортировка по релевантности
+          results.sort((a, b) => b.relevance - a.relevance);
+          
+          return {
+            results: results.slice((page - 1) * 20, page * 20),
+            totalCount: results.length
+          };
+        }
+        
+        searchMembers(data, query, page) {
+          const searchVariants = this.createSearchVariants(query);
+          const results = [];
+          
+          for (const [slug, profile] of Object.entries(data.members)) {
+            const nick = profile.nick || slug;
+            
+            const nickMatch = this.searchInText(nick, searchVariants);
+            const slugMatch = this.searchInText(slug, searchVariants);
+            
+            if (nickMatch || slugMatch) {
+              results.push({
+                type: 'member',
+                slug: slug,
+                nick: nick,
+                postsCount: profile.stats?.forumPosts || 0,
+                joinedAt: profile.joinedAt,
+                relevance: nickMatch ? 10 : 1
+              });
+            }
+          }
+          
+          // Сортировка по релевантности
+          results.sort((a, b) => b.relevance - a.relevance);
+          
+          return {
+            results: results.slice((page - 1) * 20, page * 20),
+            totalCount: results.length
+          };
+        }
+        
+        calculateRelevance(text, searchVariants) {
+          let score = 0;
+          const lowerText = text.toLowerCase();
+          
+          searchVariants.forEach(variant => {
+            const matches = (lowerText.match(new RegExp(variant, 'g')) || []).length;
+            score += matches;
+          });
+          
+          return score;
+        }
+      }
+      
+      const searchWorker = new SearchWorker();
+      
+      self.onmessage = function(e) {
+        const { type, data } = e.data;
+        
+        try {
+          switch (type) {
+            case 'updateIndex':
+              searchWorker.searchIndex = data;
+              self.postMessage({ type: 'indexUpdated' });
+              break;
+              
+            case 'search':
+              const { query, searchType, boardFilter, authorFilter, page } = data;
+              let result;
+              
+              if (searchType === 'posts') {
+                result = searchWorker.searchPosts(searchWorker.searchIndex, query, boardFilter, authorFilter, page);
+              } else if (searchType === 'threads') {
+                result = searchWorker.searchThreads(searchWorker.searchIndex, query, boardFilter, authorFilter, page);
+              } else if (searchType === 'members') {
+                result = searchWorker.searchMembers(searchWorker.searchIndex, query, page);
+              }
+              
+              self.postMessage({ type: 'searchResult', data: result, searchId: data.searchId });
+              break;
+          }
+        } catch (error) {
+          self.postMessage({ type: 'error', error: error.message, searchId: data.searchId });
+        }
+      };
+    `;
+    
+    const blob = new Blob([workerCode], { type: 'application/javascript' });
+    this.searchWorker = new Worker(URL.createObjectURL(blob));
+    
+    this.searchWorker.onmessage = (e) => {
+      this.handleWorkerMessage(e.data);
+    };
+  }
+  
+  // Привязка событий
+  bindEvents() {
+    const searchBtn = document.getElementById('searchBtn');
+    const searchQuery = document.getElementById('searchQuery');
+    const resetBtn = document.getElementById('resetBtn');
+    const tabs = document.querySelectorAll('.tab');
+    const searchTypeDropdown = document.getElementById('searchType');
+    
+    if (searchBtn) searchBtn.addEventListener('click', () => this.performSearch());
+    if (searchQuery) {
+      searchQuery.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') this.performSearch();
+      });
+      searchQuery.addEventListener('input', this.debounce(() => this.performSearch(), this.SEARCH_DEBOUNCE_MS));
+    }
+    if (resetBtn) resetBtn.addEventListener('click', () => this.resetSearch());
+    
+    // Search type dropdown change
+    if (searchTypeDropdown) {
+      searchTypeDropdown.addEventListener('change', () => {
+        const searchType = searchTypeDropdown.value;
+        
+        // Update currentTab based on dropdown when not "all"
+        if (searchType === 'posts' || searchType === 'threads' || searchType === 'members') {
+          this.currentTab = searchType;
+        } else if (searchType === 'all') {
+          this.currentTab = 'posts'; // Default to posts
+        }
+        
+        this.updateSearchFieldsVisibility();
+        
+        // Trigger search if there's a query
+        const query = document.getElementById('searchQuery').value.trim();
+        if (query) {
+          this.isSearching = false;
+          this.performSearch();
+        }
+      });
+    }
+    
+    // Tab switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => this.switchTab(tab.dataset.tab));
+    });
+    
+    // Toggle search panel
+    const toggleSearchBtn = document.getElementById('toggleSearchBtn');
+    if (toggleSearchBtn) {
+      toggleSearchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.toggleSearchPanel();
+      });
+    }
+    
+    // Header search
+    const headerSearchBtn = document.getElementById('headerSearchBtn');
+    const headerSearchInput = document.getElementById('headerSearchInput');
+    
+    if (headerSearchBtn) {
+      headerSearchBtn.addEventListener('click', () => {
+        const query = headerSearchInput.value.trim();
+        if (query) {
+          document.getElementById('searchQuery').value = query;
+          this.performSearch();
+        }
+      });
+    }
+    
+    if (headerSearchInput) {
+      headerSearchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const query = headerSearchInput.value.trim();
+          if (query) {
+            document.getElementById('searchQuery').value = query;
+            this.performSearch();
+          }
+        }
+      });
+    }
+  }
+  
+  // Debounce функция
+  debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+  
+  // Переключение вкладок
+  switchTab(tab) {
+    console.log('Switching to tab:', tab);
+    this.currentTab = tab;
+    this.currentPage = 1;
+    
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    const activeTab = document.querySelector(`[data-tab="${tab}"]`);
+    if (activeTab) activeTab.classList.add('active');
+    
+    this.updateSearchFieldsVisibility();
+    
+    // Обновляем URL
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', tab);
+    history.replaceState(null, '', url.toString());
+    
+    // Если есть результаты, загружаем их для новой вкладки
+    const query = document.getElementById('searchQuery').value.trim();
+    if (query) {
+      console.log('Performing search for query:', query);
+      // Force new search for the new tab type
+      this.isSearching = false;
+      this.performSearch();
+    } else {
+      console.log('No query, showing empty state');
+      this.displayResults();
+    }
+  }
+  
+  // Обновление видимости полей поиска
+  updateSearchFieldsVisibility() {
+    const searchTypeDropdown = document.getElementById('searchType');
+    const tabsContainer = document.querySelector('.results-tabs');
+    const boardFilterSelect = document.getElementById('boardFilter');
+    const authorFilterInput = document.getElementById('authorFilter');
+    
+    if (!searchTypeDropdown) return;
+    
+    const searchType = searchTypeDropdown.value;
+    
+    // Determine which type we're searching for
+    let activeType = searchType !== 'all' ? searchType : this.currentTab;
+    
+    // Enable/disable filters based on search type
+    if (activeType === 'members') {
+      // Members: disable both board and author filters
+      if (boardFilterSelect) {
+        boardFilterSelect.disabled = true;
+        boardFilterSelect.style.opacity = '0.5';
+        boardFilterSelect.style.cursor = 'not-allowed';
+      }
+      if (authorFilterInput) {
+        authorFilterInput.disabled = true;
+        authorFilterInput.style.opacity = '0.5';
+        authorFilterInput.style.cursor = 'not-allowed';
+        authorFilterInput.placeholder = 'Недоступно для поиска участников';
+      }
+    } else {
+      // Posts and Threads: enable both board and author filters
+      if (boardFilterSelect) {
+        boardFilterSelect.disabled = false;
+        boardFilterSelect.style.opacity = '1';
+        boardFilterSelect.style.cursor = 'pointer';
+      }
+      if (authorFilterInput) {
+        authorFilterInput.disabled = false;
+        authorFilterInput.style.opacity = '1';
+        authorFilterInput.style.cursor = 'text';
+        authorFilterInput.placeholder = 'Имя автора';
+      }
+    }
+    
+    // Update tabs visibility based on dropdown selection
+    if (tabsContainer) {
+      if (searchType === 'all') {
+        // Show all tabs when "Везде" is selected
+        tabsContainer.style.display = 'flex';
+        document.querySelectorAll('.tab').forEach(tab => tab.style.display = 'block');
+      } else {
+        // Hide tabs when specific type is selected (dropdown controls the search)
+        tabsContainer.style.display = 'none';
+      }
+    }
+  }
+  
+  // Переключение панели поиска
+  toggleSearchPanel() {
+    const searchPanel = document.getElementById('advSearch');
+    const toggleBtn = document.getElementById('toggleSearchBtn');
+    
+    if (searchPanel && toggleBtn) {
+      const isCollapsed = searchPanel.classList.contains('collapsed');
+      
+      if (isCollapsed) {
+        searchPanel.classList.remove('collapsed');
+        toggleBtn.textContent = 'Свернуть поиск';
+      } else {
+        searchPanel.classList.add('collapsed');
+        toggleBtn.textContent = 'Расширенный поиск';
+      }
+    }
+  }
+  
+  // Сброс поиска
+  resetSearch() {
+    document.getElementById('searchQuery').value = '';
+    document.getElementById('boardFilter').value = 'all';
+    document.getElementById('authorFilter').value = '';
+    
+    this.currentResults = { posts: [], threads: [], members: [] };
+    this.currentPage = 1;
+    
+    document.getElementById('resultsList').innerHTML = 
+      '<div class="no-results">Введите поисковый запрос для начала поиска</div>';
+    document.getElementById('resultsCount').textContent = 'Введите поисковый запрос';
+    
+    // Удаляем пагинацию
+    const pagination = document.getElementById('pagination');
+    if (pagination) pagination.remove();
+  }
+  
+  // Основная функция поиска
+  async performSearch() {
+    if (this.isSearching) return;
+    
+    const query = document.getElementById('searchQuery').value.trim();
+    const searchTypeDropdown = document.getElementById('searchType');
+    const searchType = searchTypeDropdown ? searchTypeDropdown.value : 'all';
+    const boardFilter = document.getElementById('boardFilter').value;
+    const authorFilter = document.getElementById('authorFilter').value.trim();
+    
+    // Determine actual search type:
+    // - If dropdown is not "all", use dropdown value (user explicitly selected a type)
+    // - If dropdown is "all", use currentTab (user is using tabs to filter)
+    let actualSearchType;
+    if (searchType !== 'all') {
+      actualSearchType = searchType;
+      this.currentTab = searchType; // Sync currentTab with dropdown
+    } else {
+      actualSearchType = this.currentTab;
+    }
+    
+    // Performance timing
+    const startTime = performance.now();
+    
+    // Обновляем URL
+    this.updateSearchURL({ query, searchType: actualSearchType, boardFilter, authorFilter });
+    
+    // Allow search without query if filters are present
+    const hasFilters = (boardFilter && boardFilter !== 'all') || authorFilter;
+    if (!query && !hasFilters) {
+      this.resetSearch();
+      return;
+    }
+    
+    // Проверяем кеш
+    const cacheKey = this.createSearchCacheKey(query, actualSearchType, boardFilter, authorFilter, this.currentPage);
+    const cached = this.searchCache.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp) < this.CACHE_TTL_MS) {
+      console.log(`Search completed from cache in ${(performance.now() - startTime).toFixed(0)}ms`);
+      this.handleSearchResult(cached.data, cached.searchId);
+      return;
+    }
+    
+    this.isSearching = true;
+    this.showSearchProgress();
+    
+    // Если индекс не загружен, загружаем его
+    if (!this.searchIndex.size) {
+      await this.buildSearchIndex();
+    }
+    
+    // Store start time for later
+    this._searchStartTime = startTime;
+    
+    // Отправляем запрос в worker
+    const searchId = Date.now();
+    this.searchWorker.postMessage({
+      type: 'search',
+      data: {
+        query,
+        searchType: actualSearchType,
+        boardFilter,
+        authorFilter,
+        page: this.currentPage,
+        searchId
+      }
+    });
+  }
+  
+  // Построение поискового индекса
+  async buildSearchIndex() {
+    if (!this.forumDirectoryHandle) return;
+    
+    const indexData = {
+      boards: {},
+      members: {}
+    };
+    
+    // Загружаем данные досок
+    const boards = ['general', 'images', 'news', 'anime', 'videogames', 'tv-and-cinema', 
+                   'music', '2d', '3d', 'worldbuilding', 'tutorials', 'creative-other',
+                   'study', 'everyday', 'city', 'notes', 'internet', 
+                   'gadgets', 'technology', 'companies'];
+    
+    const boardPromises = boards.map(async (boardId) => {
+      try {
+        const boardDir = await this.forumDirectoryHandle.getDirectoryHandle(boardId);
+        const threads = {};
+        
+        for await (const [name, handle] of boardDir.entries()) {
+          if (handle.kind === 'directory' && !name.startsWith('.') && name !== 'assets') {
+            try {
+              const threadDir = await boardDir.getDirectoryHandle(name);
+              const threadData = await this.readJSONFile(threadDir, 'thread.json', {});
+              
+              // Сохраняем только необходимые данные
+              threads[name] = {
+                title: threadData.title || '',
+                posts: (threadData.posts || []).map(post => ({
+                  nick: post.nick || '',
+                  text: post.text || '',
+                  date: post.date
+                })),
+                lastPostDate: threadData.lastPostDate,
+                updatedAt: threadData.updatedAt
+              };
+            } catch (e) {
+              console.warn(`Failed to index thread ${boardId}/${name}:`, e);
+            }
+          }
+        }
+        
+        indexData.boards[boardId] = threads;
+      } catch (e) {
+        console.warn(`Failed to index board ${boardId}:`, e);
+      }
+    });
+    
+    // Загружаем данные участников
+    const membersPromise = (async () => {
+      try {
+        const users = await window.ForumYouViIntegration.getAllForumUsers();
+        
+        for (const user of users) {
+          indexData.members[user.name] = {
+            nick: user.nick || user.name,
+            postsCount: user.postsCount || 0,
+            joinedAt: user.joinedAt
+          };
+        }
+      } catch (e) {
+        console.warn('Failed to index users:', e);
+      }
+    })();
+    
+    await Promise.all([...boardPromises, membersPromise]);
+    
+    // Отправляем индекс в worker
+    this.searchWorker.postMessage({
+      type: 'updateIndex',
+      data: indexData
+    });
+    
+    this.searchIndex = indexData;
+  }
+  
+  // Обработка сообщений от worker
+  handleWorkerMessage(message) {
+    switch (message.type) {
+      case 'searchResult':
+        this.handleSearchResult(message.data, message.searchId);
+        break;
+      case 'error':
+        this.handleSearchError(message.error);
+        break;
+      case 'indexUpdated':
+        console.log('Search index updated');
+        break;
+    }
+  }
+  
+  // Обработка результатов поиска
+  handleSearchResult(data, searchId) {
+    this.isSearching = false;
+    this.hideSearchProgress();
+    
+    // Performance timing
+    if (this._searchStartTime) {
+      const duration = performance.now() - this._searchStartTime;
+      console.log(`Search completed in ${duration.toFixed(0)}ms (${data.totalCount || 0} results)`);
+      this._searchStartTime = null;
+    }
+    
+    // Кешируем результат
+    const query = document.getElementById('searchQuery').value.trim();
+    const searchType = this.currentTab;
+    const boardFilter = document.getElementById('boardFilter').value;
+    const authorFilter = document.getElementById('authorFilter').value.trim();
+    const cacheKey = this.createSearchCacheKey(query, searchType, boardFilter, authorFilter, this.currentPage);
+    
+    this.searchCache.set(cacheKey, {
+      data,
+      timestamp: Date.now(),
+      searchId
+    });
+    
+    // Обновляем результаты
+    if (this.currentTab === 'posts') {
+      this.currentResults = { posts: data.results, threads: [], members: [], totalCount: data.totalCount };
+    } else if (this.currentTab === 'threads') {
+      this.currentResults = { posts: [], threads: data.results, members: [], totalCount: data.totalCount };
+    } else if (this.currentTab === 'members') {
+      this.currentResults = { posts: [], threads: [], members: data.results, totalCount: data.totalCount };
+    }
+    
+    this.displayResults();
+  }
+  
+  // Обработка ошибки поиска
+  handleSearchError(error) {
+    this.isSearching = false;
+    this.hideSearchProgress();
+    
+    console.error('Search error:', error);
+    document.getElementById('resultsList').innerHTML = 
+      '<div class="no-results">Ошибка поиска. Попробуйте еще раз.</div>';
+    document.getElementById('resultsCount').textContent = 'Ошибка поиска';
+  }
+  
+  // Показ прогресса поиска
+  showSearchProgress() {
+    document.getElementById('resultsCount').textContent = 'Поиск...';
+    document.getElementById('resultsList').innerHTML = 
+      '<div class="loading">Идет поиск...</div>';
+  }
+  
+  // Скрытие прогресса поиска
+  hideSearchProgress() {
+    // Реализуется в displayResults
+  }
+  
+  // Отображение результатов
+  displayResults() {
+    let currentTabResults = [];
+    let totalCount = 0;
+    
+    if (this.currentTab === 'posts') {
+      currentTabResults = this.currentResults.posts;
+      totalCount = this.currentResults.totalCount || 0;
+    } else if (this.currentTab === 'threads') {
+      currentTabResults = this.currentResults.threads;
+      totalCount = this.currentResults.totalCount || 0;
+    } else if (this.currentTab === 'members') {
+      currentTabResults = this.currentResults.members;
+      totalCount = this.currentResults.totalCount || 0;
+    }
+    
+    // Обновляем счетчик
+    const totalPages = Math.max(1, Math.ceil(totalCount / this.RESULTS_PER_PAGE));
+    const startItem = currentTabResults.length > 0 ? (this.currentPage - 1) * this.RESULTS_PER_PAGE + 1 : 0;
+    const endItem = Math.min(this.currentPage * this.RESULTS_PER_PAGE, totalCount);
+    document.getElementById('resultsCount').textContent = 
+      `Найдено результатов: ${totalCount} (${startItem}-${endItem} из ${totalCount} на стр. ${this.currentPage} из ${totalPages})`;
+    
+    const query = document.getElementById('searchQuery').value.trim();
+    let html = '';
+    
+    if (this.currentTab === 'posts') {
+      html = this.renderPostResults(currentTabResults, query);
+    } else if (this.currentTab === 'threads') {
+      html = this.renderThreadResults(currentTabResults, query);
+    } else if (this.currentTab === 'members') {
+      html = this.renderMemberResults(currentTabResults, query);
+    }
+    
+    document.getElementById('resultsList').innerHTML = html;
+    
+    // Создаем пагинацию
+    this.createPagination(totalPages, totalCount);
+    
+    // Загружаем аватары асинхронно
+    this.loadAvatarsForResults(currentTabResults);
+  }
+  
+  // Рендеринг результатов постов
+  renderPostResults(results, query) {
+    if (results.length === 0) {
+      return '<div class="no-results">Сообщения не найдены</div>';
+    }
+    
+    return results.map(result => {
+      const postIndex = result.post.index || 0;
+      return `
+        <div class="result-item">
+          <div class="result-title">
+            <a href="forum_thread.html?id=${result.threadId}&board=${result.board}&highlight=${postIndex}&query=${encodeURIComponent(query)}">
+              ${this.highlightText(result.threadTitle, query)}
+            </a>
+          </div>
+          <div class="result-meta">Раздел: ${result.board} • ${new Date(result.post.date).toLocaleString()}</div>
+          <div class="result-preview">${this.highlightText(result.preview, query)}</div>
+          <div class="result-author">
+            <div class="author-avatar" data-nick="${result.post.nick}">
+              ${result.post.nick ? result.post.nick.charAt(0).toUpperCase() : '?'}
+            </div>
+            ${result.post.nick || 'Неизвестно'}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  // Рендеринг результатов тем
+  renderThreadResults(results, query) {
+    if (results.length === 0) {
+      return '<div class="no-results">Темы не найдены</div>';
+    }
+    
+    return results.map(result => `
+      <div class="result-item">
+        <div class="result-title">
+          <a href="forum_thread.html?id=${result.threadId}&board=${result.board}">
+            ${this.highlightText(result.title, query)}
+          </a>
+        </div>
+        <div class="result-meta">
+          Раздел: ${result.board} • Сообщений: ${result.postsCount} • 
+          ${result.lastPostDate ? new Date(result.lastPostDate).toLocaleString() : ''}
+        </div>
+        <div class="result-preview">${this.highlightText(result.preview, query)}</div>
+        <div class="result-author">
+          <div class="author-avatar" data-nick="${result.author}">
+            ${result.author ? result.author.charAt(0).toUpperCase() : '?'}
+          </div>
+          ${result.author || 'Неизвестно'}
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  // Рендеринг результатов участников
+  renderMemberResults(results, query) {
+    if (results.length === 0) {
+      return '<div class="no-results">Участники не найдены</div>';
+    }
+    
+    let html = '<div class="grid">';
+    results.forEach(result => {
+      const postsLine = result.postsCount != null ? `Постов: ${result.postsCount}` : '';
+      const joinedLine = result.joinedAt ? `С нами с: ${new Date(result.joinedAt).toLocaleDateString()}` : '';
+      const extra = (postsLine || joinedLine) ? 
+        `<div class="meta">${[postsLine, joinedLine].filter(Boolean).join('<br>')}</div>` : '';
+      
+      html += `
+        <div class="card">
+          <div class="avatar" data-nick="${result.slug}">
+            ${result.nick ? result.nick.charAt(0).toUpperCase() : '?'}
+          </div>
+          <div class="card-body">
+            <div class="nick">
+              <a href="forum_profile.html?nick=${encodeURIComponent(result.slug)}">
+                ${this.highlightText(result.nick, query)}
+              </a>
+            </div>
+            <div class="meta">@${this.highlightText(result.slug, query)}</div>
+            ${extra}
+          </div>
+        </div>
+      `;
+    });
+    html += '</div>';
+    return html;
+  }
+  
+  // Подсветка текста
+  highlightText(text, query) {
+    if (!query || !text) return this.escapeHtml(text);
+    
+    const searchVariants = this.createSearchVariants(query);
+    const escapedVariants = searchVariants.map(variant => 
+      variant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    );
+    
+    const regex = new RegExp(`(${escapedVariants.join('|')})`, 'gi');
+    return this.escapeHtml(text).replace(regex, '<mark>$1</mark>');
+  }
+  
+  // Создание вариантов поиска (упрощенная версия)
+  createSearchVariants(query) {
+    return [query.toLowerCase()];
+  }
+  
+  // Экранирование HTML
+  escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  // Создание ключа кеша
+  createSearchCacheKey(query, searchType, boardFilter, authorFilter, page) {
+    return `${query}|${searchType}|${boardFilter}|${authorFilter}|${page}`;
+  }
+  
+  // Обновление URL
+  updateSearchURL(params) {
+    const url = new URL(window.location.href);
+    
+    url.searchParams.delete('q');
+    url.searchParams.delete('type');
+    url.searchParams.delete('board');
+    url.searchParams.delete('author');
+    
+    if (params.query) url.searchParams.set('q', params.query);
+    if (params.searchType && params.searchType !== 'all') url.searchParams.set('type', params.searchType);
+    if (params.boardFilter && params.boardFilter !== 'all') url.searchParams.set('board', params.boardFilter);
+    if (params.authorFilter) url.searchParams.set('author', params.authorFilter);
+    
+    history.replaceState(null, '', url.toString());
+  }
+  
+  // Создание пагинации
+  createPagination(totalPages, totalItems) {
+    const existing = document.getElementById('pagination');
+    if (existing) existing.remove();
+    if (totalPages <= 1) return;
+    
+    const pagination = document.createElement('div');
+    pagination.id = 'pagination';
+    pagination.className = 'pagination';
+    
+    const info = document.createElement('div');
+    info.className = 'pagination-info';
+    const startItem = (this.currentPage - 1) * this.RESULTS_PER_PAGE + 1;
+    const endItem = Math.min(this.currentPage * this.RESULTS_PER_PAGE, totalItems);
+    info.textContent = `${startItem}-${endItem} из ${totalItems} (стр. ${this.currentPage} из ${totalPages})`;
+    pagination.appendChild(info);
+    
+    const pageBtn = (text, page) => {
+      const b = document.createElement('button');
+      b.className = 'pagination-btn';
+      b.textContent = text;
+      b.addEventListener('click', () => this.goToPage(page));
+      return b;
+    };
+    
+    if (this.currentPage > 1) pagination.appendChild(pageBtn('‹ Назад', this.currentPage - 1));
+    
+    const maxVisible = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+    if (endPage - startPage + 1 < maxVisible) {
+      startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+    
+    if (startPage > 1) {
+      pagination.appendChild(pageBtn('1', 1));
+      if (startPage > 2) {
+        const dots = document.createElement('span');
+        dots.textContent = '...';
+        dots.style.cssText = 'margin:0 5px;color:#999;';
+        pagination.appendChild(dots);
+      }
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      const btn = pageBtn(i.toString(), i);
+      if (i === this.currentPage) btn.classList.add('active');
+      pagination.appendChild(btn);
+    }
+    
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        const dots = document.createElement('span');
+        dots.textContent = '...';
+        dots.style.cssText = 'margin:0 5px;color:#999;';
+        pagination.appendChild(dots);
+      }
+      pagination.appendChild(pageBtn(totalPages.toString(), totalPages));
+    }
+    
+    if (this.currentPage < totalPages) {
+      pagination.appendChild(pageBtn('Вперед ›', this.currentPage + 1));
+    }
+    
+    const resultsList = document.getElementById('resultsList');
+    if (resultsList && resultsList.parentNode) {
+      resultsList.parentNode.appendChild(pagination);
+    }
+  }
+  
+  // Переход на страницу
+  goToPage(page) {
+    this.currentPage = page;
+    this.performSearch();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
+  // Асинхронная загрузка аватаров
+  async loadAvatarsForResults(results) {
+    if (!this.forumDirectoryHandle || !results.length) return;
+    
+    // Собираем уникальные ники
+    const nicksToLoad = new Set();
+    results.forEach(result => {
+      let nick = null;
+      if (this.currentTab === 'posts' && result.post && result.post.nick) {
+        nick = result.post.nick;
+      } else if (this.currentTab === 'threads' && result.author) {
+        nick = result.author;
+      } else if (this.currentTab === 'members' && result.nick) {
+        nick = result.nick;
+      }
+      if (nick) nicksToLoad.add(nick);
+    });
+    
+    // Загружаем аватары батчами с кешированием
+    const batchSize = 10;
+    const nicks = Array.from(nicksToLoad);
+    
+    for (let i = 0; i < nicks.length; i += batchSize) {
+      const batch = nicks.slice(i, i + batchSize);
+      
+      // Process batch in parallel
+      await Promise.all(batch.map(async (nick) => {
+        try {
+          const avatarUrl = await this.loadCachedAvatar(nick);
+          if (avatarUrl) {
+            this.updateAvatarInDOM(nick, avatarUrl);
+          }
+        } catch (e) {
+          console.warn(`Failed to load avatar for ${nick}:`, e);
+        }
+      }));
+      
+      // Small delay between batches
+      if (i + batchSize < nicks.length) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+    }
+  }
+  
+  // Cached avatar loading
+  async loadCachedAvatar(nick) {
+    const cacheKey = `avatar_${nick}`;
+    
+    // Check cache
+    if (this.avatarCache.has(cacheKey)) {
+      const cached = this.avatarCache.get(cacheKey);
+      if (Date.now() - cached.timestamp < this.AVATAR_CACHE_TTL) {
+        return cached.url;
+      }
+      // Cache expired, revoke old URL
+      if (cached.url && cached.url.startsWith('blob:')) {
+        URL.revokeObjectURL(cached.url);
+      }
+      this.avatarCache.delete(cacheKey);
+    }
+    
+    // Load avatar
+    try {
+      const profile = await window.ForumYouViIntegration.getForumUserProfile(nick);
+      if (profile && profile.avatar) {
+        const avatarUrl = await window.ForumYouViIntegration.loadForumUserAvatar(nick, profile.avatar);
+        if (avatarUrl) {
+          this.avatarCache.set(cacheKey, {
+            url: avatarUrl,
+            timestamp: Date.now()
+          });
+          return avatarUrl;
+        }
+      }
+    } catch (e) {
+      console.warn(`Error loading avatar for ${nick}:`, e);
+    }
+    
+    // Cache null result to avoid repeated failures
+    this.avatarCache.set(cacheKey, {
+      url: null,
+      timestamp: Date.now()
+    });
+    return null;
+  }
+  
+  // Обновление аватара в DOM
+  updateAvatarInDOM(nick, avatarUrl) {
+    const avatarElements = document.querySelectorAll(`[data-nick="${nick}"]`);
+    avatarElements.forEach(element => {
+      if (element.classList.contains('author-avatar') || element.classList.contains('avatar')) {
+        element.style.background = 'none';
+        element.innerHTML = `<img src="${avatarUrl}" alt="avatar" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+      }
+    });
+  }
+  
+  // Утилитарные функции
+  slugifyNick(nick) {
+    return (nick || 'anon').toLowerCase().trim()
+      .replace(/\s+/g, '_')
+      .replace(/[^a-z0-9_\-\.а-яё']/gi, '');
+  }
+  
+  async readJSONFile(dirHandle, fileName, defaultValue = null) {
+    try {
+      const fileHandle = await dirHandle.getFileHandle(fileName);
+      const file = await fileHandle.getFile();
+      const text = await file.text();
+      return JSON.parse(text);
+    } catch (e) {
+      return defaultValue;
+    }
+  }
+  
+  // Инициализация из URL параметров
+  initializeFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+    const searchType = urlParams.get('type') || 'all';
+    const boardFilter = urlParams.get('board') || 'all';
+    const authorFilter = urlParams.get('author') || '';
+    const tab = urlParams.get('tab') || 'posts';
+    
+    // Заполняем поля
+    if (query) document.getElementById('searchQuery').value = query;
+    const searchTypeDropdown = document.getElementById('searchType');
+    if (searchTypeDropdown && searchType) searchTypeDropdown.value = searchType;
+    if (boardFilter) document.getElementById('boardFilter').value = boardFilter;
+    if (authorFilter) document.getElementById('authorFilter').value = authorFilter;
+    
+    // Устанавливаем активную вкладку
+    this.currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    const activeTab = document.querySelector(`[data-tab="${tab}"]`);
+    if (activeTab) activeTab.classList.add('active');
+    
+    this.updateSearchFieldsVisibility();
+    
+    // Инициализируем панель поиска в развернутом состоянии
+    const searchPanel = document.getElementById('advSearch');
+    const toggleBtn = document.getElementById('toggleSearchBtn');
+    if (searchPanel && toggleBtn) {
+      searchPanel.classList.remove('collapsed');
+      toggleBtn.textContent = 'Свернуть поиск';
+    }
+    
+    // Запускаем поиск если есть запрос
+    if (query) {
+      this.performSearch();
+    }
+  }
+  
+  // Загрузка списка досок для фильтра
+  async loadBoards() {
+    if (!this.forumDirectoryHandle) return;
+    
+    const boards = ['general', 'images', 'news', 'anime', 'videogames', 'tv-and-cinema', 
+                   'music', '2d', '3d', 'worldbuilding', 'tutorials', 'creative-other',
+                   'study', 'everyday', 'city', 'notes', 'internet', 
+                   'gadgets', 'technology', 'companies'];
+    
+    const boardNames = {
+      'general': 'Общее',
+      'news': 'Новости сайта',
+      'anime': 'Аниме',
+      'videogames': 'Видеоигры',
+      'tv-and-cinema': 'Кино и ТВ',
+      'music': 'Музыка',
+      '2d': '2Д',
+      '3d': '3Д',
+      'worldbuilding': 'Создание миров',
+      'tutorials': 'Туториалы',
+      'creative-other': 'Другое',
+      'study': 'Учёба',
+      'everyday': 'Повседневность',
+      'city': 'Город',
+      'notes': 'Заметки',
+      'internet': 'Интернет',
+      'gadgets': 'Гаджеты',
+      'technology': 'Технологии',
+      'companies': 'Компании'
+    };
+    
+    const select = document.getElementById('boardFilter');
+    if (!select) return;
+    
+    boards.forEach(board => {
+      const option = document.createElement('option');
+      option.value = board;
+      option.textContent = boardNames[board] || board;
+      select.appendChild(option);
+    });
+  }
+  
+  // Инициализация
+  async initialize(forumDirectoryHandle) {
+    this.forumDirectoryHandle = forumDirectoryHandle;
+    
+    // Загружаем доски для фильтра
+    await this.loadBoards();
+    
+    // Инициализируем из URL
+    this.initializeFromURL();
+    
+    // Строим поисковый индекс в фоне
+    setTimeout(() => this.buildSearchIndex(), 1000);
+  }
+  
+  // Освобождение ресурсов
+  cleanup() {
+    if (this.searchWorker) {
+      this.searchWorker.terminate();
+      this.searchWorker = null;
+    }
+    
+    // Очищаем blob URLs созданные для аватаров
+    document.querySelectorAll('img[src^="blob:"]').forEach(img => {
+      try {
+        URL.revokeObjectURL(img.src);
+      } catch (e) {}
+    });
+    
+    this.searchCache.clear();
+    this.searchIndex.clear();
+  }
+}
+
+// LRU Cache класс
+class LRUCache {
+  constructor(maxSize = 50) {
+    this.maxSize = maxSize;
+    this.cache = new Map();
+  }
+  
+  get(key) {
+    if (this.cache.has(key)) {
+      const value = this.cache.get(key);
+      this.cache.delete(key);
+      this.cache.set(key, value);
+      return value;
+    }
+    return undefined;
+  }
+  
+  set(key, value) {
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    } else if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      this.cache.delete(firstKey);
+    }
+    this.cache.set(key, value);
+  }
+  
+  clear() {
+    this.cache.clear();
+  }
+  
+  size() {
+    return this.cache.size;
+  }
+}
+
+// Инициализация поисковой системы
+let searchEngine = null;
+
+// Функция инициализации (вызывается при загрузке страницы)
+async function initializeSearch() {
+  try {
+    // Get forum directory from YouVi integration
+    const forumDirectoryHandle = await window.YouviShared.getForumDirectory();
+    
+    if (forumDirectoryHandle) {
+      searchEngine = new ForumSearchEngine();
+      await searchEngine.initialize(forumDirectoryHandle);
+      console.log('Search engine initialized successfully');
+    } else {
+      console.warn('Выберите папку на index.html');
+    }
+  } catch (e) {
+    console.error('Error initializing search:', e);
+  }
+}
+
+// Функции для работы с IndexedDB (должны быть определены в основном коде)
+async function openForumDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('8SiteDB', 1);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains('handles')) {
+        db.createObjectStore('handles');
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function getFromForumDB(db, key) {
+  const tx = db.transaction('handles', 'readonly');
+  const store = tx.objectStore('handles');
+  return new Promise((resolve) => {
+    const request = store.get(key);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => resolve(null);
+  });
+}
+
+// Очистка ресурсов при выгрузке страницы
+window.addEventListener('beforeunload', () => {
+  if (searchEngine) {
+    searchEngine.cleanup();
+  }
+});
+
+// Set forum banner image similar to forum_main.html
+(() => {
+  try {
+    const banner = document.getElementById('forumBannerSection');
+    if (banner) {
+      const banners = ['images/forum_banners/8site_banner_main.png'];
+      const randomBanner = banners[Math.floor(Math.random() * banners.length)];
+      banner.style.backgroundImage = `url('${randomBanner}')`;
+    }
+  } catch (_) {}
+})();
+
+// Автоинициализация при загрузке DOM
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeSearch);
+} else {
+  initializeSearch();
+}
+
+// Theme System
+(function() {
+  // Theme System - handled by theme-toggle.js
+})();
+</script>
+</body>
+</html>

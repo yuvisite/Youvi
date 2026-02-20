@@ -115,26 +115,10 @@
             applyPagination(listEl);
         }
 
-        const observer = new MutationObserver((mutations) => {
-            for (const m of mutations) {
-                if (m.type === 'childList') {
-                    const target = m.target;
-                    if (target && target.querySelector) {
-                        const list = target.querySelector('.comments-list') || (target.classList && target.classList.contains('comments-list') ? target : null);
-                        if (list && list.children && list.children.length) {
-                            applyPagination(list);
-                        }
-                    }
-                    if (target && target.classList && target.classList.contains('comments-list')) {
-                        if (target.children && target.children.length) {
-                            applyPagination(target);
-                        }
-                    }
-                }
-            }
-        });
-        observer.observe(container, { childList: true, subtree: true });
-        container._commentsPaginationObserver = observer;
+        // NOTE: MutationObserver is no longer used here.
+        // Lazy batch rendering in renderComments handles pagination directly,
+        // avoiding the performance overhead of observing every DOM mutation
+        // when thousands of comment nodes are appended.
     }
 
     if (document.readyState === 'loading') {

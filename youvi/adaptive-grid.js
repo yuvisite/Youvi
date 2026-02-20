@@ -11,9 +11,10 @@ class AdaptiveGridSystem {
     this.DEBUG = false;
     
     this.breakpoints = [
-      { width: 1600, cols: 6, name: 'ultrawide' },
-      { width: 1400, cols: 6, name: 'wide' },
-      { width: 1200, cols: 5, name: 'desktop' },
+      { width: 1800, cols: 6, name: 'ultrawide-6' },
+      { width: 1600, cols: 5, name: 'ultrawide' },
+      { width: 1400, cols: 5, name: 'wide' },
+      { width: 1200, cols: 5, name: 'desktop' }, // 5 cols down to 1200 so right sidebar on 24" doesn't flip to 4
       { width: 1000, cols: 4, name: 'laptop' },
       { width: 850, cols: 4, name: 'tablet-landscape' },
       { width: 650, cols: 3, name: 'tablet' },
@@ -57,18 +58,74 @@ class AdaptiveGridSystem {
 
     window.addEventListener('resize', () => this.handleResize());
 
+    const contentEl = document.querySelector('.main-content') || document.querySelector('.content-wrapper');
+    if (contentEl && typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(() => this.handleResize());
+      ro.observe(contentEl);
+    }
+
     this.attachManualControls();
 
+    // When sidebar is toggled, layout changes but resize/ResizeObserver may fire late — refresh so grid switcher (авто) updates
+    window.addEventListener('youvi-sidebar-toggle', () => {
+      setTimeout(() => this.refreshAfterLayoutChange(), 80);
+    });
+
+    // Clean-view toggle: content area grows/shrinks; wait for layout then refresh (avoids stale width when switching to clean)
+    window.addEventListener('youvi-clean-view-toggle', () => {
+      const run = () => this.refreshAfterLayoutChange();
+      requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(run, 200)));
+    });
+
     this.isInitialized = true;
-    
+
+    // First load: re-measure after layout is ready so right sidebar (tag panel) is taken into account
+    const runAfterLayout = () => this.refreshAfterLayoutChange();
+    if (document.readyState === 'complete') {
+      requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(runAfterLayout, 80)));
+    } else {
+      window.addEventListener('load', () => {
+        requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(runAfterLayout, 80)));
+      });
+    }
+
     if (this.DEBUG) console.log('[AdaptiveGrid] Initialized with breakpoint:', this.currentBreakpoint.name);
   }
 
   /**
-   * Get current breakpoint based on viewport width
+   * Re-read content width and update breakpoint + UI (e.g. after sidebar or clean-view toggle).
+   */
+  refreshAfterLayoutChange() {
+    const contentEl = document.querySelector('.main-content') || document.querySelector('.content-wrapper');
+    if (contentEl) void contentEl.offsetWidth;
+    const newBreakpoint = this.getCurrentBreakpoint();
+    const prevName = this.currentBreakpoint && this.currentBreakpoint.name;
+    this.currentBreakpoint = newBreakpoint;
+    if (newBreakpoint.name !== prevName) {
+      localStorage.setItem(this.STORAGE_KEYS.LAST_BREAKPOINT, newBreakpoint.name);
+      this.resetToAutoMode();
+      this.triggerContentRerender();
+    }
+    this.applyGridSettings();
+  }
+
+  /**
+   * Get width of the content area (grid container). When sidebar is open this is
+   * narrower than the window, so columns adapt to actual space.
+   */
+  getContentWidth() {
+    const el = document.querySelector('.main-content') || document.querySelector('.content-wrapper');
+    if (!el) return window.innerWidth;
+    if (el.clientWidth > 0) return el.clientWidth;
+    void el.offsetWidth;
+    return el.clientWidth || window.innerWidth;
+  }
+
+  /**
+   * Get current breakpoint based on content area width (so sidebar open = fewer cols)
    */
   getCurrentBreakpoint() {
-    const width = window.innerWidth;
+    const width = this.getContentWidth();
     
     for (const breakpoint of this.breakpoints) {
       if (width >= breakpoint.width) {
@@ -87,11 +144,12 @@ class AdaptiveGridSystem {
     
     this.resizeTimer = setTimeout(() => {
       const newBreakpoint = this.getCurrentBreakpoint();
+      const contentW = this.getContentWidth();
       
       if (newBreakpoint.name !== this.currentBreakpoint.name) {
         if (this.DEBUG) console.log('[AdaptiveGrid] Breakpoint changed:', 
           this.currentBreakpoint.name, '→', newBreakpoint.name,
-          'Window width:', window.innerWidth);
+          'Content width:', contentW);
         
         this.currentBreakpoint = newBreakpoint;
         localStorage.setItem(this.STORAGE_KEYS.LAST_BREAKPOINT, newBreakpoint.name);
@@ -102,8 +160,8 @@ class AdaptiveGridSystem {
         
         this.triggerContentRerender();
       } else {
-        if (this.DEBUG) console.log('[AdaptiveGrid] Window resized but breakpoint unchanged:', 
-          newBreakpoint.name, 'Width:', window.innerWidth);
+        this.currentBreakpoint = newBreakpoint;
+        this.applyGridSettings();
       }
     }, this.resizeDelay);
   }
@@ -119,12 +177,12 @@ class AdaptiveGridSystem {
   }
 
   /**
-   * Apply grid settings based on current mode (auto or manual)
+   * Apply grid settings based on current mode (auto or manual). Clean-view uses same adaptive breakpoints (no forced 6 on small screens).
    */
   applyGridSettings() {
     const isVideoManual = localStorage.getItem(this.STORAGE_KEYS.IS_MANUAL_VIDEO) === 'true';
     let videoCols;
-    
+
     if (isVideoManual) {
       videoCols = parseInt(localStorage.getItem(this.STORAGE_KEYS.VIDEO_COLS)) || this.currentBreakpoint.cols;
     } else {
@@ -251,11 +309,11 @@ class AdaptiveGridSystem {
   }
 
   /**
-   * Get current column count
+   * Get current column count (video and playlist follow breakpoint or manual override).
    */
   getCurrentColumns(gridType = 'video') {
     const isManual = this.isManualMode(gridType);
-    
+
     if (gridType === 'video') {
       if (isManual) {
         return parseInt(localStorage.getItem(this.STORAGE_KEYS.VIDEO_COLS)) || this.currentBreakpoint.cols;

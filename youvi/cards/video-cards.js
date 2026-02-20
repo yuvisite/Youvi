@@ -100,7 +100,7 @@ function createVideoCard(video, options = {}) {
 
     const title = document.createElement('div');
     title.className = config.titleClass;
-    title.style.fontSize = '16px';
+    title.style.fontSize = '13px';
     
     if (video.playlistUrl) {
         title.innerHTML = `<a href="${video.playlistUrl}" class="video-title-link" style="color:inherit;text-decoration:none;">${escapeHtml(getFileNameWithoutExtension(video.name))}</a>`;
@@ -119,7 +119,7 @@ function createVideoCard(video, options = {}) {
         
         const statsLine = document.createElement('div');
         statsLine.className = 'video-stats';
-        statsLine.style.cssText = 'color:#888;font-size:14px;';
+        statsLine.style.cssText = 'color:#888;font-size:11px;';
         statsLine.innerHTML = `${viewsSvg} ${viewCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}`;
         info.appendChild(statsLine);
     }
@@ -164,7 +164,7 @@ function createVideoCard(video, options = {}) {
     if (config.showChannel && channelName) {
         const channel = document.createElement('div');
         channel.className = 'video-playlist';
-        channel.style.fontSize = '14px';
+        channel.style.fontSize = '11px';
         channel.innerHTML = `<a href="youvi_ch_view.html?channel=${encodeURIComponent(channelName)}" class="playlist-channel-link">${escapeHtml(channelName)}</a>`;
         textWrapper.appendChild(channel);
     }
@@ -175,7 +175,7 @@ function createVideoCard(video, options = {}) {
     if (dateStr) {
         const dateLine = document.createElement('div');
         dateLine.className = 'video-date';
-        dateLine.style.cssText = 'color:#888;font-size:13px;';
+        dateLine.style.cssText = 'color:#888;font-size:11px;';
         dateLine.textContent = dateStr;
         textWrapper.appendChild(dateLine);
     }
@@ -248,7 +248,7 @@ function createLatestCard(video, options = {}) {
     if (config.showChannel && video.channel) {
         const channel = document.createElement('div');
         channel.className = 'latest-channel';
-        channel.style.fontSize = '12px';
+        channel.style.fontSize = '11px';
         channel.innerHTML = `<a href="#" onclick="filterByChannel('${escapeHtml(video.channel)}', this.id); return false;" class="playlist-channel-link">${escapeHtml(video.channel)}</a>`;
         info.appendChild(channel);
     }

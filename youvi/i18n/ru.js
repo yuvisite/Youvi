@@ -19,7 +19,7 @@ window.ru = {
         tabHome: 'Главная',
         tabVideos: 'Видео',
         tabAnalytics: 'Аналитика',
-        tabFeed: 'Лента',
+        tabFeed: 'Форум',
         tabPlaylists: 'Плейлисты',
         tabDescription: 'Описание',
         pinnedVideo: 'Закрепленное видео',
@@ -140,10 +140,13 @@ window.ru = {
         management: 'Управление',
         channels: 'Каналы',
         playlists: 'Плейлисты',
+        images: 'Картинки',
+        gifs: 'Гифки',
         feed: 'Feed',
         forums: 'Форумы',
         qms: 'QMS',
-        wiki: 'Wiki',
+        wiki: 'Вики',
+        download: 'Загрузки',
         chooseLang: 'Выбери язык'
     },
     
@@ -193,7 +196,11 @@ window.ru = {
         allTagsLink: 'Все теги',
         autoplay: 'Автоплей',
         noSubscriptions: 'Нет подписок',
-        loadingError: 'Ошибка загрузки'
+        loadingError: 'Ошибка загрузки',
+        cleanView: 'Чистый вид',
+        cleanViewTitle: 'Скрыть правую панель для большего пространства',
+        forumActivity: 'Активность форума',
+        forumActivityAll: 'Все'
     },
     
     main: {
@@ -436,7 +443,7 @@ window.ru = {
         tabHome: 'Главная',
         tabVideos: 'Видео',
         tabAnalytics: 'Аналитика',
-        tabFeed: 'Лента',
+        tabFeed: 'Форум',
         tabPlaylists: 'Плейлисты',
         tabDescription: 'Описание',
         editorBold: 'Жирный',
@@ -945,5 +952,49 @@ window.ru = {
         multiviewToggle: 'Открыть/закрыть Multiview',
         multiviewFullscreen: 'Полный экран (в Multiview)',
         multiviewClose: 'Закрыть Multiview'
+    },
+    
+    download: {
+        pageTitle: 'Менеджер Загрузок | Youvi',
+        title: 'Скачать Видео',
+        platform: 'Платформа',
+        videoUrl: 'URL видео',
+        videoUrlPlaceholder: 'https://youtube.com/watch?v=...',
+        videoUrlHelp: 'Вставьте URL видео с выбранной платформы',
+        tags: 'Теги (через запятую)',
+        tagsPlaceholder: 'музыка, туториал, игры',
+        downloadOptions: 'Опции Загрузки',
+        optionVideo: 'Видео (yt-dlp)',
+        optionComments: 'Комментарии (JSON)',
+        optionDanmaku: 'Данмаку (из комментариев)',
+        optionLiveChat: 'Живой Чат (как данмаку)',
+        optionDescription: 'Описание (TXT)',
+        videoQuality: 'Качество Видео',
+        qualityBest: 'Лучшее Качество',
+        quality1080p: '1080p',
+        quality720p: '720p (рекомендуется)',
+        quality480p: '480p',
+        quality360p: '360p',
+        qualityAudio: 'Только Аудио',
+        qualityHelp: 'Выберите качество видео для загрузок yt-dlp',
+        saveLocation: 'Место Сохранения (абсолютный путь)',
+        saveLocationPlaceholder: 'F:\\Videos\\Other\\Music',
+        saveLocationHelp: 'Введите полный путь. Выбор папки в браузере не может его предоставить.',
+        downloadButton: 'Скачать',
+        progressVideo: 'Загрузка видео...',
+        progressDone: 'Готово',
+        serverOnline: 'Сервер Онлайн',
+        serverOffline: 'Сервер Офлайн',
+        checkingServer: 'Проверка сервера...',
+        tools: 'Инструменты',
+        search: 'Поиск'
+    },
+    
+    widgets: {
+        forumPosts: 'Посты',
+        topUsers: 'Авторы',
+        loading: 'Загрузка...',
+        viewAllPosts: 'Все посты →',
+        viewAllChannels: 'Все каналы →'
     }
 };

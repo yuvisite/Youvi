@@ -1,0 +1,367 @@
+.layout-container {
+    min-height: calc(100vh - 200px);
+}
+
+.settings-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-top: 18px;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.settings-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-section {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+}
+
+.form-section h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+.avatar-upload {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.banner-section {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.banner-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.banner-section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.banner-description {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.banner-preview {
+    width: 100%;
+    max-width: 600px;
+    height: 133px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+
+.banner-preview svg {
+    width: 48px;
+    height: 48px;
+    color: white;
+    opacity: 0.7;
+}
+
+.banner-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.avatar-section {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.avatar-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.avatar-user-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.avatar-user-stats {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+}
+
+.avatar-section-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.avatar-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+
+.avatar-preview svg {
+    width: 48px;
+    height: 48px;
+    color: white;
+}
+
+.avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.btn,
+.btn-primary {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+
+.btn {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+.btn:hover {
+    background: var(--bg-secondary);
+}
+
+.btn-primary {
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: white;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 16px;
+    }
+
+    .settings-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .settings-header h1 {
+        font-size: 20px;
+    }
+
+    .settings-form {
+        padding: 16px;
+    }
+
+    .banner-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .banner-preview {
+        max-width: 100%;
+    }
+
+    .banner-info {
+        align-items: center;
+        text-align: center;
+    }
+
+    .banner-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .banner-actions button {
+        width: 100%;
+    }
+
+    .avatar-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .avatar-info {
+        align-items: center;
+    }
+
+    .avatar-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .avatar-actions button {
+        width: 100%;
+    }
+
+    .form-section h2 {
+        font-size: 16px;
+    }
+
+    .settings-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .settings-actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 12px;
+    }
+
+    .settings-header h1 {
+        font-size: 18px;
+    }
+
+    .avatar-preview {
+        width: 100px;
+        height: 100px;
+    }
+
+    .avatar-preview svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .avatar-user-name {
+        font-size: 16px;
+    }
+
+    .form-input,
+    .form-textarea {
+        font-size: 14px;
+    }
+}

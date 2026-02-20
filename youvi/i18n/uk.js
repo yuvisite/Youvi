@@ -19,7 +19,7 @@ window.uk = {
         tabHome: 'Головна',
         tabVideos: 'Відео',
         tabAnalytics: 'Аналітика',
-        tabFeed: 'Стрічка',
+        tabFeed: 'Форум',
         tabPlaylists: 'Плейлісти',
         tabDescription: 'Опис',
         pinnedVideo: 'Закріплене відео',
@@ -152,9 +152,12 @@ window.uk = {
         management: 'Управління',
         channels: 'Канали',
         playlists: 'Плейлісти',
+        images: 'Зображення',
+        gifs: 'Гіфки',
         feed: 'Feed',
         forums: 'Форуми',
-        wiki: 'Wiki',
+        wiki: 'Вікі',
+        download: 'Завантаження',
         chooseLang: 'Обери мову'
     },
     
@@ -202,7 +205,11 @@ window.uk = {
         sortDanmaku: 'За данмаку',
         tags: 'Теги',
         allTagsLink: 'Всі теги',
-        autoplay: 'Автопрогравання'
+        autoplay: 'Автопрогравання',
+        cleanView: 'Чистий вигляд',
+        cleanViewTitle: 'Сховати праву панель для більшого простору',
+        forumActivity: 'Активність форуму',
+        forumActivityAll: 'Всі'
     },
     
     main: {
@@ -444,7 +451,7 @@ window.uk = {
         tabHome: 'Головна',
         tabVideos: 'Відео',
         tabAnalytics: 'Аналітика',
-        tabFeed: 'Стрічка',
+        tabFeed: 'Форум',
         tabPlaylists: 'Плейлісти',
         tabDescription: 'Опис',
         editorBold: 'Жирний',
@@ -604,10 +611,14 @@ window.uk = {
         management: 'Управління',
         channels: 'Канали',
         playlists: 'Плейлісти',
+        images: 'Зображення',
+        gifs: 'Гіфки',
         feed: 'Feed',
         forums: 'Форуми',
         qms: 'QMS',
-        wiki: 'Wiki',
+        wiki: 'Вікі',
+        download: 'Завантаження',
+        chooseLang: 'Обери мову',
         messages: 'ПП'
     },
     
@@ -965,5 +976,49 @@ window.uk = {
         multiviewToggle: 'Відкрити/закрити Multiview',
         multiviewFullscreen: 'Повний екран (в Multiview)',
         multiviewClose: 'Закрити Multiview'
+    },
+    
+    download: {
+        pageTitle: 'Менеджер Завантажень | Youvi',
+        title: 'Завантажити Відео',
+        platform: 'Платформа',
+        videoUrl: 'URL відео',
+        videoUrlPlaceholder: 'https://youtube.com/watch?v=...',
+        videoUrlHelp: 'Вставте URL відео з обраної платформи',
+        tags: 'Теги (через кому)',
+        tagsPlaceholder: 'музика, туторіал, ігри',
+        downloadOptions: 'Опції Завантаження',
+        optionVideo: 'Відео (yt-dlp)',
+        optionComments: 'Коментарі (JSON)',
+        optionDanmaku: 'Данмаку (з коментарів)',
+        optionLiveChat: 'Живий Чат (як данмаку)',
+        optionDescription: 'Опис (TXT)',
+        videoQuality: 'Якість Відео',
+        qualityBest: 'Найкраща Якість',
+        quality1080p: '1080p',
+        quality720p: '720p (рекомендовано)',
+        quality480p: '480p',
+        quality360p: '360p',
+        qualityAudio: 'Тільки Аудіо',
+        qualityHelp: 'Виберіть якість відео для завантажень yt-dlp',
+        saveLocation: 'Місце Збереження (абсолютний шлях)',
+        saveLocationPlaceholder: 'F:\\Videos\\Other\\Music',
+        saveLocationHelp: 'Введіть повний шлях. Вибір папки в браузері не може його надати.',
+        downloadButton: 'Завантажити',
+        progressVideo: 'Завантаження відео...',
+        progressDone: 'Готово',
+        serverOnline: 'Сервер Онлайн',
+        serverOffline: 'Сервер Офлайн',
+        checkingServer: 'Перевірка сервера...',
+        tools: 'Інструменти',
+        search: 'Пошук'
+    },
+    
+    widgets: {
+        forumPosts: 'Пости',
+        topUsers: 'Автори',
+        loading: 'Завантаження...',
+        viewAllPosts: 'Всі пости →',
+        viewAllChannels: 'Всі канали →'
     }
 };

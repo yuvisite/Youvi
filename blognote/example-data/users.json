@@ -1,0 +1,25 @@
+[
+  {
+    "id": "user1",
+    "name": "Алексей Иванов",
+    "email": "alexey@example.com",
+    "bio": "Разработчик и технический писатель. Пишу о веб-разработке, JavaScript и современных технологиях.",
+    "joinDate": "2024-01-15",
+    "website": "https://example.com"
+  },
+  {
+    "id": "user2",
+    "name": "Мария Петрова",
+    "email": "maria@example.com",
+    "bio": "UX/UI дизайнер с опытом работы более 5 лет. Делюсь мыслями о дизайне и пользовательском опыте.",
+    "joinDate": "2024-02-20"
+  },
+  {
+    "id": "user3",
+    "name": "Дмитрий Сидоров",
+    "email": "dmitry@example.com",
+    "bio": "Backend разработчик. Интересуюсь архитектурой приложений и оптимизацией производительности.",
+    "joinDate": "2024-03-10",
+    "website": "https://dmitry-blog.example.com"
+  }
+]

@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n-title="download.pageTitle">Менеджер Загрузок | Youvi</title>
+    <script>
+        (function() {
+            var theme = localStorage.getItem('youvi-theme');
+            var sidebar = localStorage.getItem('sidebarCollapsed');
+            
+            var htmlClasses = [];
+            if (theme === 'dark') htmlClasses.push('dark-theme');
+            else if (theme === 'skeuo') htmlClasses.push('skeuo-theme');
+            if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+            if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
+        })();
+    </script>
+    <link rel="stylesheet" href="../youvi/header/youvi-header.css">
+    <link rel="stylesheet" href="../youvi/sticky-video.css">
+    <link rel="stylesheet" href="../youvi/sidebar.css">
+    <link rel="stylesheet" href="../youvi/sidebar-scroll.css">
+    <link rel="stylesheet" href="../youvi/themes/dark-theme.css">
+    <link rel="stylesheet" href="../youvi/themes/theme-dropdown.css">
+    <link rel="stylesheet" href="../youvi/tag-types/tag-types.css">
+    <link rel="stylesheet" href="../youvi/autocomplete/autocomplete.css">
+    <link rel="icon" href="../favicon/youvi/favicon.ico" type="image/x-icon">
+    <script src="../youvi/sidebar-toggle.js"></script>
+    <script src="../youvi/sidebar-scroll.js"></script>
+    
+    <!-- i18n System -->
+    <script src="../youvi/i18n/ru.js"></script>
+    <script src="../youvi/i18n/en.js"></script>
+    <script src="../youvi/i18n/uk.js"></script>
+    <script src="../youvi/i18n/i18n.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+            color: #111;
+            min-height: 100vh;
+        }
+
+        .top-nav {
+            background: #d94b88;
+            border-bottom: 1px solid #c2185b;
+            padding: 4px 0;
+        }
+
+        .top-nav-content {
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .top-nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 12px;
+            padding: 2px 0;
+            transition: color 0.2s;
+        }
+
+        .top-nav a:hover {
+            color: #ffd6ea;
+        }
+
+        .top-nav a.active {
+            color: #ffd6ea;
+            font-weight: 600;
+        }
+
+        .lang-switcher {
+            margin-left: auto;
+        }
+
+        .lang-select {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .lang-select:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .lang-select option {
+            background: #d94b88;
+            color: #fff;
+        }
+
+        .header {
+            background: #FFE7F4;
+            padding: 0;
+            border-bottom: 1px solid #f2cfe1;
+            min-height: 40px;
+            width: 100%;
+        }
+
+        .header-content-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+            box-sizing: border-box;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 20px;
+            width: 100%;
+            min-height: 40px;
+        }
+
+        .settings-container {
+            position: relative;
+        }
+
+        .settings-btn {
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            margin: 0;
+            gap: 20px;
+            padding: 0 20px 0 20px;
+            min-height: calc(100vh - 180px);
+        }
+        
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 40px;
+            align-items: center;
+        }
+
+        .download-section {
+            background: #fff;
+            border-radius: 6px;
+            padding: 20px 24px 24px 24px;
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 16px;
+            margin-top: 0;
+            color: #ff69b4;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #111;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fff;
+            color: #111;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #ff69b4;
+        }
+
+        .platform-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 8px;
+            width: 100%;
+        }
+
+        .platform-btn {
+            padding: 7px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: center;
+            color: #333;
+        }
+
+        .platform-btn:hover {
+            border-color: #ff69b4;
+            background: #fff5f9;
+        }
+
+        .platform-btn.active {
+            border-color: #ff69b4;
+            background: #ff69b4;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .checkbox-item.youtube-only {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .checkbox-item.youtube-only.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn {
+            padding: 9px 18px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+            min-width: 140px;
+        }
+
+        .btn-primary {
+            background: #ff69b4;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #ff1493;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .path-display {
+            background: #f5f5f5;
+            padding: 7px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 11px;
+            color: #666;
+            flex: 1;
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        .location-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .location-row .btn {
+            order: 2;
+        }
+
+        .location-row .path-display {
+            order: 1;
+        }
+
+        .download-section > .btn-primary {
+            align-self: center;
+            margin-top: 8px;
+        }
+
+        .console-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .console-output.active {
+            display: block;
+        }
+
+        .download-progress-block {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f0f4f8;
+            border-radius: 6px;
+            border: 1px solid #e0e6ed;
+        }
+
+        body.dark-theme .download-progress-block {
+            background: #2a2d31;
+            border-color: #3d4148;
+        }
+
+        .download-progress-label {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        body.dark-theme .download-progress-label {
+            color: #d4d4d4;
+        }
+
+        .download-progress-bar-wrap {
+            height: 10px;
+            background: #e0e6ed;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        body.dark-theme .download-progress-bar-wrap {
+            background: #3d4148;
+        }
+
+        .download-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #d94b88, #ff69b4);
+            border-radius: 5px;
+            transition: width 0.25s ease;
+        }
+
+        .console-line {
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .console-line.error {
+            color: #f48771;
+        }
+
+        .console-line.success {
+            color: #89d185;
+        }
+
+        .console-line.info {
+            color: #4fc1ff;
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .server-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+
+        .server-status.online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .server-status.offline {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c2c2c;
+            color: #fff;
+            padding: 25px 0 15px 0;
+            margin-top: 0;
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .footer-logo {
+            flex-shrink: 0;
+            width: 200px;
+        }
+
+        .footer-logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .footer-logo p {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #ccc;
+            line-height: 1.3;
+        }
+
+        .footer-sections {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .footer-main {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .footer-mascot {
+            flex-shrink: 0;
+        }
+
+        .footer-mascot img {
+            height: 180px;
+            width: auto;
+        }
+
+        .footer-section {
+            flex: 1;
+        }
+
+        .footer-section h3 {
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section li {
+            margin-bottom: 6px;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 11px;
+            transition: color 0.2s;
+        }
+
+        .footer-section a:hover {
+            color: #ff69b4;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #444;
+            margin-top: 20px;
+            padding-top: 15px;
+            text-align: center;
+            color: #999;
+            font-size: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .footer-sections {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .footer-main {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .footer-right {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .footer-mascot img {
+                height: 120px;
+            }
+            
+            .footer-section {
+                text-align: center;
+            }
+        }
+
+        /* Dark theme */
+        body.dark-theme {
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .header {
+            background: #2c1810 !important;
+            border-bottom: 1px solid #444 !important;
+        }
+
+        body.dark-theme .sidebar-toggle-btn {
+            color: #fff !important;
+        }
+
+        body.dark-theme .sidebar-toggle-btn svg {
+            fill: #fff !important;
+        }
+
+        body.dark-theme .search-input {
+            background: #2d2d2d;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .search-btn {
+            background: #ff69b4;
+        }
+
+        body.dark-theme .search-btn:hover {
+            background: #ff1493;
+        }
+
+        body.dark-theme .user-actions a {
+            color: #fff !important;
+        }
+
+        body.dark-theme .user-actions a:hover {
+            color: #ff69b4 !important;
+        }
+
+        body.dark-theme .settings-btn {
+            color: #fff !important;
+        }
+
+        body.dark-theme .download-section {
+            background: #2d2d2d;
+            border: 1px solid #444;
+        }
+
+        body.dark-theme .form-label {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .form-input {
+            background: #1a1a1a;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .platform-btn {
+            background: #2d2d2d;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .platform-btn:hover {
+            border-color: #ff69b4;
+            background: #3d3d3d;
+        }
+
+        body.dark-theme .platform-btn.active {
+            border-color: #ff69b4;
+            background: #ff69b4;
+            color: #fff;
+        }
+
+        body.dark-theme .path-display {
+            background: #1a1a1a;
+            color: #aaa;
+        }
+
+        body.dark-theme .btn-secondary {
+            background: #3d3d3d;
+            color: #e0e0e0;
+            border-color: #555;
+        }
+
+        body.dark-theme .btn-secondary:hover {
+            background: #4d4d4d;
+        }
+
+        body.dark-theme .server-status.online {
+            background: #1b5e20;
+            color: #a5d6a7;
+        }
+
+        body.dark-theme .server-status.offline {
+            background: #4e342e;
+            color: #ffcc80;
+        }
+
+        body.dark-theme .footer {
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+        }
+
+        body.dark-theme .footer-section a {
+            color: #aaa;
+        }
+
+        body.dark-theme .footer-section a:hover {
+            color: #ff69b4;
+        }
+
+        body.dark-theme .footer-logo p {
+            color: #999;
+        }
+
+        body.dark-theme .footer-bottom {
+            border-top-color: #333;
+            color: #666;
+        }
+
+        @media (max-width: 1200px) {
+            .platform-buttons {
+                grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .platform-buttons {
+                grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            }
+
+            .download-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <div class="top-nav-content">
+            <a href="../youvi_main.html" data-i18n="nav.video">Video</a>
+            <a href="../index.html" data-i18n="nav.management">Management</a>
+            <a href="../youvi_ch_list.html" data-i18n="nav.channels">Channels</a>
+            <a href="../youvi_playlists_list.html" data-i18n="nav.playlists">Playlists</a>
+            <a href="../forum/forum.html" data-i18n="nav.forums">Forums</a>
+            <a href="youvi_download.html" class="active" data-i18n="nav.download">Download</a>
+            <a href="../wiki/index.html" data-i18n="nav.wiki">Wiki</a>
+            <div class="lang-switcher">
+                <select id="langSwitcher" class="lang-select">
+                    <option value="ru">RU</option>
+                    <option value="en">EN</option>
+                    <option value="uk">UK</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content-wrapper">
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar" data-i18n-aria="header.toggleSidebar">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </button>
+                
+                <div class="logo">
+                    <a href="../youvi_main.html">
+                        <img src="../images/logo_youvi_ind.png" alt="Youvi logo">
+                    </a>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="search-area autocomplete-wrapper">
+                    <input type="text" id="globalSearch" placeholder="Search videos..." class="search-input" data-i18n-placeholder="search.placeholder">
+                    <button id="doSearch" class="search-btn" data-i18n="search.button">Search</button>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="user-actions">
+                    <a href="#" id="badgesToggle" data-i18n="header.badges">Badges</a>
+                    <a href="#" id="forceRefreshBtn" title="Clear cache and rescan all videos" data-i18n="header.scan" data-i18n-title="header.scanTitle">Scan</a>
+                    <div class="settings-container">
+                        <a href="#" class="settings-btn">⚙</a>
+                        <div class="theme-dropdown">
+                            <button class="theme-dropdown-item" data-theme="light" data-i18n="themes.light">Light</button>
+                            <button class="theme-dropdown-item" data-theme="dark" data-i18n="themes.dark">Dark</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title" data-i18n="sidebar.navigation">Navigation</div>
+                    <a href="../youvi_main.html" class="sidebar-item nav-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9,22 9,12 15,12 15,22"/>
+                        </svg>
+                        <span data-i18n="sidebar.home">Home</span>
+                    </a>
+                    <a href="../youvi_search.html" class="sidebar-item nav-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <span data-i18n="download.search">Search</span>
+                    </a>
+                    <a href="../youvi_tags.html" class="sidebar-item nav-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                            <line x1="7" y1="7" x2="7.01" y2="7"/>
+                        </svg>
+                        <span data-i18n="sidebar.allTags">All Tags</span>
+                    </a>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title" data-i18n="sidebar.library">Library</div>
+                    <a href="../youvi_history.html" class="sidebar-item library-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                        <span data-i18n="sidebar.history">History</span>
+                    </a>
+                    <a href="../youvi_fav.html" class="sidebar-item library-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <span data-i18n="sidebar.favorites">Favorites</span>
+                    </a>
+                    <a href="../youvi_playlists_list.html" class="sidebar-item library-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="8" y1="8" x2="16" y2="8"/>
+                            <line x1="8" y1="12" x2="16" y2="12"/>
+                            <line x1="8" y1="16" x2="16" y2="16"/>
+                        </svg>
+                        <span data-i18n="sidebar.playlists">Playlists</span>
+                    </a>
+                    <a href="../youvi_ch_list.html" class="sidebar-item library-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 1-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span data-i18n="sidebar.channels">Channels</span>
+                    </a>
+                    <a href="../youvi_subscriptions.html" class="sidebar-item library-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                            <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/>
+                            <polyline points="17,2 12,7 7,2"/>
+                        </svg>
+                        <span data-i18n="sidebar.subscriptions">Subscriptions</span>
+                    </a>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title" data-i18n="nav.download">Загрузки</div>
+                    <a href="youvi_download.html" class="sidebar-item nav-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        <span data-i18n="nav.download">Загрузки</span>
+                    </a>
+                    <a href="youvi_download.html?platform=youtube" class="sidebar-item library-item">YouTube</a>
+                    <a href="youvi_download.html?platform=niconico" class="sidebar-item library-item">Niconico</a>
+                    <a href="youvi_download.html?platform=bilibili" class="sidebar-item library-item">Bilibili</a>
+                    <a href="youvi_download.html?platform=tiktok" class="sidebar-item library-item">TikTok</a>
+                    <a href="youvi_download.html?platform=odysee" class="sidebar-item library-item">Odysee</a>
+                    <a href="youvi_download.html?platform=vimeo" class="sidebar-item library-item">Vimeo</a>
+                    <a href="youvi_download.html?platform=dailymotion" class="sidebar-item library-item">Dailymotion</a>
+                    <a href="youvi_download.html?platform=mover" class="sidebar-item library-item">Mover.uz</a>
+                </div>
+        </aside>
+
+        <div class="content-wrapper">
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="download-section">
+                    <div id="serverStatus" class="server-status offline">
+                        <span class="status-dot"></span>
+                        <span data-i18n="download.checkingServer">Checking server...</span>
+                    </div>
+
+                    <h2 class="section-title" data-i18n="download.title">Download Video</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="download.platform">Platform</label>
+                        <div class="platform-buttons">
+                            <button class="platform-btn active" data-platform="youtube">YouTube</button>
+                            <button class="platform-btn" data-platform="niconico">Niconico</button>
+                            <button class="platform-btn" data-platform="bilibili">Bilibili</button>
+                            <button class="platform-btn" data-platform="tiktok">TikTok</button>
+                            <button class="platform-btn" data-platform="odysee">Odysee</button>
+                            <button class="platform-btn" data-platform="vimeo">Vimeo</button>
+                            <button class="platform-btn" data-platform="dailymotion">Dailymotion</button>
+                            <button class="platform-btn" data-platform="mover">Mover.uz</button>
+                        </div>
+                        <div class="help-text" id="platformNote"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="videoUrl" data-i18n="download.videoUrl">Video URL</label>
+                        <input type="text" id="videoUrl" class="form-input" placeholder="https://youtube.com/watch?v=..." data-i18n-placeholder="download.videoUrlPlaceholder" />
+                        <div class="help-text" data-i18n="download.videoUrlHelp">Paste video URL from selected platform</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="videoTags" data-i18n="download.tags">Tags (comma separated)</label>
+                        <input type="text" id="videoTags" class="form-input" placeholder="music, tutorial, gaming" data-i18n-placeholder="download.tagsPlaceholder" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="download.downloadOptions">Download Options</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="downloadVideo" checked />
+                                <label for="downloadVideo" data-i18n="download.optionVideo">Video (yt-dlp)</label>
+                            </div>
+                            <div class="checkbox-item youtube-only">
+                                <input type="checkbox" id="downloadComments" />
+                                <label for="downloadComments" data-i18n="download.optionComments">Comments (JSON)</label>
+                            </div>
+                            <div class="checkbox-item youtube-only">
+                                <input type="checkbox" id="downloadDanmaku" />
+                                <label for="downloadDanmaku" data-i18n="download.optionDanmaku">Danmaku (from comments)</label>
+                            </div>
+                            <div class="checkbox-item youtube-only">
+                                <input type="checkbox" id="downloadLiveChat" />
+                                <label for="downloadLiveChat" data-i18n="download.optionLiveChat">Live Chat (as danmaku)</label>
+                            </div>
+                            <div class="checkbox-item youtube-only">
+                                <input type="checkbox" id="downloadDescription" />
+                                <label for="downloadDescription" data-i18n="download.optionDescription">Description (TXT)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="videoQuality" data-i18n="download.videoQuality">Video Quality</label>
+                        <select id="videoQuality" class="form-input">
+                            <option value="best" data-i18n="download.qualityBest">Best Quality</option>
+                            <option value="1080p" data-i18n="download.quality1080p">1080p</option>
+                            <option value="720p" selected data-i18n="download.quality720p">720p (recommended)</option>
+                            <option value="480p" data-i18n="download.quality480p">480p</option>
+                            <option value="360p" data-i18n="download.quality360p">360p</option>
+                            <option value="audio" data-i18n="download.qualityAudio">Audio Only</option>
+                        </select>
+                        <div class="help-text" data-i18n="download.qualityHelp">Select video quality for yt-dlp downloads</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="pathInput" data-i18n="download.saveLocation">Save Location (absolute path)</label>
+                        <input type="text" id="pathInput" class="form-input" placeholder="F:\\Videos\\Other\\Music" data-i18n-placeholder="download.saveLocationPlaceholder" />
+                        <div class="help-text" data-i18n="download.saveLocationHelp">Enter a full path. The browser folder picker cannot provide it.</div>
+                    </div>
+
+                    <button class="btn btn-primary" id="generateBtn" data-i18n="download.downloadButton">Download</button>
+
+                    <div id="downloadProgressBlock" class="download-progress-block" style="display: none;">
+                        <div class="download-progress-label" id="downloadProgressLabel">Downloading video... 0%</div>
+                        <div class="download-progress-bar-wrap">
+                            <div class="download-progress-bar" id="downloadProgressBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div id="consoleOutput" class="console-output"></div>
+                    <div id="statusMessage"></div>
+                </div>
+            </main>
+        </div><!-- /content-wrapper -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-logo">
+                    <img src="../images/logo_youvi_ind_ex.png" alt="Youvi">
+                    <p data-i18n="footer.description">Platform for viewing video content. Save, categorize and watch videos.</p>
+                </div>
+                <div class="footer-sections">
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.sections">Sections</h3>
+                        <ul>
+                            <li><a href="../youvi_main.html" data-i18n="footer.video">Video</a></li>
+                            <li><a href="../youvi_tags.html" data-i18n="sidebar.tags">Tags</a></li>
+                            <li><a href="../forum/forum.html" data-i18n="nav.forums">Forums</a></li>
+                            <li><a href="../index.html" data-i18n="nav.management">Management</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="sidebar.library">Library</h3>
+                        <ul>
+                            <li><a href="../youvi_ch_list.html" data-i18n="sidebar.channels">Channels</a></li>
+                            <li><a href="../youvi_playlists_list.html" data-i18n="sidebar.playlists">Playlists</a></li>
+                            <li><a href="../youvi_subscriptions.html" data-i18n="sidebar.subscriptions">Subscriptions</a></li>
+                            <li><a href="../youvi_fav.html" data-i18n="sidebar.favorites">Favorites</a></li>
+                            <li><a href="../youvi_history.html" data-i18n="sidebar.history">History</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="nav.wiki">Wiki</h3>
+                        <ul>
+                            <li><a href="../wiki/index.html" data-i18n="sidebar.home">Home</a></li>
+                            <li><a href="../wiki/player.html" data-i18n="footer.wiki.player">Player</a></li>
+                            <li><a href="../wiki/danmaku.html" data-i18n="footer.wiki.danmaku">Danmaku</a></li>
+                            <li><a href="../wiki/tags/general.html" data-i18n="sidebar.tags">Tags</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.pgc">PGC</h3>
+                        <ul>
+                            <li><a href="../youvi_main.html?tag=Anime (ct)" data-i18n="footer.categories.anime">Anime</a></li>
+                            <li><a href="../youvi_main.html?tag=Animation (ct)" data-i18n="footer.categories.animation">Animation</a></li>
+                            <li><a href="../youvi_main.html?tag=Movies (ct)" data-i18n="footer.categories.movies">Movies</a></li>
+                            <li><a href="../youvi_main.html?tag=Series (ct)" data-i18n="footer.categories.series">Series</a></li>
+                            <li><a href="../youvi_main.html?tag=Music (ct)" data-i18n="footer.categories.music">Music</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.ugc">UGC</h3>
+                        <ul>
+                            <li><a href="../youvi_main.html?tag=Games (ct)" data-i18n="footer.categories.games">Games</a></li>
+                            <li><a href="../youvi_main.html?tag=Technology (ct)" data-i18n="footer.categories.tech">Technology</a></li>
+                            <li><a href="../youvi_main.html?tag=Entertainment (ct)" data-i18n="footer.categories.entertainment">Entertainment</a></li>
+                            <li><a href="../youvi_main.html?tag=IRL (ct)" data-i18n="footer.categories.irl">IRL</a></li>
+                            <li><a href="../youvi_main.html?tag=TV (ct)" data-i18n="footer.categories.tv">TV</a></li>
+                            <li><a href="../youvi_main.html?tag=Education (ct)" data-i18n="footer.categories.education">Education</a></li>
+                            <li><a href="../youvi_main.html?tag=Other (ct)" data-i18n="footer.categories.other">Other</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.about">About</h3>
+                        <ul>
+                            <li><a href="../wiki/about.html" data-i18n="footer.aboutSite">About Site</a></li>
+                            <li><a href="../wiki/docs.html" data-i18n="footer.docs">Documentation</a></li>
+                            <li><a href="../wiki/tech.html" data-i18n="footer.tech">Technologies</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-right">
+                <div class="footer-mascot">
+                    <img src="../images/mascot1.png" alt="Yuvi">
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="../youvi_shared.js"></script>
+    <script src="../youvi/autocomplete-data-loader.js"></script>
+    <script src="../youvi/autocomplete/autocomplete-cache.js"></script>
+    <script src="../youvi/autocomplete/autocomplete.js"></script>
+    <script src="../youvi/autocomplete/autocomplete-integration.js"></script>
+    <script src="../youvi/header/youvi-header.js"></script>
+    <script src="../youvi/tag-database/tag-database-manager.js"></script>
+    <script src="../youvi/autocomplete/tag-input-autocomplete.js"></script>
+    <script src="../youvi/tag-types/tag-types.js"></script>
+    <script src="youvi_download.js"></script>
+</body>
+</html>
