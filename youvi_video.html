@@ -82,7 +82,6 @@
 
     <!-- Wide Screen Mode -->
     <link rel="stylesheet" href="youvi/widescreen-mode.css">
-    <link rel="stylesheet" href="youvi/tv-mode/tv-mode.css">
 
     <style>
         * {
@@ -1706,13 +1705,6 @@
         }
 
         #cinemaModeBtn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1
-        }
-
-        #tvModeBtn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3837,10 +3829,6 @@
 
         #cinemaModeBtn.active {
             color: #ff69b4;
-        }
-
-        #tvModeBtn.active {
-            color: #4aa6ff;
         }
 
         #pipBtn.active {
@@ -6067,15 +6055,6 @@
                                         <path d="M8 15h8" />
                                         <path d="M2 22v-1a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1" />
                                         <path d="M14 22v-1a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1" />
-                                    </svg>
-                                </button>
-                                <button class="control-btn hide-in-fullscreen" id="tvModeBtn" title="TV mode">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <rect x="2" y="5" width="20" height="14" rx="2" />
-                                        <path d="M8 21h8" />
-                                        <path d="M12 19v2" />
                                     </svg>
                                 </button>
                                 <button class="control-btn hide-in-fullscreen" id="multiviewBtn" title="Multiview (N)"
@@ -17439,7 +17418,6 @@
     <!-- Wide Screen Mode -->
     <script src="youvi/danmaku-scroll-sync.js"></script>
     <script src="youvi/widescreen-mode.js"></script>
-    <script src="youvi/tv-mode/tv-mode.js"></script>
 
     <!-- Document Picture-in-Picture Module -->
     <script src="youvi/pip/document-pip.js"></script>
