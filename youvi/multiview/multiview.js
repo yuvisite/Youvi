@@ -104,6 +104,12 @@ const MULTIVIEW_DEBUG = false;
             });
         }
 
+        window.addEventListener('youvi:ratingFilterChanged', () => {
+            if (searchPanel && searchPanel.classList.contains('active')) {
+                performSearch(searchInput ? searchInput.value : '');
+            }
+        });
+
         document.addEventListener('keydown', handleKeydown);
 
         setLayout('2h');
@@ -890,7 +896,11 @@ const MULTIVIEW_DEBUG = false;
     }
 
     function performSearch(query) {
-        const sourceVideos = window.allVideos || [];
+        const baseVideos = window.allVideos || [];
+        const ratingMode = window.currentRatingFilter || 'all';
+        const sourceVideos = (typeof window.applyRatingFilterToList === 'function')
+            ? window.applyRatingFilterToList(baseVideos, ratingMode)
+            : baseVideos;
 
         if (typeof evaluateBooleanQuery !== 'function') {
             if (!query) {
@@ -940,6 +950,9 @@ const MULTIVIEW_DEBUG = false;
         videos.forEach(v => {
             const item = document.createElement('div');
             item.className = 'multiview-search-item';
+            const ratingBadgeHtml = (typeof window.getVideoRatingBadgeHtmlForVideo === 'function')
+                ? window.getVideoRatingBadgeHtmlForVideo(v)
+                : '';
 
             let tagsHtml = '';
             if (window.TagTypes && v.tags && v.tags.length > 0) {
@@ -947,7 +960,7 @@ const MULTIVIEW_DEBUG = false;
             }
 
             item.innerHTML = `
-                <div class="multiview-search-item-thumb loading"></div>
+                <div class="multiview-search-item-thumb loading">${ratingBadgeHtml}</div>
                 <div class="multiview-search-item-info">
                     <div class="multiview-search-item-title">${removeExtension(v.name || '')}</div>
                     ${tagsHtml}

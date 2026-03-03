@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search — Interface | Youvi Wiki</title>
+    <title>Tags Implications | Youvi Wiki</title>
     <!-- Load header CSS FIRST to prevent layout shifts -->
     <link rel="stylesheet" href="../../youvi/header/youvi-header.css">
     <script>
@@ -69,7 +69,8 @@
         }
 
         .sidebar-collapsed .sidebar,
-        html.sidebar-collapsed .sidebar {
+        html.sidebar-collapsed .sidebar,
+        body.sidebar-collapsed .sidebar {
             width: 60px !important;
             padding: 10px 8px !important;
             display: block !important;
@@ -78,6 +79,27 @@
             max-height: calc(var(--sidebar-max-height, 100vh) - 75px) !important;
             overflow-y: auto !important;
             overflow-x: hidden !important;
+        }
+
+        body.dark-theme .sidebar-collapsed .sidebar,
+        body.dark-theme html.sidebar-collapsed .sidebar,
+        html.dark-theme .sidebar-collapsed .sidebar {
+            background: #1a1a1a !important;
+        }
+
+        .sidebar-collapsed .container,
+        html.sidebar-collapsed .container {
+            padding-left: 20px;
+        }
+
+        .sidebar-collapsed .main-content,
+        html.sidebar-collapsed .main-content {
+            margin-left: 0;
+        }
+        
+        .sidebar-collapsed .content-wrapper,
+        html.sidebar-collapsed .content-wrapper {
+            max-width: 1500px;
         }
 
         .sidebar-collapsed .sidebar-title,
@@ -96,21 +118,46 @@
             font-size: 0 !important;
         }
 
+        .sidebar-collapsed .sidebar-item:hover,
+        html.sidebar-collapsed .sidebar-item:hover {
+            background: rgba(255, 105, 180, 0.1);
+        }
+
+        .sidebar-collapsed .sidebar-item.active,
+        html.sidebar-collapsed .sidebar-item.active {
+            background: rgba(255, 105, 180, 0.15);
+        }
+
         .sidebar-collapsed .sidebar-item svg,
-        html.sidebar-collapsed .sidebar-item svg {
+        .sidebar-collapsed .sidebar-item img,
+        html.sidebar-collapsed .sidebar-item svg,
+        html.sidebar-collapsed .sidebar-item img {
             margin: 0 !important;
             width: 20px !important;
             height: 20px !important;
+            font-size: 16px !important;
         }
 
-        .sidebar-collapsed .container,
-        html.sidebar-collapsed .container {
-            padding-left: 20px;
+        .sidebar-collapsed .library-item,
+        .sidebar-collapsed .nav-item,
+        html.sidebar-collapsed .library-item,
+        html.sidebar-collapsed .nav-item {
+            justify-content: center !important;
+            gap: 0 !important;
         }
 
-        .sidebar-collapsed .content-wrapper,
-        html.sidebar-collapsed .content-wrapper {
-            max-width: 1500px;
+        .sidebar-collapsed .library-item span,
+        .sidebar-collapsed .nav-item span,
+        html.sidebar-collapsed .library-item span,
+        html.sidebar-collapsed .nav-item span {
+            display: none !important;
+        }
+
+        .sidebar-collapsed .library-item svg,
+        .sidebar-collapsed .nav-item svg,
+        html.sidebar-collapsed .library-item svg,
+        html.sidebar-collapsed .nav-item svg {
+            margin: 0 !important;
         }
 
         .sidebar-collapsed .sidebar-section:nth-child(3),
@@ -171,87 +218,348 @@
             flex-direction: column;
             padding-top: 20px;
         }
-.page-header{background:#fafafa;border:1px solid #e0e0e0;border-radius:6px;padding:16px 18px;margin-bottom:15px}
-.page-title{font-size:21px;font-weight:600;color:#111;margin-bottom:6px}
-.page-desc{font-size:13px;color:#666}
-.tech-section{background:#fff;border:1px solid #e6e6e6;border-radius:6px;padding:16px 18px;margin-bottom:15px}
-.tech-section h2{font-size:18px;margin:0 0 10px 0;color:#111}
-.tech-section h3{font-size:14px;margin:14px 0 8px 0;color:#333}
-.tech-section h4{font-size:13px;margin:10px 0 6px 0;color:#444}
-.tech-section p{font-size:14px;color:#333;line-height:1.75;margin:8px 0;text-align:justify}
-.tech-section ul{margin:8px 0 8px 20px}
-.tech-section ol{margin:8px 0 8px 20px}
-.tech-section li{font-size:14px;line-height:1.6;margin:6px 0;color:#333}
-.tech-section code{background:#f5f5f5;padding:2px 6px;border-radius:3px;font-family:monospace;font-size:13px;color:#d94b88}
-.callout{background:#fff5f9;border:1px solid #ffd6ea;border-radius:6px;padding:12px;margin:12px 0;color:#7a3c55}
-.callout.info{background:#f0f9ff;border-color:#bae6fd;color:#0369a1}
-.toc{background:#fafafa;border:1px dashed #e0e0e0;border-radius:6px;padding:12px;margin:12px 0}
-.tag-example{display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;color:#fff;margin:2px 4px 2px 0;font-weight:500}
-.tag-ct{background:#67c5d6}
-.tag-gt{background:#6b7280}
-.tag-at{background:#a78bdb}
-.tag-nat{background:#9dd6a8}
-.tag-ser{background:#8db8d6}
-.tag-mt{background:#d4a373}
-.tag-ch{background:#6b9e4d}
-.tag-ge{background:#6b9bd1}
-.tag-au{background:#ef6c7d}
-.tag-st{background:#f28b8b}
-.tag-yr{background:#eab676}
-.toc a{color:#111;text-decoration:none}
-.toc a:hover{color:#ff69b4;text-decoration:underline}
-.footer{background:#2c2c2c;color:#fff;padding:25px 0 15px 0;margin-top:0}
-body.dark-theme{background:#0d0d0d;color:#ddd}
-body.dark-theme .sidebar{background:#1a1a1a}
-body.dark-theme .page-header{background:#1a1a1a;border-color:#333;color:#ddd}
-body.dark-theme .page-title{color:#fff}
-body.dark-theme .page-desc{color:#999}
-body.dark-theme .tech-section{background:#1a1a1a;border-color:#333}
-body.dark-theme .tech-section h2{color:#fff}
-body.dark-theme .tech-section h3{color:#ddd}
-body.dark-theme .tech-section h4{color:#ccc}
-body.dark-theme .tech-section p{color:#ccc}
-body.dark-theme .tech-section li{color:#ccc}
-body.dark-theme .tech-section code{background:#2a2a2a;color:#ff8aba}
-body.dark-theme .callout{background:#2a1a1f;border-color:#4a2a3a;color:#ffb3d9}
-body.dark-theme .toc{background:#1a1a1a;border-color:#333}
-body.dark-theme .toc a{color:#ddd}
-body.dark-theme .toc a:hover{color:#ff8aba}
-body.dark-theme .breadcrumbs{color:#999}
-body.dark-theme .breadcrumbs a{color:#999}
-body.dark-theme .breadcrumbs span{color:#fff}
+        .page-header {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px 18px;
+            margin-bottom: 15px;
+        }
 
-        .kbd {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            padding: 2px 6px;
-            font-family: monospace;
-            font-size: 12px;
+        .page-title {
+            font-size: 21px;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 6px;
+        }
+
+        .page-desc {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .tech-section {
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            border-radius: 6px;
+            padding: 16px 18px;
+            margin-bottom: 15px;
+        }
+
+        .tech-section h2 {
+            font-size: 18px;
+            margin: 0 0 10px 0;
+            color: #111;
+        }
+
+        .tech-section h3 {
+            font-size: 14px;
+            margin: 14px 0 8px 0;
             color: #333;
         }
 
-        body.dark-theme .kbd {
-            background: #2a2a2a;
-            border-color: #444;
+        .tech-section h4 {
+            font-size: 13px;
+            margin: 10px 0 6px 0;
+            color: #444;
+        }
+
+        .tech-section p {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.75;
+            margin: 8px 0;
+            text-align: justify;
+        }
+
+        .tech-section ul {
+            margin: 8px 0 8px 20px;
+        }
+
+        .tech-section ol {
+            margin: 8px 0 8px 20px;
+        }
+
+        .tech-section li {
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 6px 0;
+            color: #333;
+        }
+
+        .tech-section code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #d94b88;
+        }
+
+        .callout {
+            background: #fff5f9;
+            border: 1px solid #ffd6ea;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            color: #7a3c55;
+        }
+
+        .callout.info {
+            background: #f0f9ff;
+            border-color: #bae6fd;
+            color: #0369a1;
+        }
+
+        .callout.warning {
+            background: #fffbeb;
+            border-color: #fde68a;
+            color: #92400e;
+        }
+
+        .toc {
+            background: #fafafa;
+            border: 1px dashed #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .toc a {
+            color: #111;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            color: #ff69b4;
+            text-decoration: underline;
+        }
+
+        .tag-example {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #fff;
+            margin: 2px 6px 2px 0;
+            font-weight: 600;
+        }
+
+        .tag-ra-questionable { background: rgba(255, 152, 0, 0.95); }
+        .tag-ra-explicit { background: rgba(244, 67, 54, 0.95); }
+
+        .breadcrumbs {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .breadcrumbs a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .breadcrumbs span {
+            color: #111;
+        }
+
+        body.dark-theme {
+            background: #000;
+            color: #ddd;
+        }
+
+        body.dark-theme .sidebar {
+            background: #1a1a1a;
+        }
+
+        body.dark-theme .page-header {
+            background: #1a1a1a;
+            border-color: #333;
+            color: #ddd;
+        }
+
+        body.dark-theme .page-title {
+            color: #fff;
+        }
+
+        body.dark-theme .page-desc {
+            color: #999;
+        }
+
+        body.dark-theme .tech-section {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        body.dark-theme .tech-section h2 {
+            color: #fff;
+        }
+
+        body.dark-theme .tech-section h3 {
+            color: #ddd;
+        }
+
+        body.dark-theme .tech-section h4 {
             color: #ccc;
         }
-.footer-content{max-width:1600px;margin:0 auto;padding:0 20px;display:flex;gap:30px;align-items:flex-start}
-.footer-main{display:flex;gap:30px;flex:1}
-.footer-logo{flex-shrink:0;width:200px}
-.footer-logo img{height:40px;width:auto}
-.footer-logo p{margin-top:8px;font-size:11px;color:#ccc;line-height:1.3}
-.footer-sections{display:flex;gap:30px;flex:1}
-.footer-right{display:flex;gap:20px;align-items:flex-start}
-.footer-mascot{flex-shrink:0}
-.footer-mascot img{height:180px;width:auto}
-.footer-section{flex:1}
-.footer-section h3{font-size:13px;margin-bottom:10px;color:#fff;font-weight:600}
-.footer-section ul{list-style:none;padding:0;margin:0}
-.footer-section li{margin-bottom:6px}
-.footer-section a{color:#ccc;text-decoration:none;font-size:11px;transition:color .2s}
-.footer-section a:hover{color:#ff69b4}
-.footer-bottom{border-top:1px solid #444;margin-top:20px;padding-top:15px;text-align:center;color:#999;font-size:10px}
+
+        body.dark-theme .tech-section p {
+            color: #ccc;
+        }
+
+        body.dark-theme .tech-section li {
+            color: #ccc;
+        }
+
+        body.dark-theme .tech-section code {
+            background: #2a2a2a;
+            color: #ff8aba;
+        }
+
+        body.dark-theme .callout {
+            background: #2a1a1f;
+            border-color: #4a2a3a;
+            color: #ffb3d9;
+        }
+
+        body.dark-theme .callout.info {
+            background: #1a2a3a;
+            border-color: #2a4a6a;
+            color: #7dd3fc;
+        }
+
+        body.dark-theme .callout.warning {
+            background: #3a2a1a;
+            border-color: #5a4a2a;
+            color: #fcd34d;
+        }
+
+        body.dark-theme .toc {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        body.dark-theme .toc a {
+            color: #ddd;
+        }
+
+        body.dark-theme .toc a:hover {
+            color: #ff8aba;
+        }
+
+        body.dark-theme .breadcrumbs {
+            color: #999;
+        }
+
+        body.dark-theme .breadcrumbs a {
+            color: #999;
+        }
+
+        body.dark-theme .breadcrumbs span {
+            color: #fff;
+        }
+
+        .footer {
+            background: #2c2c2c;
+            color: #fff;
+            padding: 25px 0 15px 0;
+            margin-top: 0;
+        }
+
+        .footer-content {
+            max-width: 1600px !important;
+            margin: 0 auto !important;
+            padding: 0 20px !important;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .footer-main {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .footer-logo {
+            flex-shrink: 0;
+            width: 200px;
+        }
+
+        .footer-logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .footer-logo p {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #ccc;
+            line-height: 1.3;
+        }
+
+        .footer-sections {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .footer-mascot {
+            flex-shrink: 0;
+        }
+
+        .footer-mascot img {
+            height: 180px;
+            width: auto;
+        }
+
+        .footer-section {
+            flex: 1;
+        }
+
+        .footer-section h3 {
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section li {
+            margin-bottom: 6px;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 11px;
+            transition: color 0.2s;
+        }
+
+        .footer-section a:hover {
+            color: #ff69b4;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #444;
+            margin-top: 20px;
+            padding-top: 15px;
+            text-align: center;
+            color: #999;
+            font-size: 10px;
+        }
+
         @media (min-width: 1700px) {
             .content-wrapper {
                 max-width: 1500px;
@@ -296,7 +604,7 @@ body.dark-theme .breadcrumbs span{color:#fff}
                 height: 120px;
             }
         }
-</style>
+    </style>
     <link rel="stylesheet" href="../../youvi/sidebar.css">
     <link rel="stylesheet" href="../../youvi/sidebar-scroll.css">
     <link rel="stylesheet" href="../../youvi/themes/dark-theme.css">
@@ -343,7 +651,7 @@ body.dark-theme .breadcrumbs span{color:#fff}
       <div class="header-right">
         <div class="user-actions">
           <div class="settings-container">
-            <a href="#" class="settings-btn">⚙</a>
+            <a href="#" class="settings-btn">вљ™</a>
             <div class="theme-dropdown">
               <button class="theme-dropdown-item" data-theme="light">Light</button>
               <button class="theme-dropdown-item" data-theme="dark">Dark</button>
@@ -434,11 +742,11 @@ body.dark-theme .breadcrumbs span{color:#fff}
                 <a href="../index.html" class="sidebar-item library-item">Home</a>
                 <a href="../player.html" class="sidebar-item library-item ">Player</a>
                 <a href="../danmaku.html" class="sidebar-item library-item">Danmaku</a>
-                <a href="general.html" class="sidebar-item library-item active">Search: Interface</a>
+                <a href="general.html" class="sidebar-item library-item">Search: Interface</a>
                 <a href="operators.html" class="sidebar-item library-item">Search: Operators</a>
                 <a href="../tags/general.html" class="sidebar-item library-item">Tags: General</a>
                 <a href="../tags/allias.html" class="sidebar-item library-item">Tags: Aliases</a>
-                <a href="../tags/implication.html" class="sidebar-item library-item">Tags: Implications</a>
+                <a href="../tags/implication.html" class="sidebar-item library-item active">Tags: Implications</a>
                 <a href="../tags/rules.html" class="sidebar-item library-item">Tags: Tagging Rules</a>
                 <a href="../tags/archive-system.html" class="sidebar-item library-item">Tags: Archive System</a>
                 <a href="../feed.html" class="sidebar-item library-item">Feed</a>
@@ -449,25 +757,21 @@ body.dark-theme .breadcrumbs span{color:#fff}
                 <a href="../about.html" class="sidebar-item library-item">About Site</a>
                 <a href="../tech.html" class="sidebar-item library-item">Technologies</a>
                 <a href="../docs.html" class="sidebar-item library-item">Documentation</a>
-                <a href="../history.html" class="sidebar-item library-item">History</a>
-                <a href="../gallery.html" class="sidebar-item library-item">Gallery</a>
             </div>
-           
+
         </aside>
-
-<!-- Content Wrapper (centered) -->
-    <div class="content-wrapper">
-      <!-- Main Content -->
-      <main class="main-content">
-      <div class="breadcrumbs" style="font-size:12px;color:#666;margin-bottom:10px;">
-        <a href="#" style="color:#666;text-decoration:none;">Wiki</a> › 
-        <a href="#" style="color:#666;text-decoration:none;">Search</a> › 
-        <span>Interface</span>
-      </div>
-
-      <div class="page-header">
-        <div class="page-title">Search — Interface and Features</div>
-        <div class="page-desc">How to search for videos, playlists and channels in Youvi</div>
+        <!-- Content Wrapper (centered) -->
+        <div class="content-wrapper">
+            <!-- Main Content -->
+                        <main class="main-content">
+                <div class="breadcrumbs">
+                    <a href="../index.html">Wiki</a> &gt; 
+                    <a href="#">Tags</a> &gt; 
+                    <span>Archive System</span>
+                </div>
+<div class="page-header">
+        <div class="page-title">Archive System</div>
+        <div class="page-desc">Strict archived rating tags, filters, and badge color behavior</div>
       </div>
 
       <div class="page-body">
@@ -475,250 +779,85 @@ body.dark-theme .breadcrumbs span{color:#fff}
           <h2>Contents</h2>
           <div class="toc">
             <ul>
-              <li><a href="#basics">Search Basics</a></li>
-              <li><a href="#search-page">Search Page</a></li>
-              <li><a href="#view-modes">Display Modes</a></li>
-              <li><a href="#filters">Filters and Sorting</a></li>
-              <li><a href="#types">Content Types</a></li>
-              <li><a href="#autocomplete">Autocomplete</a></li>
-              <li><a href="#technical">Technical Information</a></li>
+              <li><a href="#overview">Overview</a></li>
+              <li><a href="#strict-tags">Strict Rating Tags</a></li>
+              <li><a href="#filters">Filter Modes</a></li>
+              <li><a href="#colors">Badge Colors</a></li>
+              <li><a href="#source">Tag Source and Consistency</a></li>
+              <li><a href="#recommendations">Recommendations</a></li>
             </ul>
           </div>
         </div>
 
-        <section class="tech-section" id="basics">
-          <h2>Search Basics</h2>
-          <p>Youvi's search system allows you to quickly find videos, playlists and channels in your collection. Search works by titles, tags and metadata.</p>
-          
-          <h3>Where to Search</h3>
+        <section class="tech-section" id="overview">
+          <h2>Overview</h2>
+          <p>The archive system uses rating tags with suffix <code>(ra)</code> to separate regular and archived content.</p>
           <ul>
-            <li><strong>Site Header</strong> — search bar is available on all pages</li>
-            <li><strong>Search Page</strong> — <a href="../../youvi_search.html">youvi_search.html</a> with advanced filters</li>
-            <li><strong>Main Page</strong> — clicking on a tag under a video opens search for that tag</li>
+            <li><code>questionable (ra)</code> > archived content</li>
+            <li><code>explicit (ra)</code> > archived content</li>
+            <li>No recognized archived rating tag > safe content</li>
           </ul>
-
-          <h3>How Search Works</h3>
-          <p>Enter a query in the search bar and press Enter or the "Search" button. The system searches for matches in:</p>
-          <ul>
-            <li>Video titles</li>
-            <li>Video tags</li>
-            <li>Playlist titles</li>
-            <li>Channel titles</li>
-          </ul>
-
-          <div class="callout">
-            <strong>Tip:</strong> Search supports transliteration — you can search for "anime" and find "аниме", or vice versa.
-          </div>
         </section>
 
-        <section class="tech-section" id="search-page">
-          <h2>Search Page</h2>
-          <p>The search page (<a href="../../youvi_search.html">youvi_search.html</a>) is the search control center with advanced capabilities.</p>
-          
-          <h3>Interface Elements</h3>
+        <section class="tech-section" id="strict-tags">
+          <h2>Strict Rating Tags</h2>
+          <p>Parsing is strict. Only canonical tags are recognized:</p>
           <ul>
-            <li><strong>Search Bar</strong> — enter query and press Enter</li>
-            <li><strong>"?" Button</strong> — help on search operators (opens modal window)</li>
-            <li><strong>Type Switcher</strong> — Videos / Playlists / Channels</li>
-            <li><strong>View Switcher</strong> — Grid / List / Compact</li>
-            <li><strong>Filter Panel</strong> — sorting and filtering results</li>
+            <li><code>Questionable (ra)</code> / <code>questionable (ra)</code></li>
+            <li><code>Explicit (ra)</code> / <code>explicit (ra)</code></li>
           </ul>
 
-          <h3>Visual Indicators</h3>
-          <p>The search bar changes color depending on query type:</p>
+          <h3>Not Recognized</h3>
           <ul>
-            <li><strong>Pink Border</strong> — boolean search (AND, OR, NOT)</li>
-            <li><strong>Green Border</strong> — exact search (in quotes)</li>
-            <li><strong>Orange Border</strong> — wildcard search (with asterisks)</li>
+            <li><code>R-18</code>, <code>18+</code>, <code>16+</code>, <code>PG-13</code></li>
+            <li><code>ra: explicit</code>, <code>explicit ra</code>, <code>explicit (rating)</code></li>
           </ul>
 
           <div class="callout info">
-            <strong>Hint:</strong> Hover over the search bar — a tooltip about the current query type will appear.
-          </div>
-        </section>
-
-        <section class="tech-section" id="view-modes">
-          <h2>Display Modes</h2>
-          <p>Search results can be viewed in three modes. Choose the one that suits you.</p>
-          
-          <h3>Grid</h3>
-          <ul>
-            <li>6 cards per row on desktop</li>
-            <li>Video previews with quality badges</li>
-            <li>Compact information display</li>
-            <li>Best for quick browsing</li>
-          </ul>
-
-          <h3>List</h3>
-          <ul>
-            <li>Large previews (280x158px)</li>
-            <li>Detailed video information</li>
-            <li>Description and metadata</li>
-            <li>Convenient for detailed examination</li>
-          </ul>
-
-          <h3>Compact</h3>
-          <ul>
-            <li>Small previews (170x96px)</li>
-            <li>Minimal information</li>
-            <li>More results on screen</li>
-            <li>For quick scanning</li>
-          </ul>
-
-          <div class="callout">
-            <strong>Switching:</strong> Use the "Grid", "List", "Compact" buttons in the top right corner of the search page.
+            <strong>Important:</strong> Keep canonical format with the <code>(ra)</code> suffix to ensure stable filtering and consistent badge colors.
           </div>
         </section>
 
         <section class="tech-section" id="filters">
-          <h2>Filters and Sorting</h2>
-          <p>The filter panel allows you to refine search results. Click on the "Sorting and Filters" header to expand the panel.</p>
-          
-          <h3>Sorting</h3>
-          <ul>
-            <li><strong>Newest</strong> — recently added first</li>
-            <li><strong>Oldest</strong> — old videos first</li>
-            <li><strong>Popular</strong> — by view count</li>
-            <li><strong>Alphabetical</strong> — in alphabetical order</li>
-          </ul>
+          <h2>Filter Modes</h2>
 
-          <h3>Quality Filter</h3>
-          <p>Show only videos of specific quality:</p>
-          <ul>
-            <li><span class="tag-example" style="background:#9c27b0">4K</span> — Ultra HD (2160p)</li>
-            <li><span class="tag-example" style="background:#ff69b4">1080p</span> — Full HD</li>
-            <li><span class="tag-example" style="background:#4caf50">720p</span> — HD</li>
-            <li><span class="tag-example" style="background:#ff9800">480p</span> — SD</li>
-            <li><span class="tag-example" style="background:#666">SD</span> — Standard Definition</li>
-          </ul>
+          <h3>All</h3>
+          <p>Shows all videos regardless of rating.</p>
 
-          <h3>Duration Filter</h3>
-          <ul>
-            <li><strong>Up to 1 min</strong> — short clips</li>
-            <li><strong>Up to 5 min</strong> — clips</li>
-            <li><strong>Up to 10 min</strong> — medium videos</li>
-            <li><strong>Up to 20 min</strong> — episodes</li>
-            <li><strong>Up to 1 hour</strong> — long videos</li>
-            <li><strong>Over an hour</strong> — movies and streams</li>
-          </ul>
+          <h3>General</h3>
+          <p>Shows only videos with effective rating <code>safe</code>.</p>
 
-          <h3>Reset Filters</h3>
-          <p>The "Reset All" button removes all active filters and returns to original results.</p>
+          <h3>Archived</h3>
+          <p>Shows only videos with effective rating <code>questionable</code> or <code>explicit</code>.</p>
         </section>
 
-        <section class="tech-section" id="types">
-          <h2>Content Types</h2>
-          <p>Search works with three content types. Switch between them using buttons at the top of the page.</p>
-          
-          <h3>Videos</h3>
-          <p>Search for video files in your collection:</p>
+        <section class="tech-section" id="colors">
+          <h2>Badge Colors</h2>
+          <p>Color mapping is fixed by rating class:</p>
           <ul>
-            <li>Search by file name</li>
-            <li>Search by tags</li>
-            <li>Filter by quality and duration</li>
-            <li>Display previews and metadata</li>
-          </ul>
-
-          <h3>Playlists</h3>
-          <p>Search for playlists:</p>
-          <ul>
-            <li>Search by playlist name</li>
-            <li>Search by channel name</li>
-            <li>Preview from 4 playlist videos</li>
-            <li>Video count counter</li>
-          </ul>
-
-          <h3>Channels</h3>
-          <p>Search for channels:</p>
-          <ul>
-            <li>Search by channel name</li>
-            <li>Display channel avatar</li>
-            <li>Statistics (video count, views)</li>
-            <li>Subscribe button</li>
+            <li><span class="tag-example tag-ra-questionable">Questionable (ra)</span></li>
+            <li><span class="tag-example tag-ra-explicit">Explicit (ra)</span></li>
           </ul>
 
           <div class="callout">
-            Three display modes are available: grid (6 columns), list and compact.
+            <strong>UI label:</strong> Badge text neutral (<code>Archived</code>), while color still reflects rating level.
           </div>
         </section>
 
-        <section class="tech-section" id="autocomplete">
-          <h2>Autocomplete</h2>
-          <p>When typing in the search bar, the system suggests options from your collection.</p>
-          
-          <h3>What is Suggested</h3>
+        <section class="tech-section" id="source">
+          <h2>Tag Source and Consistency</h2>
+          <p>For stable behavior, pages should evaluate rating from canonical video metadata by video name, not from stale playlist snapshots.</p>
           <ul>
-            <li><strong>Tags</strong> — existing tags with color coding by types</li>
-            <li><strong>Videos</strong> — video titles with previews</li>
-            <li><strong>Playlists</strong> — playlist titles</li>
-            <li><strong>Channels</strong> — channel names with avatars</li>
-          </ul>
-
-          <h3>Navigation</h3>
-          <ul>
-            <li><strong>Arrow keys ↑↓</strong> — move through list</li>
-            <li><strong>Enter</strong> — select item</li>
-            <li><strong>Esc</strong> — close list</li>
-            <li><strong>Mouse click</strong> — select item</li>
-            <li><strong>Tab</strong> — insert selected option from list into search bar</li>
-          </ul>
-
-          <h3>Quick Navigation</h3>
-          <p>Selecting an item from autocomplete:</p>
-          <ul>
-            <li><strong>Tag</strong> — inserts tag into search bar</li>
-            <li><strong>Video</strong> — opens video page</li>
-            <li><strong>Playlist</strong> — opens playlist page</li>
-            <li><strong>Channel</strong> — inserts <code>channel:name</code> into search</li>
-          </ul>
-        </section>
-
-        <section class="tech-section" id="technical">
-          <h2>Technical Information</h2>
-          
-          <h3>Performance</h3>
-          <p>Search is optimized for working with large collections:</p>
-          <ul>
-            <li><strong>Batch Rendering</strong> — 48 results at a time</li>
-            <li><strong>Lazy Loading Previews</strong> — images load as you scroll</li>
-            <li><strong>Caching</strong> — results are cached for quick access</li>
-            <li><strong>Indexing</strong> — search index updates every 30 seconds</li>
-          </ul>
-
-          <h3>Transliteration</h3>
-          <p>The system automatically handles transliteration:</p>
-          <ul>
-            <li>Cyrillic ↔ Latin</li>
-            <li>Support for Ukrainian letters (і, ї, є, ґ)</li>
-            <li>Ignoring soft/hard signs</li>
-            <li>Transliteration variant cache</li>
-          </ul>
-
-          <h3>Settings Storage</h3>
-          <p>Search settings are saved in localStorage:</p>
-          <ul>
-            <li><code>youvi_search_view</code> — display mode (grid/list/compact)</li>
-            <li><code>youvi_search_type</code> — content type (videos/playlists/channels)</li>
-            <li><code>youvi_sort</code> — current sorting</li>
-            <li><code>youvi_filters</code> — active filters (quality, duration)</li>
-          </ul>
-
-          <h3>URL Parameters</h3>
-          <p>Search supports URL parameters:</p>
-          <ul>
-            <li><code>?q=query</code> — search query</li>
-            <li><code>?view=grid</code> — display mode</li>
-            <li><code>?type=videos</code> — content type</li>
-            <li><code>?page=2</code> — page number</li>
+            <li>If canonical tags are used, folder playlists and site playlists behave the same.</li>
+            <li>If snapshot tags are stale, color/filter mismatches can appear.</li>
           </ul>
         </section>
 
 
+            </main>
+        </div><!-- /content-wrapper -->
+    </div>
 
-      </div>
-      </main>
-    </div><!-- /content-wrapper -->
-  </div>
 
   <footer class="footer">
     <div class="footer-content">
@@ -787,8 +926,6 @@ body.dark-theme .breadcrumbs span{color:#fff}
               <li><a href="../../wiki/about.html">About Site</a></li>
                <li><a href="../../wiki/docs.html">Documentation</a></li>
               <li><a href="../../wiki/tech.html">Technologies</a></li>
-              <li><a href="../../wiki/history.html">History</a></li>
-              <li><a href="../../wiki/gallery.html">Gallery</a></li>
             </ul>
           </div>
         </div>
@@ -801,40 +938,46 @@ body.dark-theme .breadcrumbs span{color:#fff}
     </div>
   </footer>
 
-<script src="../../youvi/sidebar-scroll.js"></script>
-<script src="../../youvi/themes/theme-toggle.js"></script>
-<script>
-try {
-  const toggle = document.getElementById('sidebarToggle');
-  const html = document.documentElement;
-  
-  const savedState = localStorage.getItem('sidebarCollapsed');
-  if (savedState === 'true') {
-    html.classList.add('sidebar-collapsed');
-  }
-  
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      html.classList.toggle('sidebar-collapsed');
-      localStorage.setItem('sidebarCollapsed', html.classList.contains('sidebar-collapsed'));
-    });
-  }
-} catch(_) {}
 
-try {
-  const input = document.querySelector('#headerSearchInput');
-  const btn = document.querySelector('#doSearch');
-  if (btn && input) {
-    const go = () => {
-      const q = (input.value || '').trim();
-      const url = q ? `../../youvi_search.html?q=${encodeURIComponent(q)}` : '../../youvi_search.html';
-      location.href = url;
-    };
-    btn.addEventListener('click', go);
-    input.addEventListener('keyup', (e) => { if (e.key === 'Enter') go(); });
-  }
-} catch(_) {}
-</script>
+    <script src="../../youvi/sidebar-scroll.js"></script>
+    <script src="../../youvi/themes/theme-toggle.js"></script>
+    <script>
+        try {
+            const toggle = document.getElementById('sidebarToggle');
+            const html = document.documentElement;
+            
+            const savedState = localStorage.getItem('sidebarCollapsed');
+            if (savedState === 'true') {
+                html.classList.add('sidebar-collapsed');
+            }
+            
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    html.classList.toggle('sidebar-collapsed');
+                    localStorage.setItem('sidebarCollapsed', html.classList.contains('sidebar-collapsed'));
+                });
+            }
+        } catch(_) {}
+
+        try {
+            const input = document.querySelector('#headerSearchInput');
+            const btn = document.querySelector('#doSearch');
+            if (btn && input) {
+                const go = () => {
+                    const q = (input.value || '').trim();
+                    const url = q ? `../../youvi_search.html?q=${encodeURIComponent(q)}` : '../../youvi_search.html';
+                    location.href = url;
+                };
+                btn.addEventListener('click', go);
+                input.addEventListener('keyup', (e) => { if (e.key === 'Enter') go(); });
+            }
+        } catch(_) {}
+    </script>
 </body>
 </html>
+
+
+
+
+
 

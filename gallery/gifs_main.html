@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIFs | 8Site</title>
+    <script>
+        (function() {
+            var theme = localStorage.getItem('youvi-theme');
+            var sidebar = localStorage.getItem('sidebarCollapsed');
+            
+            var htmlClasses = [];
+            if (theme === 'dark') htmlClasses.push('dark-theme');
+            else if (theme === 'skeuo') htmlClasses.push('skeuo-theme');
+            if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+            if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
+        })();
+    </script>
+    
+    <!-- Header styles -->
+    <link rel="stylesheet" href="../youvi/header/youvi-header.css">
+    
+    <!-- Autocomplete styles -->
+    <link rel="stylesheet" href="../youvi/autocomplete/autocomplete.css">
+    
+    <!-- Sidebar styles -->
+    <link rel="stylesheet" href="../youvi/sidebar.css">
+    <link rel="stylesheet" href="../youvi/sidebar-scroll.css">
+    
+    <!-- Theme System -->
+    <link rel="stylesheet" href="../youvi/themes/dark-theme.css">
+    <link rel="stylesheet" href="../youvi/themes/theme-dropdown.css">
+    
+    <!-- Sticky layout -->
+    <link rel="stylesheet" href="../youvi/sticky-video.css">
+    
+    <!-- Scripts -->
+    <script src="../youvi/themes/theme-toggle.js"></script>
+    <script src="../youvi/header/youvi-header.js"></script>
+    <script src="../youvi/sidebar-toggle.js"></script>
+    <script src="../youvi/sidebar-scroll.js"></script>
+    
+    <style>
+        /* Basic reset and layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            width: 100%;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+            color: #111;
+            max-width: 100vw;
+        }
+        
+        /* Top nav overrides */
+        .top-nav-content {
+            max-width: none !important;
+            margin: 0 !important;
+        }
+        
+        /* Header overrides */
+        .header-content-wrapper {
+            max-width: none !important;
+            margin: 0 !important;
+        }
+        
+        .container {
+            width: 100%;
+            margin: 0;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            max-width: 1500px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Minimal GIF-specific styles only */
+        :root {
+            --gifs-cols: 6;
+        }
+        
+        .page-title {
+            font-size: 20px;
+            margin: 10px 0 8px 20px;
+            color: #111;
+        }
+        
+        body.dark-theme .page-title {
+            color: #e0e0e0;
+        }
+        
+        .gifs-grid {
+            display: grid;
+            grid-template-columns: repeat(var(--gifs-cols, 6), 1fr);
+            gap: 12px;
+            padding: 0 20px;
+            align-content: start;
+            justify-items: center;
+            grid-auto-flow: row;
+            align-items: center;
+        }
+        
+        .gif-card {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .gif-thumbnail {
+            height: auto;
+            max-height: 400px;
+            background: #eee;
+            border-radius: 0;
+            margin-bottom: 0;
+            display: block;
+            object-fit: contain;
+            max-width: 100%;
+        }
+        
+        .gif-info {
+            display: none;
+        }
+        
+        .gif-name {
+            display: none;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 60px 20px;
+            font-size: 16px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        
+        body.dark-theme .page-title,
+        body.dark-theme .gif-name {
+            color: #e0e0e0;
+        }
+        
+        .container {
+            width: 100%;
+            margin: 0;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            max-width: 1500px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .footer {
+            background: #2c2c2c;
+            color: #fff;
+            padding: 25px 0 15px 0;
+            margin-top: 0;
+        }
+        
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        
+        .footer-logo {
+            flex-shrink: 0;
+            width: 200px;
+        }
+        
+        .footer-logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .footer-logo p {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #ccc;
+            line-height: 1.3;
+        }
+        
+        .footer-sections {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+        
+        .footer-main {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+        
+        .footer-right {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        
+        .footer-mascot {
+            flex-shrink: 0;
+        }
+        
+        .footer-mascot img {
+            height: 180px;
+            width: auto;
+        }
+        
+        .footer-section {
+            flex: 1;
+        }
+        
+        .footer-section h3 {
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-section li {
+            margin-bottom: 6px;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 11px;
+            transition: color 0.2s;
+        }
+        
+        .footer-section a:hover {
+            color: #ff69b4;
+        }
+    </style>
+    <link rel="icon" href="../favicon/youvi/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="top-nav">
+        <div class="top-nav-content">
+            <a href="../youvi_main.html">Видео</a>
+            <a href="../index.html">Управление</a>
+            <a href="../youvi_ch_list.html">Каналы</a>
+            <a href="../youvi_playlists_list.html">Плейлисты</a>
+            <a href="gifs_main.html" class="active">GIFs</a>
+            <a href="../forum/forum.html">Форумы</a>
+            <a href="../wiki/index.html">Wiki</a>
+            <span style="flex: 1;"></span>
+            <span style="color: #fff; font-size: 11px; margin-right: 8px;">Выбери язык / Choose language -----></span>
+            <div class="lang-switcher" style="margin-left: auto;">
+                <select id="langSwitcher" class="lang-select">
+                    <option value="ru">🇷🇺 RU</option>
+                    <option value="en">🇬🇧 EN</option>
+                    <option value="uk">🇺🇦 UK</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content-wrapper">
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </button>
+                
+                <div class="logo">
+                    <a href="../youvi_main.html">
+                        <img src="../images/logo_youvi_ind.png" alt="Youvi logo">
+                    </a>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="search-area autocomplete-wrapper">
+                    <input type="text" id="gifSearch" placeholder="Поиск GIF..." class="search-input">
+                    <button id="doSearch" class="search-btn">Найти</button>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="user-actions">
+                    <div class="settings-container">
+                        <a href="#" class="settings-btn">⚙</a>
+                        <div class="theme-dropdown">
+                            <button class="theme-dropdown-item" data-theme="light">Белая</button>
+                            <button class="theme-dropdown-item" data-theme="dark">Черная</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Навигация</div>
+                <a href="../youvi_main.html" class="sidebar-item nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    <span>Youvi</span>
+                </a>
+                <a href="gifs_main.html" class="sidebar-item nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
+                        <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
+                        <line x1="7" y1="2" x2="7" y2="22"/>
+                        <line x1="17" y1="2" x2="17" y2="22"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/>
+                        <line x1="2" y1="7" x2="7" y2="7"/>
+                        <line x1="2" y1="17" x2="7" y2="17"/>
+                        <line x1="17" y1="17" x2="22" y2="17"/>
+                        <line x1="17" y1="7" x2="22" y2="7"/>
+                    </svg>
+                    <span>GIFs</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- Main Content -->
+            <main class="main-content">
+                <h2 class="page-title">GIFs Collection</h2>
+                <div id="gifsGrid" class="gifs-grid">
+                    <div class="loading">Loading GIFs...</div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-logo">
+                    <img src="../images/logo_youvi_ind_ex.png" alt="Youvi">
+                    <p data-i18n="footer.description">Платформа для просмотра видео контента. Сохраняйте, категоризируйте и смотрите видео.</p>
+                </div>
+                <div class="footer-sections">
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.sections">Разделы</h3>
+                        <ul>
+                            <li><a href="../youvi_main.html" data-i18n="footer.video">Видео</a></li>
+                            <li><a href="../youvi_tags.html" data-i18n="sidebar.tags">Теги</a></li>
+                            <li><a href="gifs_main.html">GIFs</a></li>
+                            <li><a href="../forum/forum.html">Форумы</a></li>
+                            <li><a href="../index.html" data-i18n="nav.management">Управление</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="sidebar.library">Библиотека</h3>
+                        <ul>
+                            <li><a href="../youvi_ch_list.html" data-i18n="sidebar.channels">Каналы</a></li>
+                            <li><a href="../youvi_playlists_list.html" data-i18n="sidebar.playlists">Плейлисты</a></li>
+                            <li><a href="../youvi_subscriptions.html" data-i18n="sidebar.subscriptions">Подписки</a></li>
+                            <li><a href="../youvi_fav.html" data-i18n="sidebar.favorites">Избранное</a></li>
+                            <li><a href="../youvi_history.html" data-i18n="sidebar.history">История</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="nav.wiki">Wiki</h3>
+                        <ul>
+                            <li><a href="../wiki/index.html" data-i18n="sidebar.home">Главная</a></li>
+                            <li><a href="../wiki/player.html" data-i18n="footer.wiki.player">Плеер</a></li>
+                            <li><a href="../wiki/danmaku.html" data-i18n="footer.wiki.danmaku">Данмаку</a></li>
+                            <li><a href="../wiki/tags/general.html" data-i18n="sidebar.tags">Теги</a></li>
+                            <li><a href="../wiki/tags/rules.html" data-i18n="footer.wiki.taggingRules">Правила тегирования</a></li>
+                            <li><a href="../wiki/search/general.html" data-i18n="footer.wiki.search">Поиск</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.pgc">PGC</h3>
+                        <ul>
+                            <li><a href="../youvi_main.html?tag=Anime (ct)" data-i18n="footer.categories.anime">Anime</a></li>
+                            <li><a href="../youvi_main.html?tag=Animation (ct)" data-i18n="footer.categories.animation">Animation</a></li>
+                            <li><a href="../youvi_main.html?tag=Movies (ct)" data-i18n="footer.categories.movies">Movies</a></li>
+                            <li><a href="../youvi_main.html?tag=Series (ct)" data-i18n="footer.categories.series">Series</a></li>
+                            <li><a href="../youvi_main.html?tag=Music (ct)" data-i18n="footer.categories.music">Music</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.ugc">UGC</h3>
+                        <ul>
+                            <li><a href="../youvi_main.html?tag=Games (ct)" data-i18n="footer.categories.games">Games</a></li>
+                            <li><a href="../youvi_main.html?tag=Technology (ct)" data-i18n="footer.categories.tech">Technology</a></li>
+                            <li><a href="../youvi_main.html?tag=Entertainment (ct)" data-i18n="footer.categories.entertainment">Entertainment</a></li>
+                            <li><a href="../youvi_main.html?tag=IRL (ct)" data-i18n="footer.categories.irl">IRL</a></li>
+                            <li><a href="../youvi_main.html?tag=TV (ct)" data-i18n="footer.categories.tv">TV</a></li>
+                            <li><a href="../youvi_main.html?tag=Education (ct)" data-i18n="footer.categories.education">Education</a></li>
+                            <li><a href="../youvi_main.html?tag=Other (ct)" data-i18n="footer.categories.other">Other</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.about">О сайте</h3>
+                        <ul>
+                            <li><a href="../wiki/about.html" data-i18n="footer.aboutSite">Про сайт</a></li>
+                            <li><a href="../wiki/docs.html" data-i18n="footer.docs">Документация</a></li>
+                            <li><a href="../wiki/tech.html" data-i18n="footer.tech">Технологии</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-right">
+                <div class="footer-mascot">
+                    <img src="../images/mascot1.png" alt="Yuvi">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="gifs_loader.js"></script>
+</body>
+</html>

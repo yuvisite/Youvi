@@ -14,6 +14,7 @@ class YouviAutocomplete {
       minChars: 1,
       debounceDelay: 150,
       onSelect: null,
+      filterResults: null,
       avatarLoader: null,
       videoDirectoryHandle: null,
       ...options
@@ -96,7 +97,14 @@ class YouviAutocomplete {
     
     try {
       this.showLoading();
-      const results = await this.cache.search(query);
+      let results = await this.cache.search(query);
+
+      if (typeof this.options.filterResults === 'function') {
+        const filteredResults = await this.options.filterResults(results, query);
+        if (filteredResults && typeof filteredResults === 'object') {
+          results = filteredResults;
+        }
+      }
       
       if (searchId !== this.currentSearchId) {
         if (AUTOCOMPLETE_DEBUG) console.log(`[Autocomplete] Ignoring outdated search #${searchId}, current is #${this.currentSearchId}`);

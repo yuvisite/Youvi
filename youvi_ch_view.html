@@ -107,6 +107,7 @@
     <script src="youvi/autocomplete/autocomplete-cache.js"></script>
     <script src="youvi/autocomplete/autocomplete.js"></script>
     <script src="youvi/autocomplete/autocomplete-integration.js"></script>
+    <script src="youvi/filter/filter-engine.js"></script>
     
     <!-- Danmaku Counter -->
     <script src="youvi/danmaku-counter.js"></script>
@@ -676,6 +677,10 @@
               <li><a href="wiki/about.html" data-i18n="footer.aboutSite">Про сайт</a></li>
                <li><a href="wiki/docs.html" data-i18n="footer.docs">Документация</a></li>
               <li><a href="wiki/tech.html" data-i18n="footer.tech">Технологии</a></li>
+              <li style="margin-top: 10px; color:#fff; font-weight:600;" data-i18n="sidebar.filter">Фильтр</li>
+              <li><a href="#" id="footerFilterAll" data-i18n="sidebar.filterAll" onclick="setRatingFilter('all'); return false;">Все</a></li>
+              <li><a href="#" id="footerFilterGeneral" data-i18n="sidebar.filterGeneral" onclick="setRatingFilter('general'); return false;">Общие</a></li>
+              <li><a href="#" id="footerFilterArchived" data-i18n="sidebar.filterArchived" onclick="setRatingFilter('archived'); return false;">Архив</a></li>
             </ul>
                     </div>
                 </div>
@@ -841,6 +846,9 @@
         let channelVideos = [];
         let channelVideosLoaded = false;
         let currentSort = 'default';
+        let currentRatingFilter = new URLSearchParams(window.location.search).get('rating') || localStorage.getItem('youvi_rating_filter') || 'all';
+        let currentTagFilter = 'all';
+        window.currentRatingFilter = currentRatingFilter;
 
         let selectedVideoIds = new Set();
         let editingSelectedVideos = new Set();
@@ -848,6 +856,87 @@
 
         function getCurrentSortType() {
             return currentSort;
+        }
+
+        function applyRatingFilterToList(videos, mode) {
+            const list = Array.isArray(videos) ? videos : [];
+            const effectiveMode = mode || currentRatingFilter || 'all';
+            if (window.YouviFilterEngine && typeof window.YouviFilterEngine.applyRatingFilterToVideos === 'function') {
+                return window.YouviFilterEngine.applyRatingFilterToVideos(list, effectiveMode);
+            }
+            return list;
+        }
+
+        function getRatingScopedChannelVideos(videos) {
+            return applyRatingFilterToList(Array.isArray(videos) ? videos : channelVideos, currentRatingFilter);
+        }
+
+        function getVideoRatingForChannelPage(tags) {
+            if (window.YouviFilterEngine && typeof window.YouviFilterEngine.getVideoRating === 'function') {
+                return window.YouviFilterEngine.getVideoRating(tags || []);
+            }
+            return 'safe';
+        }
+
+        function getVideoRatingBadgeHtml(video) {
+            const rating = getVideoRatingForChannelPage(video && video.tags ? video.tags : []);
+            if (rating !== 'questionable' && rating !== 'explicit') return '';
+            return `<div class="video-rating-badge rating-${rating}">Archived</div>`;
+        }
+
+        function updateFooterRatingFilterUi() {
+            const map = {
+                all: 'footerFilterAll',
+                general: 'footerFilterGeneral',
+                archived: 'footerFilterArchived'
+            };
+            ['footerFilterAll', 'footerFilterGeneral', 'footerFilterArchived'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
+            const activeId = map[currentRatingFilter] || map.all;
+            const activeEl = document.getElementById(activeId);
+            if (activeEl) activeEl.classList.add('active');
+        }
+
+        function renderVideosForCurrentState() {
+            if (currentTagFilter && currentTagFilter !== 'all') {
+                filterVideosByTag(currentTagFilter);
+                return;
+            }
+            const sortedVideos = sortVideos(channelVideos, currentSort);
+            renderVideos(sortedVideos);
+        }
+
+        function setRatingFilter(mode) {
+            const normalized = mode === 'all' || mode === 'general' || mode === 'archived' ? mode : 'all';
+            if (currentRatingFilter === normalized) return;
+            currentRatingFilter = normalized;
+            window.currentRatingFilter = currentRatingFilter;
+            try {
+                localStorage.setItem('youvi_rating_filter', currentRatingFilter);
+            } catch (_) {}
+            updateFooterRatingFilterUi();
+
+            const url = new URL(window.location.href);
+            if (currentRatingFilter === 'all') url.searchParams.delete('rating');
+            else url.searchParams.set('rating', currentRatingFilter);
+            window.history.replaceState({}, '', url.toString());
+
+            loadSidebarTags();
+            renderVideosForCurrentState();
+            loadPlaylists();
+            loadPinnedVideo();
+            if (document.querySelector('[data-tab="home"]')?.classList.contains('active')) {
+                loadHomePage();
+            }
+            if (document.querySelector('[data-tab="analytics"]')?.classList.contains('active') && channelAnalyticsInstance) {
+                channelAnalyticsInstance.updateAnalytics(getRatingScopedChannelVideos(channelVideos), true).then(() => {
+                    channelAnalyticsInstance.renderAnalytics();
+                }).catch(() => {});
+            }
+
+            window.dispatchEvent(new CustomEvent('youvi:ratingFilterChanged', { detail: { mode: currentRatingFilter } }));
         }
         let createModalVideoOrder = [];
         
@@ -986,6 +1075,11 @@
                 durationBadge.className = 'video-duration';
                 durationBadge.textContent = duration;
                 thumbnailElement.appendChild(durationBadge);
+
+                const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
+                if (ratingBadgeHtml) {
+                    thumbnailElement.insertAdjacentHTML('beforeend', ratingBadgeHtml);
+                }
                 
                 if (video.quality) {
                     const qualityBadge = document.createElement('div');
@@ -1062,7 +1156,7 @@
                         ((currentLikes + currentDislikes) / this.data.views * 100) : 0;
                 }
                 
-                if (Math.abs(currentViews - this.lastViews) > this.data.views * 0.1) {
+                if (forceUpdate || Math.abs(currentViews - this.lastViews) > this.data.views * 0.1) {
                     this.data.popularVideos = this.getPopularVideos(videos);
                 }
                 
@@ -1189,13 +1283,23 @@
                         <div class="analytics-section">
                             <h4>${typeof i18n !== 'undefined' ? i18n.t('channelView.popularVideos') : 'Популярные видео'}</h4>
                             <div class="popular-videos">
-                                ${this.data.popularVideos.map((video, index) => `
-                                    <div class="popular-video">
-                                        <span class="rank">${index + 1}</span>
-                                        <span class="title">${video.title}</span>
-                                        <span class="views">${video.views.toLocaleString()} views</span>
-                                    </div>
-                                `).join('')}
+                                ${(() => {
+                                    const visibleVideos = getRatingScopedChannelVideos(channelVideos || []);
+                                    const hiddenByFilter = (channelVideos || []).length > 0 && visibleVideos.length === 0 && currentRatingFilter !== 'all';
+                                    if (hiddenByFilter) {
+                                        return `<div class="popular-video" style="justify-content:center;color:#666;">Популярные видео скрыты текущим фильтром</div>`;
+                                    }
+                                    if (!this.data.popularVideos || this.data.popularVideos.length === 0) {
+                                        return `<div class="popular-video" style="justify-content:center;color:#666;">Нет видео</div>`;
+                                    }
+                                    return this.data.popularVideos.map((video, index) => `
+                                        <div class="popular-video">
+                                            <span class="rank">${index + 1}</span>
+                                            <span class="title">${video.title}</span>
+                                            <span class="views">${video.views.toLocaleString()} views</span>
+                                        </div>
+                                    `).join('');
+                                })()}
                             </div>
                         </div>
                         
@@ -2379,7 +2483,7 @@ async function loadSubscriptionsFromFile() {
             loadShownAchievements();
             
             taskQueue.add(async () => {
-                const analytics = await channelAnalyticsInstance.updateAnalytics(channelVideos);
+                const analytics = await channelAnalyticsInstance.updateAnalytics(getRatingScopedChannelVideos(channelVideos));
                 channelAnalyticsInstance.renderAnalytics();
                 
                 const newAchievements = channelAchievementsInstance.checkAchievements(analytics);
@@ -2647,17 +2751,17 @@ async function loadChannelVideos() {
         function renderVideosGrid(sortedVideos) {
                 const grid = document.getElementById('videosGrid');
             if (!grid) return;
-            
+                const visibleVideos = getRatingScopedChannelVideos(sortedVideos);
                 grid.innerHTML = '';
 
-                if (sortedVideos.length === 0) {
+                if (visibleVideos.length === 0) {
                     const noVideosText = typeof i18n !== 'undefined' ? i18n.t('channelView.noVideosYet') : 'На канале пока нет видео';
                     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#7a3c55;padding:40px">${noVideosText}</div>`;
                     return;
                 }
 
-            const maxPlaceholders = Math.min(VISIBLE_ITEMS, sortedVideos.length);
-            const placeholders = sortedVideos.slice(0, maxPlaceholders).map(() => {
+            const maxPlaceholders = Math.min(VISIBLE_ITEMS, visibleVideos.length);
+            const placeholders = visibleVideos.slice(0, maxPlaceholders).map(() => {
                 const item = document.createElement('div');
                 item.className = 'video-item loading-placeholder';
                 item.style.height = '200px';
@@ -2666,15 +2770,15 @@ async function loadChannelVideos() {
             
             placeholders.forEach(placeholder => grid.appendChild(placeholder));
 
-            sortedVideos.forEach((video, index) => {
+            visibleVideos.forEach((video, index) => {
                     const item = document.createElement('div');
                     item.className = 'video-item';
                     item.setAttribute('data-video-name', video.name);
                     
                     const playlist = video.playlist || '';
                     const videoUrl = window.VideoID 
-                        ? window.VideoID.buildVideoUrl(video.name, playlist)
-                        : `youvi_video.html?name=${encodeURIComponent(video.name)}&playlist=${encodeURIComponent(playlist)}`;
+                        ? window.VideoID.buildVideoUrl(video.name, playlist) + (currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : '')
+                        : `youvi_video.html?name=${encodeURIComponent(video.name)}&playlist=${encodeURIComponent(playlist)}${currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : ''}`;
                     
                     const hiddenLink = document.createElement('a');
                     hiddenLink.href = videoUrl;
@@ -2816,7 +2920,7 @@ async function loadChannelVideos() {
             
             const allTags = new Map();
             
-            channelVideos.forEach(video => {
+            getRatingScopedChannelVideos(channelVideos).forEach(video => {
                 if (video.tags) {
                     video.tags.forEach(tag => {
                         const typeCode = parseTagType(tag);
@@ -2868,6 +2972,7 @@ async function loadChannelVideos() {
         }
 
         function filterVideosByTag(tag) {
+            currentTagFilter = tag;
             document.querySelectorAll('#sidebarTagsContainer .sidebar-item').forEach(item => item.classList.remove('active'));
             document.getElementById('allTagsLink').classList.remove('active');
             
@@ -2876,7 +2981,7 @@ async function loadChannelVideos() {
                 clickedTagItem.classList.add('active');
             }
             
-            const filteredVideos = channelVideos.filter(video => 
+            const filteredVideos = getRatingScopedChannelVideos(channelVideos).filter(video => 
                 video.tags && video.tags.includes(tag)
             );
             
@@ -2895,7 +3000,18 @@ async function loadChannelVideos() {
             }
 
              const sortType = getCurrentSortType();
-            const sortedPlaylists = sortPlaylists(channelData.playlists, sortType);
+            const sortedPlaylists = sortPlaylists(channelData.playlists, sortType)
+                .map(playlist => ({
+                    ...playlist,
+                    videos: applyRatingFilterToList(playlist.videos || [], currentRatingFilter)
+                }))
+                .filter(playlist => Array.isArray(playlist.videos) && playlist.videos.length > 0);
+
+            if (sortedPlaylists.length === 0) {
+                const noPlaylistsText = typeof i18n !== 'undefined' ? i18n.t('channelView.noPlaylistsYet') : 'РџР»РµР№Р»РёСЃС‚РѕРІ РїРѕРєР° РЅРµС‚';
+                playlistsGrid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#7a3c55;padding:40px">${noPlaylistsText}</div>`;
+                return;
+            }
 
             sortedPlaylists.forEach(playlist => {
                 if (playlist.videos && channelVideos.length > 0) {
@@ -2916,7 +3032,7 @@ async function loadChannelVideos() {
                 const item = document.createElement('div');
                 item.className = 'playlist-item';
                 
-                const playlistUrl = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlist.id)}`;
+                const playlistUrl = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlist.id)}${currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : ''}`;
                 
                 const hiddenLink = document.createElement('a');
                 hiddenLink.href = playlistUrl;
@@ -2935,12 +3051,16 @@ async function loadChannelVideos() {
                         cell.textContent = getFileNameWithoutExtension(v.name).slice(0, 10) + '…';
 
                         const foundVideo = channelVideos.find(av => av.name === v.name);
+                        const ratingBadgeHtml = getVideoRatingBadgeHtml(foundVideo || v);
                         if (foundVideo) {
                             getPreviewAndDuration(foundVideo).then(({preview}) => {
                                 if (preview && preview !== null && preview.length > 50 && !preview.includes('blob:null/')) {
-                                    cell.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';">`;
+                                    cell.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';">${ratingBadgeHtml}`;
                                 }
                             }).catch(() => {  });
+                        }
+                        if (ratingBadgeHtml) {
+                            cell.innerHTML = `${escapeHtml(getFileNameWithoutExtension(v.name).slice(0, 10) + '…')}${ratingBadgeHtml}`;
                         }
                     }
                     thumbGrid.appendChild(cell);
@@ -2998,7 +3118,7 @@ async function loadChannelVideos() {
         }
 
         function openPlaylist(playlistId) {
-            window.location.href = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlistId)}`;
+            window.location.href = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlistId)}${currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : ''}`;
         }
 
         async function loadHomePage() {
@@ -3020,8 +3140,8 @@ async function loadChannelVideos() {
             
             const playlist = video.playlist || '';
             const videoUrl = window.VideoID 
-                ? window.VideoID.buildVideoUrl(video.name, playlist)
-                : `youvi_video.html?name=${encodeURIComponent(video.name)}&playlist=${encodeURIComponent(playlist)}`;
+                ? window.VideoID.buildVideoUrl(video.name, playlist) + (currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : '')
+                : `youvi_video.html?name=${encodeURIComponent(video.name)}&playlist=${encodeURIComponent(playlist)}${currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : ''}`;
             
             const hiddenLink = document.createElement('a');
             hiddenLink.href = videoUrl;
@@ -3055,6 +3175,9 @@ async function loadChannelVideos() {
                 thumb.appendChild(newBadge);
             }
             
+            const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
+            if (ratingBadgeHtml) thumb.insertAdjacentHTML('beforeend', ratingBadgeHtml);
+
             thumb.addEventListener('click', () => window.location.href = videoUrl);
             
             const info = document.createElement('div');
@@ -3104,6 +3227,8 @@ async function loadChannelVideos() {
                     nb.textContent = 'Новинка';
                     thumb.appendChild(nb);
                 }
+                const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
+                if (ratingBadgeHtml) thumb.insertAdjacentHTML('beforeend', ratingBadgeHtml);
             }).catch(() => {});
             
             return item;
@@ -3115,14 +3240,15 @@ async function loadChannelVideos() {
             
             recentGrid.innerHTML = '';
             
-            if (channelVideos.length === 0) {
+            const visibleChannelVideos = getRatingScopedChannelVideos(channelVideos);
+            if (visibleChannelVideos.length === 0) {
                 const noVideosText = typeof i18n !== 'undefined' ? i18n.t('channelView.noVideosYet') : 'На канале пока нет видео';
                 recentGrid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#7a3c55;padding:40px">${noVideosText}</div>`;
                 return;
             }
 
             const sortType = document.getElementById('videoSortSelect')?.value || 'new';
-            const sortedVideos = sortVideos(channelVideos, sortType);
+            const sortedVideos = sortVideos(visibleChannelVideos, sortType);
             const recentVideos = sortedVideos.slice(0, 5);
             
             recentVideos.forEach(video => renderVideoCard(video, recentGrid));
@@ -3134,14 +3260,15 @@ async function loadChannelVideos() {
             
             recentGrid.innerHTML = '';
             
-            if (channelVideos.length <= 5) {
+            const visibleChannelVideos = getRatingScopedChannelVideos(channelVideos);
+            if (visibleChannelVideos.length <= 5) {
                 const noMoreVideosText = typeof i18n !== 'undefined' ? i18n.t('channelView.noMoreVideos') : 'Больше видео нет';
                 recentGrid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#7a3c55;padding:40px">${noMoreVideosText}</div>`;
                 return;
             }
 
             const sortType = document.getElementById('videoSortSelect')?.value || 'new';
-            const sortedVideos = sortVideos(channelVideos, sortType);
+            const sortedVideos = sortVideos(visibleChannelVideos, sortType);
             const recentVideos = sortedVideos.slice(5, 10);
             
             recentVideos.forEach(video => renderVideoCard(video, recentGrid));
@@ -3160,14 +3287,24 @@ async function loadChannelVideos() {
             }
             
              const sortType = getCurrentSortType();
-            const sortedPlaylists = sortPlaylists(channelData.playlists, sortType);
+            const sortedPlaylists = sortPlaylists(channelData.playlists, sortType)
+                .map(playlist => ({
+                    ...playlist,
+                    videos: applyRatingFilterToList(playlist.videos || [], currentRatingFilter)
+                }))
+                .filter(playlist => Array.isArray(playlist.videos) && playlist.videos.length > 0);
             const recentPlaylists = sortedPlaylists.slice(0, 5);
+            if (recentPlaylists.length === 0) {
+                const noPlaylistsText = typeof i18n !== 'undefined' ? i18n.t('channelView.noPlaylistsYet') : 'РџР»РµР№Р»РёСЃС‚РѕРІ РїРѕРєР° РЅРµС‚';
+                recentPlaylistsGrid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#7a3c55;padding:40px">${noPlaylistsText}</div>`;
+                return;
+            }
             
             recentPlaylists.forEach(playlist => {
                 const item = document.createElement('div');
                 item.className = 'playlist-item';
                 
-                const playlistUrl = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlist.id)}`;
+                const playlistUrl = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlist.id)}${currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : ''}`;
                 
                 const hiddenLink = document.createElement('a');
                 hiddenLink.href = playlistUrl;
@@ -3186,12 +3323,16 @@ async function loadChannelVideos() {
                         cell.textContent = getFileNameWithoutExtension(v.name).slice(0, 10) + '…';
                         
                         const foundVideo = channelVideos.find(av => av.name === v.name);
+                        const ratingBadgeHtml = getVideoRatingBadgeHtml(foundVideo || v);
                         if (foundVideo) {
                             getPreviewAndDuration(foundVideo).then(({preview}) => {
                                 if (preview && preview !== null && preview.length > 50 && !preview.includes('blob:null/')) {
-                                    cell.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';">`;
+                                    cell.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';">${ratingBadgeHtml}`;
                                 }
                             }).catch(() => {  });
+                        }
+                        if (ratingBadgeHtml) {
+                            cell.innerHTML = `${escapeHtml(getFileNameWithoutExtension(v.name).slice(0, 10) + '…')}${ratingBadgeHtml}`;
                         }
                     }
                     thumbGrid.appendChild(cell);
@@ -3229,12 +3370,13 @@ async function loadChannelVideos() {
             
             topVideosList.innerHTML = '';
             
-            if (channelVideos.length === 0) {
+            const visibleChannelVideos = getRatingScopedChannelVideos(channelVideos);
+            if (visibleChannelVideos.length === 0) {
                 topVideosList.innerHTML = '<div style="text-align:center;color:#7a3c55;padding:20px;font-size:12px">Нет видео</div>';
                 return;
             }
             
-            const sortedVideos = [...channelVideos].sort((a, b) => (b.views || 0) - (a.views || 0));
+            const sortedVideos = [...visibleChannelVideos].sort((a, b) => (b.views || 0) - (a.views || 0));
             const topVideos = sortedVideos.slice(0, 5);
             
             topVideos.forEach((video, index) => {
@@ -3243,8 +3385,8 @@ async function loadChannelVideos() {
                 
                 const playlist = video.playlist || '';
                 const videoUrl = window.VideoID 
-                    ? window.VideoID.buildVideoUrl(video.name, playlist)
-                    : `youvi_video.html?name=${encodeURIComponent(video.name)}&playlist=${encodeURIComponent(playlist)}`;
+                    ? window.VideoID.buildVideoUrl(video.name, playlist) + (currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : '')
+                    : `youvi_video.html?name=${encodeURIComponent(video.name)}&playlist=${encodeURIComponent(playlist)}${currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : ''}`;
                 
                 const hiddenLink = document.createElement('a');
                 hiddenLink.href = videoUrl;
@@ -3279,6 +3421,8 @@ async function loadChannelVideos() {
                 
                 item.appendChild(thumb);
                 item.appendChild(info);
+                const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
+                if (ratingBadgeHtml) thumb.insertAdjacentHTML('beforeend', ratingBadgeHtml);
                 
                 item.addEventListener('click', () => {
                     window.location.href = videoUrl;
@@ -3298,6 +3442,7 @@ async function loadChannelVideos() {
                     newRank.className = `top-video-rank rank-${index + 1}`;
                     newRank.textContent = index + 1;
                     thumb.appendChild(newRank);
+                    if (ratingBadgeHtml) thumb.insertAdjacentHTML('beforeend', ratingBadgeHtml);
                 }).catch(() => {
                     const existingRank = thumb.querySelector('.top-video-rank');
                     if (!existingRank) {
@@ -3593,7 +3738,8 @@ async function loadChannelVideos() {
             if (!pinnedVideoContainer) return;
             
             if (channelData.pinnedVideo) {
-                const video = channelVideos.find(v => v.name === channelData.pinnedVideo);
+                const allPinnedVideo = channelVideos.find(v => v.name === channelData.pinnedVideo);
+                const video = getRatingScopedChannelVideos(channelVideos).find(v => v.name === channelData.pinnedVideo);
                 if (video) {
                     pinnedVideoContainer.innerHTML = `
                         <div style="display:flex;gap:15px;align-items:flex-start;">
@@ -3617,18 +3763,33 @@ async function loadChannelVideos() {
                     getPreviewAndDuration(video).then(({ preview }) => {
                         const thumbEl = document.getElementById('pinnedThumb');
                         if (thumbEl) {
+                            const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
                             if (preview && preview !== null && preview.length > 50 && !preview.includes('blob:null/')) {
-                                thumbEl.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';" />`;
+                                thumbEl.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';" />${ratingBadgeHtml}`;
                             } else {
-                                thumbEl.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#333;color:#fff;font-size:10px;text-align:center;">${getFileNameWithoutExtension(video.name)}</div>`;
+                                thumbEl.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#333;color:#fff;font-size:10px;text-align:center;">${getFileNameWithoutExtension(video.name)}</div>${ratingBadgeHtml}`;
                             }
                         }
                     }).catch(() => {
                         const thumbEl = document.getElementById('pinnedThumb');
                         if (thumbEl) {
-                            thumbEl.textContent = getFileNameWithoutExtension(video.name).substring(0, 15) + '...';
+                            const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
+                            thumbEl.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#333;color:#fff;font-size:10px;text-align:center;">${getFileNameWithoutExtension(video.name).substring(0, 15) + '...'}</div>${ratingBadgeHtml}`;
                         }
                     });
+                } else if (allPinnedVideo) {
+                    const hiddenText = typeof i18n !== 'undefined'
+                        ? i18n.t('channelView.noPinnedVideoHint')
+                        : 'Закрепленное видео скрыто текущим фильтром';
+                    pinnedVideoContainer.innerHTML = `
+                        <div style="text-align:center;color:#999;padding:24px 16px">
+                            <div style="font-size:14px;margin-bottom:8px;">Закрепленное видео скрыто текущим фильтром</div>
+                            <div style="font-size:12px;color:#666;">${hiddenText}</div>
+                            <div style="margin-top:12px;">
+                                <button onclick="unpinVideo()" class="btn secondary">Открепить</button>
+                            </div>
+                        </div>
+                    `;
                 } else {
                     channelData.pinnedVideo = null;
                     await saveChannelData();
@@ -3667,7 +3828,9 @@ async function loadChannelVideos() {
                 const video = channelVideos.find(v => v.name === channelData.pinnedVideo);
                 if (video) {
                     const playlist = video.playlist || '';
-                    window.location.href = window.VideoID ? window.VideoID.buildVideoUrl(video.name, playlist) : `youvi_video.html?name=${encodeURIComponent(video.name)}&playlist=${encodeURIComponent(playlist)}`;
+                    window.location.href = window.VideoID
+                        ? window.VideoID.buildVideoUrl(video.name, playlist) + (currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : '')
+                        : `youvi_video.html?name=${encodeURIComponent(video.name)}&playlist=${encodeURIComponent(playlist)}${currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : ''}`;
                 }
             }
         }
@@ -4194,35 +4357,36 @@ async function loadChannelVideos() {
         }
 
         function sortVideos(videos, sortType) {
+            const sourceVideos = getRatingScopedChannelVideos(videos);
             if (CHANNEL_VIEW_DEBUG) console.log('sortVideos called with sortType:', sortType, 'and', videos.length, 'videos');
             
             if (sortType === 'new' || sortType === 'default') {
-                const sorted = videos.slice().sort((a, b) => (b.created || b.modified || 0) - (a.created || a.modified || 0));
+                const sorted = sourceVideos.slice().sort((a, b) => (b.created || b.modified || 0) - (a.created || a.modified || 0));
                 if (CHANNEL_VIEW_DEBUG) console.log('Sorted by new, first video:', sorted[0]?.name, 'created:', sorted[0]?.created, 'modified:', sorted[0]?.modified);
                 return sorted;
             }
             if (sortType === 'old') {
-                const sorted = videos.slice().sort((a, b) => (a.created || a.modified || 0) - (b.created || b.modified || 0));
+                const sorted = sourceVideos.slice().sort((a, b) => (a.created || a.modified || 0) - (b.created || b.modified || 0));
                 if (CHANNEL_VIEW_DEBUG) console.log('Sorted by old, first video:', sorted[0]?.name, 'created:', sorted[0]?.created, 'modified:', sorted[0]?.modified);
                 return sorted;
             }
             if (sortType === 'popular') {
-                const sorted = videos.slice().sort((a, b) => (b.views || 0) - (a.views || 0));
+                const sorted = sourceVideos.slice().sort((a, b) => (b.views || 0) - (a.views || 0));
                 if (CHANNEL_VIEW_DEBUG) console.log('Sorted by popular, first video:', sorted[0]?.name, 'views:', sorted[0]?.views);
                 return sorted;
             }
             if (sortType === 'alpha' || sortType === 'alphabetical') {
-                const sorted = videos.slice().sort((a, b) => naturalSort(getFileNameWithoutExtension(a.name), getFileNameWithoutExtension(b.name)));
+                const sorted = sourceVideos.slice().sort((a, b) => naturalSort(getFileNameWithoutExtension(a.name), getFileNameWithoutExtension(b.name)));
                 if (CHANNEL_VIEW_DEBUG) console.log('Sorted by alphabetical, first video:', sorted[0]?.name);
                 return sorted;
             }
             if (sortType === 'random') {
-                const sorted = videos.slice().sort(() => Math.random() - 0.5);
+                const sorted = sourceVideos.slice().sort(() => Math.random() - 0.5);
                 if (CHANNEL_VIEW_DEBUG) console.log('Sorted by random, first video:', sorted[0]?.name);
                 return sorted;
             }
             if (sortType === 'danmaku') {
-                const sorted = videos.slice().sort((a, b) => {
+                const sorted = sourceVideos.slice().sort((a, b) => {
                     const aDanmaku = a.danmakuCount || (window.DanmakuCounter ? window.DanmakuCounter.get(a.name) : 0);
                     const bDanmaku = b.danmakuCount || (window.DanmakuCounter ? window.DanmakuCounter.get(b.name) : 0);
                     return bDanmaku - aDanmaku;
@@ -4231,7 +4395,7 @@ async function loadChannelVideos() {
                 return sorted;
             }
             
-            const sorted = videos.slice().sort((a, b) => (b.created || b.modified || 0) - (a.created || a.modified || 0));
+            const sorted = sourceVideos.slice().sort((a, b) => (b.created || b.modified || 0) - (a.created || a.modified || 0));
             if (CHANNEL_VIEW_DEBUG) console.log('Default sort, first video:', sorted[0]?.name);
             return sorted;
         }
@@ -4281,7 +4445,7 @@ async function loadChannelVideos() {
                 
                 if (targetTab === 'analytics' && channelAnalyticsInstance) {
                     taskQueue.add(async () => {
-                        const analytics = await channelAnalyticsInstance.updateAnalytics(channelVideos);
+                        const analytics = await channelAnalyticsInstance.updateAnalytics(getRatingScopedChannelVideos(channelVideos));
                         channelAnalyticsInstance.renderAnalytics();
                         
                         if (channelAchievementsInstance) {
@@ -4295,6 +4459,13 @@ async function loadChannelVideos() {
                         
                         return analytics;
                     }, 2);
+                } else if (targetTab === 'home') {
+                    loadHomePage();
+                    loadPinnedVideo();
+                } else if (targetTab === 'playlists') {
+                    loadPlaylists();
+                } else if (targetTab === 'videos') {
+                    renderVideosForCurrentState();
                 }
             });
         });
@@ -4319,6 +4490,7 @@ async function loadChannelVideos() {
         
 
         document.addEventListener('DOMContentLoaded', async () => {
+            updateFooterRatingFilterUi();
             const activeTab = getUrlParam('tab');
             if (activeTab && ['home', 'videos', 'analytics', 'feed', 'playlists', 'description'].includes(activeTab)) {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -4355,10 +4527,11 @@ async function loadChannelVideos() {
             if (allTagsLink) {
                 allTagsLink.addEventListener('click', (e) => {
                     e.preventDefault();
+                    currentTagFilter = 'all';
                     document.querySelectorAll('#sidebarTagsContainer .sidebar-item').forEach(item => item.classList.remove('active'));
                     allTagsLink.classList.add('active');
                     
-                    renderVideos(channelVideos);
+                    renderVideos(sortVideos(channelVideos, currentSort));
                 });
             }
 
@@ -4378,8 +4551,7 @@ async function loadChannelVideos() {
                 
                  currentSort = 'default';
                  
-                 const sortedVideos = sortVideos(channelVideos, 'default');
-                 renderVideos(sortedVideos);
+                 renderVideosForCurrentState();
                  
                  if (document.querySelector('[data-tab="playlists"]').classList.contains('active')) {
                      loadPlaylists();
@@ -4395,8 +4567,7 @@ async function loadChannelVideos() {
                 
                  currentSort = 'new';
                  
-                 const sortedVideos = sortVideos(channelVideos, 'new');
-                 renderVideos(sortedVideos);
+                 renderVideosForCurrentState();
                  
                  if (document.querySelector('[data-tab="playlists"]').classList.contains('active')) {
                      loadPlaylists();
@@ -4412,8 +4583,7 @@ async function loadChannelVideos() {
                 
                  currentSort = 'popular';
                  
-                 const sortedVideos = sortVideos(channelVideos, 'popular');
-                 renderVideos(sortedVideos);
+                 renderVideosForCurrentState();
                  
                  if (document.querySelector('[data-tab="playlists"]').classList.contains('active')) {
                      loadPlaylists();
@@ -4429,8 +4599,7 @@ async function loadChannelVideos() {
                 
                  currentSort = 'old';
                  
-                 const sortedVideos = sortVideos(channelVideos, 'old');
-                 renderVideos(sortedVideos);
+                 renderVideosForCurrentState();
                  
                  if (document.querySelector('[data-tab="playlists"]').classList.contains('active')) {
                      loadPlaylists();
@@ -4446,8 +4615,7 @@ async function loadChannelVideos() {
                 
                  currentSort = 'random';
                  
-                 const sortedVideos = sortVideos(channelVideos, 'random');
-                 renderVideos(sortedVideos);
+                 renderVideosForCurrentState();
                  
                  if (document.querySelector('[data-tab="playlists"]').classList.contains('active')) {
                      loadPlaylists();
@@ -4463,8 +4631,7 @@ async function loadChannelVideos() {
                 
                  currentSort = 'alphabetical';
                  
-                 const sortedVideos = sortVideos(channelVideos, 'alpha');
-                 renderVideos(sortedVideos);
+                 renderVideosForCurrentState();
                  
                  if (document.querySelector('[data-tab="playlists"]').classList.contains('active')) {
                      loadPlaylists();
@@ -4481,8 +4648,7 @@ async function loadChannelVideos() {
                 
                  currentSort = 'danmaku';
                  
-                 const sortedVideos = sortVideos(channelVideos, 'danmaku');
-                 renderVideos(sortedVideos);
+                 renderVideosForCurrentState();
                  
                  if (document.querySelector('[data-tab="playlists"]').classList.contains('active')) {
                      loadPlaylists();
@@ -4543,7 +4709,7 @@ async function loadChannelVideos() {
                                 await renderSubscribedChannelsList();
                                 
                                 try {
-                                    const searchInput = document.getElementById('headerSearchInput');
+                                    const searchInput = document.getElementById('headerSearchInput') || document.getElementById('globalSearch');
                                     if (searchInput && typeof AutocompleteIntegration !== 'undefined' && typeof YouviAutocomplete !== 'undefined') {
                                         const { videos, playlists } = typeof AutocompleteDataLoader !== 'undefined' 
                                           ? await AutocompleteDataLoader.loadData() 
@@ -4555,10 +4721,55 @@ async function loadChannelVideos() {
                                         );
                                         
                                         const autocompleteIntegration = new AutocompleteIntegration();
+                                        const filterAutocompleteResultsForChannelView = (results) => {
+                                            if (!results || typeof results !== 'object') return results;
+                                            const visibleVideos = applyRatingFilterToList(Array.isArray(videos) ? videos : [], currentRatingFilter);
+                                            if (window.YouviAutocompleteFilterHelper && typeof window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos === 'function') {
+                                                return window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos(
+                                                    results,
+                                                    visibleVideos,
+                                                    playlists || []
+                                                );
+                                            }
+                                            const visibleVideoNames = new Set(visibleVideos.map(v => v && v.name).filter(Boolean));
+                                            const visibleTags = new Set();
+                                            const visibleChannels = new Set();
+
+                                            visibleVideos.forEach(video => {
+                                                const tags = Array.isArray(video && video.tags) ? video.tags : [];
+                                                tags.forEach(tag => {
+                                                    const raw = String(tag || '').trim();
+                                                    if (!raw) return;
+                                                    if (raw.includes('(ка)') || raw.includes('(КА)')) {
+                                                        visibleChannels.add(raw.replace(/\s*\((ка|КА)\)\s*$/i, '').trim().toLowerCase());
+                                                    } else {
+                                                        visibleTags.add(raw.toLowerCase());
+                                                    }
+                                                });
+                                            });
+
+                                            return {
+                                                ...results,
+                                                videos: (results.videos || []).filter(v => visibleVideoNames.has((v && (v.value || v.name)) || '')),
+                                                tags: (results.tags || []).filter(t => {
+                                                    const raw = String((t && (t.name || t.value || t.content || t.displayName)) || '').trim().toLowerCase();
+                                                    if (!raw) return false;
+                                                    if (visibleTags.has(raw)) return true;
+                                                    const noSuffix = raw.replace(/\s*\([a-zа-я]{2,3}\)\s*$/i, '').trim();
+                                                    if (!noSuffix) return false;
+                                                    for (const x of visibleTags) {
+                                                        if (x === noSuffix || x.startsWith(noSuffix + ' (')) return true;
+                                                    }
+                                                    return false;
+                                                }),
+                                                channels: (results.channels || []).filter(ch => visibleChannels.has(String((ch && (ch.value || ch.name)) || '').trim().toLowerCase()))
+                                            };
+                                        };
                                         await autocompleteIntegration.init(searchInput, {
                                           videoDirectoryHandle: videoDirectoryHandle,
                                           allVideos: cacheValid ? [] : videos,
-                                          allPlaylists: cacheValid ? [] : playlists
+                                          allPlaylists: cacheValid ? [] : playlists,
+                                          filterResults: filterAutocompleteResultsForChannelView
                                         });
                                         if (CHANNEL_VIEW_DEBUG) console.log('[Autocomplete] ✅ Initialized on youvi_ch_view.html');
                                     }
@@ -5547,6 +5758,29 @@ async function loadChannelVideos() {
         .video-thumb {
             position: relative;
         }
+
+        .video-rating-badge {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            z-index: 4;
+            line-height: 1;
+        }
+
+        .playlist-thumb .video-rating-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            bottom: 3px;
+            left: 3px;
+        }
+
+        .video-rating-badge.rating-questionable { background: rgba(255, 152, 0, 0.95); }
+        .video-rating-badge.rating-explicit { background: rgba(244, 67, 54, 0.95); }
         
         .top-video-item {
             position: relative;
@@ -5666,6 +5900,11 @@ async function loadChannelVideos() {
         .playlist-edit-btn:hover,
         .playlist-delete-btn:hover {
             background: rgba(217, 75, 136, 0.9) !important;
+        }
+
+        .footer-section a.active {
+            color: #ff69b4;
+            font-weight: 600;
         }
 
         .modal {

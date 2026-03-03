@@ -108,7 +108,22 @@ async function initializeTagSystem() {
             return;
         }
 
+        try {
+            const permission = await dirHandle.queryPermission({ mode: 'read' });
+            if (permission !== 'granted') {
+                const requested = await dirHandle.requestPermission({ mode: 'read' });
+                if (requested !== 'granted') {
+                    console.warn('[Download] Directory permission denied for tag autocomplete');
+                    return;
+                }
+            }
+        } catch (permErr) {
+            console.warn('[Download] Failed to verify directory permission for tags:', permErr);
+            return;
+        }
+
         await window.tagDatabaseManager.initialize(dirHandle);
+        await ensureTagDatabaseHasData();
         
         const tagInput = document.getElementById('videoTags');
         if (tagInput && typeof window.TagInputAutocomplete !== 'undefined') {
@@ -121,6 +136,44 @@ async function initializeTagSystem() {
         }
     } catch (err) {
         console.warn('[Download] Failed to initialize tag system:', err);
+    }
+}
+
+async function ensureTagDatabaseHasData() {
+    try {
+        if (!window.tagDatabaseManager || !window.tagDatabaseManager.isLoaded) return;
+        const existing = window.tagDatabaseManager.getAllTags();
+        if (Array.isArray(existing) && existing.length > 0) return;
+        if (typeof window.AutocompleteDataLoader === 'undefined') {
+            console.warn('[Download] AutocompleteDataLoader not available for tag DB bootstrap');
+            return;
+        }
+
+        const loaded = await window.AutocompleteDataLoader.loadData();
+        const videos = Array.isArray(loaded?.videos) ? loaded.videos : [];
+        if (!videos.length) return;
+
+        const counts = new Map();
+        videos.forEach(video => {
+            const tags = Array.isArray(video?.tags) ? video.tags : [];
+            tags.forEach(raw => {
+                const tag = String(raw || '').trim();
+                if (!tag) return;
+                counts.set(tag, (counts.get(tag) || 0) + 1);
+            });
+        });
+
+        if (!counts.size) return;
+
+        const ops = Array.from(counts.entries()).map(([tagName, count]) => ({
+            tagName,
+            options: { usageCount: count, incrementUsage: false }
+        }));
+
+        await window.tagDatabaseManager.addTagsBatch(ops);
+        console.log('[Download] Tag database bootstrapped from videos:', ops.length);
+    } catch (e) {
+        console.warn('[Download] Failed to bootstrap tag database:', e);
     }
 }
 

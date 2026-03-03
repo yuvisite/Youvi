@@ -9,6 +9,24 @@
  * @param {Object} options - Card configuration options
  * @returns {HTMLElement} Video card element
  */
+function getVideoRatingForCard(tags) {
+    if (window.YouviFilterEngine && typeof window.YouviFilterEngine.getVideoRating === 'function') {
+        return window.YouviFilterEngine.getVideoRating(tags || []);
+    }
+    if (!Array.isArray(tags) || tags.length === 0) return 'safe';
+    let result = 'safe';
+    for (const rawTag of tags) {
+        if (!rawTag) continue;
+        const normalized = String(rawTag).toLowerCase().trim();
+        const match = normalized.match(/^(.+?)\s*\(ra\)$/);
+        if (!match) continue;
+        const value = match[1].trim();
+        if (value === 'explicit') return 'explicit';
+        if (value === 'questionable' && result !== 'explicit') result = 'questionable';
+    }
+    return result;
+}
+
 function createVideoCard(video, options = {}) {
     const config = {
         showNumber: false,
@@ -73,6 +91,14 @@ function createVideoCard(video, options = {}) {
         newBadge.className = 'video-new';
         newBadge.textContent = typeof i18n !== 'undefined' ? i18n.t('badges.new', 'Новинка') : 'Новинка';
         thumbnail.appendChild(newBadge);
+    }
+
+    const rating = getVideoRatingForCard(video && video.tags ? video.tags : []);
+    if (rating === 'questionable' || rating === 'explicit') {
+        const ratingBadge = document.createElement('div');
+        ratingBadge.className = `video-rating-badge rating-${rating}`;
+        ratingBadge.textContent = 'Archived';
+        thumbnail.appendChild(ratingBadge);
     }
 
     if (config.showDuration) {

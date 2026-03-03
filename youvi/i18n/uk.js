@@ -209,7 +209,13 @@ window.uk = {
         cleanView: 'Чистий вигляд',
         cleanViewTitle: 'Сховати праву панель для більшого простору',
         forumActivity: 'Активність форуму',
-        forumActivityAll: 'Всі'
+        forumActivityAll: 'Всі',
+        noSubscriptions: 'Немає підписок',
+        loadingError: 'Помилка завантаження',
+        filter: 'Фільтр',
+        filterAll: 'Всі',
+        filterGeneral: 'Загальні',
+        filterArchived: 'Архів'
     },
     
     main: {

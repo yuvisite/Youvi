@@ -31,6 +31,7 @@
     
     <!-- Search Logic -->
     <script src="youvi/search/search-logic.js"></script>
+    <script src="youvi/filter/filter-engine.js"></script>
     
     <!-- Danmaku Counter -->
     <script src="youvi/danmaku-counter.js"></script>
@@ -265,6 +266,10 @@
         .video-quality[data-quality="480p"] { background: rgba(255,152,0,0.8); }
         .video-quality[data-quality="SD"] { background: rgba(102,102,102,0.8); }
         .video-new { position: absolute; top: 5px; right: 5px; background: #ff4444; padding: 2px 6px; border-radius: 2px; font-size: 10px; color: #fff; z-index: 3; font-weight: bold; text-transform: uppercase; }
+        .video-rating-badge { position: absolute; bottom: 5px; left: 5px; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; color: #fff; z-index: 4; line-height: 1; }
+        .playlist-thumb .video-rating-badge { font-size: 10px; padding: 2px 6px; bottom: 3px; left: 3px; }
+        .video-rating-badge.rating-questionable { background: rgba(255, 152, 0, 0.95); }
+        .video-rating-badge.rating-explicit { background: rgba(244, 67, 54, 0.95); }
         .video-info { padding: 0 5px; width: 100%; min-width: 0; overflow-wrap: break-word; word-break: break-word; }
         .video-card-title { font-size: 12px; margin-bottom: 2px; color: #111; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-clamp: 2; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; }
         .video-views { font-size: 10px; color: #666; margin-top: 1px; display: flex; align-items: center; gap: 4px; }
@@ -308,6 +313,8 @@
 
 
         .video-meta-line { font-size: 10px; color:#666; margin-top: 2px; display:flex; gap:8px; flex-wrap:wrap; }
+        .video-stats { font-size: 11px; color:#888; margin-top: 2px; }
+        .video-date { font-size: 11px; color:#888; margin-top: 2px; }
         .video-views-line { font-size: 10px; color:#666; margin-top: 2px; }
         .video-likes-line { font-size: 10px; color:#666; margin-top: 2px; }
         .video-dates-line { font-size: 10px; color:#777; margin-top: 2px; display:flex; gap:8px; flex-wrap:wrap; }
@@ -332,6 +339,7 @@
         .footer-section li { margin-bottom: 6px; }
         .footer-section a { color: #ccc; text-decoration: none; font-size: 11px; transition: color 0.2s; }
         .footer-section a:hover { color: #ff69b4; }
+        .footer-section a.active { color: #ff69b4; font-weight: 600; }
         .footer-bottom { border-top: 1px solid #444; margin-top: 20px; padding-top: 15px; text-align: center; color: #999; font-size: 10px; }
         
         @media (max-width: 768px) {
@@ -1105,7 +1113,63 @@
     let currentView = __params.get('view') || localStorage.getItem('youvi_search_view') || 'grid';
     let currentType = __params.get('type') || localStorage.getItem('youvi_search_type') || 'videos';
     let currentPage = parseInt(__params.get('page')||'1', 10) || 1;
+    const initialRatingFilter = __params.get('rating') || localStorage.getItem('youvi_rating_filter') || 'all';
     const ITEMS_PER_PAGE = 48;
+    if (!window.currentRatingFilter) window.currentRatingFilter = initialRatingFilter;
+
+    function getCurrentRatingFilter() {
+      return window.currentRatingFilter || initialRatingFilter || 'all';
+    }
+
+    function applyRatingFilterToList(videos, mode) {
+      const list = Array.isArray(videos) ? videos : [];
+      const effectiveMode = mode || getCurrentRatingFilter();
+      if (window.YouviFilterEngine && typeof window.YouviFilterEngine.applyRatingFilterToVideos === 'function') {
+        return window.YouviFilterEngine.applyRatingFilterToVideos(list, effectiveMode);
+      }
+      return list;
+    }
+
+    function getVideoRatingForSearch(tags) {
+      if (window.YouviFilterEngine && typeof window.YouviFilterEngine.getVideoRating === 'function') {
+        return window.YouviFilterEngine.getVideoRating(tags || []);
+      }
+      return 'safe';
+    }
+
+    function getVideoRatingBadgeHtml(video) {
+      const rating = getVideoRatingForSearch(video && video.tags ? video.tags : []);
+      if (rating !== 'questionable' && rating !== 'explicit') return '';
+      return `<div class="video-rating-badge rating-${rating}">Archived</div>`;
+    }
+
+    function updateFooterRatingFilterUi() {
+      const map = {
+        all: 'footerFilterAll',
+        general: 'footerFilterGeneral',
+        archived: 'footerFilterArchived'
+      };
+      ['footerFilterAll', 'footerFilterGeneral', 'footerFilterArchived'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+      const activeId = map[getCurrentRatingFilter()] || map.all;
+      const activeEl = document.getElementById(activeId);
+      if (activeEl) activeEl.classList.add('active');
+    }
+
+    function setRatingFilter(mode) {
+      const normalized = mode === 'all' || mode === 'general' || mode === 'archived' ? mode : 'all';
+      if (getCurrentRatingFilter() === normalized) return;
+      window.currentRatingFilter = normalized;
+      try {
+        localStorage.setItem('youvi_rating_filter', normalized);
+      } catch (_) {}
+      currentPage = 1;
+      updateFooterRatingFilterUi();
+      updateUrlAndMaybeSearch();
+      window.dispatchEvent(new CustomEvent('youvi:ratingFilterChanged', { detail: { mode: normalized } }));
+    }
 
 
     async function openDB(){
@@ -1398,7 +1462,7 @@ async function loadChannelIndex(){
 
         if (currentType === 'playlists'){
           const card=document.createElement('div'); card.className='video-card';
-          const url=`youvi_playlists_view.html?playlistId=${encodeURIComponent(v.id||v.title||'')}`;
+          const url=`youvi_playlists_view.html?playlistId=${encodeURIComponent(v.id||v.title||'')}${getCurrentRatingFilter() !== 'all' ? `&rating=${encodeURIComponent(getCurrentRatingFilter())}` : ''}`;
 
           const link=document.createElement('a'); link.className='video-thumbnail'; link.href=url;
           const thumbGrid=document.createElement('div'); thumbGrid.className='playlist-thumbnail';
@@ -1407,13 +1471,17 @@ async function loadChannelIndex(){
             const cell=document.createElement('div'); cell.className='playlist-thumb';
             if (v.videos && v.videos[i]){
               const pv = v.videos[i];
+              const ratingBadgeHtml = getVideoRatingBadgeHtml(pv);
               cell.textContent = getFileNameWithoutExtension(pv.name).slice(0,10) + '…';
 
               getPreviewAndDuration(pv).then(({preview})=>{
                 if (preview) {
-                  cell.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover">`;
+                  cell.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover">${ratingBadgeHtml}`;
                 }
               }).catch(()=>{  });
+              if (ratingBadgeHtml) {
+                cell.innerHTML = `${escapeHtml(getFileNameWithoutExtension(pv.name).slice(0,10) + '…')}${ratingBadgeHtml}`;
+              }
             }
             thumbGrid.appendChild(cell);
           }
@@ -1434,8 +1502,8 @@ async function loadChannelIndex(){
         const card=document.createElement('div'); card.className='video-card';
         const link=document.createElement('a'); link.className='video-thumbnail'; 
         const url = window.VideoID 
-            ? window.VideoID.buildVideoUrl(v.name)
-            : `youvi_video.html?name=${encodeURIComponent(v.name)}&playlist=`; 
+            ? window.VideoID.buildVideoUrl(v.name) + (getCurrentRatingFilter() !== 'all' ? `&rating=${encodeURIComponent(getCurrentRatingFilter())}` : '')
+            : `youvi_video.html?name=${encodeURIComponent(v.name)}${getCurrentRatingFilter() !== 'all' ? `&rating=${encodeURIComponent(getCurrentRatingFilter())}` : ''}`; 
         link.href=url;
 
         if (!v.file || !v.handle) {
@@ -1457,6 +1525,8 @@ async function loadChannelIndex(){
         
         const badges=[]; const q=getVideoQuality(v); if(q){ badges.push(`<div class="video-quality" data-quality="${q}">${q}</div>`); }
         if (v.created && (Date.now()-v.created) < 24*60*60*1000){ badges.push(`<div class="video-new">Новинка</div>`); }
+        const ratingBadgeHtml = getVideoRatingBadgeHtml(v);
+        if (ratingBadgeHtml) badges.push(ratingBadgeHtml);
         link.innerHTML = `<div class="video-duration">...</div>${badges.join('')}<div style="width:100%;height:100%;background:#eee;display:flex;align-items:center;justify-content:center;color:#111;font-size:10px;text-align:center;padding:5px;">${escapeHtml(getFileNameWithoutExtension(v.name))}</div>`;
         const info=document.createElement('div'); info.className='video-info';
 
@@ -1500,11 +1570,11 @@ async function loadChannelIndex(){
         if (currentView === 'list' || currentView === 'compact') {
             // List/Compact: all in one line
             const fontSize = currentView === 'compact' ? '12px' : '14px';
-            metaLine = `<div class="video-meta-line" style="color:#888;font-size:${fontSize};">${dateStr ? dateStr + ' • ' : ''}${viewsSvg} ${viewsCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}</div>`;
+            metaLine = `<div class="video-stats" style="color:#888;font-size:${fontSize};">${dateStr ? dateStr + ' • ' : ''}${viewsSvg} ${viewsCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}</div>`;
         } else {
             // Grid: separate lines
-            const dateLine = dateStr ? `<div class="video-meta-line" style="color:#888;font-size:14px;">${dateStr}</div>` : '';
-            const statsLine = `<div class="video-meta-line" style="color:#888;font-size:14px;">${viewsSvg} ${viewsCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}</div>`;
+            const dateLine = dateStr ? `<div class="video-date">${dateStr}</div>` : '';
+            const statsLine = `<div class="video-stats">${viewsSvg} ${viewsCount.toLocaleString()} • ${danmakuSvg} ${danmakuCount}</div>`;
             metaLine = dateLine + statsLine;
         }
 
@@ -1599,6 +1669,7 @@ async function loadChannelIndex(){
     }
 
     document.addEventListener('DOMContentLoaded', async ()=>{
+      updateFooterRatingFilterUi();
       // Read search query from URL
       const urlParams = new URLSearchParams(window.location.search);
       const queryFromUrl = urlParams.get('q');
@@ -1781,10 +1852,55 @@ async function loadChannelIndex(){
                 );
                 
                 const autocompleteIntegration = new AutocompleteIntegration();
+                const filterAutocompleteResultsForSearchPage = (results) => {
+                  if (!results || typeof results !== 'object') return results;
+                  const visibleVideos = applyRatingFilterToList(allVideos, getCurrentRatingFilter());
+                  if (window.YouviAutocompleteFilterHelper && typeof window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos === 'function') {
+                    return window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos(
+                      results,
+                      visibleVideos,
+                      allPlaylists || []
+                    );
+                  }
+                  const visibleVideoNames = new Set(visibleVideos.map(v => v && v.name).filter(Boolean));
+                  const visibleTags = new Set();
+                  const visibleChannels = new Set();
+
+                  visibleVideos.forEach(video => {
+                    const tags = Array.isArray(video && video.tags) ? video.tags : [];
+                    tags.forEach(tag => {
+                      const raw = String(tag || '').trim();
+                      if (!raw) return;
+                      if (raw.includes('(ка)') || raw.includes('(КА)')) {
+                        visibleChannels.add(raw.replace(/\s*\((ка|КА)\)\s*$/i, '').trim().toLowerCase());
+                      } else {
+                        visibleTags.add(raw.toLowerCase());
+                      }
+                    });
+                  });
+
+                  return {
+                    ...results,
+                    videos: (results.videos || []).filter(v => visibleVideoNames.has((v && (v.value || v.name)) || '')),
+                    tags: (results.tags || []).filter(t => {
+                      const raw = String((t && (t.name || t.value || t.content || t.displayName)) || '').trim().toLowerCase();
+                      if (!raw) return false;
+                      if (visibleTags.has(raw)) return true;
+                      const noSuffix = raw.replace(/\s*\([a-zа-я]{2,3}\)\s*$/i, '').trim();
+                      if (!noSuffix) return false;
+                      for (const x of visibleTags) {
+                        if (x === noSuffix || x.startsWith(noSuffix + ' (')) return true;
+                      }
+                      return false;
+                    }),
+                    channels: (results.channels || []).filter(ch => visibleChannels.has(String((ch && (ch.value || ch.name)) || '').trim().toLowerCase()))
+                  };
+                };
                 await autocompleteIntegration.init(searchInput, {
                   videoDirectoryHandle: videoDirectoryHandle,
                   allVideos: cacheValid ? [] : (allVideos || []),
                   allPlaylists: cacheValid ? [] : (allPlaylists || []),
+                  filterResults: filterAutocompleteResultsForSearchPage,
                   
                   onTagSelect: (tagName) => {
                     searchInput.value = tagName;
@@ -1792,11 +1908,11 @@ async function loadChannelIndex(){
                   },
                   
                   onVideoSelect: (videoName) => {
-                    window.location.href = `youvi_video.html?v=${encodeURIComponent(videoName)}`;
+                    window.location.href = `youvi_video.html?name=${encodeURIComponent(videoName)}${getCurrentRatingFilter() !== 'all' ? `&rating=${encodeURIComponent(getCurrentRatingFilter())}` : ''}`;
                   },
                   
                   onPlaylistSelect: (playlistId) => {
-                    window.location.href = `youvi_playlists_view.html?id=${playlistId}`;
+                    window.location.href = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlistId)}${getCurrentRatingFilter() !== 'all' ? `&rating=${encodeURIComponent(getCurrentRatingFilter())}` : ''}`;
                   },
                   
                   onChannelSelect: (channelName) => {
@@ -1888,6 +2004,7 @@ async function loadChannelIndex(){
       if (q) url.searchParams.set('q', q); else url.searchParams.delete('q');
       if (currentType) url.searchParams.set('type', currentType);
       if (currentView) url.searchParams.set('view', currentView);
+      if (getCurrentRatingFilter() === 'all') url.searchParams.delete('rating'); else url.searchParams.set('rating', getCurrentRatingFilter());
       if (currentPage && currentPage>1) url.searchParams.set('page', String(currentPage)); else url.searchParams.delete('page');
       window.history.replaceState({}, '', url.toString());
 
@@ -1901,7 +2018,7 @@ async function loadChannelIndex(){
         return;
       }
       
-      if (q) runSearch(q); else renderResults([]);
+      if (q) runSearch(q); else refreshResults();
     }
 
     function applyQueryFromInput(){
@@ -2070,6 +2187,10 @@ async function loadChannelIndex(){
                             <li><a href="wiki/about.html" data-i18n="footer.aboutSite">Про сайт</a></li>
                             <li><a href="wiki/docs.html" data-i18n="footer.docs">Документация</a></li>
                             <li><a href="wiki/tech.html" data-i18n="footer.tech">Технологии</a></li>
+                            <li style="margin-top: 10px; color:#fff; font-weight:600;" data-i18n="sidebar.filter">Фильтр</li>
+                            <li><a href="#" id="footerFilterAll" data-i18n="sidebar.filterAll" onclick="setRatingFilter('all'); return false;">Все</a></li>
+                            <li><a href="#" id="footerFilterGeneral" data-i18n="sidebar.filterGeneral" onclick="setRatingFilter('general'); return false;">Общие</a></li>
+                            <li><a href="#" id="footerFilterArchived" data-i18n="sidebar.filterArchived" onclick="setRatingFilter('archived'); return false;">Архив</a></li>
                         </ul>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1032,6 +1032,11 @@
             color: #ff69b4;
         }
 
+        .footer-section a.active {
+            color: #ff69b4;
+            font-weight: 600;
+        }
+
         .footer-bottom {
             border-top: 1px solid #444;
             margin-top: 20px;
@@ -1677,6 +1682,12 @@
                             <li><a href="wiki/docs.html" data-i18n="footer.docs">Документация</a></li>
                             <li><a href="wiki/tech.html" data-i18n="footer.tech">Технологии</a></li>
                         </ul>
+                        <h3 style="margin-top: 14px;" data-i18n="sidebar.filter">Фильтр</h3>
+                        <ul>
+                            <li><a href="youvi_subscriptions.html?rating=all" data-i18n="sidebar.filterAll" id="footerFilterAll">Все</a></li>
+                            <li><a href="youvi_subscriptions.html?rating=general" data-i18n="sidebar.filterGeneral" id="footerFilterGeneral">Общие</a></li>
+                            <li><a href="youvi_subscriptions.html?rating=archived" data-i18n="sidebar.filterArchived" id="footerFilterArchived">Архив</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -1704,6 +1715,7 @@
         let videosPerPage = 60;
         let currentSort = 'date';
         let currentTimeFilter = 'all';
+        let currentRatingFilter = 'all';
         let currentSearchQuery = '';
         let videoDirectoryHandle = null;
         window.videoDirectoryHandle = null;
@@ -1717,6 +1729,78 @@
         let initialLoadComplete = false;
         const SCAN_INTERVAL = 5 * 60 * 1000;
         const BATCH_SIZE = 100;
+
+        function normalizeRatingFilter(mode) {
+            if (mode === 'all' || mode === 'general' || mode === 'archived') return mode;
+            return 'all';
+        }
+
+        function getRatingFilterFromUrl() {
+            try {
+                const params = new URLSearchParams(window.location.search || '');
+                const fromUrl = params.get('rating');
+                const fromStorage = localStorage.getItem('youvi_rating_filter');
+                return normalizeRatingFilter(fromUrl || fromStorage || 'all');
+            } catch (e) {
+                return 'all';
+            }
+        }
+
+        function isVideoAllowedByRating(video) {
+            if (!video) return false;
+            if (typeof window.YouviFilterEngine?.applyRatingFilterToVideos === 'function') {
+                return window.YouviFilterEngine.applyRatingFilterToVideos([video], currentRatingFilter).length > 0;
+            }
+            return true;
+        }
+
+        function updateFooterFilterLinks() {
+            const allLink = document.getElementById('footerFilterAll');
+            const generalLink = document.getElementById('footerFilterGeneral');
+            const archivedLink = document.getElementById('footerFilterArchived');
+            [allLink, generalLink, archivedLink].forEach(link => link && link.classList.remove('active'));
+            if (currentRatingFilter === 'all' && allLink) allLink.classList.add('active');
+            if (currentRatingFilter === 'general' && generalLink) generalLink.classList.add('active');
+            if (currentRatingFilter === 'archived' && archivedLink) archivedLink.classList.add('active');
+        }
+
+        function setRatingFilter(mode, updateUrl = true) {
+            currentRatingFilter = normalizeRatingFilter(mode);
+            try {
+                localStorage.setItem('youvi_rating_filter', currentRatingFilter);
+            } catch (_) {}
+            updateFooterFilterLinks();
+            currentPage = 1;
+            filterVideos();
+
+            if (updateUrl) {
+                const url = new URL(window.location.href);
+                if (currentRatingFilter === 'all') url.searchParams.delete('rating');
+                else url.searchParams.set('rating', currentRatingFilter);
+                history.replaceState({}, '', url.toString());
+            }
+
+            try {
+                window.dispatchEvent(new CustomEvent('youvi:ratingFilterChanged', { detail: { mode: currentRatingFilter } }));
+            } catch (_) {}
+        }
+
+        function bindFooterFilterEvents() {
+            const map = [
+                { id: 'footerFilterAll', mode: 'all' },
+                { id: 'footerFilterGeneral', mode: 'general' },
+                { id: 'footerFilterArchived', mode: 'archived' }
+            ];
+
+            map.forEach(({ id, mode }) => {
+                const link = document.getElementById(id);
+                if (!link) return;
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    setRatingFilter(mode, true);
+                });
+            });
+        }
         
         function showLoadingProgress() {
             let progressBar = document.getElementById('loadingProgress');
@@ -2006,6 +2090,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
+            currentRatingFilter = getRatingFilterFromUrl();
+            updateFooterFilterLinks();
+            bindFooterFilterEvents();
+
             if (!supportsFS) {
                 document.getElementById('subscriptionContent').innerHTML = 
                     '<div class="empty-state" style="color:red"><strong>File System API не поддерживается в этом браузере. Используйте Chrome/Edge.</strong></div>';
@@ -2991,6 +3079,10 @@
             const oneMonthMs = 30 * oneDayMs;
 
             filteredVideos = allVideos.filter(video => {
+                if (!isVideoAllowedByRating(video)) {
+                    return false;
+                }
+
                 if (currentTimeFilter !== 'all') {
                     const videoAge = now - (video.created || 0);
                     switch (currentTimeFilter) {
@@ -3128,6 +3220,10 @@
                 const q = getVideoQuality(v);
                 if (q) { badges.push(`<div class="video-quality" data-quality="${q}">${q}</div>`); }
                 if (v.created && (Date.now() - v.created) < 24 * 60 * 60 * 1000) { badges.push(`<div class="video-new">Новинка</div>`); }
+                const rating = getVideoRatingForList(v.tags || []);
+                if (rating === 'questionable' || rating === 'explicit') {
+                    badges.push(`<div class="video-rating-badge rating-${rating}">Archived</div>`);
+                }
                 link.innerHTML = `<div class="video-duration">...</div>${badges.join('')}<div style="width:100%;height:100%;background:#eee;display:flex;align-items:center;justify-content:center;color:#111;font-size:10px;text-align:center;padding:5px;">${escapeHtml(getFileNameWithoutExtension(v.name))}</div>`;
 
                 const info = document.createElement('div');
@@ -3884,6 +3980,7 @@
                 
                 const existingQuality = thumbnailElement.querySelector('.video-quality');
                 const existingNew = thumbnailElement.querySelector('.video-new');
+                const existingRating = thumbnailElement.querySelector('.video-rating-badge');
                 
                 thumbnailElement.innerHTML = '';
                 
@@ -3894,6 +3991,7 @@
                 
                 if (existingQuality) thumbnailElement.appendChild(existingQuality);
                 if (existingNew) thumbnailElement.appendChild(existingNew);
+                if (existingRating) thumbnailElement.appendChild(existingRating);
                 
                 if (preview) {
                     const img = document.createElement('img');
@@ -3932,6 +4030,13 @@
                 return 'SD';
             }
             return null;
+        }
+
+        function getVideoRatingForList(tags) {
+            if (window.YouviFilterEngine && typeof window.YouviFilterEngine.getVideoRating === 'function') {
+                return window.YouviFilterEngine.getVideoRating(tags || []);
+            }
+            return 'safe';
         }
 
         function getnameWithoutExtension(name) {
@@ -4012,6 +4117,7 @@
     </script>
     
     <!-- Autocomplete Module -->
+    <script src="youvi/filter/filter-engine.js"></script>
     <link rel="stylesheet" href="youvi/autocomplete/autocomplete.css">
     <script src="youvi/autocomplete-data-loader.js"></script>
     <script src="youvi/autocomplete/autocomplete-cache.js"></script>

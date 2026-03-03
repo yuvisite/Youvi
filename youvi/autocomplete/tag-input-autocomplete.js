@@ -265,10 +265,21 @@ class TagInputAutocomplete {
       }
       
       const existingTags = this.getExistingTags();
-      const filteredResults = results.filter(tag => {
+      let filteredResults = results.filter(tag => {
         const normalized = tag.canonical.toLowerCase();
         return !existingTags.some(existing => existing.toLowerCase() === normalized);
       });
+
+      if (typeof this.options.filterResults === 'function') {
+        try {
+          const customFiltered = this.options.filterResults(filteredResults, query);
+          if (Array.isArray(customFiltered)) {
+            filteredResults = customFiltered;
+          }
+        } catch (filterError) {
+          console.warn('[TagInputAutocomplete] filterResults hook failed:', filterError);
+        }
+      }
       
       this.currentResults = filteredResults.slice(0, this.options.maxResults);
       this.render(this.currentResults, query);

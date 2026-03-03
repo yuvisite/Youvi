@@ -40,6 +40,7 @@
     <link rel="stylesheet" href="youvi/themes/dark-theme.css">
     <link rel="stylesheet" href="youvi/themes/theme-dropdown.css">
     <script src="youvi/themes/theme-toggle.js"></script>
+    <script src="youvi/filter/filter-engine.js"></script>
     <link rel="stylesheet" href="youvi/sticky-video.css">
     
     <style>
@@ -415,6 +416,29 @@
             border-radius: 2px;
             font-size: 11px;
             color: #fff; }
+
+        .video-rating-badge {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            z-index: 4;
+            line-height: 1;
+        }
+
+        .playlist-thumb .video-rating-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            bottom: 3px;
+            left: 3px;
+        }
+
+        .video-rating-badge.rating-questionable { background: rgba(255, 152, 0, 0.95); }
+        .video-rating-badge.rating-explicit { background: rgba(244, 67, 54, 0.95); }
 
         .video-info {
             padding: 0 5px;
@@ -938,6 +962,11 @@
             color: #ff69b4;
         }
 
+        #footerRatingFilter a.active {
+            color: #ff69b4;
+            font-weight: 700;
+        }
+
         .footer-bottom {
             border-top: 1px solid #444;
             margin-top: 20px;
@@ -1347,6 +1376,12 @@
                             <li><a href="wiki/docs.html" data-i18n="footer.docs">Документация</a></li>
                             <li><a href="wiki/tech.html" data-i18n="footer.tech">Технологии</a></li>
                         </ul>
+                        <h3>Фильтр</h3>
+                        <ul id="footerRatingFilter">
+                            <li><a href="#" id="footerFilterAll" onclick="setRatingFilter('all'); return false;">Все</a></li>
+                            <li><a href="#" id="footerFilterGeneral" onclick="setRatingFilter('general'); return false;">Общие</a></li>
+                            <li><a href="#" id="footerFilterArchived" onclick="setRatingFilter('archived'); return false;">Архив</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -1380,9 +1415,98 @@
       let currentSearchQuery = new URLSearchParams(window.location.search).get('search') || '';
       let currentSort = new URLSearchParams(window.location.search).get('sort') || localStorage.getItem('playlistSort') || 'new';
       let currentFilter = new URLSearchParams(window.location.search).get('tag') || 'all';
+      let currentRatingFilter = new URLSearchParams(window.location.search).get('rating') || localStorage.getItem('youvi_rating_filter') || 'all';
       let db = null;
       let currentEditingPlaylist = null;
       let editingSelectedVideos = new Set();
+
+      function applyRatingFilterToList(videos, mode) {
+        const list = Array.isArray(videos) ? videos : [];
+        const effectiveMode = mode || currentRatingFilter || 'all';
+        if (window.YouviFilterEngine && typeof window.YouviFilterEngine.applyRatingFilterToVideos === 'function') {
+          return window.YouviFilterEngine.applyRatingFilterToVideos(list, effectiveMode);
+        }
+        return list;
+      }
+
+      function getPlaylistVideosForCurrentRating(playlist) {
+        const source = (playlist && Array.isArray(playlist.videos)) ? playlist.videos : [];
+        return applyRatingFilterToList(source, currentRatingFilter);
+      }
+
+      function updateFooterRatingFilterUi() {
+        const map = {
+          all: 'footerFilterAll',
+          general: 'footerFilterGeneral',
+          archived: 'footerFilterArchived'
+        };
+        ['footerFilterAll', 'footerFilterGeneral', 'footerFilterArchived'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.remove('active');
+        });
+        const activeId = map[currentRatingFilter] || map.all;
+        const activeEl = document.getElementById(activeId);
+        if (activeEl) activeEl.classList.add('active');
+      }
+
+      function setRatingFilter(mode) {
+        const normalized = mode === 'all' || mode === 'general' || mode === 'archived' ? mode : 'all';
+        if (currentRatingFilter === normalized) return;
+        currentRatingFilter = normalized;
+        try {
+          localStorage.setItem('youvi_rating_filter', currentRatingFilter);
+        } catch (e) {}
+        updateFooterRatingFilterUi();
+        updateUrlParameter('rating', currentRatingFilter === 'all' ? null : currentRatingFilter);
+        currentPage = 1;
+        applyFiltersAndRender();
+      }
+
+      function filterAutocompleteResultsForPlaylistsList(results) {
+        if (!results || typeof results !== 'object') return results;
+
+        const visibleVideos = applyRatingFilterToList(allVideos, currentRatingFilter);
+        if (window.YouviAutocompleteFilterHelper && typeof window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos === 'function') {
+          return window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos(
+            results,
+            visibleVideos,
+            allPlaylists || []
+          );
+        }
+        const visibleVideoNames = new Set(visibleVideos.map(v => v && v.name).filter(Boolean));
+        const visibleTags = new Set();
+        const visibleChannels = new Set();
+
+        visibleVideos.forEach(video => {
+          const tags = Array.isArray(video && video.tags) ? video.tags : [];
+          tags.forEach(tag => {
+            const raw = String(tag || '').trim();
+            if (!raw) return;
+            if (raw.includes('(ка)') || raw.includes('(РєР°)')) {
+              visibleChannels.add(raw.replace(/\s*\((ка|РєР°)\)\s*$/i, '').trim().toLowerCase());
+            } else {
+              visibleTags.add(raw.toLowerCase());
+            }
+          });
+        });
+
+        return {
+          ...results,
+          videos: (results.videos || []).filter(v => visibleVideoNames.has((v && (v.value || v.name)) || '')),
+          tags: (results.tags || []).filter(t => {
+            const raw = String((t && (t.name || t.value || t.content || t.displayName)) || '').trim().toLowerCase();
+            if (!raw) return false;
+            if (visibleTags.has(raw)) return true;
+            const noSuffix = raw.replace(/\s*\([a-zа-я]{2,3}\)\s*$/i, '').trim();
+            if (!noSuffix) return false;
+            for (const x of visibleTags) {
+              if (x === noSuffix || x.startsWith(noSuffix + ' (')) return true;
+            }
+            return false;
+          }),
+          channels: (results.channels || []).filter(ch => visibleChannels.has(String((ch && (ch.value || ch.name)) || '').trim().toLowerCase()))
+        };
+      }
 
       let modalVideosPerPage = 50;
       let currentModalPage = 1;
@@ -1846,7 +1970,7 @@
           const item = document.createElement('div');
           item.className = 'playlist-item';
 
-          const playlistUrl = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlist.id)}`;
+          const playlistUrl = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlist.id)}${currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : ''}`;
 
           const hiddenLink = document.createElement('a');
           hiddenLink.href = playlistUrl;
@@ -1862,13 +1986,20 @@
             cell.className = 'playlist-thumb';
             if (playlist.videos && playlist.videos[i]){
               const v = playlist.videos[i];
+              const foundVideo = allVideos.find(av => av.name === v.name);
+              const previewVideo = foundVideo ? { ...foundVideo, ...v } : v;
+              const ratingBadgeHtml = getVideoRatingBadgeHtml(previewVideo);
               cell.textContent = getFileNameWithoutExtension(v.name).slice(0,10) + '...';
               cell.setAttribute('data-video-name', v.name);
 
-              if (v.file && v.handle) {
-                getPreviewAndDuration(v).then(({preview})=>{
-                  cell.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover">`;
+              if (previewVideo.preview) {
+                cell.innerHTML = `<img src="${previewVideo.preview}" style="width:100%;height:100%;object-fit:cover">${ratingBadgeHtml}`;
+              } else if (previewVideo.file) {
+                getPreviewAndDuration(previewVideo).then(({preview})=>{
+                  cell.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover">${ratingBadgeHtml}`;
                 }).catch(()=>{ });
+              } else if (ratingBadgeHtml) {
+                cell.innerHTML = `${escapeHtml(getFileNameWithoutExtension(v.name).slice(0,10) + '...')}${ratingBadgeHtml}`;
               }
             }
             thumbGrid.appendChild(cell);
@@ -1895,7 +2026,7 @@
           viewBtn.className = 'action-btn';
           viewBtn.title = i18n.t('playlists.view', 'View');
           viewBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
-          viewBtn.onclick = (e)=>{ e.stopPropagation(); window.location.href = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlist.id)}`; };
+          viewBtn.onclick = (e)=>{ e.stopPropagation(); window.location.href = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlist.id)}${currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : ''}`; };
 
           const editBtn = document.createElement('button');
           editBtn.className = 'action-btn';
@@ -1922,13 +2053,14 @@
             if (e.target.closest('.playlist-actions')) {
               return;
             }
-            window.location.href = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlist.id)}`;
+            window.location.href = `youvi_playlists_view.html?playlistId=${encodeURIComponent(playlist.id)}${currentRatingFilter !== 'all' ? `&rating=${encodeURIComponent(currentRatingFilter)}` : ''}`;
           });
 
           grid.appendChild(item);
         }
 
         renderPagination(totalPages);
+        queueVisiblePreviewRefresh();
       }
 
       function getFileNameWithoutExtension(name){ return name.replace(/\.[^/.]+$/,""); }
@@ -2173,7 +2305,7 @@
           applyFiltersAndRender();
           renderSidebarCategories();
 
-          setTimeout(() => backgroundScanForHandles(), 50);
+          setTimeout(() => queueVisiblePreviewRefresh(), 50);
         }catch(e){ console.error('createGlobalPlaylist error', e); alert(i18n.t('playlists.errorCreating')); }
       }
 
@@ -2368,7 +2500,7 @@
           filteredPlaylists = [...allPlaylists];
           renderPlaylists();
 
-          setTimeout(() => backgroundScanForHandles(), 50);
+          setTimeout(() => queueVisiblePreviewRefresh(), 50);
         }catch(e){ console.error('saveEditedPlaylist error', e); alert(i18n.t('playlists.errorSaving')); }
       }
 
@@ -2430,12 +2562,13 @@
       function createOptimizedVideoPreviewTask(video, thumbnailElement, isModal = false) {
         return async () => {
           try {
+            const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
 
             const cacheKey = `preview_${video.name}`;
             if (modalVideoPreviewCache.has(cacheKey)) {
               const cached = modalVideoPreviewCache.get(cacheKey);
               if (Date.now() - cached.timestamp < 300000) {
-                thumbnailElement.innerHTML = `<img src="${cached.preview}" style="width:100%;height:100%;object-fit:cover;">`;
+                thumbnailElement.innerHTML = `<img src="${cached.preview}" style="width:100%;height:100%;object-fit:cover;">${ratingBadgeHtml}`;
                 const durationElement = document.createElement('div');
                 durationElement.className = 'video-duration';
                 durationElement.textContent = cached.duration;
@@ -2457,7 +2590,7 @@
             }
 
             if (preview) {
-              thumbnailElement.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover;">`;
+              thumbnailElement.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover;">${ratingBadgeHtml}`;
             }
             const durationElement = document.createElement('div');
             durationElement.className = 'video-duration';
@@ -2465,7 +2598,9 @@
             thumbnailElement.appendChild(durationElement);
           } catch (e) {
             console.error('Error loading preview for', video.name, e);
+            const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
             thumbnailElement.innerHTML = `
+              ${ratingBadgeHtml}
               <div class="video-duration">0:00</div>
               <div style="width:100%;height:100%;background:#333;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;text-align:center;padding:5px;">
                 ${escapeHtml(getFileNameWithoutExtension(video.name))}
@@ -2483,20 +2618,22 @@
         if (!videoCarousel) return;
 
         videoCarousel.innerHTML = '';
+        const ratingScopedVideos = getPlaylistVideosForCurrentRating(playlist);
 
         const currentVideoPage = carouselVideoPages.get(playlist.id) || 1;
-        const totalVideoPages = Math.ceil((playlist.videos ? playlist.videos.length : 0) / videosPerPage);
+        const totalVideoPages = Math.ceil((ratingScopedVideos ? ratingScopedVideos.length : 0) / videosPerPage);
         const videoStart = (currentVideoPage - 1) * videosPerPage;
-        const videoEnd = Math.min(videoStart + videosPerPage, playlist.videos ? playlist.videos.length : 0);
+        const videoEnd = Math.min(videoStart + videosPerPage, ratingScopedVideos ? ratingScopedVideos.length : 0);
 
         const actualVideosPerPage = 5;
 
-        const videosToRender = (playlist.videos || []).slice(videoStart, Math.min(videoStart + actualVideosPerPage, playlist.videos.length));
+        const videosToRender = (ratingScopedVideos || []).slice(videoStart, Math.min(videoStart + actualVideosPerPage, ratingScopedVideos.length));
         if (videosToRender.length > 0) {
           const previewTasks = [];
           for (const video of videosToRender) {
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
+            const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
 
             const thumbLink = document.createElement('a');
             thumbLink.className = 'video-thumbnail';
@@ -2506,6 +2643,7 @@
             thumbLink.href = videoUrl;
             thumbLink.innerHTML = `
               <div class="video-duration">...</div>
+              ${ratingBadgeHtml}
               <div style="width:100%;height:100%;background:#333;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;text-align:center;padding:5px;">
                 ${escapeHtml(getFileNameWithoutExtension(video.name))}
               </div>`;
@@ -2696,7 +2834,7 @@
           allPlaylists.unshift(playlist);
           applyFiltersAndRender();
           renderSidebarCategories();
-          setTimeout(() => backgroundScanForHandles(), 50);
+          setTimeout(() => queueVisiblePreviewRefresh(), 50);
         }catch(e){
           console.error('createGlobalPlaylist error', e);
           alert(i18n.t('playlists.errorCreating'));
@@ -2817,6 +2955,30 @@
         return null;
       }
 
+      function getVideoRatingForPlaylistPages(tags) {
+        if (window.YouviFilterEngine && typeof window.YouviFilterEngine.getVideoRating === 'function') {
+          return window.YouviFilterEngine.getVideoRating(tags || []);
+        }
+        if (!Array.isArray(tags) || tags.length === 0) return 'safe';
+        let result = 'safe';
+        for (const rawTag of tags) {
+          if (!rawTag) continue;
+          const normalized = String(rawTag).toLowerCase().trim();
+          const match = normalized.match(/^(.+?)\s*\(ra\)$/);
+          if (!match) continue;
+          const value = match[1].trim();
+          if (value === 'explicit') return 'explicit';
+          if (value === 'questionable' && result !== 'explicit') result = 'questionable';
+        }
+        return result;
+      }
+
+      function getVideoRatingBadgeHtml(video) {
+        const rating = getVideoRatingForPlaylistPages(video && video.tags ? video.tags : []);
+        if (rating !== 'questionable' && rating !== 'explicit') return '';
+        return `<div class="video-rating-badge rating-${rating}">Archived</div>`;
+      }
+
       function naturalSort(a, b) {
           const normalize = (s) => s.replace(/й/g, 'y');
           
@@ -2927,6 +3089,13 @@
           );
         }
 
+        tempPlaylists = tempPlaylists
+          .map(playlist => ({
+            ...playlist,
+            videos: getPlaylistVideosForCurrentRating(playlist)
+          }))
+          .filter(playlist => Array.isArray(playlist.videos) && playlist.videos.length > 0);
+
         tempPlaylists = sortPlaylists(tempPlaylists);
 
         filteredPlaylists = tempPlaylists;
@@ -3013,6 +3182,25 @@
         return false;
       }
 
+      let visiblePreviewRefreshRunning = false;
+      let visiblePreviewRefreshQueued = false;
+
+      async function queueVisiblePreviewRefresh() {
+        if (visiblePreviewRefreshRunning) {
+          visiblePreviewRefreshQueued = true;
+          return;
+        }
+        visiblePreviewRefreshRunning = true;
+        try {
+          do {
+            visiblePreviewRefreshQueued = false;
+            await backgroundScanForHandles();
+          } while (visiblePreviewRefreshQueued);
+        } finally {
+          visiblePreviewRefreshRunning = false;
+        }
+      }
+
       async function backgroundScanForHandles() {
         log('?? Starting targeted scan for visible playlist videos...');
         const scanStart = performance.now();
@@ -3027,18 +3215,29 @@
           if (name) visibleVideoNames.add(name);
         });
         
-        log(`?? Looking for ${visibleVideoNames.size} videos`);
+        const unresolvedVideoNames = new Set(
+          [...visibleVideoNames].filter(name => {
+            const video = allVideos.find(v => v && v.name === name);
+            return !(video && video.file);
+          })
+        );
+        
+        log(`?? Looking for ${unresolvedVideoNames.size}/${visibleVideoNames.size} unresolved videos`);
         if (visibleVideoNames.size === 0) return;
+        if (unresolvedVideoNames.size === 0) {
+          loadVisiblePreviews();
+          return;
+        }
         
         const foundVideos = new Map();
         
         async function scan(dir, path = '') {
 
-          if (foundVideos.size >= visibleVideoNames.size) return;
+          if (foundVideos.size >= unresolvedVideoNames.size) return;
           
           try {
             for await (const [name, handle] of dir.entries()) {
-              if (handle.kind === 'file' && visibleVideoNames.has(name)) {
+              if (handle.kind === 'file' && unresolvedVideoNames.has(name)) {
                 try {
                   const file = await handle.getFile();
                   foundVideos.set(name, { handle, file, dirHandle: dir });
@@ -3050,7 +3249,7 @@
                     cachedVideo.dirHandle = dir;
                   }
 
-                  if (foundVideos.size >= visibleVideoNames.size) return;
+                  if (foundVideos.size >= unresolvedVideoNames.size) return;
                 } catch (e) { }
               } else if (handle.kind === 'directory' && !name.startsWith('.')) {
                 await scan(handle, path + '/' + name);
@@ -3093,11 +3292,18 @@
           if (!videoName) return;
 
           const video = allVideos.find(v => v.name === videoName);
+          if (video && video.preview) {
+            const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
+            cell.innerHTML = `<img src="${video.preview}" style="width:100%;height:100%;object-fit:cover">${ratingBadgeHtml}`;
+            return;
+          }
+
           if (video && video.file) {
+            const ratingBadgeHtml = getVideoRatingBadgeHtml(video);
             getPreviewAndDuration(video).then(({preview}) => {
 
               if (!cell.querySelector('img')) {
-                cell.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover">`;
+                cell.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover">${ratingBadgeHtml}`;
               }
             }).catch(() => { });
           }
@@ -3105,6 +3311,7 @@
       }
 
       document.addEventListener('DOMContentLoaded', async ()=>{
+        updateFooterRatingFilterUi();
         if (!supportsFS){
           document.getElementById('playlistsContainer').innerHTML = `<div class="empty-state" style="color:red"><strong>${i18n.t('errors.fsNotSupported', 'File System API не поддерживается в этом браузере. Используйте Chrome/Edge.')}</strong></div>`;
           return;
@@ -3145,9 +3352,7 @@
                 log(`? Initial render from cache in ${Math.round(performance.now() - startTime)}ms`);
 
                 setTimeout(() => {
-                  backgroundScanForHandles().then(() => {
-
-                    loadVisiblePreviews();
+                  queueVisiblePreviewRefresh().then(() => {
                     log(`? Previews loaded`);
                   });
                 }, 50);
@@ -3190,7 +3395,8 @@
                     await autocompleteIntegration.init(searchInput, {
                       videoDirectoryHandle: videoDirectoryHandle,
                       allVideos: cacheValid ? [] : videos,
-                      allPlaylists: cacheValid ? [] : playlists
+                      allPlaylists: cacheValid ? [] : playlists,
+                      filterResults: filterAutocompleteResultsForPlaylistsList
                     });
                     log('[Autocomplete] ? Initialized on youvi_playlists_list.html');
                   }

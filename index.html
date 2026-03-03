@@ -188,6 +188,23 @@ controls{display:flex;gap:8px;margin-top:10px}
   z-index: 2;
 }
 
+.video-rating-badge{
+  position:absolute;
+  left:6px;
+  bottom:6px;
+  padding:3px 8px;
+  border-radius:6px;
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  z-index:3;
+  line-height:1;
+  pointer-events:none;
+}
+
+.video-rating-badge.rating-questionable{ background: rgba(255, 152, 0, 0.95); }
+.video-rating-badge.rating-explicit{ background: rgba(244, 67, 54, 0.95); }
+
 .meta{padding:0}
 .title{font-weight:800;margin:0;font-size:var(--title-size);font-family: Verdana, Geneva;}
 header div{font-family: Arial, Helvetica;}
@@ -547,6 +564,7 @@ body.dark-theme.default-background {
   <script src="youvi/i18n/en.js"></script>
   <script src="youvi/i18n/uk.js"></script>
   <script src="youvi/i18n/i18n.js"></script>
+  <script src="youvi/filter/filter-engine.js"></script>
 </head>
 <link rel="icon" href="favicon/video/favicon.ico" type="image/x-icon">
 <body>
@@ -721,6 +739,10 @@ let currentHoverCleanup = null;
 
 function getQS(p) { return new URLSearchParams(location.search).get(p); }
 const urlPage = getQS('page') ? parseInt(getQS('page'), 10) : null;
+let currentRatingFilter = getQS('rating') || localStorage.getItem('youvi_rating_filter') || 'general';
+if (currentRatingFilter !== 'all' && currentRatingFilter !== 'general' && currentRatingFilter !== 'archived') {
+  currentRatingFilter = 'general';
+}
 
 const grid = document.getElementById('videosGrid');
 const emptyState = document.getElementById('emptyState');
@@ -732,6 +754,42 @@ const grid4Btn = document.getElementById('grid4Btn');
 const grid5Btn = document.getElementById('grid5Btn');
 const grid1696Btn = document.getElementById('grid1696Btn');
 const grid1695Btn = document.getElementById('grid1695Btn');
+const ratingAllBtn = document.getElementById('ratingAllBtn');
+const ratingGeneralBtn = document.getElementById('ratingGeneralBtn');
+const ratingArchivedBtn = document.getElementById('ratingArchivedBtn');
+
+function applyRatingFilterToVideosList(videos, mode) {
+  const list = Array.isArray(videos) ? videos : [];
+  const effectiveMode = mode || currentRatingFilter || 'all';
+  if (window.YouviFilterEngine && typeof window.YouviFilterEngine.applyRatingFilterToVideos === 'function') {
+    return window.YouviFilterEngine.applyRatingFilterToVideos(list, effectiveMode);
+  }
+  return list;
+}
+
+function updateRatingFilterButtons() {
+  [ratingAllBtn, ratingGeneralBtn, ratingArchivedBtn].forEach(btn => {
+    if (btn) btn.classList.remove('active');
+  });
+  if (currentRatingFilter === 'general' && ratingGeneralBtn) ratingGeneralBtn.classList.add('active');
+  else if (currentRatingFilter === 'archived' && ratingArchivedBtn) ratingArchivedBtn.classList.add('active');
+  else if (ratingAllBtn) ratingAllBtn.classList.add('active');
+}
+
+function setRatingFilter(mode) {
+  const next = (mode === 'all' || mode === 'general' || mode === 'archived') ? mode : 'all';
+  if (next === currentRatingFilter) return;
+  currentRatingFilter = next;
+  try { localStorage.setItem('youvi_rating_filter', currentRatingFilter); } catch (_) {}
+  updateRatingFilterButtons();
+  currentPage = 1;
+  const params = new URLSearchParams(window.location.search);
+  if (currentRatingFilter === 'all') params.delete('rating');
+  else params.set('rating', currentRatingFilter);
+  params.delete('page');
+  history.replaceState(null, '', `index.html${params.toString() ? '?' + params.toString() : ''}`);
+  filterAndRender(true);
+}
 
 function applyGridMode() {
   document.body.classList.remove('grid-3','grid-4','grid-5','grid-169-6','grid-169-5');
@@ -745,6 +803,10 @@ function applyGridMode() {
 }
 
 applyGridMode();
+updateRatingFilterButtons();
+if (ratingAllBtn) ratingAllBtn.addEventListener('click', () => setRatingFilter('all'));
+if (ratingGeneralBtn) ratingGeneralBtn.addEventListener('click', () => setRatingFilter('general'));
+if (ratingArchivedBtn) ratingArchivedBtn.addEventListener('click', () => setRatingFilter('archived'));
 if (grid5Btn) grid5Btn.addEventListener('click', () => {
   gridMode = '5';
   localStorage.setItem('gridMode', gridMode);
@@ -1309,6 +1371,7 @@ async function loadPlaylist(playlistName, dirHandle) {
     await scanPlaylistDirectory(dirHandle, playlistName);
     renderList();
     let params = ['playlist=' + encodeURIComponent(playlistName)];
+    if (currentRatingFilter !== 'all') params.push('rating=' + encodeURIComponent(currentRatingFilter));
     const newUrl = 'index.html?' + params.join('&');
     history.replaceState(null, '', newUrl);
   } catch (e) {
@@ -1473,6 +1536,13 @@ function sortVideos(arr) {
   return arr;
 }
 
+function getVideoRatingBadgeHtml(item) {
+  if (!item || !window.YouviFilterEngine || typeof window.YouviFilterEngine.getVideoRating !== 'function') return '';
+  const rating = window.YouviFilterEngine.getVideoRating(item.tags || []);
+  if (rating !== 'questionable' && rating !== 'explicit') return '';
+  return `<div class="video-rating-badge rating-${rating}">R-18</div>`;
+}
+
 function createLazyPreviewTask(item, thumb) {
   return async () => {
     try {
@@ -1497,12 +1567,14 @@ function createLazyPreviewTask(item, thumb) {
         return;
       }
       
+      const ratingBadgeHtml = getVideoRatingBadgeHtml(item);
       thumb.innerHTML = '';
       const img = document.createElement('img');
       img.src = preview;
       img.style.cssText = 'width:100%;height:100%;object-fit:contain;border-radius:4px;background:#000;';
       img.alt = typeof i18n !== 'undefined' ? i18n.t('admin.videoPreview', 'Превью видео') : 'Превью видео';
       thumb.appendChild(img);
+      if (ratingBadgeHtml) thumb.insertAdjacentHTML('beforeend', ratingBadgeHtml);
       
       const dur = document.createElement('div');
       dur.className = 'duration-badge';
@@ -1515,10 +1587,11 @@ function createLazyPreviewTask(item, thumb) {
       thumb.dataset.generating = 'false';
       
       if (!thumb.querySelector('video') && !thumb.querySelector('img[src^="data:image"]')) {
+        const ratingBadgeHtml = getVideoRatingBadgeHtml(item);
         thumb.innerHTML = `
           <div style="width:100%;height:100%;background:#333;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;text-align:center;padding:5px;border-radius:4px;">
             ${item.name.replace(/\.[^/.]+$/, '')}
-          </div>
+          </div>${ratingBadgeHtml}
         `;
         const dur = document.createElement('div');
         dur.className = 'duration-badge';
@@ -1870,6 +1943,7 @@ function filterAndRender(resetPage = false) {
   if (renderFrame) cancelAnimationFrame(renderFrame);
   renderFrame = requestAnimationFrame(() => {
   let items = Array.from(currentVideos);
+  items = applyRatingFilterToVideosList(items, currentRatingFilter);
   if (currentTagFilter) {
     items = items.filter(it => (it.tags || []).includes(currentTagFilter));
   }
@@ -1924,7 +1998,7 @@ function filterAndRender(resetPage = false) {
 async function renderList(resetPage = false) {
   filterAndRender(resetPage);
   emptyState.style.display = (currentVideos.length === 0) ? 'block' : 'none';
-  await buildTagCloud(currentVideos);
+  await buildTagCloud(applyRatingFilterToVideosList(currentVideos, currentRatingFilter));
 }
 
 function renderCards(items) {
@@ -1939,6 +2013,14 @@ function renderCards(items) {
   }
   
   const totalItems = items.length;
+  if (totalItems === 0) {
+    emptyState.style.display = 'block';
+    emptyState.textContent = 'Нет видео по текущему фильтру.';
+    const existingPagination = document.getElementById('pagination');
+    if (existingPagination) existingPagination.remove();
+    return;
+  }
+  emptyState.style.display = 'none';
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   
 const adminTitle = typeof i18n !== 'undefined' ? i18n.t('admin.title', 'Админ') : 'Админ';
@@ -1961,13 +2043,14 @@ if (totalPages > 1) {
     const thumb = document.createElement('div');
     thumb.className = 'thumb';
     thumb.dataset.videoName = item.name;
+    const ratingBadgeHtml = getVideoRatingBadgeHtml(item);
     const durationBadge = document.createElement('div');
     durationBadge.className = 'duration-badge';
     durationBadge.textContent = '--:--';
-    thumb.appendChild(durationBadge);
-    thumb.innerHTML += `<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#333;color:#fff;font-size:10px;text-align:center;padding:5px;">
+    thumb.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#333;color:#fff;font-size:10px;text-align:center;padding:5px;">
       ${item.name.replace(/\.[^/.]+$/, '')}
-    </div>`;
+    </div>${ratingBadgeHtml}`;
+    thumb.appendChild(durationBadge);
 	
 thumb.addEventListener('contextmenu', (e) => {
   e.preventDefault();
@@ -2245,6 +2328,8 @@ if (cardState.hoverVideo && !cardState.segmentTimer) {
             img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:4px;';
             img.alt = typeof i18n !== 'undefined' ? i18n.t('admin.videoPreview', 'Превью видео') : 'Превью видео';
             thumb.appendChild(img);
+            const ratingBadgeHtml = getVideoRatingBadgeHtml(item);
+            if (ratingBadgeHtml) thumb.insertAdjacentHTML('beforeend', ratingBadgeHtml);
             
             const dur = document.createElement('div');
             dur.className = 'duration-badge';
@@ -2375,6 +2460,7 @@ btn.addEventListener('click', () => {
   currentPage = page;
   let params = [];
   if (currentPlaylist && currentPlaylist.name) params.push('playlist=' + encodeURIComponent(currentPlaylist.name));
+  if (currentRatingFilter !== 'all') params.push('rating=' + encodeURIComponent(currentRatingFilter));
   params.push('page=' + encodeURIComponent(currentPage));
   const newUrl = 'index.html' + (params.length ? '?' + params.join('&') : '');
   history.replaceState(null, '', newUrl);
@@ -2410,9 +2496,10 @@ document.getElementById('sortRandom').addEventListener('click', () => {
 });
 
 document.getElementById('randomVideoBtn').addEventListener('click', () => {
-  if (!currentVideos.length) return;
-  const idx = Math.floor(Math.random() * currentVideos.length);
-  const video = currentVideos[idx];
+  const source = applyRatingFilterToVideosList(currentVideos, currentRatingFilter);
+  if (!source.length) return;
+  const idx = Math.floor(Math.random() * source.length);
+  const video = source[idx];
   if (video) {
     const playlist = video.playlist || '';
     const url = window.VideoID 
@@ -2454,6 +2541,13 @@ document.getElementById('resetFilters').addEventListener('click', () => {
   globalSearch.value = '';
   currentSort = 'new';
   currentTagFilter = null;
+  currentRatingFilter = 'general';
+  try { localStorage.setItem('youvi_rating_filter', currentRatingFilter); } catch (_) {}
+  updateRatingFilterButtons();
+  const params = new URLSearchParams(window.location.search);
+  params.delete('rating');
+  params.delete('page');
+  history.replaceState(null, '', `index.html${params.toString() ? '?' + params.toString() : ''}`);
   filterAndRender(true);
 });
 

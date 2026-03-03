@@ -38,6 +38,7 @@ class AutocompleteIntegration {
     this.autocomplete = new YouviAutocomplete(inputElement, {
       minChars: 1,
       debounceDelay: 150,
+      filterResults: options.filterResults,
       videoDirectoryHandle: options.videoDirectoryHandle,
       avatarLoader: this.createAvatarLoader(options.videoDirectoryHandle),
       onSelect: (result) => this.handleSelection(result, options)
@@ -281,6 +282,158 @@ class AutocompleteIntegration {
       this.avatarCache = null;
     }
   }
+}
+
+if (typeof window !== 'undefined' && !window.YouviAutocompleteFilterHelper) {
+  window.YouviAutocompleteFilterHelper = (function createAutocompleteFilterHelper() {
+    const CHANNEL_SUFFIX_RE = /\s*\((?:ka|\u043A\u0430)\)\s*$/i;
+    const GENERIC_SUFFIX_RE = /\s*\([a-z0-9\u0400-\u04FF]{2,10}\)\s*$/i;
+
+    function toLowerText(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function getVideoName(item) {
+      return String((item && (item.name || item.value)) || '').trim();
+    }
+
+    function getChannelName(item) {
+      return toLowerText((item && (item.name || item.value)) || '');
+    }
+
+    function getPlaylistId(item) {
+      return String((item && (item.id || item.value || item.playlistId)) || '').trim();
+    }
+
+    function getPlaylistTitle(item) {
+      return toLowerText((item && (item.title || item.name || item.value)) || '');
+    }
+
+    function isChannelTag(tag) {
+      const raw = String(tag || '').trim();
+      if (!raw) return false;
+      return CHANNEL_SUFFIX_RE.test(raw);
+    }
+
+    function stripChannelSuffix(tag) {
+      return String(tag || '').replace(CHANNEL_SUFFIX_RE, '').trim();
+    }
+
+    function extractChannelNames(video) {
+      const names = new Set();
+      if (!video || typeof video !== 'object') return names;
+
+      const directName = toLowerText(video.channelName);
+      if (directName) names.add(directName);
+
+      const tags = Array.isArray(video.tags) ? video.tags : [];
+      for (const tag of tags) {
+        if (!isChannelTag(tag)) continue;
+        const channelName = toLowerText(stripChannelSuffix(tag));
+        if (channelName) names.add(channelName);
+      }
+      return names;
+    }
+
+    function collectTagCounts(videos) {
+      const counts = new Map();
+      for (const video of Array.isArray(videos) ? videos : []) {
+        const tags = Array.isArray(video && video.tags) ? video.tags : [];
+        for (const rawTag of tags) {
+          const tag = String(rawTag || '').trim();
+          if (!tag || isChannelTag(tag)) continue;
+          counts.set(tag, (counts.get(tag) || 0) + 1);
+        }
+      }
+      return counts;
+    }
+
+    function tagVisible(tagName, visibleTagCounts) {
+      const raw = String(tagName || '').trim();
+      if (!raw) return false;
+      if (visibleTagCounts.has(raw)) return true;
+
+      const normalized = toLowerText(raw);
+      const noSuffix = normalized.replace(GENERIC_SUFFIX_RE, '').trim();
+      if (!noSuffix) return false;
+
+      for (const key of visibleTagCounts.keys()) {
+        const keyLower = toLowerText(key);
+        if (keyLower === noSuffix || keyLower.startsWith(noSuffix + ' (')) return true;
+      }
+      return false;
+    }
+
+    function createPlaylistLookup(playlistsSource) {
+      const byId = new Map();
+      const byTitle = new Map();
+      for (const playlist of Array.isArray(playlistsSource) ? playlistsSource : []) {
+        const id = getPlaylistId(playlist);
+        const title = getPlaylistTitle(playlist);
+        if (id) byId.set(id, playlist);
+        if (title) byTitle.set(title, playlist);
+      }
+      return { byId, byTitle };
+    }
+
+    function getPlaylistVideos(playlist) {
+      if (!playlist) return [];
+      const videos = Array.isArray(playlist.videos) ? playlist.videos : [];
+      return videos
+        .map(v => (typeof v === 'string' ? v : String((v && (v.name || v.value)) || '').trim()))
+        .filter(Boolean);
+    }
+
+    function playlistVisible(playlistSuggestion, lookup, allowedVideoNames) {
+      const byId = lookup.byId;
+      const byTitle = lookup.byTitle;
+      const id = getPlaylistId(playlistSuggestion);
+      const title = getPlaylistTitle(playlistSuggestion);
+
+      const fullPlaylist = (id && byId.get(id)) || (title && byTitle.get(title)) || playlistSuggestion;
+      const playlistVideos = getPlaylistVideos(fullPlaylist);
+      if (playlistVideos.length === 0) return false;
+
+      return playlistVideos.some(name => allowedVideoNames.has(name));
+    }
+
+    function filterResultsByVisibleVideos(results, visibleVideos, playlistsSource) {
+      if (!results || typeof results !== 'object') return results;
+
+      const allowedVideoNames = new Set(
+        (Array.isArray(visibleVideos) ? visibleVideos : []).map(v => v && v.name).filter(Boolean)
+      );
+      const visibleTagCounts = collectTagCounts(visibleVideos);
+      const visibleChannels = new Set();
+      for (const video of Array.isArray(visibleVideos) ? visibleVideos : []) {
+        for (const channel of extractChannelNames(video)) {
+          visibleChannels.add(channel);
+        }
+      }
+
+      const playlistLookup = createPlaylistLookup(playlistsSource);
+
+      return {
+        ...results,
+        videos: (results.videos || []).filter(v => allowedVideoNames.has(getVideoName(v))),
+        tags: (results.tags || [])
+          .map(tag => {
+            const name = String((tag && (tag.name || tag.value || tag.content || tag.displayName)) || '').trim();
+            if (!tagVisible(name, visibleTagCounts)) return null;
+            const count = visibleTagCounts.get(name);
+            return typeof count === 'number' ? { ...tag, count } : tag;
+          })
+          .filter(Boolean)
+          .sort((a, b) => (b.count || 0) - (a.count || 0)),
+        channels: (results.channels || []).filter(ch => visibleChannels.has(getChannelName(ch))),
+        playlists: (results.playlists || []).filter(pl => playlistVisible(pl, playlistLookup, allowedVideoNames))
+      };
+    }
+
+    return {
+      filterResultsByVisibleVideos
+    };
+  })();
 }
 
 window.AutocompleteIntegration = AutocompleteIntegration;

@@ -2,7 +2,7 @@ window.en = {
     pageTitle: {
         main: 'Home | Youvi'
     },
-    
+
     channelView: {
         pageTitle: 'Channel | Youvi',
         subscribe: 'Subscribe',
@@ -146,7 +146,7 @@ window.en = {
         saturday: 'Saturday',
         sunday: 'Sunday'
     },
-    
+
     nav: {
         video: 'Videos',
         management: 'Management',
@@ -161,21 +161,21 @@ window.en = {
         download: 'Download',
         chooseLang: 'Choose a language'
     },
-    
+
     search: {
         placeholder: 'Search videos...',
         button: 'Search',
         noResults: 'Nothing found',
         clickSearchForMore: 'Click "Search" to see more'
     },
-    
+
     header: {
         badges: 'Badges',
         scan: 'Scan',
         scanTitle: 'Clear cache and rescan all videos',
         toggleSidebar: 'Toggle sidebar'
     },
-    
+
     user: {
         upload: 'Upload',
         anime: 'Anime',
@@ -183,7 +183,7 @@ window.en = {
         series: 'Series',
         settings: 'Settings'
     },
-    
+
     sidebar: {
         navigation: 'Navigation',
         home: 'Home',
@@ -212,9 +212,13 @@ window.en = {
         cleanView: 'Clean view',
         cleanViewTitle: 'Hide right sidebar for more space',
         forumActivity: 'Forum activity',
-        forumActivityAll: 'All'
+        forumActivityAll: 'All',
+        filter: 'Filter',
+        filterAll: 'All',
+        filterGeneral: 'General',
+        filterArchived: 'Archived'
     },
-    
+
     main: {
         latestVideos: 'Latest Videos',
         popularVideos: 'Popular Videos',
@@ -242,34 +246,34 @@ window.en = {
         untitled: 'Untitled',
         openAll: 'Open all'
     },
-    
+
     tags: {
         all: 'All',
         randomShort: 'Rand.'
     },
-    
+
     badges: {
         new: 'New'
     },
-    
+
     grid: {
         auto: 'auto',
         manual: 'manual',
         resetToAuto: 'Reset to auto'
     },
-    
+
     pagination: {
         next: 'Next',
         prev: 'Prev',
         first: 'First',
         last: 'Last'
     },
-    
+
     errors: {
         fsNotSupported: 'File System API is not supported in this browser. Use Chrome/Edge.',
         fsAccessError: 'File system access error'
     },
-    
+
     player: {
         play: 'Play',
         pause: 'Pause',
@@ -302,7 +306,7 @@ window.en = {
         sec: 'sec',
         widescreen: 'Widescreen'
     },
-    
+
     multiview: {
         addVideo: 'Add video',
         swap: 'Swap',
@@ -312,7 +316,7 @@ window.en = {
         selectVideo: 'Select video',
         close: 'Close (Esc)'
     },
-    
+
     playerSettings: {
         logo: 'Logo',
         clock: 'Clock',
@@ -328,7 +332,7 @@ window.en = {
         rewind: 'Rewind',
         dragSeek: 'Mouse drag seek'
     },
-    
+
     video: {
         tags: 'Tags',
         description: 'Description',
@@ -383,7 +387,7 @@ window.en = {
         fsAccessError: 'File system access error',
         nextVideo: 'Next video'
     },
-    
+
     comments: {
         comments: 'Comments',
         danmaku: 'Danmaku',
@@ -446,7 +450,7 @@ window.en = {
         insertKaomoji: 'Insert kaomoji',
         toggleDanmakuForm: 'Show/hide danmaku form'
     },
-    
+
     channelFeed: {
         pageTitle: 'Channel Feed | Youvi',
         channelName: 'Channel Name',
@@ -483,7 +487,7 @@ window.en = {
         confirmDeleteReply: 'Delete this reply?',
         anonymous: 'Anonymous'
     },
-    
+
     footer: {
         description: 'Platform for watching video content. Save, categorize and watch videos.',
         sections: 'Sections',
@@ -546,18 +550,18 @@ window.en = {
             other: 'Other'
         }
     },
-    
+
     themes: {
         light: 'Light',
         dark: 'Dark'
     },
-    
+
     languages: {
         russian: 'Русский',
         english: 'English',
         ukrainian: 'Українська'
     },
-    
+
     admin: {
         title: 'Admin',
         categories: 'Categories',
@@ -608,7 +612,7 @@ window.en = {
         grid5WideTitle: '5 16:9 cards (wide)',
         grid6WideTitle: '6 16:9 cards (wide)'
     },
-    
+
     tags: {
         pageTitle: 'Tags | Youvi',
         allTags: 'All Tags',
@@ -640,7 +644,7 @@ window.en = {
         implicationPlaceholder: 'Enter tag...',
         implicationsHelp: 'Implications automatically add related tags (e.g., "windows_7" → "windows" → "os", "microsoft"). System prevents cycles and computes transitive closure.'
     },
-    
+
     channels: {
         pageTitle: 'Channels | Youvi',
         title: 'Channels',
@@ -657,7 +661,7 @@ window.en = {
         subscribed: 'Subscribed',
         goToChannel: 'Go to channel'
     },
-    
+
     playlists: {
         title: 'Playlists',
         pageTitle: 'Playlists | Youvi',
@@ -729,7 +733,7 @@ window.en = {
         playlistEmpty: 'Playlist is empty',
         noActivePlaylist: 'No active playlist'
     },
-    
+
     history: {
         pageTitle: 'View History | Youvi',
         title: 'View History',
@@ -759,14 +763,14 @@ window.en = {
         totalInHistory: 'Total in History',
         watched: 'Watched'
     },
-    
+
     pagination: {
         previous: '‹ Previous',
         next: 'Next ›',
         of: 'of',
         page: 'page'
     },
-    
+
     favorites: {
         pageTitle: 'Favorites | Youvi',
         title: 'Favorites',
@@ -780,7 +784,7 @@ window.en = {
         videoCount: 'videos',
         defaultCount: '0 videos'
     },
-    
+
     subscriptions: {
         pageTitle: 'Subscriptions | Youvi',
         title: 'Subscriptions',
@@ -806,7 +810,7 @@ window.en = {
         sortByViews: 'By views',
         sortByAlphabetical: 'Alphabetical'
     },
-    
+
     dates: {
         today: 'Today',
         yesterday: 'Yesterday',
@@ -815,12 +819,12 @@ window.en = {
         monthsAgo: '{n} months ago',
         yearsAgo: '{n} years ago'
     },
-    
+
     stats: {
         title: 'Statistics',
         totalInFavorites: 'Total in favorites'
     },
-    
+
     feed: {
         pageTitle: 'All Posts | Youvi',
         filterPosts: 'Filter posts',
@@ -854,7 +858,7 @@ window.en = {
         noPostsInSubscriptions: 'You are not subscribed to any channel or there are no posts in subscriptions',
         postsNotFound: 'Posts not found'
     },
-    
+
     searchPage: {
         pageTitle: 'Search | Youvi',
         search: 'Search',
@@ -918,7 +922,7 @@ window.en = {
         helpNormalEx2: 'games 2024 - finds videos with "games" and "2024"',
         helpNormalEx3: 'comedy series - finds comedy series'
     },
-    
+
     kaomoji: {
         all: 'All',
         happy: 'Happy',
@@ -934,7 +938,7 @@ window.en = {
         gestures: 'Gestures',
         other: 'Other'
     },
-    
+
     hotkeys: {
         playback: 'Navigation and Playback',
         playPause: 'Play/Pause',
@@ -964,7 +968,7 @@ window.en = {
         multiviewFullscreen: 'Fullscreen (in Multiview)',
         multiviewClose: 'Close Multiview'
     },
-    
+
     download: {
         pageTitle: 'Download Manager | Youvi',
         title: 'Download Video',
@@ -1000,7 +1004,7 @@ window.en = {
         tools: 'Tools',
         search: 'Search'
     },
-    
+
     widgets: {
         forumPosts: 'Posts',
         topUsers: 'Authors',

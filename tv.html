@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>TV Tuner Menu Mockup - Pink Edition</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Tahoma, Arial, sans-serif;
+            color: white;
+        }
+
+        /* Основной контейнер интерфейса */
+        .tuner-interface {
+            width: 800px;
+            height: 480px;
+            /* Фон - глубокий розово-пурпурный градиент */
+            background: linear-gradient(to bottom, #8c004e 0%, #4d002b 100%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ --- */
+        .top-bar {
+            height: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 1px #000;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0));
+        }
+        
+        .breadcrumbs {
+            font-weight: bold;
+            color: #ccc;
+        }
+        .breadcrumbs span {
+            color: #fff;
+        }
+
+        /* --- ОСНОВНАЯ ЧАСТЬ --- */
+        .main-area {
+            display: flex;
+            flex: 1;
+            padding: 5px;
+        }
+
+        /* Левая панель (навигация) - узкая полоска */
+        .left-nav {
+            width: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-right: 5px;
+        }
+        
+        .nav-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            margin: 10px 0;
+            font-size: 11px;
+            /* Светло-розовый текст */
+            color: #ffaded;
+            text-shadow: 1px 1px 0 #000;
+            letter-spacing: 2px;
+        }
+        
+        .nav-arrow {
+            font-size: 10px;
+            margin: 5px 0;
+        }
+
+        /* Список каналов */
+        .channel-list {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .channel-row {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            /* Розовый "стеклянный" бар (перекрашенный синий) */
+            background: linear-gradient(to bottom, #991e57 0%, #d82989 50%, #ca207c 51%, #e87db9 100%);
+            border: 1px solid #5f0b36;
+            border-radius: 3px;
+            font-size: 14px;
+            text-shadow: 1px 1px 0 #000;
+            position: relative;
+        }
+
+        /* Номер канала */
+        .ch-num {
+            /* Светло-розовый градиент для номера */
+            background: linear-gradient(to bottom, #fff0f9 0%, #ffcbeb 47%, #ffa1db 100%);
+            color: #660033; /* Темно-бордовый текст */
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 2px;
+            margin-right: 8px;
+            text-shadow: none;
+            border: 1px solid #555;
+            font-size: 12px;
+            width: 15px;
+            text-align: center;
+        }
+
+        .ch-icons {
+            margin-right: 8px;
+            font-size: 10px;
+            color: #ffd700; 
+        }
+        
+        .ch-flag {
+            display: inline-block;
+            width: 16px;
+            height: 10px;
+            background: #555;
+            margin-right: 5px;
+            border: 1px solid #fff;
+        }
+
+        /* Активная строка (выделенная) - остается серебристой для контраста */
+        .channel-row.active {
+            background: linear-gradient(to bottom, #ffffff 0%, #e5e5e5 50%, #dcdcdc 51%, #f2f2f2 100%);
+            color: #660033; /* Темно-бордовый текст */
+            text-shadow: none;
+            border: 1px solid #fff;
+            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+            font-weight: bold;
+        }
+        
+        .channel-row.active .ch-num {
+            background: #8c004e; /* Активный темно-розовый фон */
+            color: white;
+            border: 1px solid #4d002b;
+        }
+
+        .channel-row.active::before,
+        .channel-row.active::after {
+            content: '▶';
+            position: absolute;
+            color: #ffd700;
+            font-size: 10px;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+        }
+        .channel-row.active::before { left: -12px; }
+        .channel-row.active::after { right: -12px; content: '◀'; }
+
+
+        /* Правая часть (Превью + ЕПГ) */
+        .right-panel {
+            flex: 1;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-window {
+            width: 100%;
+            height: 220px;
+            background-color: #000;
+            border: 2px solid #444;
+            border-radius: 4px;
+            box-shadow: inset 0 0 10px #000;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .right-panel-sidebar {
+            position: absolute;
+            right: 0;
+            top: 40px;
+            height: 220px;
+            width: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .epg-list {
+            font-size: 13px;
+            color: #ffaded; /* Светло-розовый текст ЕПГ */
+            line-height: 1.4;
+        }
+        
+        .epg-item {
+            margin-bottom: 2px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .epg-item.current {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* --- НИЖНИЙ ФУТЕР (КНОПКИ) --- */
+        .footer {
+            height: 40px;
+            /* Темно-розовый/бордовый футер */
+            background: linear-gradient(to bottom, #660033 0%, #33001a 100%);
+            border-top: 1px solid #800040;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            gap: 5px;
+        }
+
+        .color-btn {
+            flex: 1;
+            height: 24px;
+            background: linear-gradient(to bottom, #e2e2e2 0%, #dbdbdb 50%, #d1d1d1 51%, #fefefe 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            color: #333;
+            font-size: 11px;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            border: 1px solid #999;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+            box-shadow: inset 0 -2px 5px rgba(0,0,0,0.5), 0 1px 1px rgba(255,255,255,0.8);
+            border: 1px solid rgba(0,0,0,0.3);
+        }
+        
+        .dot.red { background: radial-gradient(circle at 30% 30%, #ff6666, #cc0000); }
+        .dot.green { background: radial-gradient(circle at 30% 30%, #66ff66, #009900); }
+        .dot.yellow { background: radial-gradient(circle at 30% 30%, #ffff66, #cc9900); }
+        .dot.blue { background: radial-gradient(circle at 30% 30%, #66ccff, #0066cc); }
+
+    </style>
+</head>
+<body>
+
+    <div class="tuner-interface">
+        <div class="top-bar">
+            <div class="breadcrumbs">
+                TV / <span>ВСЕ</span> / ТОЛЬКО ИЗБРАННОЕ /
+            </div>
+            <div class="time">17:54</div>
+        </div>
+
+        <div class="main-area">
+            
+            <div class="left-nav">
+                <span class="nav-arrow">▲</span>
+                <div class="nav-text">НАЗАД</div>
+                <span class="nav-arrow">▼</span>
+            </div>
+
+            <div class="channel-list">
+                <div class="channel-row">
+                    <div class="ch-num">1</div>
+                    <div class="ch-icons">★ 🕒</div>
+                    <div class="ch-flag"></div>
+                    International News
+                </div>
+                <div class="channel-row">
+                    <div class="ch-num">2</div>
+                    <div class="ch-icons">🔒 🕒</div>
+                    <div class="ch-flag"></div>
+                    Sport Premium
+                </div>
+                <div class="channel-row">
+                    <div class="ch-num">3</div>
+                    <div class="ch-icons">★</div>
+                    <div class="ch-flag"></div>
+                    Discovery World
+                </div>
+                
+                <div class="channel-row active">
+                    <div class="ch-num">4</div>
+                    <div class="ch-icons">★ 🕒</div>
+                    <div class="ch-flag"></div>
+                    Movie Channel HD
+                </div>
+
+                <div class="channel-row">
+                    <div class="ch-num">5</div>
+                    <div class="ch-icons">📡</div>
+                    <div class="ch-flag"></div>
+                    Music Hits TV
+                </div>
+                 <div class="channel-row">
+                    <div class="ch-num">6</div>
+                    <div class="ch-icons"></div>
+                    <div class="ch-flag"></div>
+                    Cartoon Network
+                </div>
+                 <div class="channel-row">
+                    <div class="ch-num">7</div>
+                    <div class="ch-icons">★</div>
+                    <div class="ch-flag"></div>
+                    History Channel
+                </div>
+                 <div class="channel-row">
+                    <div class="ch-num">8</div>
+                    <div class="ch-icons"></div>
+                    <div class="ch-flag"></div>
+                    Auto Plus
+                </div>
+                 <div class="channel-row">
+                    <div class="ch-num">9</div>
+                    <div class="ch-icons"></div>
+                    <div class="ch-flag"></div>
+                    Travel Guide
+                </div>
+                 <div class="channel-row">
+                    <div class="ch-num">10</div>
+                    <div class="ch-icons"></div>
+                    <div class="ch-flag"></div>
+                    Tech Zone
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="preview-window">
+                    </div>
+                
+                <div class="epg-list">
+                    <div class="epg-item">17:30 - Боевик "Скорость" (1994)</div>
+                    <div class="epg-item current">18:00 - Новости: Вечерний выпуск</div>
+                    <div class="epg-item">18:30 - Сериал "Детективы". 45-я серия</div>
+                    <div class="epg-item">19:00 - Погода в мире</div>
+                    <div class="epg-item">19:30 - Спорт за неделю</div>
+                </div>
+            </div>
+            
+            <div class="left-nav" style="width: 20px; margin-left: 5px;">
+                <span class="nav-arrow">▶</span>
+                <div class="nav-text" style="writing-mode: vertical-lr; transform: none;">ТВ ГИД</div>
+                <span class="nav-arrow">▶</span>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <div class="color-btn">
+                <div class="dot red"></div>
+                Отображение
+            </div>
+            <div class="color-btn">
+                <div class="dot green"></div>
+                Сортировка
+            </div>
+            <div class="color-btn">
+                <div class="dot yellow"></div>
+                Избранное
+            </div>
+            <div class="color-btn">
+                <div class="dot blue"></div>
+                Двигать
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -87,9 +87,31 @@
     text-transform: uppercase;
 }
 
+.video-rating-badge {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    z-index: 4;
+    line-height: 1;
+}
+
+.video-rating-badge.rating-questionable {
+    background: rgba(255, 152, 0, 0.95);
+}
+
+.video-rating-badge.rating-explicit {
+    background: rgba(244, 67, 54, 0.95);
+}
+
 /* Badge visibility control */
 .badges-hidden .video-quality,
 .badges-hidden .video-new,
+.badges-hidden .video-rating-badge,
 .badges-hidden [class*="video-quality"],
 .badges-hidden [class*="video-new"] {
     display: none !important;
@@ -98,6 +120,7 @@
 /* Hide badges in subscription videos specifically */
 .badges-hidden .video-grid .video-quality,
 .badges-hidden .video-grid .video-new,
+.badges-hidden .video-grid .video-rating-badge,
 .badges-hidden .channel-section .video-quality,
 .badges-hidden .channel-section .video-new {
     display: none !important;

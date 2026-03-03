@@ -170,7 +170,8 @@ class TagDatabaseIntegration {
    */
   _getCacheKey(searchQuery) {
     const showSpecialVideos = localStorage.getItem('showSpecialVideos') === 'true';
-    return `${searchQuery}_${showSpecialVideos}`;
+    const ratingFilter = this._getCurrentRatingFilter();
+    return `${searchQuery}_${showSpecialVideos}_${ratingFilter}`;
   }
   
   /**
@@ -178,7 +179,7 @@ class TagDatabaseIntegration {
    */
   _renderCachedTagCloud(cachedData) {
     this.renderTagCloud(cachedData.tagsByType, cachedData.searchQuery);
-    this.updateVideoCounter(cachedData.tags);
+    this.updateVideoCounter(cachedData.tags, cachedData.visibleVideoCount);
   }
   
   /**
@@ -197,12 +198,9 @@ class TagDatabaseIntegration {
     try {
       this._cleanupCache();
       
-      let tags;
-      if (searchQuery) {
-        tags = this.tagManager.searchTags(searchQuery);
-      } else {
-        tags = this.tagManager.getAllTags();
-      }
+      const visibleVideos = this._getVisibleVideosForCurrentState();
+      const exclusiveAllowSet = this._getExclusiveTagAllowSet();
+      const tags = this._buildTagsFromVisibleVideos(visibleVideos, searchQuery, exclusiveAllowSet);
 
       const tagsByType = this.groupTagsByType(tags);
 
@@ -210,6 +208,7 @@ class TagDatabaseIntegration {
         tagsByType,
         searchQuery,
         tags,
+        visibleVideoCount: visibleVideos.length,
         timestamp: Date.now()
       };
       
@@ -220,7 +219,7 @@ class TagDatabaseIntegration {
         this.cache.tagCloud.delete(oldestKey);
       }
 
-      this._renderTagCloudOptimized(tagsByType, searchQuery, tags);
+      this._renderTagCloudOptimized(tagsByType, searchQuery, tags, visibleVideos.length);
       
       const duration = performance.now() - startTime;
       if (duration > 100) {
@@ -268,7 +267,7 @@ class TagDatabaseIntegration {
   /**
    * Optimized rendering with virtual scrolling for large tag lists
    */
-  _renderTagCloudOptimized(tagsByType, searchQuery, tags) {
+  _renderTagCloudOptimized(tagsByType, searchQuery, tags, visibleVideoCount) {
     const totalTags = Object.values(tagsByType).reduce((sum, tags) => sum + tags.length, 0);
     
     if (totalTags > this.performance.virtualScrollThreshold) {
@@ -278,7 +277,7 @@ class TagDatabaseIntegration {
       this.renderTagCloud(tagsByType, searchQuery);
     }
     
-    this.updateVideoCounter(tags);
+    this.updateVideoCounter(tags, visibleVideoCount);
   }
   
   /**
@@ -286,6 +285,179 @@ class TagDatabaseIntegration {
    */
   _renderTagCloudVirtual(tagsByType, searchQuery) {
     this.renderTagCloud(tagsByType, searchQuery);
+  }
+
+  _getCurrentRatingFilter() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const mode = (params.get('rating') || localStorage.getItem('youvi_rating_filter') || 'all').toLowerCase();
+      if (mode === 'general' || mode === 'archived' || mode === 'all') return mode;
+    } catch (e) {}
+    return 'all';
+  }
+
+  _isSpecialTag(tag) {
+    const normalizedTag = String(tag || '').toLowerCase();
+    return normalizedTag.includes('особое') || normalizedTag.includes('(ос)');
+  }
+
+  _getVideoRatingFallback(tags) {
+    if (!Array.isArray(tags) || tags.length === 0) return 'safe';
+    let result = 'safe';
+    for (const rawTag of tags) {
+      if (!rawTag) continue;
+      const normalized = String(rawTag).toLowerCase().trim();
+      const match = normalized.match(/^(.+?)\s*\(ra\)$/);
+      if (!match) continue;
+      const value = match[1].trim();
+      if (value === 'explicit') return 'explicit';
+      if (value === 'questionable' && result !== 'explicit') result = 'questionable';
+    }
+    return result;
+  }
+
+  _applyRatingFilterToVideos(videos, mode) {
+    const list = Array.isArray(videos) ? videos : [];
+    const effectiveMode = mode || 'all';
+
+    if (window.YouviFilterEngine && typeof window.YouviFilterEngine.applyRatingFilterToVideos === 'function') {
+      return window.YouviFilterEngine.applyRatingFilterToVideos(list, effectiveMode);
+    }
+
+    if (effectiveMode === 'all') return list;
+    if (effectiveMode === 'general') {
+      return list.filter(video => this._getVideoRatingFallback(video && video.tags ? video.tags : []) === 'safe');
+    }
+    if (effectiveMode === 'archived') {
+      return list.filter(video => {
+        const rating = this._getVideoRatingFallback(video && video.tags ? video.tags : []);
+        return rating === 'questionable' || rating === 'explicit';
+      });
+    }
+    return list;
+  }
+
+  _getVisibleVideosForCurrentState() {
+    if (typeof window.getVisibleVideosForTagPage === 'function') {
+      try {
+        const external = window.getVisibleVideosForTagPage();
+        if (Array.isArray(external)) return external;
+      } catch (e) {}
+    }
+
+    const sourceVideos = Array.isArray(this.currentVideos)
+      ? this.currentVideos
+      : (Array.isArray(window.allVideos) ? window.allVideos : []);
+    const mode = this._getCurrentRatingFilter();
+    const showSpecialVideos = localStorage.getItem('showSpecialVideos') === 'true';
+    const ratingFiltered = this._applyRatingFilterToVideos(sourceVideos, mode);
+
+    if (showSpecialVideos) return ratingFiltered;
+    return ratingFiltered.filter(video => {
+      const tags = Array.isArray(video && video.tags) ? video.tags : [];
+      return !tags.some(tag => this._isSpecialTag(tag));
+    });
+  }
+
+  _collectCanonicalTagSet(videos) {
+    const set = new Set();
+    const list = Array.isArray(videos) ? videos : [];
+    list.forEach(video => {
+      const tags = Array.isArray(video && video.tags) ? video.tags : [];
+      tags.forEach(rawTag => {
+        const tagName = String(rawTag || '').trim();
+        if (!tagName) return;
+        const dbTag = this.tagManager && typeof this.tagManager.getTag === 'function'
+          ? this.tagManager.getTag(tagName)
+          : null;
+        const canonical = dbTag && dbTag.canonical ? dbTag.canonical : tagName;
+        set.add(canonical);
+      });
+    });
+    return set;
+  }
+
+  _getExclusiveTagAllowSet() {
+    const mode = this._getCurrentRatingFilter();
+    if (mode !== 'general' && mode !== 'archived') return null;
+
+    const sourceVideos = Array.isArray(this.currentVideos)
+      ? this.currentVideos
+      : (Array.isArray(window.allVideos) ? window.allVideos : []);
+    const showSpecialVideos = localStorage.getItem('showSpecialVideos') === 'true';
+    const oppositeMode = mode === 'general' ? 'archived' : 'general';
+
+    let modeVideos = this._applyRatingFilterToVideos(sourceVideos, mode);
+    let oppositeVideos = this._applyRatingFilterToVideos(sourceVideos, oppositeMode);
+
+    if (!showSpecialVideos) {
+      modeVideos = modeVideos.filter(video => {
+        const tags = Array.isArray(video && video.tags) ? video.tags : [];
+        return !tags.some(tag => this._isSpecialTag(tag));
+      });
+      oppositeVideos = oppositeVideos.filter(video => {
+        const tags = Array.isArray(video && video.tags) ? video.tags : [];
+        return !tags.some(tag => this._isSpecialTag(tag));
+      });
+    }
+
+    const modeSet = this._collectCanonicalTagSet(modeVideos);
+    const oppositeSet = this._collectCanonicalTagSet(oppositeVideos);
+    const allow = new Set();
+    for (const canonical of modeSet) {
+      if (!oppositeSet.has(canonical)) allow.add(canonical);
+    }
+    return allow;
+  }
+
+  _buildTagsFromVisibleVideos(visibleVideos, searchQuery, exclusiveAllowSet = null) {
+    const videos = Array.isArray(visibleVideos) ? visibleVideos : [];
+    const usageByCanonical = new Map();
+
+    videos.forEach(video => {
+      const tags = Array.isArray(video && video.tags) ? video.tags : [];
+      tags.forEach(rawTag => {
+        const tagName = String(rawTag || '').trim();
+        if (!tagName) return;
+
+        const dbTag = this.tagManager && typeof this.tagManager.getTag === 'function'
+          ? this.tagManager.getTag(tagName)
+          : null;
+        const canonical = dbTag && dbTag.canonical ? dbTag.canonical : tagName;
+        usageByCanonical.set(canonical, (usageByCanonical.get(canonical) || 0) + 1);
+      });
+    });
+
+    const query = String(searchQuery || '').toLowerCase().trim();
+    const tags = [];
+
+    for (const [canonical, usageCount] of usageByCanonical.entries()) {
+      const dbTag = this.tagManager && typeof this.tagManager.getTag === 'function'
+        ? this.tagManager.getTag(canonical)
+        : null;
+
+      if (exclusiveAllowSet && !exclusiveAllowSet.has(canonical)) continue;
+
+      const tagObj = dbTag
+        ? { ...dbTag }
+        : TagDatabaseSchema.createTag(canonical, { usageCount });
+
+      tagObj.canonical = canonical;
+      tagObj.usageCount = usageCount;
+      if (!tagObj.type) tagObj.type = TagDatabaseSchema.extractTagType(canonical) || 'gt';
+      if (!tagObj.color) tagObj.color = TagDatabaseSchema.getTagColor(tagObj.type);
+      if (!Array.isArray(tagObj.aliases)) tagObj.aliases = [];
+
+      if (query) {
+        const canonicalMatch = canonical.toLowerCase().includes(query);
+        const aliasMatch = tagObj.aliases.some(alias => String(alias || '').toLowerCase().includes(query));
+        if (!canonicalMatch && !aliasMatch) continue;
+      }
+
+      tags.push(tagObj);
+    }
+
+    return tags;
   }
 
   /**
@@ -514,37 +686,12 @@ class TagDatabaseIntegration {
   /**
    * Update video counter based on actual video count
    */
-  updateVideoCounter(tags) {
+  updateVideoCounter(tags, visibleVideoCount = null) {
     let count = 0;
-    
-    if (this.currentVideos && Array.isArray(this.currentVideos)) {
-      const showSpecialVideos = localStorage.getItem('showSpecialVideos') === 'true';
-      
-      if (showSpecialVideos) {
-        count = this.currentVideos.length;
-      } else {
-        count = this.currentVideos.filter(video => {
-          const tags = video.tags || [];
-          return !tags.some(tag => {
-            const normalizedTag = tag.toLowerCase();
-            return normalizedTag.includes('особое') || normalizedTag.includes('(ос)');
-          });
-        }).length;
-      }
-    } else if (window.allVideos && Array.isArray(window.allVideos)) {
-      const showSpecialVideos = localStorage.getItem('showSpecialVideos') === 'true';
-      
-      if (showSpecialVideos) {
-        count = window.allVideos.length;
-      } else {
-        count = window.allVideos.filter(video => {
-          const tags = video.tags || [];
-          return !tags.some(tag => {
-            const normalizedTag = tag.toLowerCase();
-            return normalizedTag.includes('особое') || normalizedTag.includes('(ос)');
-          });
-        }).length;
-      }
+    if (typeof visibleVideoCount === 'number') {
+      count = visibleVideoCount;
+    } else {
+      count = this._getVisibleVideosForCurrentState().length;
     }
     
     count = Math.min(count, 99999);

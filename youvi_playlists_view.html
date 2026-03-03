@@ -36,6 +36,7 @@
     <link rel="stylesheet" href="youvi/themes/dark-theme.css">
     <link rel="stylesheet" href="youvi/themes/theme-dropdown.css">
     <script src="youvi/themes/theme-toggle.js"></script>
+    <script src="youvi/filter/filter-engine.js"></script>
     
     <!-- Youvi Hover Preview System -->
     <script src="youvi/hover/hover-preview-queue.js"></script>
@@ -1025,6 +1026,11 @@
             color: #ff69b4;
         }
 
+        #footerRatingFilter a.active {
+            color: #ff69b4;
+            font-weight: 700;
+        }
+
         .footer-bottom {
             border-top: 1px solid #444;
             margin-top: 20px;
@@ -1396,6 +1402,12 @@ body.dark-theme .video-quality[data-quality="SD"] { background: rgba(102,102,102
                             <li><a href="wiki/docs.html" data-i18n="footer.docs">Документация</a></li>
                             <li><a href="wiki/tech.html" data-i18n="footer.tech">Технологии</a></li>
                         </ul>
+                        <h3>Фильтр</h3>
+                        <ul id="footerRatingFilter">
+                            <li><a href="#" id="footerFilterAll" onclick="setRatingFilter('all'); return false;">Все</a></li>
+                            <li><a href="#" id="footerFilterGeneral" onclick="setRatingFilter('general'); return false;">Общие</a></li>
+                            <li><a href="#" id="footerFilterArchived" onclick="setRatingFilter('archived'); return false;">Архив</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -1418,13 +1430,108 @@ body.dark-theme .video-quality[data-quality="SD"] { background: rgba(102,102,102
       let videoDirectoryHandle = null;
       window.videoDirectoryHandle = null;
       let allVideos = [];
+      let autocompleteSourceVideos = [];
+      let autocompleteSourcePlaylists = [];
       let currentPlaylist = null;
       let currentSort = 'default';
       let currentPage = 1;
       const itemsPerPage = 24;
       let currentSearchTerm = '';
+      let currentRatingFilter = new URLSearchParams(window.location.search).get('rating') || localStorage.getItem('youvi_rating_filter') || 'all';
 
       let db = null;
+
+      function applyRatingFilterToList(videos, mode) {
+        const list = Array.isArray(videos) ? videos : [];
+        const effectiveMode = mode || currentRatingFilter || 'all';
+        if (window.YouviFilterEngine && typeof window.YouviFilterEngine.applyRatingFilterToVideos === 'function') {
+          return window.YouviFilterEngine.applyRatingFilterToVideos(list, effectiveMode);
+        }
+        return list;
+      }
+
+      function updateFooterRatingFilterUi() {
+        const map = {
+          all: 'footerFilterAll',
+          general: 'footerFilterGeneral',
+          archived: 'footerFilterArchived'
+        };
+        ['footerFilterAll', 'footerFilterGeneral', 'footerFilterArchived'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.remove('active');
+        });
+        const activeId = map[currentRatingFilter] || map.all;
+        const activeEl = document.getElementById(activeId);
+        if (activeEl) activeEl.classList.add('active');
+      }
+
+      function setRatingFilter(mode) {
+        const normalized = mode === 'all' || mode === 'general' || mode === 'archived' ? mode : 'all';
+        if (currentRatingFilter === normalized) return;
+        currentRatingFilter = normalized;
+        try {
+          localStorage.setItem('youvi_rating_filter', currentRatingFilter);
+        } catch (e) {}
+        try {
+          const params = new URLSearchParams(window.location.search);
+          if (currentRatingFilter === 'all') params.delete('rating');
+          else params.set('rating', currentRatingFilter);
+          const qs = params.toString();
+          history.replaceState(null, '', `${window.location.pathname}${qs ? '?' + qs : ''}`);
+        } catch (e) {}
+        updateFooterRatingFilterUi();
+        currentPage = 1;
+        if (currentPlaylist) renderSinglePlaylistVideos(currentPlaylist);
+      }
+
+      function filterAutocompleteResultsForPlaylistsView(results) {
+        if (!results || typeof results !== 'object') return results;
+
+        const sourceVideos = (Array.isArray(allVideos) && allVideos.length > 0)
+          ? allVideos
+          : autocompleteSourceVideos;
+        const visibleVideos = applyRatingFilterToList(sourceVideos, currentRatingFilter);
+        if (window.YouviAutocompleteFilterHelper && typeof window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos === 'function') {
+          return window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos(
+            results,
+            visibleVideos,
+            autocompleteSourcePlaylists
+          );
+        }
+        const visibleVideoNames = new Set(visibleVideos.map(v => v && v.name).filter(Boolean));
+        const visibleTags = new Set();
+        const visibleChannels = new Set();
+
+        visibleVideos.forEach(video => {
+          const tags = Array.isArray(video && video.tags) ? video.tags : [];
+          tags.forEach(tag => {
+            const raw = String(tag || '').trim();
+            if (!raw) return;
+            if (raw.includes('(ка)') || raw.includes('(РєР°)')) {
+              visibleChannels.add(raw.replace(/\s*\((ка|РєР°)\)\s*$/i, '').trim().toLowerCase());
+            } else {
+              visibleTags.add(raw.toLowerCase());
+            }
+          });
+        });
+
+        return {
+          ...results,
+          videos: (results.videos || []).filter(v => visibleVideoNames.has((v && (v.value || v.name)) || '')),
+          tags: (results.tags || []).filter(t => {
+            const raw = String((t && (t.name || t.value || t.content || t.displayName)) || '').trim().toLowerCase();
+            if (!raw) return false;
+            if (visibleTags.has(raw)) return true;
+            const noSuffix = raw.replace(/\s*\([a-zа-я]{2,3}\)\s*$/i, '').trim();
+            if (!noSuffix) return false;
+            for (const x of visibleTags) {
+              if (x === noSuffix || x.startsWith(noSuffix + ' (')) return true;
+            }
+            return false;
+          }),
+          channels: (results.channels || []).filter(ch => visibleChannels.has(String((ch && (ch.value || ch.name)) || '').trim().toLowerCase()))
+        };
+      }
 
       async function openDB(){
         return new Promise((resolve,reject)=>{
@@ -2154,7 +2261,8 @@ body.dark-theme .video-quality[data-quality="SD"] { background: rgba(102,102,102
 
         document.title = `${playlist.title} | Youvi`;
 
-        const filteredVideos = playlist.videos.filter(video => 
+        const ratingScopedVideos = applyRatingFilterToList(playlist.videos || [], currentRatingFilter);
+        const filteredVideos = ratingScopedVideos.filter(video => 
           getFileNameWithoutExtension(video.name).toLowerCase().includes(currentSearchTerm.toLowerCase())
         );
 
@@ -2567,6 +2675,7 @@ body.dark-theme .video-quality[data-quality="SD"] { background: rgba(102,102,102
       }
 
       document.addEventListener('DOMContentLoaded', async ()=>{
+        updateFooterRatingFilterUi();
 
         const langSwitcher = document.getElementById('langSwitcher');
         if (langSwitcher && typeof i18n !== 'undefined') {
@@ -2611,6 +2720,8 @@ body.dark-theme .video-quality[data-quality="SD"] { background: rgba(102,102,102
                     const { videos, playlists } = typeof AutocompleteDataLoader !== 'undefined' 
                         ? await AutocompleteDataLoader.loadData() 
                         : { videos: allVideos || [], playlists: [] };
+                    autocompleteSourceVideos = Array.isArray(videos) ? videos : [];
+                    autocompleteSourcePlaylists = Array.isArray(playlists) ? playlists : [];
 
                     const cacheValid = await window.autocompleteCache.isCacheValid(
                       videos.length,
@@ -2621,7 +2732,8 @@ body.dark-theme .video-quality[data-quality="SD"] { background: rgba(102,102,102
                     await autocompleteIntegration.init(searchInput, {
                       videoDirectoryHandle: videoDirectoryHandle,
                       allVideos: cacheValid ? [] : videos,
-                      allPlaylists: cacheValid ? [] : playlists
+                      allPlaylists: cacheValid ? [] : playlists,
+                      filterResults: filterAutocompleteResultsForPlaylistsView
                     });
                     log('[Autocomplete] ? Initialized on youvi_playlists_view.html');
                   }

@@ -72,6 +72,38 @@ function addHoverPreview(thumbElement, videoData, options = {}) {
         cardState.hoverVideo.setAttribute('controlsList', 'nodownload noplaybackrate nofullscreen');
         cardState.hoverVideo.src = cardState.hoverUrl;
         thumbElement.appendChild(cardState.hoverVideo);
+        
+        // Add Archived badge if video has restricted rating
+        if (videoData.tags && Array.isArray(videoData.tags)) {
+          // Check for rating tags - use getVideoRating if available, otherwise check directly
+          let rating = 'safe';
+          if (typeof getVideoRating === 'function') {
+            rating = getVideoRating(videoData.tags);
+          } else {
+            // Fallback: check tags directly
+            for (const rawTag of videoData.tags) {
+              const normalized = String(rawTag).toLowerCase().trim();
+              const match = normalized.match(/^(.+?)\s*\(ra\)$/);
+              if (!match) continue;
+              const value = match[1].trim();
+              if (value === 'explicit') {
+                rating = 'explicit';
+                break;
+              }
+              if (value === 'questionable' && rating !== 'explicit') {
+                rating = 'questionable';
+              }
+            }
+          }
+          
+          if (rating === 'questionable' || rating === 'explicit') {
+            const badge = document.createElement('div');
+            badge.className = `video-rating-badge rating-${rating}`;
+            badge.textContent = 'Archived';
+            badge.style.cssText = 'position:absolute;bottom:5px;left:5px;padding:3px 8px;border-radius:4px;font-size:12px;font-weight:700;color:#fff;z-index:10;';
+            thumbElement.appendChild(badge);
+          }
+        }
 
         const playNextSegment = () => {
           if (!cardState.hoverVideo || cardState.segmentTimer) return;

@@ -1,6 +1,8 @@
 
 let currentQuery = '';
 let currentSort = localStorage.getItem('youvi_sort') || 'newest';
+let currentRatingFilter = new URLSearchParams(window.location.search).get('rating') || localStorage.getItem('youvi_rating_filter') || 'all';
+window.currentRatingFilter = currentRatingFilter;
 
 let currentFilters = {
   quality: null,
@@ -19,6 +21,30 @@ try {
 
 let searchIndex = new Map();
 let lastIndexBuild = 0;
+
+function getCurrentRatingMode() {
+  return window.currentRatingFilter || currentRatingFilter || 'all';
+}
+
+function applyRatingModeToVideos(videos) {
+  const list = Array.isArray(videos) ? videos : [];
+  const mode = getCurrentRatingMode();
+  if (window.YouviFilterEngine && typeof window.YouviFilterEngine.applyRatingFilterToVideos === 'function') {
+    return window.YouviFilterEngine.applyRatingFilterToVideos(list, mode);
+  }
+  return list;
+}
+
+function applyRatingModeToPlaylists(playlists) {
+  const list = Array.isArray(playlists) ? playlists : [];
+  return list
+    .map(playlist => {
+      const sourceVideos = Array.isArray(playlist && playlist.videos) ? playlist.videos : [];
+      const videos = applyRatingModeToVideos(sourceVideos);
+      return { ...playlist, videos };
+    })
+    .filter(playlist => Array.isArray(playlist.videos) && playlist.videos.length > 0);
+}
 
 const TAG_TYPE_MAP = {
   'channel': 'ка',
@@ -701,8 +727,10 @@ function applyFiltersAndSort(videos) {
 
 function filterVideosRegular(query) {
   buildSearchIndex();
+  const sourceVideos = applyRatingModeToVideos(allVideos);
+  const sourceVideoSet = new Set(sourceVideos);
   const tokens = tokenizeQuery(query);
-  if (tokens.length === 0) return allVideos;
+  if (tokens.length === 0) return sourceVideos;
   
   let expandedTokens = [...tokens];
   if (window.tagAliasSearch && window.tagAliasSearch.tagDB && window.tagAliasSearch.tagDB.isLoaded) {
@@ -739,10 +767,12 @@ function filterVideosRegular(query) {
   
   if (candidateSet.size === 0) {
     candidateSet.clear();
-    allVideos.forEach(video => candidateSet.add(video));
+    sourceVideos.forEach(video => candidateSet.add(video));
   }
-  
-  const results = Array.from(candidateSet).map(v => {
+
+  const results = Array.from(candidateSet)
+  .filter(v => sourceVideoSet.has(v))
+  .map(v => {
     const fileName = getFileNameWithoutExtension(v.name);
     const nameScore = quickScore(expandedTokens, fileName);
     
@@ -777,11 +807,12 @@ function filterVideosRegular(query) {
 }
 
 function filterVideos(query) {
-  if (!query) return allVideos;
+  const sourceVideos = applyRatingModeToVideos(allVideos);
+  if (!query) return sourceVideos;
   
   const { isBoolean } = parseBooleanQuery(query);
   if (isBoolean) {
-    return evaluateBooleanQuery(query, allVideos, filterVideosRegular);
+    return evaluateBooleanQuery(query, sourceVideos, filterVideosRegular);
   }
   
   return filterVideosRegular(query);
@@ -789,8 +820,10 @@ function filterVideos(query) {
 
 function filterPlaylistsRegular(query) {
   buildSearchIndex();
+  const sourcePlaylists = applyRatingModeToPlaylists(allPlaylists);
+  const sourcePlaylistSet = new Set(sourcePlaylists.map(pl => (pl && pl.id) || (pl && pl.title) || ''));
   const tokens = tokenizeQuery(query);
-  if (tokens.length === 0) return allPlaylists;
+  if (tokens.length === 0) return sourcePlaylists;
   
   const candidateSet = new Set();
   
@@ -810,10 +843,12 @@ function filterPlaylistsRegular(query) {
   
   if (candidateSet.size === 0) {
     candidateSet.clear();
-    allPlaylists.forEach(playlist => candidateSet.add(playlist));
+    sourcePlaylists.forEach(playlist => candidateSet.add(playlist));
   }
   
-  const results = Array.from(candidateSet).map(p => {
+  const results = Array.from(candidateSet)
+  .filter(p => sourcePlaylistSet.has((p && p.id) || (p && p.title) || ''))
+  .map(p => {
     const titleScore = quickScore(tokens, p.title||'');
     const channelScore = quickScore(tokens, p.channelName||'');
     return { item: p, score: Math.max(titleScore, channelScore) };
@@ -825,11 +860,12 @@ function filterPlaylistsRegular(query) {
 }
 
 function filterPlaylists(query) {
-  if (!query) return allPlaylists;
+  const sourcePlaylists = applyRatingModeToPlaylists(allPlaylists);
+  if (!query) return sourcePlaylists;
   
   const { isBoolean } = parseBooleanQuery(query);
   if (isBoolean) {
-    return evaluateBooleanQuery(query, allPlaylists, filterPlaylistsRegular);
+    return evaluateBooleanQuery(query, sourcePlaylists, filterPlaylistsRegular);
   }
   
   return filterPlaylistsRegular(query);
@@ -983,7 +1019,7 @@ function refreshResults() {
   if (currentQuery) {
     runSearch(currentQuery);
   } else {
-    const results = applyFiltersAndSort(allVideos);
+    const results = applyFiltersAndSort(applyRatingModeToVideos(allVideos));
     renderResults(results);
   }
 }

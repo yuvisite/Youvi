@@ -36,7 +36,7 @@
     <noscript>
         <link rel="stylesheet" href="player/drag-seek/drag-seek.css">
     </noscript>
-    
+
     <!-- Subtitle Track Manager CSS -->
     <link rel="stylesheet" href="player/subtitles/subtitles.css">
 
@@ -82,6 +82,7 @@
 
     <!-- Wide Screen Mode -->
     <link rel="stylesheet" href="youvi/widescreen-mode.css">
+    <link rel="stylesheet" href="youvi/tv-mode/tv-mode.css">
 
     <style>
         * {
@@ -130,10 +131,29 @@
             font-weight: 600
         }
 
-        .lang-switcher { margin-left: auto; }
-        .lang-select { background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; cursor: pointer; outline: none; }
-        .lang-select:hover { border-color: rgba(255, 255, 255, 0.5); }
-        .lang-select option { background: #d94b88; color: #fff; }
+        .lang-switcher {
+            margin-left: auto;
+        }
+
+        .lang-select {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .lang-select:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .lang-select option {
+            background: #d94b88;
+            color: #fff;
+        }
 
         .header {
             background: #FFE7F4;
@@ -1029,33 +1049,33 @@
             overflow-x: hidden;
             background: #fafafa;
         }
-        
+
         #playlistTabContent {
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
-        
+
         #playlistContent {
             flex: 1;
             min-height: 0;
             overflow-y: auto;
             overflow-x: hidden;
         }
-        
+
         #playlistContent::-webkit-scrollbar {
             width: 4px;
         }
-        
+
         #playlistContent::-webkit-scrollbar-track {
             background: transparent;
         }
-        
+
         #playlistContent::-webkit-scrollbar-thumb {
             background: rgba(255, 105, 180, 0.3);
             border-radius: 2px;
         }
-        
+
         #playlistContent::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 105, 180, 0.5);
         }
@@ -1063,7 +1083,7 @@
         .sidebar-tab-content.active {
             display: block;
         }
-        
+
         .playlist-control-btn {
             background: #fff;
             border: 1px solid #ddd;
@@ -1076,48 +1096,48 @@
             color: #666;
             transition: all 0.2s;
         }
-        
+
         .playlist-control-btn:hover {
             border-color: #ff69b4;
             color: #ff69b4;
         }
-        
+
         .playlist-control-btn.active {
             background: #ff69b4;
             border-color: #ff69b4;
             color: #fff;
         }
-        
+
         .dark-theme .playlist-control-btn {
             background: #2a2a2a;
             border-color: #444;
             color: #999;
         }
-        
+
         .dark-theme .playlist-control-btn:hover {
             border-color: #ff69b4;
             color: #ff69b4;
         }
-        
+
         .dark-theme .playlist-control-btn.active {
             background: #ff69b4;
             border-color: #ff69b4;
             color: #fff;
         }
-        
+
         .dark-theme #playlistHeader {
             background: #252525 !important;
             border-color: #333 !important;
         }
-        
+
         .dark-theme #playlistTitle {
             color: #ccc !important;
         }
-        
+
         .dark-theme #playlistOpenLink {
             color: #777 !important;
         }
-        
+
         .dark-theme #playlistOpenLink:hover {
             color: #ff69b4 !important;
         }
@@ -1235,7 +1255,7 @@
             visibility: hidden;
         }
 
-        .sidebar-panel-combined.collapsed ~ #recommendationsSidebar {
+        .sidebar-panel-combined.collapsed~#recommendationsSidebar {
             flex: 1;
         }
 
@@ -1250,7 +1270,7 @@
         .dark-theme #playlistContent::-webkit-scrollbar-thumb {
             background: rgba(255, 105, 180, 0.4);
         }
-        
+
         .dark-theme #playlistContent::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 105, 180, 0.6);
         }
@@ -1355,6 +1375,29 @@
             padding: 2px 4px;
             font-size: 10px;
             border-radius: 2px
+        }
+
+        .video-rating-badge {
+            position: absolute;
+            left: 6px;
+            bottom: 6px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            background: rgba(244, 67, 54, 0.95);
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .video-rating-badge.rating-questionable {
+            background: rgba(255, 152, 0, 0.95);
+        }
+
+        .video-rating-badge.rating-explicit {
+            background: rgba(244, 67, 54, 0.95);
         }
 
         .related-info {
@@ -1663,6 +1706,13 @@
         }
 
         #cinemaModeBtn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1
+        }
+
+        #tvModeBtn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -2552,20 +2602,20 @@
             .right-sidebar {
                 width: 450px;
             }
-            
+
             .related-thumb {
                 width: 220px !important;
                 height: 124px !important;
             }
-            
+
             .related-title {
                 font-size: 14px;
             }
-            
+
             .related-meta {
                 font-size: 12px;
             }
-            
+
             .related-duration {
                 font-size: 11px;
             }
@@ -2575,20 +2625,20 @@
             .right-sidebar {
                 width: 520px;
             }
-            
+
             .related-thumb {
                 width: 250px !important;
                 height: 141px !important;
             }
-            
+
             .related-title {
                 font-size: 15px;
             }
-            
+
             .related-meta {
                 font-size: 13px;
             }
-            
+
             .related-duration {
                 font-size: 12px;
                 padding: 3px 5px;
@@ -3131,6 +3181,7 @@
 
         /* Auto-collapse sidebar on small screens (13-14" laptops) */
         @media (max-width: 1440px) {
+
             /* Сайдбар скрыт по умолчанию (как в cinema-mode) */
             body:not(.cinema-mode) .sidebar {
                 position: fixed !important;
@@ -3152,10 +3203,10 @@
             /* Показываем сайдбар только с классом sidebar-open */
             body:not(.cinema-mode).sidebar-open .sidebar {
                 transform: translateX(0) !important;
-                box-shadow: 2px 0 8px rgba(0,0,0,0.2) !important;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2) !important;
             }
 
-            
+
             body.dark-theme:not(.cinema-mode).sidebar-open .sidebar {
                 background: #1e1e1e !important;
             }
@@ -3598,7 +3649,7 @@
             padding-bottom: var(--fs-form-height, 0px) !important;
             background: #000 !important;
         }
-        
+
         .video-container.fullscreen .hide-in-fullscreen {
             display: none !important;
         }
@@ -3786,6 +3837,10 @@
 
         #cinemaModeBtn.active {
             color: #ff69b4;
+        }
+
+        #tvModeBtn.active {
+            color: #4aa6ff;
         }
 
         #pipBtn.active {
@@ -4782,6 +4837,11 @@
             color: #ff69b4
         }
 
+        .footer-section a.active {
+            color: #ff69b4;
+            font-weight: 700
+        }
+
         .footer-bottom {
             border-top: 1px solid #444;
             margin-top: 20px;
@@ -4869,7 +4929,7 @@
             flex-direction: column;
             gap: 2px;
         }
-        
+
         .channel-row {
             display: flex;
             align-items: center;
@@ -5027,22 +5087,22 @@
             -webkit-text-stroke: 1px rgba(0, 0, 0, 0.78) !important;
         }
 
-        
+
         .multiview-overlay {
             z-index: 10000;
         }
-        
+
         .multiview-search-panel {
             z-index: 10001;
         }
-        
+
         .multiview-backdrop {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 10000;
             display: none;
         }
@@ -5245,6 +5305,84 @@
                 max-width: 2600px !important;
             }
         }
+
+        /* Video page skeuomorphic profile: sharp corners + deeper volume */
+        body.skeuo-theme .container,
+        body.skeuo-theme .content-wrapper,
+        body.skeuo-theme .player-section,
+        body.skeuo-theme .video-info,
+        body.skeuo-theme .video-description,
+        body.skeuo-theme .right-sidebar,
+        body.skeuo-theme .sidebar-panel-combined,
+        body.skeuo-theme .sidebar-tab-content,
+        body.skeuo-theme .danmaku-form,
+        body.skeuo-theme .theme-dropdown,
+        body.skeuo-theme .settings-menu,
+        body.skeuo-theme .recs-tab-btn,
+        body.skeuo-theme .playlist-control-btn,
+        body.skeuo-theme .sidebar-panel-btn,
+        body.skeuo-theme .sidebar-panel-tab,
+        body.skeuo-theme .autoplay-toggle,
+        body.skeuo-theme .autoplay-toggle-handle,
+        body.skeuo-theme .action-btn,
+        body.skeuo-theme .search-btn,
+        body.skeuo-theme .subscribe-btn,
+        body.skeuo-theme #sendDanmaku,
+        body.skeuo-theme .description-toggle,
+        body.skeuo-theme .video-tag,
+        body.skeuo-theme .related-video,
+        body.skeuo-theme .related-thumb,
+        body.skeuo-theme .playlist-item,
+        body.skeuo-theme .search-input,
+        body.skeuo-theme .danmaku-input input,
+        body.skeuo-theme .danmaku-controls select,
+        body.skeuo-theme .playlist-toggle-btn {
+            border-radius: 0 !important;
+        }
+
+        body.skeuo-theme .content-wrapper {
+            gap: 16px !important;
+            padding: 14px 16px 18px !important;
+        }
+
+        body.skeuo-theme .player-section,
+        body.skeuo-theme .video-info,
+        body.skeuo-theme .right-sidebar,
+        body.skeuo-theme .sidebar-panel-combined,
+        body.skeuo-theme .danmaku-form {
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.82),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+                0 4px 10px rgba(0, 0, 0, 0.16) !important;
+        }
+
+        body.skeuo-theme .search-btn,
+        body.skeuo-theme .subscribe-btn,
+        body.skeuo-theme #sendDanmaku,
+        body.skeuo-theme .action-btn.favorite-active,
+        body.skeuo-theme .playlist-control-btn.active,
+        body.skeuo-theme .recs-tab-btn.active,
+        body.skeuo-theme .sidebar-panel-btn.active {
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.42),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.26),
+                0 3px 8px rgba(0, 0, 0, 0.28) !important;
+        }
+
+        body.skeuo-theme .theme-dropdown,
+        body.skeuo-theme .settings-menu {
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.82),
+                0 10px 20px rgba(0, 0, 0, 0.28) !important;
+        }
+
+        body.skeuo-theme .video-player,
+        body.skeuo-theme video {
+            border-radius: 0 !important;
+            box-shadow:
+                inset 0 2px 8px rgba(0, 0, 0, 0.2),
+                0 5px 14px rgba(0, 0, 0, 0.25) !important;
+        }
     </style>
     <link rel="stylesheet" href="youvi/sidebar.css">
     <link rel="stylesheet" href="youvi/sidebar-scroll.css">
@@ -5265,7 +5403,7 @@
 
     <!-- Video Meta Tags Module -->
     <script src="youvi/meta/video-meta-tags.js"></script>
-    
+
     <!-- Video ID System -->
     <script src="youvi/video-id.js"></script>
 </head>
@@ -5285,8 +5423,8 @@
             <a href="index.html" data-i18n="nav.management">Управление</a>
             <a href="youvi_ch_list.html" data-i18n="nav.channels">Каналы</a>
             <a href="youvi_playlists_list.html" data-i18n="nav.playlists">Плейлисты</a>
-            <a href="forum/forum.html" data-i18n="nav.forums">Forums</a> 
-            <a href="download/youvi_download.html" data-i18n="nav.download">Download</a> 
+            <a href="forum/forum.html" data-i18n="nav.forums">Forums</a>
+            <a href="download/youvi_download.html" data-i18n="nav.download">Download</a>
             <a href="wiki/index.html" data-i18n="nav.wiki">Wiki</a>
             <div class="lang-switcher">
                 <select id="langSwitcher" class="lang-select">
@@ -5318,7 +5456,8 @@
 
             <div class="header-center">
                 <div class="search-area autocomplete-wrapper">
-                    <input type="text" id="headerSearchInput" placeholder="Поиск видео..." class="search-input" data-i18n-placeholder="search.placeholder">
+                    <input type="text" id="headerSearchInput" placeholder="Поиск видео..." class="search-input"
+                        data-i18n-placeholder="search.placeholder">
                     <button id="doSearch" class="search-btn" data-i18n="search.button">Найти</button>
                 </div>
             </div>
@@ -5326,12 +5465,16 @@
             <div class="header-right">
                 <div class="user-actions">
                     <a href="#" id="multiviewHeaderBtn" title="Multiview (N)">Multiview</a>
-                    <a href="#" id="hotkeysBtn" data-i18n="player.hotkeys" data-i18n-title="player.hotkeys" title="Hotkeys">Hotkeys</a>
+                    <a href="#" id="hotkeysBtn" data-i18n="player.hotkeys" data-i18n-title="player.hotkeys"
+                        title="Hotkeys">Hotkeys</a>
                     <div class="settings-container">
                         <a href="#" class="settings-btn">⚙</a>
                         <div class="theme-dropdown">
-                            <button class="theme-dropdown-item" data-theme="light" data-i18n="themes.light">Белая</button>
-                            <button class="theme-dropdown-item" data-theme="dark" data-i18n="themes.dark">Черная</button>
+                            <button class="theme-dropdown-item" data-theme="light"
+                                data-i18n="themes.light">Белая</button>
+                            <button class="theme-dropdown-item" data-theme="dark"
+                                data-i18n="themes.dark">Черная</button>
+                            <button class="theme-dropdown-item" data-theme="skeuo">Скевоморфизм</button>
                         </div>
                     </div>
                 </div>
@@ -5616,11 +5759,14 @@
                             <div id="videoHud" class="video-hud"></div> <!-- HUD для ⏯ -->
 
                             <!-- Danmaku Panel Button (visible in theater/fullscreen) -->
-                            <button id="danmakuPanelBtn" class="danmaku-panel-btn" data-i18n-title="comments.danmakuList" title="Danmaku list">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                                    <line x1="9" y1="10" x2="15" y2="10"/>
-                                    <line x1="9" y1="14" x2="13" y2="14"/>
+                            <button id="danmakuPanelBtn" class="danmaku-panel-btn"
+                                data-i18n-title="comments.danmakuList" title="Danmaku list">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                    <line x1="9" y1="10" x2="15" y2="10" />
+                                    <line x1="9" y1="14" x2="13" y2="14" />
                                 </svg>
                             </button>
 
@@ -5632,16 +5778,22 @@
                                         <span class="danmaku-panel-count" id="danmakuPanelCount">(0)</span>
                                     </div>
                                     <div class="danmaku-panel-controls">
-                                        <button class="danmaku-panel-follow active" id="danmakuPanelFollow" data-i18n-title="comments.followDanmaku" title="Follow danmaku">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="12" r="10"/>
-                                                <circle cx="12" cy="12" r="3"/>
+                                        <button class="danmaku-panel-follow active" id="danmakuPanelFollow"
+                                            data-i18n-title="comments.followDanmaku" title="Follow danmaku">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <circle cx="12" cy="12" r="3" />
                                             </svg>
                                         </button>
-                                        <button class="danmaku-panel-close" id="danmakuPanelClose" data-i18n-title="player.close" title="Close">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <line x1="18" y1="6" x2="6" y2="18"/>
-                                                <line x1="6" y1="6" x2="18" y2="18"/>
+                                        <button class="danmaku-panel-close" id="danmakuPanelClose"
+                                            data-i18n-title="player.close" title="Close">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <line x1="18" y1="6" x2="6" y2="18" />
+                                                <line x1="6" y1="6" x2="18" y2="18" />
                                             </svg>
                                         </button>
                                     </div>
@@ -5705,7 +5857,8 @@
                                 <div class="controls-spacer"></div>
 
                                 <div class="settings-container">
-                                    <button class="control-btn" id="settingsBtn" data-i18n-title="player.settings" title="Settings">
+                                    <button class="control-btn" id="settingsBtn" data-i18n-title="player.settings"
+                                        title="Settings">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round"
@@ -5720,11 +5873,13 @@
                                         <div class="settings-main-menu" id="settingsMainMenu">
                                             <button class="settings-tab" data-tab="logo">
                                                 <span data-i18n="playerSettings.logo">Логотип</span>
-                                                <span class="settings-tab-value" id="logoTabValue" data-i18n="playerSettings.on">Вкл</span>
+                                                <span class="settings-tab-value" id="logoTabValue"
+                                                    data-i18n="playerSettings.on">Вкл</span>
                                             </button>
                                             <button class="settings-tab" data-tab="clock">
                                                 <span data-i18n="playerSettings.clock">Часы</span>
-                                                <span class="settings-tab-value" id="clockTabValue" data-i18n="playerSettings.off">Выкл</span>
+                                                <span class="settings-tab-value" id="clockTabValue"
+                                                    data-i18n="playerSettings.off">Выкл</span>
                                             </button>
                                             <button class="settings-tab" data-tab="speed">
                                                 <span data-i18n="playerSettings.speed">Скорость</span>
@@ -5732,7 +5887,8 @@
                                             </button>
                                             <button class="settings-tab" data-tab="dragseek">
                                                 <span data-i18n="playerSettings.rewind">Перемотка</span>
-                                                <span class="settings-tab-value" id="dragSeekTabValue" data-i18n="playerSettings.on">Вкл</span>
+                                                <span class="settings-tab-value" id="dragSeekTabValue"
+                                                    data-i18n="playerSettings.on">Вкл</span>
                                             </button>
                                         </div>
 
@@ -5747,12 +5903,15 @@
                                                         <path d="M12 19l-7-7 7-7" />
                                                     </svg>
                                                 </button>
-                                                <span class="settings-sub-title" data-i18n="playerSettings.logo">Логотип</span>
+                                                <span class="settings-sub-title"
+                                                    data-i18n="playerSettings.logo">Логотип</span>
                                             </div>
                                             <div class="settings-sub-separator"></div>
                                             <div class="settings-sub-options">
-                                                <button class="settings-option" id="toggleLogoBtn" data-i18n="playerSettings.off">Выкл</button>
-                                                <button class="settings-option" id="toggleLogoTypeBtn" data-i18n="playerSettings.default">По
+                                                <button class="settings-option" id="toggleLogoBtn"
+                                                    data-i18n="playerSettings.off">Выкл</button>
+                                                <button class="settings-option" id="toggleLogoTypeBtn"
+                                                    data-i18n="playerSettings.default">По
                                                     умолчанию</button>
                                             </div>
                                         </div>
@@ -5768,13 +5927,15 @@
                                                         <path d="M12 19l-7-7 7-7" />
                                                     </svg>
                                                 </button>
-                                                <span class="settings-sub-title" data-i18n="playerSettings.clock">Часы</span>
+                                                <span class="settings-sub-title"
+                                                    data-i18n="playerSettings.clock">Часы</span>
                                             </div>
                                             <div class="settings-sub-separator"></div>
                                             <div class="settings-sub-options">
-                                                <button class="settings-option" id="toggleClockBtn" data-i18n="playerSettings.on">Вкл</button>
-                                                <button class="settings-option"
-                                                    id="toggleClockModeBtn" data-i18n="playerSettings.static">Статичные</button>
+                                                <button class="settings-option" id="toggleClockBtn"
+                                                    data-i18n="playerSettings.on">Вкл</button>
+                                                <button class="settings-option" id="toggleClockModeBtn"
+                                                    data-i18n="playerSettings.static">Статичные</button>
                                             </div>
                                         </div>
 
@@ -5789,7 +5950,8 @@
                                                         <path d="M12 19l-7-7 7-7" />
                                                     </svg>
                                                 </button>
-                                                <span class="settings-sub-title" data-i18n="playerSettings.speed">Скорость</span>
+                                                <span class="settings-sub-title"
+                                                    data-i18n="playerSettings.speed">Скорость</span>
                                             </div>
                                             <div class="settings-sub-separator"></div>
                                             <div class="settings-sub-options">
@@ -5805,7 +5967,8 @@
                                                 </div>
                                                 <button class="settings-option" data-speed="0.5">0.5x</button>
                                                 <button class="settings-option" data-speed="0.75">0.75x</button>
-                                                <button class="settings-option active" data-speed="1" data-i18n="playerSettings.normal">Normal</button>
+                                                <button class="settings-option active" data-speed="1"
+                                                    data-i18n="playerSettings.normal">Normal</button>
                                                 <button class="settings-option" data-speed="1.25">1.25x</button>
                                                 <button class="settings-option" data-speed="1.5">1.5x</button>
                                                 <button class="settings-option" data-speed="2">2x</button>
@@ -5823,17 +5986,19 @@
                                                         <path d="M12 19l-7-7 7-7" />
                                                     </svg>
                                                 </button>
-                                                <span class="settings-sub-title" data-i18n="playerSettings.dragSeek">Перемотка мышью</span>
+                                                <span class="settings-sub-title"
+                                                    data-i18n="playerSettings.dragSeek">Перемотка мышью</span>
                                             </div>
                                             <div class="settings-sub-separator"></div>
                                             <div class="settings-sub-options">
-                                                <button class="settings-option active"
-                                                    id="toggleDragSeekBtn" data-i18n="playerSettings.on">Вкл</button>
+                                                <button class="settings-option active" id="toggleDragSeekBtn"
+                                                    data-i18n="playerSettings.on">Вкл</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <button class="control-btn" id="danmakuToggleBtn" data-i18n-title="comments.danmaku" title="Danmaku"
+                                <button class="control-btn" id="danmakuToggleBtn" data-i18n-title="comments.danmaku"
+                                    title="Danmaku"
                                     style="display:inline-flex;align-items:center;justify-content:center;line-height:1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -5861,8 +6026,8 @@
                                     </svg>
                                 </button>
                                 <!-- Кнопка изменения режима отображения видео -->
-                                <button class="control-btn" id="resizeVideoBtn"
-                                    data-i18n-title="player.resizeVideo" title="Fit / crop / stretch">
+                                <button class="control-btn" id="resizeVideoBtn" data-i18n-title="player.resizeVideo"
+                                    title="Fit / crop / stretch">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="lucide lucide-scissors-icon lucide-scissors">
@@ -5887,7 +6052,8 @@
                                         <rect x="12" y="14" width="10" height="7" rx="1" />
                                     </svg>
                                 </button>
-                                <button class="control-btn" id="cinemaModeBtn" data-i18n-title="player.cinemaMode" title="Cinema mode (T)"
+                                <button class="control-btn" id="cinemaModeBtn" data-i18n-title="player.cinemaMode"
+                                    title="Cinema mode (T)"
                                     style="display:inline-flex;align-items:center;justify-content:center;line-height:1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -5903,15 +6069,24 @@
                                         <path d="M14 22v-1a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1" />
                                     </svg>
                                 </button>
+                                <button class="control-btn hide-in-fullscreen" id="tvModeBtn" title="TV mode">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                                        <path d="M8 21h8" />
+                                        <path d="M12 19v2" />
+                                    </svg>
+                                </button>
                                 <button class="control-btn hide-in-fullscreen" id="multiviewBtn" title="Multiview (N)"
                                     style="display:none;align-items:center;justify-content:center;line-height:1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round">
-                                        <rect x="2" y="3" width="9" height="8" rx="1"/>
-                                        <rect x="13" y="3" width="9" height="8" rx="1"/>
-                                        <rect x="2" y="13" width="9" height="8" rx="1"/>
-                                        <rect x="13" y="13" width="9" height="8" rx="1"/>
+                                        <rect x="2" y="3" width="9" height="8" rx="1" />
+                                        <rect x="13" y="3" width="9" height="8" rx="1" />
+                                        <rect x="2" y="13" width="9" height="8" rx="1" />
+                                        <rect x="13" y="13" width="9" height="8" rx="1" />
                                     </svg>
                                 </button>
                                 <button class="fullscreen-btn" id="fullscreenBtn">
@@ -5958,7 +6133,8 @@
                             </select>
                         </div>
                         <div class="danmaku-input">
-                            <input type="text" id="danmakuText" data-i18n-placeholder="comments.placeholder" placeholder="Введите данмаку..." maxlength="50">
+                            <input type="text" id="danmakuText" data-i18n-placeholder="comments.placeholder"
+                                placeholder="Введите данмаку..." maxlength="50">
                             <button type="button" id="danmakuKaomojiBtn" class="kaomoji-picker-btn compact"
                                 data-i18n-title="comments.insertKaomoji" title="Insert kaomoji"
                                 style="background: none; border: 1px solid #ddd; padding: 5px 8px; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; width: 40px; height: 26px; flex-shrink: 0;">
@@ -5996,25 +6172,28 @@
                         <div class="channel-info-left">
                             <div class="uploader-avatar" id="uploaderAvatar">U</div>
                             <div class="uploader-name" id="uploaderName">...</div>
-                            <button class="subscribe-btn" id="subscribeBtn" data-i18n="video.subscribe">Подписаться</button>
+                            <button class="subscribe-btn" id="subscribeBtn"
+                                data-i18n="video.subscribe">Подписаться</button>
                         </div>
 
                         <div class="actions-right">
                             <button class="action-btn" id="likeBtn" data-i18n-title="video.like">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M12 4l-8 8h6v8h4v-8h6l-8-8z" fill="currentColor"/>
+                                    <path d="M12 4l-8 8h6v8h4v-8h6l-8-8z" fill="currentColor" />
                                 </svg>
-                                <span data-i18n="video.like">Нрав.</span>
+                                <span data-i18n="video.like">Нравится</span>
                             </button>
                             <button class="action-btn" id="dislikeBtn" data-i18n-title="video.dislike">
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M12 20l8-8h-6V4h-4v8H4l8 8z" fill="currentColor"/>
+                                    <path d="M12 20l8-8h-6V4h-4v8H4l8 8z" fill="currentColor" />
                                 </svg>
-                                <span data-i18n="video.dislike">Не нрав.</span>
+                                <span data-i18n="video.dislike">Не нравится</span>
                             </button>
                             <button class="action-btn" id="favoriteBtn" data-i18n-title="favorites.addToFavorites">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    aria-hidden="true">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                                 </svg>
                                 <span data-i18n="favorites.addToFavorites">Add to favorites</span>
                             </button>
@@ -6032,7 +6211,8 @@
                     <!-- Tags Edit Form -->
                     <div class="tags-edit-form" id="tagsEditForm" style="display: none;">
                         <div class="tags-edit-controls">
-                            <input type="text" id="tagsEditInput" data-i18n-placeholder="video.enterTagsPlaceholder" placeholder="Enter tags separated by commas..." value="">
+                            <input type="text" id="tagsEditInput" data-i18n-placeholder="video.enterTagsPlaceholder"
+                                placeholder="Enter tags separated by commas..." value="">
                             <div class="tag-type-hint">
                                 <strong>Format:</strong> Name (type). Types: (ka)=channel, (gt)=general, (ch)=character,
                                 (au)=author, (ge)=genre, (tp)=type, (yr)=year, (st)=studio, (ct)=category, (ra)=rating,
@@ -6040,7 +6220,8 @@
                             </div>
                         </div>
                         <div class="tags-edit-actions">
-                            <button class="tags-edit-cancel" id="tagsEditCancel" data-i18n="video.cancel">Отмена</button>
+                            <button class="tags-edit-cancel" id="tagsEditCancel"
+                                data-i18n="video.cancel">Отмена</button>
                             <button class="tags-edit-save" id="tagsEditSave" data-i18n="video.save">Сохранить</button>
                         </div>
                     </div>
@@ -6051,7 +6232,8 @@
                     <div class="description-header" id="descriptionHeader">
                         <h3 data-i18n="video.description">Описание</h3>
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <a href="#" class="edit-description-btn" id="editDescriptionBtn" data-i18n-title="video.editDescription">
+                            <a href="#" class="edit-description-btn" id="editDescriptionBtn"
+                                data-i18n-title="video.editDescription">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -6066,8 +6248,7 @@
                     </div>
                     <div class="description-content" id="descriptionContent">
                         <div class="description-text" id="descriptionText">
-                            Описание видео. Здесь может быть подробная информация о содержании видео, ссылки и другие
-                            детали.
+                            Описание видео. Здесь может быть подробная информация о содержании видео, ссылки и другие детали.
 
                             Загружено сегодня
                         </div>
@@ -6075,12 +6256,16 @@
                         <!-- Description Edit Form -->
                         <div class="description-edit-form" id="descriptionEditForm">
                             <div class="description-edit-controls">
-                                <textarea id="descriptionEditInput" data-i18n-placeholder="video.enterDescriptionPlaceholder" placeholder="Введите описание видео...">Описание видео. Здесь может быть подробная информация о содержании видео, ссылки и другие детали.
+                                <textarea id="descriptionEditInput"
+                                    data-i18n-placeholder="video.enterDescriptionPlaceholder"
+                                    placeholder="Введите описание видео...">Описание видео. Здесь может быть подробная информация о содержании видео, ссылки и другие детали.
 Загружено сегодня</textarea>
                             </div>
                             <div class="description-edit-actions">
-                                <button class="description-edit-cancel" id="descriptionEditCancel" data-i18n="video.cancel">Отмена</button>
-                                <button class="description-edit-save" id="descriptionEditSave" data-i18n="video.save">Сохранить</button>
+                                <button class="description-edit-cancel" id="descriptionEditCancel"
+                                    data-i18n="video.cancel">Отмена</button>
+                                <button class="description-edit-save" id="descriptionEditSave"
+                                    data-i18n="video.save">Сохранить</button>
                             </div>
                         </div>
 
@@ -6189,7 +6374,7 @@
                         color: #333;
                         z-index: 10;
                         transition: all 0.2s;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                     }
 
                     .pc-nav-btn:hover {
@@ -6249,8 +6434,13 @@
                     }
 
                     @keyframes pc-skeleton {
-                        0% { background-position: 200% 0; }
-                        100% { background-position: -200% 0; }
+                        0% {
+                            background-position: 200% 0;
+                        }
+
+                        100% {
+                            background-position: -200% 0;
+                        }
                     }
 
                     .pc-video-duration {
@@ -6640,7 +6830,7 @@
                         .pc-video-card {
                             width: 150px;
                         }
-                        
+
                         .pc-search-panel {
                             width: 320px;
                         }
@@ -6650,7 +6840,7 @@
                         .pc-video-card {
                             width: 140px;
                         }
-                        
+
                         .pc-carousel-wrapper {
                             padding: 0 15px;
                         }
@@ -6660,25 +6850,25 @@
                         .parent-child-section {
                             padding: 8px;
                         }
-                        
+
                         .pc-header h3 {
                             font-size: 14px;
                         }
-                        
+
                         .pc-video-card {
                             width: 130px;
                         }
-                        
+
                         .pc-carousel-wrapper {
                             padding: 0 10px;
                         }
-                        
+
                         .pc-nav-btn {
                             width: 24px;
                             height: 24px;
                             font-size: 10px;
                         }
-                        
+
                         .pc-search-panel {
                             width: 280px;
                             max-height: 400px;
@@ -6690,28 +6880,28 @@
                             padding: 6px;
                             margin-bottom: 6px;
                         }
-                        
+
                         .pc-header {
                             padding: 0 4px;
                         }
-                        
+
                         .pc-video-card {
                             width: 120px;
                         }
-                        
+
                         .pc-video-title {
                             font-size: 12px;
                         }
-                        
+
                         .pc-video-channel,
                         .pc-video-views {
                             font-size: 10px;
                         }
-                        
+
                         .pc-carousel {
                             gap: 8px;
                         }
-                        
+
                         .pc-search-panel {
                             width: calc(100vw - 40px);
                             right: -10px;
@@ -6722,21 +6912,21 @@
                         .pc-header h3 {
                             font-size: 13px;
                         }
-                        
+
                         .pc-video-card {
                             width: 110px;
                         }
-                        
+
                         .pc-carousel-wrapper {
                             padding: 0 8px;
                         }
-                        
+
                         .pc-nav-btn {
                             width: 20px;
                             height: 20px;
                             font-size: 9px;
                         }
-                        
+
                         .action-btn {
                             padding: 6px 12px;
                             font-size: 11px;
@@ -6748,15 +6938,15 @@
                             margin: 0 0 6px 0;
                             padding: 4px;
                         }
-                        
+
                         .pc-video-card {
                             width: 100px;
                         }
-                        
+
                         .pc-video-title {
                             font-size: 11px;
                         }
-                        
+
                         .pc-carousel {
                             gap: 6px;
                         }
@@ -6777,10 +6967,12 @@
                             </button>
                             <!-- Search Panel - positioned relative to button -->
                             <div id="relatedVideoSearchPanel" class="pc-search-panel" style="display:none;">
-                                <h4 class="pc-search-title" data-i18n="video.addRelatedVideo">Добавить связанное видео</h4>
+                                <h4 class="pc-search-title" data-i18n="video.addRelatedVideo">Добавить связанное видео
+                                </h4>
                                 <div class="pc-search-input-wrapper">
-                                    <input type="text" id="relatedSearchInput" data-i18n-placeholder="video.searchByTitleOrTag" placeholder="Search by title or tag..."
-                                        autocomplete="off">
+                                    <input type="text" id="relatedSearchInput"
+                                        data-i18n-placeholder="video.searchByTitleOrTag"
+                                        placeholder="Search by title or tag..." autocomplete="off">
                                 </div>
                                 <div id="relatedSearchResults" class="pc-search-results">
                                     <!-- Results populated via JS -->
@@ -6788,7 +6980,8 @@
                                 <div class="pc-search-actions">
                                     <button id="addSelectedToChildrenBtn" class="pc-btn-primary">Child</button>
                                     <button id="addSelectedToParentsBtn" class="pc-btn-primary">Parent</button>
-                                    <button id="closeRelatedSearchBtn" class="pc-btn-secondary" data-i18n="video.cancel">Отмена</button>
+                                    <button id="closeRelatedSearchBtn" class="pc-btn-secondary"
+                                        data-i18n="video.cancel">Отмена</button>
                                 </div>
                             </div>
                         </div>
@@ -6798,11 +6991,12 @@
                     <div class="pc-carousel-container">
                         <h4 data-i18n="video.childVideos">Child видео</h4>
                         <div class="pc-carousel-wrapper">
-                            <button class="pc-nav-btn prev" data-carousel="childVideosCarousel">◀</button>
+                            <button class="pc-nav-btn prev" data-carousel="childVideosCarousel">‹</button>
                             <div class="pc-carousel" id="childVideosCarousel">
-                                <div class="pc-empty-state" data-i18n="video.childVideosEmpty">Child видео не добавлены</div>
+                                <div class="pc-empty-state" data-i18n="video.childVideosEmpty">Child видео не добавлены
+                                </div>
                             </div>
-                            <button class="pc-nav-btn next" data-carousel="childVideosCarousel">▶</button>
+                            <button class="pc-nav-btn next" data-carousel="childVideosCarousel">›</button>
                         </div>
                     </div>
 
@@ -6810,11 +7004,12 @@
                     <div class="pc-carousel-container">
                         <h4 data-i18n="video.parentVideos">Parent видео</h4>
                         <div class="pc-carousel-wrapper">
-                            <button class="pc-nav-btn prev" data-carousel="parentVideosCarousel">◀</button>
+                            <button class="pc-nav-btn prev" data-carousel="parentVideosCarousel">‹</button>
                             <div class="pc-carousel" id="parentVideosCarousel">
-                                <div class="pc-empty-state" data-i18n="video.parentVideosEmpty">Parent видео не добавлены</div>
+                                <div class="pc-empty-state" data-i18n="video.parentVideosEmpty">Parent видео не
+                                    добавлены</div>
                             </div>
-                            <button class="pc-nav-btn next" data-carousel="parentVideosCarousel">▶</button>
+                            <button class="pc-nav-btn next" data-carousel="parentVideosCarousel">›</button>
                         </div>
                     </div>
                 </div>
@@ -6825,7 +7020,8 @@
 
                 <div class="playlist-section-header">
                     <h2 class="playlist-section-title" data-i18n="video.currentPlaylist">Текущий плейлист</h2>
-                    <a href="#" class="playlist-section-all-link" id="currentPlaylistAllLink" data-i18n="main.openAll">Открыть все</a>
+                    <a href="#" class="playlist-section-all-link" id="currentPlaylistAllLink"
+                        data-i18n="main.openAll">Открыть все</a>
                 </div>
                 <div class="video-carousel-wrapper">
                     <button class="carousel-nav-btn prev-btn" id="currentPlaylistPrev" data-playlist-type="current"
@@ -6837,7 +7033,8 @@
 
                 <div class="playlist-section-header">
                     <h2 class="playlist-section-title" data-i18n="video.folderPlaylist">Плейлист из папки</h2>
-                    <a href="#" class="playlist-section-all-link" id="folderPlaylistAllLink" data-i18n="main.openAll">Открыть все</a>
+                    <a href="#" class="playlist-section-all-link" id="folderPlaylistAllLink"
+                        data-i18n="main.openAll">Открыть все</a>
                 </div>
                 <div class="video-carousel-wrapper">
                     <button class="carousel-nav-btn prev-btn" id="folderPlaylistPrev"
@@ -6857,40 +7054,56 @@
                     <div class="sidebar-panel-tabs">
                         <div class="sidebar-tabs-left">
                             <button class="sidebar-panel-tab active" data-tab="danmaku">
-                                <span data-i18n="comments.danmaku">Данмаку</span> <span id="danmakuCommentsCount">0</span>
+                                <span data-i18n="comments.danmaku">Данмаку</span> <span
+                                    id="danmakuCommentsCount">0</span>
                             </button>
                             <button class="sidebar-panel-tab" data-tab="playlist">
                                 <span data-i18n="video.playlist">Плейлист</span>
                             </button>
                         </div>
                         <div class="sidebar-panel-controls" id="danmakuControls">
-                            <button class="sidebar-panel-btn" id="sidebarFollowBtn" data-i18n-title="comments.followDanmaku" title="Follow danmaku">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <circle cx="12" cy="12" r="3"/>
+                            <button class="sidebar-panel-btn" id="sidebarFollowBtn"
+                                data-i18n-title="comments.followDanmaku" title="Follow danmaku">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <circle cx="12" cy="12" r="3" />
                                 </svg>
                             </button>
-                            <button class="sidebar-panel-btn" id="clearDanmakuBtn" data-i18n-title="comments.clearDanmaku" title="Clear danmaku">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"/>
-                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                            <button class="sidebar-panel-btn" id="clearDanmakuBtn"
+                                data-i18n-title="comments.clearDanmaku" title="Clear danmaku">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
                                 </svg>
                             </button>
-                            <button class="right-sidebar-collapse-btn" id="rightSidebarCollapseBtn" data-i18n-title="player.collapsePanel" title="Collapse/expand panel">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="9 18 15 12 9 6"/>
+                            <button class="right-sidebar-collapse-btn" id="rightSidebarCollapseBtn"
+                                data-i18n-title="player.collapsePanel" title="Collapse/expand panel">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6" />
                                 </svg>
                             </button>
                         </div>
                         <div class="sidebar-panel-controls" id="playlistControls" style="display:none;">
-                            <button class="sidebar-panel-btn" id="playlistToggle" data-i18n-title="video.togglePlaylist" title="Toggle playlist">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M3 6h18M3 12h18M3 18h18"/>
+                            <button class="sidebar-panel-btn" id="playlistToggle" data-i18n-title="video.togglePlaylist"
+                                title="Toggle playlist">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M3 6h18M3 12h18M3 18h18" />
                                 </svg>
                             </button>
-                            <button class="right-sidebar-collapse-btn" id="rightSidebarCollapseBtnPlaylist" data-i18n-title="player.collapsePanel" title="Collapse/expand panel">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="9 18 15 12 9 6"/>
+                            <button class="right-sidebar-collapse-btn" id="rightSidebarCollapseBtnPlaylist"
+                                data-i18n-title="player.collapsePanel" title="Collapse/expand panel">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6" />
                                 </svg>
                             </button>
                         </div>
@@ -6903,41 +7116,56 @@
                         </div>
                         <!-- Playlist Tab -->
                         <div class="sidebar-tab-content" id="playlistTabContent">
-                            <div id="playlistHeader" style="display:none;padding:6px 10px;border-bottom:1px solid #eee;background:#fafafa;">
+                            <div id="playlistHeader"
+                                style="display:none;padding:6px 10px;border-bottom:1px solid #eee;background:#fafafa;">
                                 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                                    <span id="playlistTitle" style="font-size:12px;font-weight:600;color:#666;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
-                                    <a id="playlistOpenLink" href="#" target="_blank" data-i18n-title="playlists.openPlaylist" title="Open playlist" style="color:#999;display:flex;align-items:center;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                                            <polyline points="15 3 21 3 21 9"/>
-                                            <line x1="10" y1="14" x2="21" y2="3"/>
+                                    <span id="playlistTitle"
+                                        style="font-size:12px;font-weight:600;color:#666;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+                                    <a id="playlistOpenLink" href="#" target="_blank"
+                                        data-i18n-title="playlists.openPlaylist" title="Open playlist"
+                                        style="color:#999;display:flex;align-items:center;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                            <polyline points="15 3 21 3 21 9" />
+                                            <line x1="10" y1="14" x2="21" y2="3" />
                                         </svg>
                                     </a>
                                 </div>
                                 <div id="playlistControls2" style="display:flex;gap:4px;margin-top:6px;">
-                                    <button id="playlistInvertBtn" class="playlist-control-btn" data-i18n-title="playlists.invert" title="Invert">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <line x1="12" y1="5" x2="12" y2="19"/>
-                                            <polyline points="19 12 12 19 5 12"/>
-                                            <line x1="12" y1="5" x2="12" y2="5"/>
-                                            <polyline points="5 8 12 1 19 8"/>
+                                    <button id="playlistInvertBtn" class="playlist-control-btn"
+                                        data-i18n-title="playlists.invert" title="Invert">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                            <polyline points="19 12 12 19 5 12" />
+                                            <line x1="12" y1="5" x2="12" y2="5" />
+                                            <polyline points="5 8 12 1 19 8" />
                                         </svg>
                                     </button>
-                                    <button id="playlistLoopBtn" class="playlist-control-btn" data-i18n-title="playlists.loopPlaylist" title="Loop playlist">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <polyline points="17 1 21 5 17 9"/>
-                                            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-                                            <polyline points="7 23 3 19 7 15"/>
-                                            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                                    <button id="playlistLoopBtn" class="playlist-control-btn"
+                                        data-i18n-title="playlists.loopPlaylist" title="Loop playlist">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="17 1 21 5 17 9" />
+                                            <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                                            <polyline points="7 23 3 19 7 15" />
+                                            <path d="M21 13v2a4 4 0 0 1-4 4H3" />
                                         </svg>
                                     </button>
-                                    <button id="playlistShuffleBtn" class="playlist-control-btn" data-i18n-title="playlists.shuffle" title="Shuffle">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <polyline points="16 3 21 3 21 8"/>
-                                            <line x1="4" y1="20" x2="21" y2="3"/>
-                                            <polyline points="21 16 21 21 16 21"/>
-                                            <line x1="15" y1="15" x2="21" y2="21"/>
-                                            <line x1="4" y1="4" x2="9" y2="9"/>
+                                    <button id="playlistShuffleBtn" class="playlist-control-btn"
+                                        data-i18n-title="playlists.shuffle" title="Shuffle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="16 3 21 3 21 8" />
+                                            <line x1="4" y1="20" x2="21" y2="3" />
+                                            <polyline points="21 16 21 21 16 21" />
+                                            <line x1="15" y1="15" x2="21" y2="21" />
+                                            <line x1="4" y1="4" x2="9" y2="9" />
                                         </svg>
                                     </button>
                                 </div>
@@ -6959,7 +7187,8 @@
 
                 <!-- Recommendations -->
                 <div class="sidebar-section-right" id="recommendationsSidebar">
-                    <div class="section-title-right" data-i18n="video.relatedVideos" style="display: none;">Похожие видео</div>
+                    <div class="section-title-right" data-i18n="video.relatedVideos" style="display: none;">Похожие
+                        видео</div>
                 </div>
             </aside>
         </div><!-- /content-wrapper -->
@@ -7276,6 +7505,9 @@
         const videosPerPage = 5;
         let allPlaylistCategories = new Map();
         let currentFilter = 'all';
+        const videoUrlParams = new URLSearchParams(window.location.search);
+        let currentRatingFilter = videoUrlParams.get('rating') || localStorage.getItem('youvi_rating_filter') || 'all';
+        window.currentRatingFilter = currentRatingFilter;
 
         let logoEnabled = localStorage.getItem("video_logo_enabled") === "true";
         let logoType = localStorage.getItem("video_logo_type") || "red";
@@ -7762,7 +7994,7 @@
             try {
                 // Read existing metadata to preserve created timestamp
                 const existingMeta = await getVideoMetadata(dirHandle, fileName);
-                
+
                 // Merge with existing, preserving created field
                 const safeMeta = {
                     ...existingMeta,
@@ -7771,7 +8003,7 @@
                     created: existingMeta.created || metadata.created || Date.now(),
                     fileCreated: existingMeta.fileCreated || metadata.fileCreated
                 };
-                
+
                 const metaDir = await dirHandle.getDirectoryHandle('.metadata', { create: true });
                 const metaFileName = fileName + '.meta.json';
                 await writeJSONFile(metaDir, metaFileName, safeMeta);
@@ -8088,7 +8320,7 @@
         }
 
         async function loadCurrentPlaylistVideos() {
-            debug.log('🚀 Quick loading current playlist videos...');
+            debug.log('рџљЂ Quick loading current playlist videos...');
             allVideos = [];
             window.allVideos = allVideos;
             const exts = ['.mp4', '.avi', '.mov', '.mkv', '.webm', '.m4v'];
@@ -8175,17 +8407,17 @@
         }
 
         const videoHandlesCache = new Map();
-        
+
         function getVideoHandle(videoName) {
             return videoHandlesCache.get(videoName);
         }
-        
+
         function cacheVideoHandle(videoName, handle, dirHandle) {
             videoHandlesCache.set(videoName, { handle, dirHandle });
         }
 
         async function loadAllVideos() {
-            
+
             const wasQuickLoaded = allVideos.length > 0;
             if (wasQuickLoaded) {
                 debug.log('Videos already quick-loaded, performing full scan to add remaining...');
@@ -8262,7 +8494,7 @@
                                     currentVideoNames.add(name);
 
                                     if (existingVideoNames.has(name)) {
-                                       
+
                                         cacheVideoHandle(name, handle, dir);
                                         return;
                                     }
@@ -8317,7 +8549,7 @@
 
             debug.log('Total videos loaded:', allVideos.length);
             debug.log('Handles cached:', videoHandlesCache.size);
-            
+
             if (window.VideoID && videoDirectoryHandle) {
                 window.VideoID.saveIndex(videoDirectoryHandle);
             }
@@ -8481,7 +8713,7 @@
 
         async function loadVideoAndPlay() {
             const urlParams = new URLSearchParams(window.location.search);
-            
+
             let videoName = null;
             const videoId = urlParams.get('v');
             if (videoId && window.VideoID && window.VideoID.isVideoId(videoId)) {
@@ -8493,14 +8725,14 @@
                     window.VideoID.register(videoName);
                 }
             }
-            
+
             const playlistId = urlParams.get('playlist') || urlParams.get('userPlaylist');
 
             if (!videoName) {
                 showErrorState(typeof i18n !== 'undefined' ? i18n.t('video.videoNotSpecified', 'Видео не указано') : 'Видео не указано', 'notfound');
                 return;
             }
-            
+
             if (window._openPlaylistTabOnLoad || playlistId) {
                 window._openPlaylistTabOnLoad = false;
                 const playlistTab = document.querySelector('.sidebar-panel-tab[data-tab="playlist"]');
@@ -8544,7 +8776,7 @@
                 window.currentVideoName = currentVideo.name;
                 window.currentPlaylistHandle = currentVideo.dirHandle;
                 window.currentVideo = currentVideo;
-                window.videoEl = video; 
+                window.videoEl = video;
 
                 currentVideoName = currentVideo.name;
                 currentPlaylistHandle = currentVideo.dirHandle;
@@ -8623,7 +8855,35 @@
                         let historyListCache = null, historyPaused = false, lastWrite = 0, recorded = false;
                         const histBaseKey = buildVideoKey(currentVideo.name, currentVideo.playlist || '');
                         async function ensureLoaded() { if (!historyListCache) { const s = await loadSettings(); historyPaused = !!(s && s.historyPaused); historyListCache = await loadHistory(); } }
-                        async function upsert(progress) { await ensureLoaded(); if (historyPaused) return; const list = historyListCache || []; const now = Date.now(); const dayKey = makeDayKey(now); const k = `${histBaseKey}::${dayKey}`; let it = list.find(x => x.key === k); const preview = (!it || !it.preview) ? capturePreviewDataURL(video) : it.preview; const base = { key: k, name: currentVideo.name, playlist: currentVideo.playlist || '', title: currentVideo.title || currentVideo.name, preview, lastWatchedAt: now, progress: Math.max(0, Math.min(1, progress || 0)) }; if (!it) list.push(base); else Object.assign(it, base); historyListCache = list; if (now - lastWrite > 1000) { lastWrite = now; saveHistory(list).catch(() => { }); } }
+                        async function upsert(progress) {
+                            await ensureLoaded();
+                            if (historyPaused) return;
+                            const list = historyListCache || [];
+                            const now = Date.now();
+                            const dayKey = makeDayKey(now);
+                            const k = `${histBaseKey}::${dayKey}`;
+                            let it = list.find(x => x.key === k);
+                            const preview = (!it || !it.preview) ? capturePreviewDataURL(video) : it.preview;
+                            const base = {
+                                key: k,
+                                name: currentVideo.name,
+                                playlist: currentVideo.playlist || '',
+                                title: currentVideo.title || currentVideo.name,
+                                tags: Array.isArray(currentVideo.tags) && currentVideo.tags.length
+                                    ? currentVideo.tags.slice()
+                                    : (Array.isArray(it && it.tags) ? it.tags.slice() : []),
+                                preview,
+                                lastWatchedAt: now,
+                                progress: Math.max(0, Math.min(1, progress || 0))
+                            };
+                            if (!it) list.push(base);
+                            else Object.assign(it, base);
+                            historyListCache = list;
+                            if (now - lastWrite > 1000) {
+                                lastWrite = now;
+                                saveHistory(list).catch(() => { });
+                            }
+                        }
                         let lastHistoryUpdate = 0;
                         video.addEventListener('timeupdate', () => {
                             if (!video.duration) return;
@@ -8865,6 +9125,7 @@
                                     playlist: currentVideo.playlist || '',
                                     title: getFileNameWithoutExtension(currentVideo.name),
                                     preview,
+                                    tags: Array.isArray(currentVideo.tags) ? currentVideo.tags.slice() : [],
                                     addedAt: Date.now()
                                 });
                                 await saveFavorites(favs);
@@ -8972,11 +9233,11 @@
                     debug.log('Looking for playlist with ID:', playlistId);
                     const playlist = allPlaylists.find(pl => String(pl.id) === playlistId);
                     debug.log('Found playlist:', playlist);
-                    
+
                     const playlistHeader = document.getElementById('playlistHeader');
                     const playlistTitleEl = document.getElementById('playlistTitle');
                     const playlistOpenLink = document.getElementById('playlistOpenLink');
-                    
+
                     if (playlist && playlist.title) {
                         if (playlistHeader) playlistHeader.style.display = '';
                         if (playlistTitleEl) playlistTitleEl.textContent = playlist.title;
@@ -8987,9 +9248,9 @@
                     } else {
                         if (playlistHeader) playlistHeader.style.display = 'none';
                     }
-                    
+
                     if (playlist && playlist.videos && playlist.videos.length > 0) {
-                        const videosToShow = playlist.videos.map(video => {
+                        let videosToShow = applyRatingFilterToList(playlist.videos, currentRatingFilter).map(video => {
                             if (!video.channelName && Array.isArray(video.tags)) {
                                 try {
                                     if (window.TagTypes) {
@@ -9004,18 +9265,23 @@
                             }
                             return video;
                         });
-                        
+
                         if (window._playlistInverted) {
                             videosToShow.reverse();
                         }
 
-                        if (window.VirtualPlaylistRenderer) {
+                        if (videosToShow.length === 0) {
+                            const noFilteredVideos = document.createElement('div');
+                            noFilteredVideos.textContent = i18n.t('search.noResults', 'Nothing found');
+                            noFilteredVideos.style.cssText = 'padding:10px;text-align:center;color:#666;font-size:12px;';
+                            playlistContent.appendChild(noFilteredVideos);
+                        } else if (window.VirtualPlaylistRenderer) {
                             virtualPlaylistRenderer = new window.VirtualPlaylistRenderer(playlistContent, {
                                 itemHeight: 112,
                                 bufferSize: 5,
                                 onVideoClick: (video) => {
                                     window._openPlaylistTabOnLoad = true;
-                                    
+
                                     const newUrl = window.VideoID.buildVideoUrl(video.name, playlistId);
                                     window.history.pushState({}, '', newUrl);
                                     currentVideo = video;
@@ -9047,7 +9313,7 @@
                 } else {
                     const playlistHeader = document.getElementById('playlistHeader');
                     if (playlistHeader) playlistHeader.style.display = 'none';
-                    
+
                     const noPlaylist = document.createElement('div');
                     noPlaylist.textContent = i18n.t('playlists.noActivePlaylist', 'No active playlist');
                     noPlaylist.style.cssText = 'padding:10px;text-align:center;color:#666;font-size:12px;';
@@ -9057,7 +9323,7 @@
                 const playlistHeader = document.getElementById('playlistHeader');
                 const playlistTitleEl = document.getElementById('playlistTitle');
                 const playlistOpenLink = document.getElementById('playlistOpenLink');
-                
+
                 if (dirHandle && dirHandle.name) {
                     if (playlistHeader) playlistHeader.style.display = '';
                     if (playlistTitleEl) playlistTitleEl.textContent = i18n.t('admin.folderPrefix') + ' ' + dirHandle.name;
@@ -9065,7 +9331,7 @@
                 } else {
                     if (playlistHeader) playlistHeader.style.display = 'none';
                 }
-                
+
                 if (!dirHandle) {
                     const noFolder = document.createElement('div');
                     noFolder.textContent = i18n.t('admin.folderNotDefined');
@@ -9075,16 +9341,17 @@
                 }
 
                 const folderVideos = allVideos.filter(video => video.dirHandle === dirHandle);
+                const filteredFolderVideos = applyRatingFilterToList(folderVideos, currentRatingFilter);
                 debug.log('Folder videos found:', folderVideos.length);
-                if (folderVideos.length === 0) {
+                if (filteredFolderVideos.length === 0) {
                     const noVideos = document.createElement('div');
-                    noVideos.textContent = 'В папке нет видео';
+                    noVideos.textContent = i18n.t('search.noResults', 'Nothing found');
                     noVideos.style.cssText = 'padding:10px;text-align:center;color:#666;font-size:12px;';
                     playlistContent.appendChild(noVideos);
                     return;
                 }
 
-                const videosToShow = folderVideos.slice().sort((a, b) => {
+                const videosToShow = filteredFolderVideos.slice().sort((a, b) => {
                     const nameA = getFileNameWithoutExtension(a.name || '');
                     const nameB = getFileNameWithoutExtension(b.name || '');
                     return naturalSort(nameA, nameB);
@@ -9103,7 +9370,7 @@
                     }
                     return video;
                 });
-                
+
                 if (window._playlistInverted) {
                     videosToShow.reverse();
                 }
@@ -9114,7 +9381,7 @@
                         bufferSize: 5,
                         onVideoClick: (video) => {
                             window._openPlaylistTabOnLoad = true;
-                            
+
                             const newUrl = window.VideoID.buildVideoUrl(video.name);
                             window.history.pushState({}, '', newUrl);
                             currentVideo = video;
@@ -9156,7 +9423,7 @@
 
             const danmakuCount = video.danmakuCount || (window.DanmakuCounter ? window.DanmakuCounter.get(video.name) : 0);
             const createdDateObj = video.created ? new Date(video.created) : null;
-            const dateStr = createdDateObj ? `${String(createdDateObj.getDate()).padStart(2,'0')}/${String(createdDateObj.getMonth()+1).padStart(2,'0')}/${createdDateObj.getFullYear()}` : '';
+            const dateStr = createdDateObj ? `${String(createdDateObj.getDate()).padStart(2, '0')}/${String(createdDateObj.getMonth() + 1).padStart(2, '0')}/${createdDateObj.getFullYear()}` : '';
             const viewsSvg = `<svg width="12" height="12" viewBox="0 0 24 24" style="display:inline;vertical-align:-2px;"><path fill="#888" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`;
             const danmakuSvg = `<svg width="12" height="12" viewBox="0 0 24 24" style="display:inline;vertical-align:-2px;"><path fill="#888" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>`;
             const metaParts = [];
@@ -9170,6 +9437,7 @@
                 <div class="related-thumb">
             ${lazyThumb.outerHTML}
             <div class="related-duration">0:00</div>
+            ${getVideoRatingBadgeHtmlForVideo(video)}
                 </div>
                 <div class="related-info">
                     <div class="related-title">${escapeHtml(getFileNameWithoutExtension(video.name))}</div>
@@ -9267,11 +9535,11 @@
                     document.fullscreenElement) {
                     return;
                 }
-                
+
                 const playerSection = document.querySelector('.player-section');
                 const danmakuContent = document.querySelector('.danmaku-content');
                 const sidebarPanel = document.getElementById('sidebarPanelCombined');
-                
+
                 if (playerSection && sidebarPanel) {
                     let totalHeight = playerSection.offsetHeight;
                     if (danmakuContent) {
@@ -9289,7 +9557,7 @@
                     sidebarPanel.style.maxHeight = totalHeight + 'px';
                 }
             }
-            
+
             syncSidebarHeight();
             setTimeout(syncSidebarHeight, 100);
             setTimeout(syncSidebarHeight, 500);
@@ -9299,67 +9567,67 @@
             if (videoForSync) {
                 videoForSync.addEventListener('loadedmetadata', syncSidebarHeight);
             }
-            
+
             const tabs = document.querySelectorAll('.sidebar-panel-tab');
             const tabContents = document.querySelectorAll('.sidebar-tab-content');
             const danmakuControls = document.getElementById('danmakuControls');
             const playlistControls = document.getElementById('playlistControls');
-            
+
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     const targetTab = tab.getAttribute('data-tab');
                     const currentTab = window._currentSidebarTab || 'danmaku';
-                    
+
                     if (currentTab === 'danmaku' && targetTab !== 'danmaku') {
                         if (window.DanmakuScrollSync) {
                             window.DanmakuScrollSync.saveSidebarScrollPosition();
                         }
                     }
-                    
+
                     tabs.forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
-                    
+
                     tabContents.forEach(content => {
                         content.classList.remove('active');
                         if (content.id === targetTab + 'TabContent') {
                             content.classList.add('active');
                         }
                     });
-                    
+
                     if (danmakuControls) {
                         danmakuControls.style.display = targetTab === 'danmaku' ? '' : 'none';
                     }
                     if (playlistControls) {
                         playlistControls.style.display = targetTab === 'playlist' ? '' : 'none';
                     }
-                    
+
                     if (targetTab === 'danmaku' && currentTab !== 'danmaku') {
                         const danmakuContent = document.getElementById('danmakuTabContent');
                         if (window.DanmakuScrollSync && danmakuContent) {
                             window.DanmakuScrollSync.syncSidebarScrollPosition(danmakuContent);
                         }
                     }
-                    
+
                     window._currentSidebarTab = targetTab;
                 });
             });
-            
-            
+
+
             const collapseBtn1 = document.getElementById('rightSidebarCollapseBtn');
             const collapseBtn2 = document.getElementById('rightSidebarCollapseBtnPlaylist');
             const sidebarPanelCombined = document.getElementById('sidebarPanelCombined');
-            
+
             function togglePanelCollapse() {
                 if (!sidebarPanelCombined) return;
                 const wasCollapsed = sidebarPanelCombined.classList.contains('collapsed');
                 sidebarPanelCombined.classList.toggle('collapsed');
                 const collapsed = sidebarPanelCombined.classList.contains('collapsed');
                 localStorage.setItem('danmakuPanelCollapsed', collapsed);
-                
+
                 if (wasCollapsed && !collapsed) {
                     const danmakuTab = document.querySelector('.sidebar-panel-tab[data-tab="danmaku"]');
                     const danmakuContent = document.getElementById('danmakuTabContent');
-                    
+
                     if (danmakuTab && danmakuTab.classList.contains('active') && danmakuContent) {
                         if (window.DanmakuScrollSync) {
                             setTimeout(() => {
@@ -9369,59 +9637,59 @@
                     }
                 }
             }
-            
+
             if (sidebarPanelCombined) {
                 const isCollapsed = localStorage.getItem('danmakuPanelCollapsed') === 'true';
                 if (isCollapsed) {
                     sidebarPanelCombined.classList.add('collapsed');
                 }
-                
+
                 if (collapseBtn1) collapseBtn1.addEventListener('click', togglePanelCollapse);
                 if (collapseBtn2) collapseBtn2.addEventListener('click', togglePanelCollapse);
             }
-            
+
             if (typeof window._danmakuFollowEnabled === 'undefined') {
                 window._danmakuFollowEnabled = true;
             }
-            
+
             const sidebarFollowBtn = document.getElementById('sidebarFollowBtn');
             if (sidebarFollowBtn) {
                 sidebarFollowBtn.classList.toggle('active', window._danmakuFollowEnabled);
-                
+
                 sidebarFollowBtn.addEventListener('click', () => {
                     window._danmakuFollowEnabled = !window._danmakuFollowEnabled;
                     sidebarFollowBtn.classList.toggle('active', window._danmakuFollowEnabled);
-                    
+
                     const panelFollow = document.getElementById('danmakuPanelFollow');
                     if (panelFollow) {
                         panelFollow.classList.toggle('active', window._danmakuFollowEnabled);
                     }
                 });
             }
-              const videoEl = document.getElementById('video');
+            const videoEl = document.getElementById('video');
             if (videoEl) {
                 let lastSidebarHighlightTime = 0;
                 videoEl.addEventListener('timeupdate', () => {
                     const danmakuTab = document.getElementById('danmakuTabContent');
                     if (!danmakuTab || !danmakuTab.classList.contains('active')) return;
-                    
+
                     // Throttle updates
                     const now = Date.now();
                     if (now - lastSidebarHighlightTime < 500) return;
                     lastSidebarHighlightTime = now;
-                    
+
                     const currentTime = videoEl.currentTime;
                     const commentsList = document.getElementById('danmakuCommentsList');
-                    
+
                     // For follow mode with large datasets, use binary search on cached data
                     if (window._danmakuFollowEnabled && _sortedDanmakuData && _sortedDanmakuData.length > 0) {
                         const targetIndex = findDanmakuIndexByTime(_sortedDanmakuData, currentTime);
-                        
+
                         if (targetIndex >= 0) {
                             // Check if we need to load more items
                             const renderedItems = commentsList ? commentsList.querySelectorAll('.danmaku-comment-item').length : 0;
                             const loadMoreBtn = commentsList ? commentsList.querySelector('.danmaku-load-more') : null;
-                            
+
                             // If target is beyond rendered items, auto-load more
                             if (targetIndex >= renderedItems && loadMoreBtn) {
                                 loadMoreBtn.click();
@@ -9433,16 +9701,16 @@
                             }
                         }
                     }
-                    
+
                     highlightSidebarDanmaku(danmakuTab, currentTime);
                 });
             }
-            
+
             function highlightSidebarDanmaku(danmakuTab, currentTime) {
                 const items = danmakuTab.querySelectorAll('.danmaku-comment-item');
                 let firstCurrentItem = null;
-                
-                
+
+
                 items.forEach(item => {
                     const timeSpan = item.querySelector('.danmaku-comment-time');
                     if (!timeSpan) return;
@@ -9454,15 +9722,15 @@
                     } else if (timeParts.length === 2) {
                         time = timeParts[0] * 60 + timeParts[1];
                     }
-                    
+
                     const isCurrent = Math.abs(time - currentTime) < 2;
                     item.classList.toggle('current', isCurrent);
-                    
+
                     if (isCurrent && !firstCurrentItem) {
                         firstCurrentItem = item;
                     }
                 });
-                
+
                 if (window._danmakuFollowEnabled && firstCurrentItem) {
                     const itemTop = firstCurrentItem.offsetTop;
                     const listHeight = danmakuTab.clientHeight;
@@ -9484,14 +9752,14 @@
                     }
                 });
             }
-            
+
             const playlistToggle = document.getElementById('playlistToggle');
             const playlistContent = document.getElementById('playlistContent');
             if (playlistToggle) {
                 playlistToggle.addEventListener('click', () => {
                     currentPlaylistType = currentPlaylistType === 'current' ? 'folder' : 'current';
                     playlistToggle.classList.toggle('rotated');
-                    
+
                     if (currentVideo) {
                         if (playlistContent) {
                             playlistContent.innerHTML = '';
@@ -9502,25 +9770,25 @@
                     }
                 });
             }
-            
+
             window._playlistInverted = localStorage.getItem('playlistInverted') === 'true';
             window._playlistLoop = localStorage.getItem('playlistLoop') === 'true';
             window._playlistShuffle = localStorage.getItem('playlistShuffle') === 'true';
-            
+
             const playlistInvertBtn = document.getElementById('playlistInvertBtn');
             const playlistLoopBtn = document.getElementById('playlistLoopBtn');
             const playlistShuffleBtn = document.getElementById('playlistShuffleBtn');
-            
+
             if (playlistInvertBtn) playlistInvertBtn.classList.toggle('active', window._playlistInverted);
             if (playlistLoopBtn) playlistLoopBtn.classList.toggle('active', window._playlistLoop);
             if (playlistShuffleBtn) playlistShuffleBtn.classList.toggle('active', window._playlistShuffle);
-            
+
             if (playlistInvertBtn) {
                 playlistInvertBtn.addEventListener('click', () => {
                     window._playlistInverted = !window._playlistInverted;
                     localStorage.setItem('playlistInverted', window._playlistInverted);
                     playlistInvertBtn.classList.toggle('active', window._playlistInverted);
-                    
+
                     const urlParams = new URLSearchParams(window.location.search);
                     const playlistId = urlParams.get('playlist') || urlParams.get('userPlaylist');
                     const playlistContentEl = document.getElementById('playlistContent');
@@ -9530,7 +9798,7 @@
                     renderCombinedPlaylist(playlistId, currentVideo?.dirHandle, currentVideo?.name);
                 });
             }
-            
+
             if (playlistLoopBtn) {
                 playlistLoopBtn.addEventListener('click', () => {
                     window._playlistLoop = !window._playlistLoop;
@@ -9538,7 +9806,7 @@
                     playlistLoopBtn.classList.toggle('active', window._playlistLoop);
                 });
             }
-            
+
             if (playlistShuffleBtn) {
                 playlistShuffleBtn.addEventListener('click', () => {
                     window._playlistShuffle = !window._playlistShuffle;
@@ -9575,6 +9843,8 @@
                     video.categories && video.categories.some(cat => cat.trim().toLowerCase() === currentFilter.trim().toLowerCase())
                 );
             }
+
+            otherVideos = applyRatingFilterToList(otherVideos, currentRatingFilter);
 
             let sortedRecommendations = otherVideos.sort(() => 0.5 - Math.random());
             const recommendations = sortedRecommendations.slice(0, numRecommendations);
@@ -9670,6 +9940,175 @@
             return channelName || '';
         }
 
+        function getVideoRatingForPage(tags) {
+            if (window.YouviFilterEngine && typeof window.YouviFilterEngine.getVideoRating === 'function') {
+                return window.YouviFilterEngine.getVideoRating(tags || []);
+            }
+            if (!Array.isArray(tags) || tags.length === 0) return 'safe';
+            let result = 'safe';
+            for (const rawTag of tags) {
+                const normalized = String(rawTag || '').toLowerCase().trim();
+                const match = normalized.match(/^(.+?)\s*\(ra\)$/);
+                if (!match) continue;
+                const value = match[1].trim();
+                if (value === 'explicit') return 'explicit';
+                if (value === 'questionable' && result !== 'explicit') result = 'questionable';
+            }
+            return result;
+        }
+
+        function getEffectiveTagsForRating(video) {
+            if (video && video.name && Array.isArray(allVideos)) {
+                const fullVideo = allVideos.find(v => v && v.name === video.name && Array.isArray(v.tags) && v.tags.length > 0);
+                if (fullVideo) return fullVideo.tags;
+            }
+            if (video && Array.isArray(video.tags)) return video.tags;
+            return [];
+        }
+
+        function getVideoRatingBadgeHtmlForVideo(video) {
+            const tags = getEffectiveTagsForRating(video);
+            const rating = getVideoRatingForPage(tags);
+            if (rating === 'safe') return '';
+            const badgeColor = rating === 'explicit'
+                ? 'rgba(244, 67, 54, 0.95)'
+                : 'rgba(255, 152, 0, 0.95)';
+            return `<div class="video-rating-badge rating-${rating}" style="background:${badgeColor};">Archived</div>`;
+        }
+        window.getVideoRatingBadgeHtmlForVideo = getVideoRatingBadgeHtmlForVideo;
+
+        function applyRatingFilterToList(videos, mode) {
+            const list = Array.isArray(videos) ? videos : [];
+            const effectiveMode = mode || currentRatingFilter || 'all';
+            if (effectiveMode === 'all') return list;
+            if (effectiveMode === 'general') {
+                return list.filter(v => getVideoRatingForPage(getEffectiveTagsForRating(v)) === 'safe');
+            }
+            if (effectiveMode === 'archived') {
+                return list.filter(v => {
+                    const rating = getVideoRatingForPage(getEffectiveTagsForRating(v));
+                    return rating === 'questionable' || rating === 'explicit';
+                });
+            }
+            return list;
+        }
+
+        function getRatingFilteredVideoSource() {
+            return applyRatingFilterToList(allVideos, currentRatingFilter);
+        }
+
+        function buildVisibleTagCountsForVideoPage() {
+            const tagCounts = new Map();
+            const visibleVideos = getRatingFilteredVideoSource();
+            visibleVideos.forEach(v => {
+                (v.tags || []).forEach(rawTag => {
+                    const tag = String(rawTag || '').trim();
+                    if (!tag) return;
+                    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+                });
+            });
+            return tagCounts;
+        }
+
+        function filterTagAutocompleteResultsForVideoPage(results) {
+            if (!Array.isArray(results)) return results;
+            const visibleTagCounts = buildVisibleTagCountsForVideoPage();
+
+            return results
+                .map(tag => {
+                    const canonical = String(tag?.canonical || '').trim();
+                    if (!canonical) return null;
+                    const count = visibleTagCounts.get(canonical);
+                    if (!count) return null;
+                    return { ...tag, usageCount: count };
+                })
+                .filter(Boolean)
+                .sort((a, b) => (b.usageCount || 0) - (a.usageCount || 0));
+        }
+
+        function syncFooterRatingFilterUI() {
+            const map = {
+                all: 'footerFilterAll',
+                general: 'footerFilterGeneral',
+                archived: 'footerFilterArchived'
+            };
+            Object.values(map).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
+            const activeId = map[currentRatingFilter] || map.all;
+            const activeEl = document.getElementById(activeId);
+            if (activeEl) activeEl.classList.add('active');
+        }
+
+        function setRatingFilter(mode) {
+            const allowed = ['all', 'general', 'archived'];
+            const next = allowed.includes(mode) ? mode : 'all';
+            if (currentRatingFilter === next) return;
+            currentRatingFilter = next;
+            window.currentRatingFilter = currentRatingFilter;
+            try {
+                localStorage.setItem('youvi_rating_filter', currentRatingFilter);
+            } catch (_) { }
+            try {
+                const params = new URLSearchParams(window.location.search);
+                if (currentRatingFilter === 'all') params.delete('rating');
+                else params.set('rating', currentRatingFilter);
+                const nextUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+                window.history.replaceState({}, '', nextUrl);
+            } catch (_) { }
+            syncFooterRatingFilterUI();
+            try {
+                window.dispatchEvent(new CustomEvent('youvi:ratingFilterChanged', { detail: { mode: currentRatingFilter } }));
+            } catch (_) { }
+            updateRecommendationsDebounced();
+            if (currentVideo) {
+                const params = new URLSearchParams(window.location.search);
+                const playlistId = params.get('playlist') || params.get('userPlaylist');
+                renderCombinedPlaylist(playlistId, currentVideo.dirHandle, currentVideo.name).catch(() => { });
+            }
+        }
+
+        function filterAutocompleteResultsForVideoPage(results) {
+            if (!results) return results;
+            const visibleVideos = getRatingFilteredVideoSource();
+            if (window.YouviAutocompleteFilterHelper && typeof window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos === 'function') {
+                return window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos(
+                    results,
+                    visibleVideos,
+                    allPlaylists || []
+                );
+            }
+            const allowedVideoNames = new Set(visibleVideos.map(v => v.name));
+            const allowedChannels = new Set(visibleVideos.map(v => getVideoChannelName(v)).filter(Boolean));
+            const tagCounts = new Map();
+            visibleVideos.forEach(v => {
+                (v.tags || []).forEach(rawTag => {
+                    const tag = String(rawTag || '').trim();
+                    if (!tag || tag.includes('(ка)')) return;
+                    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+                });
+            });
+
+            return {
+                ...results,
+                tags: (results.tags || [])
+                    .map(tag => {
+                        const name = String((tag && tag.name) || '').trim();
+                        if (!name || !tagCounts.has(name)) return null;
+                        return { ...tag, count: tagCounts.get(name) };
+                    })
+                    .filter(Boolean)
+                    .sort((a, b) => (b.count || 0) - (a.count || 0)),
+                videos: (results.videos || []).filter(v => allowedVideoNames.has(v.name)),
+                playlists: (results.playlists || []).filter(pl => {
+                    if (!pl || !Array.isArray(pl.videos)) return true;
+                    return pl.videos.some(v => allowedVideoNames.has(v.name));
+                }),
+                channels: (results.channels || []).filter(c => allowedChannels.has(c.name))
+            };
+        }
+
         function updateRecommendationsTabs() {
             const similarBtn = document.getElementById('recsSimilarBtn');
             const channelBtn = document.getElementById('recsChannelBtn');
@@ -9731,7 +10170,7 @@
             if (recsUpdateTimer) {
                 clearTimeout(recsUpdateTimer);
             }
-            
+
             recsUpdateTimer = setTimeout(() => {
                 try {
                     const recsSource = getRecommendationsSourceVideos();
@@ -9739,17 +10178,17 @@
                         return;
                     }
                     const sourceChanged = recsSource.source !== lastRecsSourceType;
-                    const needsUpdate = sourceChanged || (window.YouviRecommendations.needsRebuild 
+                    const needsUpdate = sourceChanged || (window.YouviRecommendations.needsRebuild
                         ? window.YouviRecommendations.needsRebuild(recsSource.list)
                         : recsSource.list.length !== lastRecsVideoCount);
-                    
+
                     if (needsUpdate) {
                         window.YouviRecommendations.onAllVideosUpdated(recsSource.list);
                         lastRecsVideoCount = recsSource.list.length;
                         lastRecsSourceType = recsSource.source;
                         debug.log('[Recommendations] Index updated:', recsSource.list.length, 'videos');
                     }
-                    
+
                     renderRecommendationsSidebarEfficient();
                 } catch (e) {
                     debug.warn('[Recommendations] Update failed:', e);
@@ -9762,11 +10201,11 @@
             const sidebarSection = document.getElementById('recommendationsSidebar');
             if (!sidebarSection) return;
             const title = sidebarSection.querySelector('.section-title-right');
-            
+
             const fragment = document.createDocumentFragment();
 
             updateRecommendationsTabs();
-            
+
             if (!window.YouviRecommendations || !currentVideo) {
                 const loading = document.createElement('div');
                 loading.textContent = 'Загрузка рекомендаций…';
@@ -9797,6 +10236,8 @@
             if (recommendationsMode === 'similar') {
                 recs = window.YouviRecommendations.recommendFor(currentVideo, { limit }) || [];
             }
+
+            recs = applyRatingFilterToList(recs, currentRatingFilter).filter(v => v && v.name !== currentVideo.name);
 
             if (recs.length === 0) {
                 const noRecommendations = document.createElement('div');
@@ -9868,7 +10309,7 @@
 
                     const thumbnailElement = document.createElement('a');
                     thumbnailElement.className = 'video-thumbnail';
-                    const thumbUrl = window.VideoID 
+                    const thumbUrl = window.VideoID
                         ? window.VideoID.buildVideoUrl(video.name, playlistId)
                         : `youvi_video.html?name=${encodeURIComponent(video.name)}${playlistId ? `&playlist=${encodeURIComponent(playlistId)}` : ''}`;
                     thumbnailElement.href = thumbUrl;
@@ -9880,6 +10321,7 @@
 
 
                     thumbnailElement.innerHTML = `
+                        ${getVideoRatingBadgeHtmlForVideo(video)}
                         <div class="video-duration">...</div>
                         <div style="width:100%;height:100%;background:#333;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;text-align:center;padding:5px;">
                             ${escapeHtml(getFileNameWithoutExtension(video.name))}
@@ -9889,7 +10331,7 @@
                     infoElement.className = 'video-info';
                     const danmakuCount = video.danmakuCount || (window.DanmakuCounter ? window.DanmakuCounter.get(video.name) : 0);
                     const createdDateObj = video.created ? new Date(video.created) : null;
-                    const dateStr = createdDateObj ? `${String(createdDateObj.getDate()).padStart(2,'0')}/${String(createdDateObj.getMonth()+1).padStart(2,'0')}/${createdDateObj.getFullYear()}` : '';
+                    const dateStr = createdDateObj ? `${String(createdDateObj.getDate()).padStart(2, '0')}/${String(createdDateObj.getMonth() + 1).padStart(2, '0')}/${createdDateObj.getFullYear()}` : '';
                     const viewsSvg = `<svg width="12" height="12" viewBox="0 0 24 24" style="display:inline;vertical-align:-2px;"><path fill="#888" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`;
                     const danmakuSvg = `<svg width="12" height="12" viewBox="0 0 24 24" style="display:inline;vertical-align:-2px;"><path fill="#888" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>`;
                     const metaParts = [];
@@ -9951,7 +10393,7 @@
                 try {
                     const { preview, duration } = await getPreviewAndDuration(video);
                     if (preview) {
-                        thumbnailElement.innerHTML = `<img src="${preview}" style="width:100%;height:100%;object-fit:cover;">`;
+                        thumbnailElement.innerHTML = `${getVideoRatingBadgeHtmlForVideo(video)}<img src="${preview}" style="width:100%;height:100%;object-fit:cover;">`;
                     }
                     const newDurationElement = document.createElement('div');
                     newDurationElement.className = 'video-duration';
@@ -9960,6 +10402,7 @@
                 } catch (e) {
                     debug.error('Error loading preview for', video.name, e);
                     thumbnailElement.innerHTML = `
+                        ${getVideoRatingBadgeHtmlForVideo(video)}
                         <div class="video-duration">0:00</div>
                         <div style="width:100%;height:100%;background:#333;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;text-align:center;padding:5px;">
                             ${escapeHtml(getFileNameWithoutExtension(video.name))}
@@ -10229,16 +10672,16 @@
             // Добавляем поддержку touch событий для play/pause
             let videoTouchStartTime = 0;
             let videoTouchMoved = false;
-            
+
             video.addEventListener('touchstart', (e) => {
                 videoTouchStartTime = Date.now();
                 videoTouchMoved = false;
             }, { passive: true });
-            
+
             video.addEventListener('touchmove', (e) => {
                 videoTouchMoved = true;
             }, { passive: true });
-            
+
             video.addEventListener('touchend', (e) => {
                 // Проверяем что это был быстрый тап, а не свайп или удержание
                 const touchDuration = Date.now() - videoTouchStartTime;
@@ -10271,7 +10714,7 @@
                 hasStarted = true;
                 updateLogoVisibility();
                 updateClockVisibility();
-                if (hasStarted) showHud('▶');
+                if (hasStarted) showHud('play');
 
                 if (window.currentVideo) {
                     const title = getFileNameWithoutExtension(window.currentVideo.name);
@@ -10303,7 +10746,7 @@
                 if (suppressNextPauseHud || video.ended || nearEnd) {
                     suppressNextPauseHud = false;
                 } else if (hasStarted) {
-                    showHud('⏸');
+                    showHud('pause');
                 }
                 cancelAutoplayIfActive();
             });
@@ -10660,10 +11103,10 @@
                     if (window.DanmakuScrollSync) {
                         window.DanmakuScrollSync.savePanelScrollPosition();
                     }
-                    
+
                     body.classList.remove('cinema-mode');
                     body.classList.remove('sidebar-open');
-                    
+
                     const isWidescreen = body.classList.contains('wide-screen-mode');
                     const isFullscreen = document.fullscreenElement;
                     if (!isWidescreen && !isFullscreen) {
@@ -10676,13 +11119,13 @@
                         if (danmakuPanelBtn) {
                             danmakuPanelBtn.classList.remove('active');
                         }
-                        
+
                         const danmakuContent = document.getElementById('danmakuTabContent');
                         if (window.DanmakuScrollSync && danmakuContent) {
                             window.DanmakuScrollSync.syncSidebarScrollPosition(danmakuContent);
                         }
                     }
-                    
+
                     if (window.__cinemaMeasureHandler) {
                         try { window.removeEventListener('resize', window.__cinemaMeasureHandler); } catch (_) { }
                         window.__cinemaMeasureHandler = null;
@@ -10707,7 +11150,7 @@
                     }
                     try { document.body.style.removeProperty('--cin-form-height'); } catch (_) { }
                     updateUiTopOffset();
-                    
+
                     setTimeout(() => {
                         window.dispatchEvent(new Event('resize'));
                     }, 100);
@@ -10715,7 +11158,7 @@
                     if (window.DanmakuScrollSync) {
                         window.DanmakuScrollSync.saveSidebarScrollPosition();
                     }
-                    
+
                     body.classList.add('cinema-mode-entering');
                     void body.offsetHeight;
                     body.classList.add('cinema-mode');
@@ -10760,7 +11203,7 @@
 
                 let seekHudEl = null;
                 let seekHudTimerId = null;
-                function showSeekHUD(direction , seconds) {
+                function showSeekHUD(direction, seconds) {
                     const container = document.getElementById('videoContainer');
                     if (!container) return;
                     try {
@@ -10923,9 +11366,9 @@
                             window.DanmakuScrollSync.saveSidebarScrollPosition();
                         }
                         videoContainer.requestFullscreen();
-                    } else if (videoContainer.webkitRequestFullscreen) { 
+                    } else if (videoContainer.webkitRequestFullscreen) {
                         videoContainer.webkitRequestFullscreen();
-                    } else if (videoContainer.msRequestFullscreen) { 
+                    } else if (videoContainer.msRequestFullscreen) {
                         videoContainer.msFullscreenElement();
                     }
                 } else if (e.code === 'KeyT') {
@@ -11719,7 +12162,7 @@
                             if (window.DanmakuScrollSync) {
                                 window.DanmakuScrollSync.saveSidebarScrollPosition();
                             }
-                            
+
                             if (videoContainer.requestFullscreen) {
                                 await videoContainer.requestFullscreen();
                             } else if (videoContainer.webkitRequestFullscreen) {
@@ -11786,7 +12229,7 @@
                     videoContainer.style.removeProperty('--fs-form-height');
                     showControls();
                     clearTimeout(controlsTimeout);
-                    
+
                     const isWidescreen = document.body.classList.contains('wide-screen-mode');
                     const isCinema = document.body.classList.contains('cinema-mode');
                     if (!isWidescreen && !isCinema) {
@@ -12092,14 +12535,14 @@
                     }
 
                     if (currentPlaylist && currentPlaylist.videos) {
-                        playlistVideos = currentPlaylist.videos.slice();
-                        
+                        playlistVideos = applyRatingFilterToList(currentPlaylist.videos, currentRatingFilter).slice();
+
                         if (window._playlistInverted) {
                             playlistVideos.reverse();
                         }
-                        
+
                         const currentIndex = playlistVideos.findIndex(v => v.name === currentVideo.name);
-                        
+
                         if (window._playlistShuffle) {
                             const otherVideos = playlistVideos.filter(v => v.name !== currentVideo.name);
                             if (otherVideos.length > 0) {
@@ -12115,9 +12558,12 @@
                     }
 
                     if (!nextVideo) {
-                        const folderVideos = allVideos.filter(v => v.dirHandle === currentVideo.dirHandle);
+                        const folderVideos = applyRatingFilterToList(
+                            allVideos.filter(v => v.dirHandle === currentVideo.dirHandle),
+                            currentRatingFilter
+                        );
                         const currentIndex = folderVideos.findIndex(v => v.name === currentVideo.name);
-                        
+
                         if (window._playlistShuffle) {
                             const otherVideos = folderVideos.filter(v => v.name !== currentVideo.name);
                             if (otherVideos.length > 0) {
@@ -12261,79 +12707,80 @@
 
         document.addEventListener('DOMContentLoaded', async () => {
             const langSwitcher = document.getElementById('langSwitcher');
+            syncFooterRatingFilterUI();
             if (langSwitcher && typeof i18n !== 'undefined') {
                 langSwitcher.value = i18n.getCurrentLanguage();
-                
+
                 langSwitcher.addEventListener('change', async (e) => {
                     await i18n.setLanguage(e.target.value);
                 });
-                
+
                 i18n.subscribe(async (newLang) => {
                     debug.log('[i18n] Language changed to:', newLang, '- re-rendering dynamic content');
-                    
+
                     if (typeof currentVideo !== 'undefined' && currentVideo) {
                         const videoViewsEl = document.getElementById('videoViews');
                         const videoLikesEl = document.getElementById('videoLikes');
                         const videoDislikesEl = document.getElementById('videoDislikes');
                         const uploaderNameEl = document.getElementById('uploaderName');
-                        
+
                         if (videoViewsEl) videoViewsEl.textContent = `${currentVideo.views || 0} ${i18n.t('video.views', 'views')}`;
                         if (videoLikesEl) videoLikesEl.textContent = `${currentVideo.likes || 0} ${i18n.t('video.likes', 'likes')}`;
                         if (videoDislikesEl) videoDislikesEl.textContent = `${currentVideo.dislikes || 0} ${i18n.t('video.dislikes', 'dislikes')}`;
-                        
+
                         if (uploaderNameEl && !window.currentChannelName) {
                             uploaderNameEl.textContent = i18n.t('video.noChannel', 'No channel');
                         }
-                        
+
                         if (window.updateVideoTagsDisplay) {
                             const tags = currentVideo.tags || currentVideo.categories || [];
                             try { window.updateVideoTagsDisplay(tags); } catch (e) { }
                         }
                     }
-                    
+
                     if (typeof window.renderComments === 'function') {
                         try {
                             const uiState = typeof captureCommentsUIState === 'function' ? captureCommentsUIState() : null;
                             await window.renderComments(uiState);
                         } catch (e) { debug.warn('Failed to re-render comments:', e); }
                     }
-                    
+
                     if (typeof renderDanmakuComments === 'function' && typeof danmakuData !== 'undefined') {
                         try { renderDanmakuComments(danmakuData); } catch (e) { }
                     }
-                    
+
                     if (typeof renderCombinedPlaylist === 'function' && currentVideo) {
-                        try { 
-                            await renderCombinedPlaylist(currentVideo._playlistId, currentVideo.dirHandle, currentVideo.name); 
+                        try {
+                            await renderCombinedPlaylist(currentVideo._playlistId, currentVideo.dirHandle, currentVideo.name);
                         } catch (e) { debug.warn('Failed to re-render playlist:', e); }
                     }
-                    
+
                     if (typeof updateRecommendationsDebounced === 'function') {
                         updateRecommendationsDebounced();
                     }
-                    
+
                     if (typeof renderSubscribedChannelsList === 'function') {
                         try { await renderSubscribedChannelsList(); } catch (e) { }
                     }
-                    
+
                     if (typeof renderSidebarCategories === 'function') {
                         try { renderSidebarCategories(); } catch (e) { }
                     }
-                    
+
                     if (typeof window.renderParentChildCarousels === 'function') {
                         try { window.renderParentChildCarousels(); } catch (e) { }
                     }
-                    
+
                     if (typeof updateTabValues === 'function') {
                         try { updateTabValues(); } catch (e) { }
                     }
-                    
+
                     if (typeof updateSidebarAutoplayStatus === 'function') {
                         try { updateSidebarAutoplayStatus(); } catch (e) { }
                     }
                 });
             }
-            
+
             const overlay = document.getElementById('videoOverlay');
             if (overlay) {
                 overlay.style.display = 'flex';
@@ -12406,8 +12853,8 @@
                         const v = document.getElementById('video');
                         const kickOffBackground = async () => {
                             try {
-                                
-                                debug.log('⏳ Loading all videos in background...');
+
+                                debug.log('вЏі Loading all videos in background...');
                                 await loadAllVideos();
                                 debug.log('✅ All videos loaded:', allVideos.length);
 
@@ -12455,7 +12902,8 @@
                                         await autocompleteIntegration.init(searchInput, {
                                             videoDirectoryHandle: videoDirectoryHandle,
                                             allVideos: videos,
-                                            allPlaylists: playlists
+                                            allPlaylists: playlists,
+                                            filterResults: (results) => filterAutocompleteResultsForVideoPage(results)
                                         });
                                         debug.log('[Autocomplete] ✅ Initialized on youvi_video.html');
                                     }
@@ -12471,7 +12919,7 @@
                                 debug.error('[Background] Error loading playlists:', err);
                             }
                         };
-                        
+
                         setTimeout(kickOffBackground, 100);
 
                         attachVideoPlayerEventListeners();
@@ -12857,9 +13305,9 @@
         function showHud(icon) {
             const videoHud = document.getElementById('videoHud');
             if (videoHud) {
-                if (icon === '▶') {
+                if (icon === 'play' || icon === '▶') {
                     videoHud.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>';
-                } else if (icon === '⏸') {
+                } else if (icon === 'pause' || icon === '⏸') {
                     videoHud.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause-icon lucide-pause"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>';
                 } else {
                     videoHud.textContent = icon;
@@ -12951,7 +13399,7 @@
                 return;
             }
 
-            if (e.key.toLowerCase() === 'r' || e.key.toLowerCase() === 'к') {
+            if (e.key.toLowerCase() === 'r' || e.key.toLowerCase() === 'Рє') {
                 if (document.body.classList.contains('error-state')) {
                     e.preventDefault();
                     return;
@@ -12989,7 +13437,7 @@
             function restoreForm() {
                 if (!form || !anchor || !anchor.parentNode) return;
                 if (anchor.nextSibling === form) return;
-                
+
                 const isWideMode = document.body.classList.contains('wide-screen-mode');
                 if (isWideMode) {
                     const mainContent = document.querySelector('.main-content');
@@ -13085,7 +13533,7 @@
                         const isPiP = window.documentPiPManager && window.documentPiPManager.pipWindow;
                         const isInPiPDocument = textInput.ownerDocument !== document;
                         const isDarkBackground = isFullscreen || isCinemaMode || isPiP || isInPiPDocument || document.body.classList.contains('dark-theme');
-                        
+
                         if (!isDarkBackground && (c.toLowerCase() === '#ffffff' || c.toLowerCase() === 'white' || c.toLowerCase() === '#fff')) {
                             c = '#111111';
                         }
@@ -13094,10 +13542,10 @@
                     };
                     applyInputColor();
                     colorSelect.addEventListener('change', applyInputColor);
-                    
+
                     document.addEventListener('fullscreenchange', applyInputColor);
                     document.addEventListener('webkitfullscreenchange', applyInputColor);
-                    
+
                     window.applyDanmakuInputColor = applyInputColor;
                 }
             } catch (_) { }
@@ -13158,7 +13606,7 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const playlistId = urlParams.get('playlist');
 
-                let url = window.VideoID 
+                let url = window.VideoID
                     ? window.VideoID.buildVideoUrl(nextVideo.name, playlistId)
                     : `youvi_video.html?name=${encodeURIComponent(nextVideo.name)}${playlistId ? `&playlist=${encodeURIComponent(playlistId)}` : ''}`;
                 window.location.href = url;
@@ -13316,7 +13764,7 @@
             `;
 
             div.addEventListener('click', () => {
-                const url = window.VideoID 
+                const url = window.VideoID
                     ? window.VideoID.buildVideoUrl(video.name, playlistId)
                     : `youvi_video.html?name=${encodeURIComponent(video.name)}&playlist=${encodeURIComponent(playlistId || '')}`;
                 window.location.href = url;
@@ -13332,9 +13780,9 @@
             const totalPages = Math.ceil(videos.length / videosPerPage);
 
             nav.innerHTML = `
-                <button class="carousel-nav-btn prev-btn" data-playlist-id="${playlistId}" data-playlist-type="current">◀</button>
+                <button class="carousel-nav-btn prev-btn" data-playlist-id="${playlistId}" data-playlist-type="current">в—Ђ</button>
                 <span class="carousel-page-info">1 / ${totalPages}</span>
-                <button class="carousel-nav-btn next-btn" data-playlist-id="${playlistId}" data-playlist-type="current">▶</button>
+                <button class="carousel-nav-btn next-btn" data-playlist-id="${playlistId}" data-playlist-type="current">в–¶</button>
             `;
 
             container.appendChild(nav);
@@ -13432,7 +13880,7 @@
             // Render with limit for large datasets
             const renderCount = Math.min(_sortedDanmakuData.length, _danmakuRenderLimit);
             const fragment = document.createDocumentFragment();
-            
+
             for (let i = 0; i < renderCount; i++) {
                 const comment = _sortedDanmakuData[i];
                 fragment.appendChild(createDanmakuCommentElement(comment));
@@ -13455,14 +13903,14 @@
             if (panelCount) {
                 panelCount.textContent = `(${_sortedDanmakuData.length})`;
             }
-            
+
             // Mark panel as needing re-render
             window._danmakuPanelNeedsRender = true;
         }
 
         function loadMoreDanmakuComments(commentsList, startIdx) {
             if (!_sortedDanmakuData.length) return;
-            
+
             // Remove load more button
             if (_danmakuLoadMoreBtn) {
                 _danmakuLoadMoreBtn.remove();
@@ -13471,7 +13919,7 @@
 
             const endIdx = Math.min(_sortedDanmakuData.length, startIdx + _danmakuRenderLimit);
             const fragment = document.createDocumentFragment();
-            
+
             for (let i = startIdx; i < endIdx; i++) {
                 const comment = _sortedDanmakuData[i];
                 fragment.appendChild(createDanmakuCommentElement(comment));
@@ -13556,25 +14004,25 @@
 
             // Initial render
             renderMorePanelItems(panelList, 300);
-            
+
             window._danmakuPanelNeedsRender = false;
         }
 
         function renderMorePanelItems(panelList, count) {
             const sortedComments = panelList._allComments;
             if (!sortedComments) return;
-            
+
             const startIdx = panelList._renderedCount || 0;
             const endIdx = Math.min(sortedComments.length, startIdx + count);
-            
+
             if (startIdx >= sortedComments.length) return; // Nothing more to render
-            
+
             // Remove old "load more" message if exists
             const oldMore = panelList.querySelector('.danmaku-panel-more');
             if (oldMore) oldMore.remove();
-            
+
             const fragment = document.createDocumentFragment();
-            
+
             for (let i = startIdx; i < endIdx; i++) {
                 const comment = sortedComments[i];
                 const item = document.createElement('div');
@@ -13631,10 +14079,10 @@
         // Find index of item closest to given time using binary search
         function findDanmakuIndexByTime(sortedComments, targetTime) {
             if (!sortedComments || sortedComments.length === 0) return -1;
-            
+
             let left = 0;
             let right = sortedComments.length - 1;
-            
+
             while (left < right) {
                 const mid = Math.floor((left + right) / 2);
                 if (sortedComments[mid].time < targetTime) {
@@ -13643,7 +14091,7 @@
                     right = mid;
                 }
             }
-            
+
             // Find closest item within 2 seconds
             const idx = left;
             if (idx < sortedComments.length && Math.abs(sortedComments[idx].time - targetTime) < 2) {
@@ -13652,27 +14100,27 @@
             if (idx > 0 && Math.abs(sortedComments[idx - 1].time - targetTime) < 2) {
                 return idx - 1;
             }
-            
+
             return -1;
         }
 
         // Ensure items around target index are rendered
         function ensurePanelItemsRendered(panelList, targetIndex) {
             if (!panelList || !panelList._allComments) return false;
-            
+
             const renderedCount = panelList._renderedCount || 0;
-            
+
             // If target is beyond rendered items, render more
             if (targetIndex >= renderedCount) {
                 const needToRender = targetIndex - renderedCount + 50; // Render 50 extra
                 renderMorePanelItems(panelList, Math.max(needToRender, 200));
                 return true;
             }
-            
+
             return false;
         }
 
-        (function() {
+        (function () {
             const panelBtn = document.getElementById('danmakuPanelBtn');
             const panelOverlay = document.getElementById('danmakuPanelOverlay');
             const panelClose = document.getElementById('danmakuPanelClose');
@@ -13684,7 +14132,7 @@
                 e.stopPropagation();
                 const isOpen = panelOverlay.classList.toggle('open');
                 panelBtn.classList.toggle('active', isOpen);
-                
+
                 // Lazy render panel on first open
                 if (isOpen && panelList) {
                     if (window._danmakuPanelNeedsRender && _sortedDanmakuData.length > 0) {
@@ -13711,12 +14159,12 @@
                 if (typeof window._danmakuFollowEnabled !== 'undefined') {
                     panelFollow.classList.toggle('active', window._danmakuFollowEnabled);
                 }
-                
+
                 panelFollow.addEventListener('click', (e) => {
                     e.stopPropagation();
                     window._danmakuFollowEnabled = !window._danmakuFollowEnabled;
                     panelFollow.classList.toggle('active', window._danmakuFollowEnabled);
-                    
+
                     const sidebarFollowBtn = document.getElementById('sidebarFollowBtn');
                     if (sidebarFollowBtn) {
                         sidebarFollowBtn.classList.toggle('active', window._danmakuFollowEnabled);
@@ -13751,34 +14199,34 @@
                 let lastHighlightTime = 0;
                 video.addEventListener('timeupdate', () => {
                     if (!panelOverlay.classList.contains('open')) return;
-                    
+
                     // Throttle highlight updates
                     const now = Date.now();
                     if (now - lastHighlightTime < 500) return;
                     lastHighlightTime = now;
-                    
+
                     const currentTime = video.currentTime;
-                    
+
                     // For follow mode with large datasets, use binary search
                     if (window._danmakuFollowEnabled && panelList && panelList._allComments) {
                         const targetIndex = findDanmakuIndexByTime(panelList._allComments, currentTime);
-                        
+
                         if (targetIndex >= 0) {
                             // Ensure items around target are rendered
                             const wasRendered = ensurePanelItemsRendered(panelList, targetIndex);
-                            
+
                             // Find the DOM element by index
                             const targetItem = panelList.querySelector(`[data-index="${targetIndex}"]`);
-                            
+
                             if (targetItem) {
                                 // Clear previous highlights
                                 panelList.querySelectorAll('.danmaku-panel-item.current').forEach(el => {
                                     el.classList.remove('current');
                                 });
-                                
+
                                 // Highlight current
                                 targetItem.classList.add('current');
-                                
+
                                 // Scroll to item
                                 const itemTop = targetItem.offsetTop;
                                 const listHeight = panelList.clientHeight;
@@ -13793,7 +14241,7 @@
                             }
                         }
                     }
-                    
+
                     // Fallback: highlight visible items
                     let firstCurrentItem = null;
                     const items = panelOverlay.querySelectorAll('.danmaku-panel-item');
@@ -13801,7 +14249,7 @@
                         const time = parseFloat(item.getAttribute('data-time'));
                         const isCurrent = Math.abs(time - currentTime) < 2;
                         item.classList.toggle('current', isCurrent);
-                        
+
                         if (isCurrent && !firstCurrentItem) {
                             firstCurrentItem = item;
                         }
@@ -14231,7 +14679,8 @@
             <div class="footer-main">
                 <div class="footer-logo">
                     <img src="images/logo_youvi_ind_ex.png" alt="Youvi" loading="lazy">
-                    <p data-i18n="footer.description">Платформа для просмотра видео контента. Сохраняйте, категоризируйте и смотрите видео.</p>
+                    <p data-i18n="footer.description">Платформа для просмотра видео контента. Сохраняйте,
+                        категоризируйте и смотрите видео.</p>
                 </div>
                 <div class="footer-sections">
                     <div class="footer-section">
@@ -14240,7 +14689,7 @@
                             <li><a href="youvi_main.html" data-i18n="footer.video">Видео</a></li>
                             <li><a href="youvi_tags.html" data-i18n="footer.tags">Теги</a></li>
                             <li><a href="forum/forum.html" ">Форумы</a></li>
-                            <li><a href="index.html" data-i18n="footer.management">Управление</a></li>
+                            <li><a href=" index.html" data-i18n="footer.management">Управление</a></li>
                         </ul>
                     </div>
                     <div class="footer-section">
@@ -14260,30 +14709,41 @@
                             <li><a href="wiki/player.html" data-i18n="footer.wiki.player">Плеер</a></li>
                             <li><a href="wiki/danmaku.html" data-i18n="footer.wiki.danmaku">Данмаку</a></li>
                             <li><a href="wiki/tags/general.html" data-i18n="footer.tags">Теги</a></li>
-                            <li><a href="wiki/tags/rules.html" data-i18n="footer.wiki.taggingRules">Правила тегирования</a></li>
+                            <li><a href="wiki/tags/rules.html" data-i18n="footer.wiki.taggingRules">Правила
+                                    тегирования</a></li>
                             <li><a href="wiki/search/general.html" data-i18n="footer.wiki.search">Поиск</a></li>
                         </ul>
                     </div>
                     <div class="footer-section">
                         <h3 data-i18n="footer.pgc">PGC</h3>
                         <ul>
-                            <li><a href="youvi_main.html?tag=Anime (ct)" data-i18n="footer.categories.anime">Anime</a></li>
-                            <li><a href="youvi_main.html?tag=Animation (ct)" data-i18n="footer.categories.animation">Animation</a></li>
-                            <li><a href="youvi_main.html?tag=Movies (ct)" data-i18n="footer.categories.movies">Movies</a></li>
-                            <li><a href="youvi_main.html?tag=Series (ct)" data-i18n="footer.categories.series">Series</a></li>
-                            <li><a href="youvi_main.html?tag=Music (ct)" data-i18n="footer.categories.music">Music</a></li>
+                            <li><a href="youvi_main.html?tag=Anime (ct)" data-i18n="footer.categories.anime">Anime</a>
+                            </li>
+                            <li><a href="youvi_main.html?tag=Animation (ct)"
+                                    data-i18n="footer.categories.animation">Animation</a></li>
+                            <li><a href="youvi_main.html?tag=Movies (ct)"
+                                    data-i18n="footer.categories.movies">Movies</a></li>
+                            <li><a href="youvi_main.html?tag=Series (ct)"
+                                    data-i18n="footer.categories.series">Series</a></li>
+                            <li><a href="youvi_main.html?tag=Music (ct)" data-i18n="footer.categories.music">Music</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="footer-section">
                         <h3 data-i18n="footer.ugc">UGC</h3>
                         <ul>
-                            <li><a href="youvi_main.html?tag=Games (ct)" data-i18n="footer.categories.games">Games</a></li>
-                            <li><a href="youvi_main.html?tag=Technology (ct)" data-i18n="footer.categories.tech">Technology</a></li>
-                            <li><a href="youvi_main.html?tag=Entertainment (ct)" data-i18n="footer.categories.entertainment">Entertainment</a></li>
+                            <li><a href="youvi_main.html?tag=Games (ct)" data-i18n="footer.categories.games">Games</a>
+                            </li>
+                            <li><a href="youvi_main.html?tag=Technology (ct)"
+                                    data-i18n="footer.categories.tech">Technology</a></li>
+                            <li><a href="youvi_main.html?tag=Entertainment (ct)"
+                                    data-i18n="footer.categories.entertainment">Entertainment</a></li>
                             <li><a href="youvi_main.html?tag=IRL (ct)" data-i18n="footer.categories.irl">IRL</a></li>
                             <li><a href="youvi_main.html?tag=TV (ct)" data-i18n="footer.categories.tv">TV</a></li>
-                            <li><a href="youvi_main.html?tag=Education (ct)" data-i18n="footer.categories.education">Education</a></li>
-                            <li><a href="youvi_main.html?tag=Other (ct)" data-i18n="footer.categories.other">Other</a></li>
+                            <li><a href="youvi_main.html?tag=Education (ct)"
+                                    data-i18n="footer.categories.education">Education</a></li>
+                            <li><a href="youvi_main.html?tag=Other (ct)" data-i18n="footer.categories.other">Other</a>
+                            </li>
                         </ul>
                     </div>
                     <div class="footer-section">
@@ -14292,6 +14752,12 @@
                             <li><a href="wiki/about.html" data-i18n="footer.about">Про сайт</a></li>
                             <li><a href="wiki/docs.html" data-i18n="footer.docs">Документация</a></li>
                             <li><a href="wiki/tech.html" data-i18n="footer.technologies">Технологии</a></li>
+                        </ul>
+                        <h3 style="margin-top: 14px;" data-i18n="sidebar.filter">Фильтр</h3>
+                        <ul id="footerRatingFilter">
+                            <li><a href="#" id="footerFilterAll" data-i18n="sidebar.filterAll" onclick="setRatingFilter('all'); return false;">Все</a></li>
+                            <li><a href="#" id="footerFilterGeneral" data-i18n="sidebar.filterGeneral" onclick="setRatingFilter('general'); return false;">Общие</a></li>
+                            <li><a href="#" id="footerFilterArchived" data-i18n="sidebar.filterArchived" onclick="setRatingFilter('archived'); return false;">Архив</a></li>
                         </ul>
                     </div>
                 </div>
@@ -14314,40 +14780,68 @@
             style="position:absolute;top:6px;right:6px;background:transparent;border:none;color:#999;font-size:16px;width:26px;height:26px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
         <div style="padding-top:6px;max-height:60vh;overflow:auto;">
             <div class="hotkeys-section" style="margin-bottom:12px;">
-                <h4 style="margin:0 0 6px 0;font-size:13px;color:#ff69b4;font-weight:600;text-transform:uppercase;" data-i18n="hotkeys.playback">Navigation and Playback</h4>
-                <div class="hotkey-item"><span class="hotkey-key">Space / K</span> — <span data-i18n="hotkeys.playPause">Play/Pause</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">J / L</span> — <span data-i18n="hotkeys.seek10">Back/Forward 10 sec</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">← / →</span> — <span data-i18n="hotkeys.seek5">Back/Forward 5 sec</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">0–9</span> — <span data-i18n="hotkeys.seekPercent">Jump to percentage</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">M</span> — <span data-i18n="hotkeys.mute">Mute/Unmute</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">↑ / ↓</span> — <span data-i18n="hotkeys.volume">Volume ±5%</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">F</span> — <span data-i18n="hotkeys.fullscreen">Fullscreen</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">T</span> — <span data-i18n="hotkeys.cinema">Cinema mode</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">W</span> — <span data-i18n="hotkeys.widescreen">Widescreen mode</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">Q</span> — <span data-i18n="hotkeys.pip">Picture-in-Picture</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">R</span> — <span data-i18n="hotkeys.fitMode">Change video fit mode</span></div>
+                <h4 style="margin:0 0 6px 0;font-size:13px;color:#ff69b4;font-weight:600;text-transform:uppercase;"
+                    data-i18n="hotkeys.playback">Navigation and Playback</h4>
+                <div class="hotkey-item"><span class="hotkey-key">Space / K</span> — <span
+                        data-i18n="hotkeys.playPause">Play/Pause</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">J / L</span> — <span
+                        data-i18n="hotkeys.seek10">Back/Forward 10 sec</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">← / →</span> — <span
+                        data-i18n="hotkeys.seek5">Back/Forward 5 sec</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">0–9</span> — <span
+                        data-i18n="hotkeys.seekPercent">Jump to percentage</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">M</span> — <span
+                        data-i18n="hotkeys.mute">Mute/Unmute</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">↑ / ↓</span> — <span data-i18n="hotkeys.volume">Volume
+                        В±5%</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">F</span> — <span
+                        data-i18n="hotkeys.fullscreen">Fullscreen</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">T</span> — <span data-i18n="hotkeys.cinema">Cinema
+                        mode</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">W</span> — <span
+                        data-i18n="hotkeys.widescreen">Widescreen mode</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">Q</span> — <span
+                        data-i18n="hotkeys.pip">Picture-in-Picture</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">R</span> — <span data-i18n="hotkeys.fitMode">Change
+                        video fit mode</span></div>
             </div>
             <div class="hotkeys-section" style="margin-bottom:12px;">
-                <h4 style="margin:0 0 6px 0;font-size:13px;color:#ff69b4;font-weight:600;text-transform:uppercase;" data-i18n="hotkeys.zoomPan">Zoom and Pan</h4>
-                <div class="hotkey-item"><span class="hotkey-key">P</span> — <span data-i18n="hotkeys.zoomIn">Zoom in</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">O</span> — <span data-i18n="hotkeys.zoomOut">Zoom out</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">Shift + W/S/A/D</span> — <span data-i18n="hotkeys.pan">Pan Up/Down/Left/Right</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">Shift + I</span> — <span data-i18n="hotkeys.resetZoom">Reset zoom and position</span></div>
+                <h4 style="margin:0 0 6px 0;font-size:13px;color:#ff69b4;font-weight:600;text-transform:uppercase;"
+                    data-i18n="hotkeys.zoomPan">Zoom and Pan</h4>
+                <div class="hotkey-item"><span class="hotkey-key">P</span> — <span data-i18n="hotkeys.zoomIn">Zoom
+                        in</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">O</span> — <span data-i18n="hotkeys.zoomOut">Zoom
+                        out</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">Shift + W/S/A/D</span> — <span
+                        data-i18n="hotkeys.pan">Pan Up/Down/Left/Right</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">Shift + I</span> — <span
+                        data-i18n="hotkeys.resetZoom">Reset zoom and position</span></div>
             </div>
             <div class="hotkeys-section" style="margin-bottom:0;">
-                <h4 style="margin:0 0 6px 0;font-size:13px;color:#ff69b4;font-weight:600;text-transform:uppercase;" data-i18n="hotkeys.interface">Interface</h4>
-                <div class="hotkey-item"><span class="hotkey-key">D</span> — <span data-i18n="hotkeys.danmaku">Danmaku on/off</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">Shift + W</span> — <span data-i18n="hotkeys.danmakuPrint">Danmaku print (cinema/fullscreen)</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">C</span> — <span data-i18n="hotkeys.subtitles">Subtitles on/off</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">H</span> — <span data-i18n="hotkeys.clock">Clock on/off</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">V</span> — <span data-i18n="hotkeys.logo">Logo on/off</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">X</span> — <span data-i18n="hotkeys.danmakuForm">Show/hide danmaku form (fullscreen only)</span></div>
+                <h4 style="margin:0 0 6px 0;font-size:13px;color:#ff69b4;font-weight:600;text-transform:uppercase;"
+                    data-i18n="hotkeys.interface">Interface</h4>
+                <div class="hotkey-item"><span class="hotkey-key">D</span> — <span data-i18n="hotkeys.danmaku">Danmaku
+                        on/off</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">Shift + W</span> — <span
+                        data-i18n="hotkeys.danmakuPrint">Danmaku print (cinema/fullscreen)</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">C</span> — <span
+                        data-i18n="hotkeys.subtitles">Subtitles on/off</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">H</span> — <span data-i18n="hotkeys.clock">Clock
+                        on/off</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">V</span> — <span data-i18n="hotkeys.logo">Logo
+                        on/off</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">X</span> — <span
+                        data-i18n="hotkeys.danmakuForm">Show/hide danmaku form (fullscreen only)</span></div>
             </div>
             <div class="hotkeys-section" style="margin-top:12px;margin-bottom:0;">
-                <h4 style="margin:0 0 6px 0;font-size:13px;color:#ff69b4;font-weight:600;text-transform:uppercase;">Multiview</h4>
-                <div class="hotkey-item"><span class="hotkey-key">N</span> — <span data-i18n="hotkeys.multiviewToggle">Open/Close Multiview</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">F</span> — <span data-i18n="hotkeys.multiviewFullscreen">Fullscreen (in Multiview)</span></div>
-                <div class="hotkey-item"><span class="hotkey-key">Esc</span> — <span data-i18n="hotkeys.multiviewClose">Close Multiview</span></div>
+                <h4 style="margin:0 0 6px 0;font-size:13px;color:#ff69b4;font-weight:600;text-transform:uppercase;">
+                    Multiview</h4>
+                <div class="hotkey-item"><span class="hotkey-key">N</span> — <span
+                        data-i18n="hotkeys.multiviewToggle">Open/Close Multiview</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">F</span> — <span
+                        data-i18n="hotkeys.multiviewFullscreen">Fullscreen (in Multiview)</span></div>
+                <div class="hotkey-item"><span class="hotkey-key">Esc</span> — <span
+                        data-i18n="hotkeys.multiviewClose">Close Multiview</span></div>
             </div>
         </div>
     </div>
@@ -14444,8 +14938,8 @@
                 }
             });
         })();
-        
-        (function() {
+
+        (function () {
             const mvHeaderBtn = document.getElementById('multiviewHeaderBtn');
             if (mvHeaderBtn) {
                 mvHeaderBtn.addEventListener('click', (e) => {
@@ -14630,7 +15124,7 @@
             attemptInit();
         })();
     </script>
-    
+
     <!-- Subtitle Track Manager -->
     <script src="player/subtitles/subtitles.js"></script>
     <script>
@@ -14701,9 +15195,9 @@
 
                     if (window.currentVideo.dirHandle) {
                         await subtitleManager.initSubsDirectory(window.currentVideo.dirHandle);
-                        
+
                         await subtitleManager.checkExternalSubtitles(
-                            window.currentVideo.dirHandle, 
+                            window.currentVideo.dirHandle,
                             videoName
                         );
                     }
@@ -15523,7 +16017,7 @@
             const channelNickPattern = /\s\((ка|ka)\)$/;
             const isCommentChannelNick = channelNickPattern.test(comment.nick);
             const commentChannelName = isCommentChannelNick ? comment.nick.replace(channelNickPattern, '') : null;
-            
+
             div.innerHTML = `
                 ${avatarHtml}
                 <div class="comment-content">
@@ -16444,6 +16938,7 @@
                 window.tagsEditAutocomplete = new TagInputAutocomplete(tagsEditInput, {
                     minChars: 1,
                     maxResults: 10,
+                    filterResults: (results) => filterTagAutocompleteResultsForVideoPage(results),
                     onSelect: (tag) => {
                         console.log('[TagsEdit] Autocomplete selected:', tag.canonical);
                     }
@@ -16554,7 +17049,7 @@
 
                         if (window.currentVideo) {
                             window.currentVideo.tags = newTags;
-                            
+
                             const uploaderNameEl = document.getElementById('uploaderName');
                             if (uploaderNameEl && window.TagTypes) {
                                 const channelTag = newTags.find(t => t.endsWith(' (ка)'));
@@ -16720,21 +17215,21 @@
     <script>
         if (window.tagBroadcastSync) {
             window.tagBroadcastSync.addEventListener(async (event) => {
-                debug.log('[TagImplication] 📡 Received broadcast event:', event);
+                debug.log('[TagImplication] рџ“Ў Received broadcast event:', event);
 
                 if (event.type === 'tag_implication_added') {
                     const { tagName, implications } = event.data;
-                    debug.log('[TagImplication] � ImIplication added in another tab:', tagName, implications);
+                    debug.log('[TagImplication] пїЅ ImIplication added in another tab:', tagName, implications);
 
                     if (window.tagImplicationResolver) {
                         window.tagImplicationResolver.invalidateCache();
-                        debug.log('[TagImplication] 🔄 Cache invalidated');
+                        debug.log('[TagImplication] рџ”„ Cache invalidated');
                     }
 
                     if (window.tagDatabaseManager && window.tagDatabaseManager.isLoaded) {
                         try {
                             await window.tagDatabaseManager.loadDatabase();
-                            debug.log('[TagImplication] 🔄 Database reloaded');
+                            debug.log('[TagImplication] рџ”„ Database reloaded');
                         } catch (error) {
                             console.warn('[TagImplication] ⚠️ Failed to reload database:', error);
                         }
@@ -16747,17 +17242,17 @@
 
                 if (event.type === 'tag_implication_removed') {
                     const { tagName, removedImplication, implications } = event.data;
-                    debug.log('[TagImplication] � Impliciation removed in another tab:', tagName, removedImplication);
+                    debug.log('[TagImplication] пїЅ Impliciation removed in another tab:', tagName, removedImplication);
 
                     if (window.tagImplicationResolver) {
                         window.tagImplicationResolver.invalidateCache();
-                        debug.log('[TagImplication] 🔄 Cache invalidated');
+                        debug.log('[TagImplication] рџ”„ Cache invalidated');
                     }
 
                     if (window.tagDatabaseManager && window.tagDatabaseManager.isLoaded) {
                         try {
                             await window.tagDatabaseManager.loadDatabase();
-                            debug.log('[TagImplication] � Database r eloaded');
+                            debug.log('[TagImplication] пїЅ Database r eloaded');
                         } catch (error) {
                             console.warn('[TagImplication] ⚠️ Failed to reload database:', error);
                         }
@@ -16773,7 +17268,7 @@
                 }
             });
 
-            debug.log('[TagImplication] 📡 Broadcast listener registered');
+            debug.log('[TagImplication] рџ“Ў Broadcast listener registered');
         } else {
             console.warn('[TagImplication] ⚠️ tagBroadcastSync not available');
         }
@@ -16892,7 +17387,7 @@
     <script src="youvi/sidebar-toggle.js"></script>
     <script src="youvi/sidebar-scroll.js"></script>
     <script src="youvi/danmaku-counter.js"></script>
-    
+
     <!-- i18n System -->
     <script src="youvi/i18n/ru.js"></script>
     <script src="youvi/i18n/en.js"></script>
@@ -16944,6 +17439,7 @@
     <!-- Wide Screen Mode -->
     <script src="youvi/danmaku-scroll-sync.js"></script>
     <script src="youvi/widescreen-mode.js"></script>
+    <script src="youvi/tv-mode/tv-mode.js"></script>
 
     <!-- Document Picture-in-Picture Module -->
     <script src="youvi/pip/document-pip.js"></script>
@@ -17039,58 +17535,61 @@
         <div class="multiview-header">
             <span class="multiview-title">
                 <img src="images/logo_youvi_ind.png" alt="Youvi" style="height:32px;">
-                <span class="multiview-title-text" style="color:#ff69b4;font-family:'VAGRoundedCyrillic',Arial,sans-serif;font-size:18px;">multiview</span>
+                <span class="multiview-title-text"
+                    style="color:#ff69b4;font-family:'VAGRoundedCyrillic',Arial,sans-serif;font-size:18px;">multiview</span>
             </span>
             <div class="multiview-controls">
                 <button class="multiview-layout-btn" data-layout="1v2h" title="1 вертикальное + 2 горизонтальных">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="2" width="8" height="20" rx="1"/>
-                        <rect x="12" y="2" width="10" height="9" rx="1"/>
-                        <rect x="12" y="13" width="10" height="9" rx="1"/>
+                        <rect x="2" y="2" width="8" height="20" rx="1" />
+                        <rect x="12" y="2" width="10" height="9" rx="1" />
+                        <rect x="12" y="13" width="10" height="9" rx="1" />
                     </svg>
                     1V+2H
                 </button>
                 <button class="multiview-layout-btn active" data-layout="2h" title="2 горизонтальных">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="4" width="9" height="16" rx="1"/>
-                        <rect x="13" y="4" width="9" height="16" rx="1"/>
+                        <rect x="2" y="4" width="9" height="16" rx="1" />
+                        <rect x="13" y="4" width="9" height="16" rx="1" />
                     </svg>
                     2H
                 </button>
                 <button class="multiview-layout-btn" data-layout="2v" title="2 вертикальных">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="4" y="2" width="16" height="9" rx="1"/>
-                        <rect x="4" y="13" width="16" height="9" rx="1"/>
+                        <rect x="4" y="2" width="16" height="9" rx="1" />
+                        <rect x="4" y="13" width="16" height="9" rx="1" />
                     </svg>
                     2V
                 </button>
                 <button class="multiview-layout-btn" data-layout="2v2h" title="2 вертикальных + 2 горизонтальных">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="2" width="9" height="9" rx="1"/>
-                        <rect x="2" y="13" width="9" height="9" rx="1"/>
-                        <rect x="13" y="2" width="9" height="9" rx="1"/>
-                        <rect x="13" y="13" width="9" height="9" rx="1"/>
+                        <rect x="2" y="2" width="9" height="9" rx="1" />
+                        <rect x="2" y="13" width="9" height="9" rx="1" />
+                        <rect x="13" y="2" width="9" height="9" rx="1" />
+                        <rect x="13" y="13" width="9" height="9" rx="1" />
                     </svg>
                     2V+2H
                 </button>
                 <button class="multiview-layout-btn" data-layout="4h" title="4 горизонтальных">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="2" width="9" height="9" rx="1"/>
-                        <rect x="13" y="2" width="9" height="9" rx="1"/>
-                        <rect x="2" y="13" width="9" height="9" rx="1"/>
-                        <rect x="13" y="13" width="9" height="9" rx="1"/>
+                        <rect x="2" y="2" width="9" height="9" rx="1" />
+                        <rect x="13" y="2" width="9" height="9" rx="1" />
+                        <rect x="2" y="13" width="9" height="9" rx="1" />
+                        <rect x="13" y="13" width="9" height="9" rx="1" />
                     </svg>
                     4H
                 </button>
-                <button class="multiview-fullscreen-btn" id="multiviewFullscreenBtn" data-i18n-title="player.fullscreen" title="Fullscreen (F)">
+                <button class="multiview-fullscreen-btn" id="multiviewFullscreenBtn" data-i18n-title="player.fullscreen"
+                    title="Fullscreen (F)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M8 3H5a2 2 0 0 0-2 2v3"/>
-                        <path d="M21 8V5a2 2 0 0 0-2-2h-3"/>
-                        <path d="M3 16v3a2 2 0 0 0 2 2h3"/>
-                        <path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+                        <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
+                        <path d="M3 16v3a2 2 0 0 0 2 2h3" />
+                        <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
                     </svg>
                 </button>
-                <button class="multiview-close-btn" id="multiviewCloseBtn" data-i18n="multiview.close">Close (Esc)</button>
+                <button class="multiview-close-btn" id="multiviewCloseBtn" data-i18n="multiview.close">Close
+                    (Esc)</button>
             </div>
         </div>
         <div class="multiview-content">
@@ -17098,20 +17597,22 @@
                 <!-- Slots will be generated by JS -->
             </div>
         </div>
-        
+
         <!-- Search Panel INSIDE overlay for fullscreen support -->
         <div class="multiview-search-panel" id="multiviewSearchPanel">
             <div class="multiview-search-header">
                 <h4 data-i18n="multiview.selectVideo">Select video</h4>
                 <button class="multiview-search-close" id="multiviewSearchClose">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                 </button>
             </div>
             <div class="multiview-search-body">
-                <input type="text" class="multiview-search-input" id="multiviewSearchInput" data-i18n-placeholder="multiview.searchPlaceholder" placeholder="Search by title or tag..." autocomplete="off">
+                <input type="text" class="multiview-search-input" id="multiviewSearchInput"
+                    data-i18n-placeholder="multiview.searchPlaceholder" placeholder="Search by title or tag..."
+                    autocomplete="off">
                 <div class="multiview-search-results" id="multiviewSearchResults">
                     <!-- Results populated via JS -->
                 </div>
@@ -17135,14 +17636,14 @@
             };
 
             let videoLookupMap = null;
-            
+
             function getVideoByName(name) {
                 if (!videoLookupMap && window.allVideos?.length) {
                     videoLookupMap = new Map(window.allVideos.map(v => [v.name, v]));
                 }
                 return videoLookupMap?.get(name) || null;
             }
-            
+
             function invalidateVideoCache() {
                 videoLookupMap = null;
             }
@@ -17195,7 +17696,13 @@
                         onVideoLoaded();
                     }
                 });
-                
+
+                window.addEventListener('youvi:ratingFilterChanged', () => {
+                    if (els.searchPanel.style.display === 'flex') {
+                        performSearch(els.searchInput.value || '');
+                    }
+                });
+
                 document.addEventListener('visibilitychange', () => {
                     if (!document.hidden && window.currentVideo && window.currentVideo.name !== pcState.currentVideoName) {
                         onVideoLoaded();
@@ -17224,7 +17731,7 @@
                 try {
                     const metaDir = await pcState.currentDirHandle.getDirectoryHandle('.metadata', { create: true });
                     const fileName = pcState.currentVideoName + '.relations.json';
-                    
+
                     let exists = false;
                     for await (const [name] of metaDir.entries()) {
                         if (name === fileName) {
@@ -17232,13 +17739,13 @@
                             break;
                         }
                     }
-                    
+
                     if (exists) {
                         const fileHandle = await metaDir.getFileHandle(fileName);
                         const file = await fileHandle.getFile();
                         const text = await file.text();
                         const data = JSON.parse(text);
-                        
+
                         pcState.parents = data.parents || [];
                         pcState.children = data.children || [];
                         debug.log('[ParentChild] Loaded relations:', { parents: pcState.parents.length, children: pcState.children.length });
@@ -17251,7 +17758,7 @@
                     pcState.parents = [];
                     pcState.children = [];
                 }
-                
+
                 renderCarousels();
             }
 
@@ -17263,16 +17770,16 @@
                     const fileName = pcState.currentVideoName + '.relations.json';
                     const fileHandle = await metaDir.getFileHandle(fileName, { create: true });
                     const writable = await fileHandle.createWritable();
-                    
+
                     const data = {
                         parents: pcState.parents,
                         children: pcState.children,
                         updated: Date.now()
                     };
-                    
+
                     await writable.write(JSON.stringify(data, null, 2));
                     await writable.close();
-                    
+
                     debug.log('[ParentChild] Relations saved to file');
                 } catch (e) {
                     console.error('[ParentChild] Failed to save relations data:', e);
@@ -17319,17 +17826,17 @@
                         const carouselId = btn.dataset.carousel;
                         const carousel = document.getElementById(carouselId);
                         if (!carousel) return;
-                        
+
                         const cardWidth = 170;
                         const visibleWidth = carousel.offsetWidth;
                         const scrollAmount = Math.floor(visibleWidth / cardWidth) * cardWidth;
-                        
+
                         if (btn.classList.contains('prev')) {
                             carousel.scrollLeft -= scrollAmount;
                         } else {
                             carousel.scrollLeft += scrollAmount;
                         }
-                        
+
                         setTimeout(() => updateNavButtons(carousel), 300);
                     });
                 });
@@ -17338,10 +17845,10 @@
             function updateNavButtons(carousel) {
                 const wrapper = carousel.closest('.pc-carousel-wrapper');
                 if (!wrapper) return;
-                
+
                 const prevBtn = wrapper.querySelector('.pc-nav-btn.prev');
                 const nextBtn = wrapper.querySelector('.pc-nav-btn.next');
-                
+
                 if (prevBtn) {
                     prevBtn.disabled = carousel.scrollLeft <= 0;
                 }
@@ -17360,7 +17867,9 @@
             }
 
             function performSearch(query) {
-                const sourceVideos = window.allVideos || [];
+                const sourceVideos = (typeof window.applyRatingFilterToList === 'function')
+                    ? window.applyRatingFilterToList(window.allVideos || [], window.currentRatingFilter || 'all')
+                    : (window.allVideos || []);
 
                 if (typeof evaluateBooleanQuery !== 'function') {
                     const lowerQ = query.toLowerCase();
@@ -17416,7 +17925,7 @@
                     }
 
                     item.innerHTML = `
-                        <div class="pc-search-item-thumb loading"></div>
+                        <div class="pc-search-item-thumb loading">${getVideoRatingBadgeHtmlForVideo(v)}</div>
                         <div style="flex:1;min-width:0;">
                             <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${removeExtension(v.name || '')}</div>
                             ${tagsHtml}
@@ -17444,11 +17953,11 @@
                 if (typeof getPreviewAndDuration === 'function') {
                     const BATCH_SIZE = 5;
                     let batchIndex = 0;
-                    
+
                     const loadBatch = () => {
                         const batch = thumbsToLoad.slice(batchIndex, batchIndex + BATCH_SIZE);
                         if (batch.length === 0) return;
-                        
+
                         batch.forEach(({ thumbEl, video }) => {
                             getPreviewAndDuration(video).then(({ preview, duration }) => {
                                 thumbEl.classList.remove('loading');
@@ -17467,19 +17976,21 @@
                                 thumbEl.classList.remove('loading');
                             });
                         });
-                        
+
                         batchIndex += BATCH_SIZE;
                         if (batchIndex < thumbsToLoad.length) {
                             requestIdleCallback(loadBatch, { timeout: 100 });
                         }
                     };
-                    
+
                     requestIdleCallback(loadBatch, { timeout: 50 });
                 }
             }
 
             async function addSelected(targetType) {
-                const sourceVideos = window.allVideos || [];
+                const sourceVideos = (typeof window.applyRatingFilterToList === 'function')
+                    ? window.applyRatingFilterToList(window.allVideos || [], window.currentRatingFilter || 'all')
+                    : (window.allVideos || []);
                 const selectedNames = Array.from(pcState.selectedSearchResults);
                 const videosToAdd = sourceVideos
                     .filter(v => selectedNames.includes(v.name))
@@ -17490,28 +18001,28 @@
 
                 pcState[targetType] = [...pcState[targetType], ...uniqueToAdd.map(v => ({ name: v.name }))];
                 await saveData();
-                
+
                 const reverseType = targetType === 'parents' ? 'children' : 'parents';
                 for (const v of uniqueToAdd) {
                     await addReverseRelationship(v.name, v.dirHandle, pcState.currentVideoName, reverseType);
                 }
-                
+
                 renderCarousels();
                 closeSearch();
             }
-            
+
             async function addReverseRelationship(targetVideoName, targetDirHandle, currentVideoName, relationshipType) {
-               
+
                 const dirHandle = targetDirHandle || pcState.currentDirHandle;
                 if (!dirHandle) {
                     console.warn('[ParentChild] No directory handle available');
                     return;
                 }
-                
+
                 try {
                     const metaDir = await dirHandle.getDirectoryHandle('.metadata', { create: true });
                     const fileName = targetVideoName + '.relations.json';
-                    
+
                     let data = { parents: [], children: [] };
                     try {
                         const fileHandle = await metaDir.getFileHandle(fileName);
@@ -17520,38 +18031,38 @@
                         data = JSON.parse(text);
                     } catch (e) {
                     }
-                    
+
                     const list = data[relationshipType] || [];
-                    
+
                     if (!list.some(v => v.name === currentVideoName)) {
                         list.push({ name: currentVideoName });
                         data[relationshipType] = list;
                         data.updated = Date.now();
-                        
+
                         const fileHandle = await metaDir.getFileHandle(fileName, { create: true });
                         const writable = await fileHandle.createWritable();
                         await writable.write(JSON.stringify(data, null, 2));
                         await writable.close();
-                        
+
                         debug.log(`[ParentChild] Added reverse relationship: ${targetVideoName} -> ${relationshipType} -> ${currentVideoName}`);
                     }
                 } catch (e) {
                     console.warn('[ParentChild] Failed to add reverse relationship:', e);
                 }
             }
-            
+
             async function removeReverseRelationship(targetVideoName, targetDirHandle, currentVideoName, relationshipType) {
-                
+
                 const dirHandle = targetDirHandle || pcState.currentDirHandle;
                 if (!dirHandle) {
                     console.warn('[ParentChild] No directory handle available');
                     return;
                 }
-                
+
                 try {
                     const metaDir = await dirHandle.getDirectoryHandle('.metadata', { create: true });
                     const fileName = targetVideoName + '.relations.json';
-                    
+
                     let data = null;
                     try {
                         const fileHandle = await metaDir.getFileHandle(fileName);
@@ -17559,19 +18070,19 @@
                         const text = await file.text();
                         data = JSON.parse(text);
                     } catch (e) {
-                        
+
                         return;
                     }
-                    
+
                     if (data && data[relationshipType]) {
                         data[relationshipType] = data[relationshipType].filter(v => v.name !== currentVideoName);
                         data.updated = Date.now();
-                        
+
                         const fileHandle = await metaDir.getFileHandle(fileName, { create: true });
                         const writable = await fileHandle.createWritable();
                         await writable.write(JSON.stringify(data, null, 2));
                         await writable.close();
-                        
+
                         debug.log(`[ParentChild] Removed reverse relationship: ${targetVideoName} -> ${relationshipType} -> ${currentVideoName}`);
                     }
                 } catch (e) {
@@ -17582,14 +18093,14 @@
             async function removeVideo(type, name) {
                 pcState[type] = pcState[type].filter(v => v.name !== name);
                 await saveData();
-                
+
                 const sourceVideos = window.allVideos || [];
                 const targetVideo = sourceVideos.find(v => v.name === name);
                 const targetDirHandle = targetVideo?.dirHandle || null;
-                
+
                 const reverseType = type === 'parents' ? 'children' : 'parents';
                 await removeReverseRelationship(name, targetDirHandle, pcState.currentVideoName, reverseType);
-                
+
                 renderCarousels();
             }
 
@@ -17597,8 +18108,8 @@
                 renderCarousel(els.childCarousel, pcState.children, 'children');
                 renderCarousel(els.parentCarousel, pcState.parents, 'parents');
             }
-            
-            window.renderParentChildCarousels = function() {
+
+            window.renderParentChildCarousels = function () {
                 invalidateVideoCache();
                 renderCarousels();
             };
@@ -17645,7 +18156,7 @@
             function renderCarousel(container, videos, type) {
                 container.innerHTML = '';
                 if (videos.length === 0) {
-                    const emptyText = type === 'parents' 
+                    const emptyText = type === 'parents'
                         ? i18n.t('video.parentVideosEmpty', 'No parent videos added')
                         : i18n.t('video.childVideosEmpty', 'No child videos added');
                     container.innerHTML = `<div class="pc-empty-state">${emptyText}</div>`;
@@ -17658,11 +18169,11 @@
                 videos.forEach(v => {
                     const card = document.createElement('div');
                     card.className = 'pc-video-card';
-                    const videoUrl = window.VideoID 
+                    const videoUrl = window.VideoID
                         ? window.VideoID.buildVideoUrl(v.name)
                         : `youvi_video.html?name=${encodeURIComponent(v.name)}`;
                     const fullVideo = getVideoByName(v.name);
-                    
+
                     let channelName = '';
                     if (fullVideo && Array.isArray(fullVideo.tags)) {
                         if (window.TagTypes) {
@@ -17674,7 +18185,7 @@
                             }
                         }
                     }
-                    
+
                     const views = fullVideo?.views || 0;
 
                     card.innerHTML = `
@@ -17716,7 +18227,7 @@
                         if (e.target.tagName === 'A') return;
                         if (e.target.classList.contains('pc-video-channel')) return;
                         if (e.target.closest('.pc-remove-btn')) return;
-                        
+
                         if (fullVideo) {
                             window.location.href = videoUrl;
                         }
@@ -17724,9 +18235,9 @@
 
                     fragment.appendChild(card);
                 });
-                
+
                 container.appendChild(fragment);
-                
+
                 updateNavButtons(container);
             }
 
@@ -17751,3 +18262,6 @@
 </body>
 
 </html>
+
+
+

@@ -114,12 +114,16 @@ class VirtualPlaylistRenderer {
         metaParts.push(`${viewsSvg} ${(video.views || 0).toLocaleString()}`);
         metaParts.push(`${danmakuSvg} ${danmakuCount}`);
         const relatedMetaLine = metaParts.join(' • ');
+        const ratingBadgeHtml = (typeof window.getVideoRatingBadgeHtmlForVideo === 'function')
+            ? window.getVideoRatingBadgeHtmlForVideo(video)
+            : '';
         
         element.innerHTML = `
             <a href="${videoUrl}" class="related-video-link" title="${this.escapeHtml(this.getFileNameWithoutExtension(video.name))}"></a>
             <div class="related-thumb">
                 <div class="lazy-thumb loading">Загрузка...</div>
                 <div class="related-duration">0:00</div>
+                ${ratingBadgeHtml}
             </div>
             <div class="related-info">
                 <div class="related-title">${this.escapeHtml(this.getFileNameWithoutExtension(video.name))}</div>

@@ -505,6 +505,11 @@ body.dark-theme #clearTagSearch:hover {
   color: #ff69b4;
 }
 
+#footerRatingFilter a.active {
+  color: #ff69b4;
+  font-weight: 700;
+}
+
 .footer-bottom {
   border-top: 1px solid #444;
   margin-top: 20px;
@@ -938,6 +943,12 @@ body.dark-theme input.search-input::placeholder {
                             <li><a href="wiki/docs.html" data-i18n="footer.docs">Документация</a></li>
                             <li><a href="wiki/tech.html" data-i18n="footer.tech">Технологии</a></li>
                         </ul>
+                        <h3>Фильтр</h3>
+                        <ul id="footerRatingFilter">
+                            <li><a href="#" id="footerFilterAll" onclick="setRatingFilter('all'); return false;">Все</a></li>
+                            <li><a href="#" id="footerFilterGeneral" onclick="setRatingFilter('general'); return false;">Общие</a></li>
+                            <li><a href="#" id="footerFilterArchived" onclick="setRatingFilter('archived'); return false;">Архив</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -954,6 +965,7 @@ body.dark-theme input.search-input::placeholder {
   <script src="youvi/sidebar-toggle.js"></script>
   <script src="youvi/sidebar-scroll.js"></script>
   <script src="youvi/themes/theme-toggle.js"></script>
+  <script src="youvi/filter/filter-engine.js"></script>
   <link rel="stylesheet" href="youvi/sticky-video.css">
 
   <script src="youvi/tags/tag-broadcast-sync.js"></script>
@@ -981,11 +993,18 @@ async function loadRandomBanner(bannerElement) {
 const supportsFS = 'showDirectoryPicker' in window;
 let videoDirectoryHandle = null;
 let allVideos = [];
+let autocompleteSourcePlaylists = [];
 let videosCache = null;
 let tagCache = null;
 let tagIndex = null; 
 let lastScanTime = 0;
 let db = null; 
+let tagDataVersion = 0;
+let tagRenderVersion = 0;
+let loadVideosVersion = 0;
+let activeBackgroundScanVersion = 0;
+const tagUrlParams = new URLSearchParams(window.location.search);
+let currentRatingFilter = tagUrlParams.get('rating') || localStorage.getItem('youvi_rating_filter') || 'all';
 
 const tagsWrap = document.getElementById('tagsWrap');
 const emptyState = document.getElementById('emptyState');
@@ -1142,8 +1161,93 @@ function hasSpecialTags(item) {
   return tags.some(tag => isSpecialTag(tag));
 }
 
+function invalidateTagCaches() {
+  tagCache = null;
+  tagIndex = null;
+  tagDataVersion++;
+}
+
+function getVideoRatingFallback(tags) {
+  if (!Array.isArray(tags) || tags.length === 0) return 'safe';
+  let result = 'safe';
+  for (const rawTag of tags) {
+    if (!rawTag) continue;
+    const normalized = String(rawTag).toLowerCase().trim();
+    const match = normalized.match(/^(.+?)\s*\(ra\)$/);
+    if (!match) continue;
+    const value = match[1].trim();
+    if (value === 'explicit') return 'explicit';
+    if (value === 'questionable' && result !== 'explicit') result = 'questionable';
+  }
+  return result;
+}
+
+function applyRatingFilterToList(videos, mode) {
+  const list = Array.isArray(videos) ? videos : [];
+  const effectiveMode = mode || currentRatingFilter || 'all';
+  if (window.YouviFilterEngine && typeof window.YouviFilterEngine.applyRatingFilterToVideos === 'function') {
+    return window.YouviFilterEngine.applyRatingFilterToVideos(list, effectiveMode);
+  }
+
+  if (effectiveMode === 'all') return list;
+  if (effectiveMode === 'general') {
+    return list.filter(video => getVideoRatingFallback(video && video.tags ? video.tags : []) === 'safe');
+  }
+  if (effectiveMode === 'archived') {
+    return list.filter(video => {
+      const rating = getVideoRatingFallback(video && video.tags ? video.tags : []);
+      return rating === 'questionable' || rating === 'explicit';
+    });
+  }
+  return list;
+}
+
+function getVisibleVideosForTagPage() {
+  const showSpecialVideos = localStorage.getItem('showSpecialVideos') === 'true';
+  const ratingFiltered = applyRatingFilterToList(allVideos, currentRatingFilter);
+  return showSpecialVideos ? ratingFiltered : ratingFiltered.filter(item => !hasSpecialTags(item));
+}
+
+function updateFooterRatingFilterUi() {
+  const map = {
+    all: 'footerFilterAll',
+    general: 'footerFilterGeneral',
+    archived: 'footerFilterArchived'
+  };
+  ['footerFilterAll', 'footerFilterGeneral', 'footerFilterArchived'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  const activeId = map[currentRatingFilter] || map.all;
+  const activeEl = document.getElementById(activeId);
+  if (activeEl) activeEl.classList.add('active');
+}
+
+function setRatingFilter(mode) {
+  const normalized = mode === 'general' || mode === 'archived' || mode === 'all' ? mode : 'all';
+  if (currentRatingFilter === normalized) return;
+  currentRatingFilter = normalized;
+  try {
+    localStorage.setItem('youvi_rating_filter', currentRatingFilter);
+  } catch (e) {}
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (currentRatingFilter === 'all') params.delete('rating');
+    else params.set('rating', currentRatingFilter);
+    const qs = params.toString();
+    history.replaceState(null, '', `${window.location.pathname}${qs ? '?' + qs : ''}`);
+  } catch (e) {}
+  updateFooterRatingFilterUi();
+  tagCache = null;
+  buildTagCloud();
+  try {
+    window.dispatchEvent(new CustomEvent('youvi:ratingFilterChanged', { detail: { mode: currentRatingFilter } }));
+  } catch (e) {}
+}
+
 async function loadAllVideos() {
   if (!videoDirectoryHandle) return;
+  const loadVersion = ++loadVideosVersion;
   
   const perfStart = performance.now();
   const videoExtensions = ['.mp4', '.avi', '.mov', '.mkv', '.webm', '.m4v'];
@@ -1151,14 +1255,17 @@ async function loadAllVideos() {
   const cachedVideos = await getVideosFromDB();
   
   if (cachedVideos.length > 0) {
+    if (loadVersion !== loadVideosVersion) return;
     if (YOUVI_TAGS_DEBUG) console.log(`Loaded ${cachedVideos.length} videos from cache in ${Math.round(performance.now() - perfStart)}ms`);
     allVideos = cachedVideos;
     videosCache = cachedVideos;
     lastScanTime = Date.now();
-    tagIndex = null; 
+    invalidateTagCaches();
     accessStatus.textContent = '';
     
+    const backgroundScanVersion = ++activeBackgroundScanVersion;
     setTimeout(async () => {
+      if (backgroundScanVersion !== activeBackgroundScanVersion || loadVersion !== loadVideosVersion) return;
       if (YOUVI_TAGS_DEBUG) console.log('Starting background scan to verify all videos...');
       const scanStart = performance.now();
       const beforeCount = allVideos.length;
@@ -1203,17 +1310,18 @@ async function loadAllVideos() {
         }
       })(videoDirectoryHandle);
       
+      if (backgroundScanVersion !== activeBackgroundScanVersion || loadVersion !== loadVideosVersion) return;
       allVideos = tempVideos;
       videosCache = tempVideos;
-      tagIndex = null;
+      invalidateTagCaches();
       
       if (YOUVI_TAGS_DEBUG) console.log(`Background scan completed in ${Math.round(performance.now() - scanStart)}ms`);
       if (YOUVI_TAGS_DEBUG) console.log(`Total videos: ${allVideos.length} (was ${beforeCount} in cache)`);
       
-      if (Math.abs(allVideos.length - beforeCount) > 10) {
-        if (YOUVI_TAGS_DEBUG) console.log('Video count changed significantly, rebuilding tag cloud...');
-        await buildTagCloud();
+      if (YOUVI_TAGS_DEBUG && Math.abs(allVideos.length - beforeCount) > 10) {
+        console.log('Video count changed significantly, rebuilding tag cloud...');
       }
+      await buildTagCloud();
     }, 200);
     
     return;
@@ -1221,6 +1329,7 @@ async function loadAllVideos() {
   
   if (YOUVI_TAGS_DEBUG) console.log('No cache found, performing full scan...');
   allVideos = [];
+  activeBackgroundScanVersion++;
   
   async function scanDirectory(dirHandle, playlistName = null, batchSize = 50) {
     try {
@@ -1277,10 +1386,10 @@ async function loadAllVideos() {
   
   try {
     await scanDirectory(videoDirectoryHandle);
+    if (loadVersion !== loadVideosVersion) return;
     videosCache = [...allVideos];
     lastScanTime = Date.now();
-    tagCache = null;
-    tagIndex = null;
+    invalidateTagCaches();
     accessStatus.textContent = '';
     
     const totalTime = performance.now() - perfStart;
@@ -1323,19 +1432,22 @@ async function buildTagIndex(videos = allVideos) {
 }
 
 async function buildTagCloud() {
+  const renderVersion = ++tagRenderVersion;
   const perfStart = performance.now();
-  const showSpecialVideos = localStorage.getItem('showSpecialVideos') === 'true';
   const searchQuery = tagSearchBox.value.toLowerCase().trim();
+  const dataVersion = tagDataVersion;
   
-  const cacheKey = `${showSpecialVideos}_${searchQuery}`;
+  const cacheKey = `${dataVersion}_${currentRatingFilter}_${localStorage.getItem('showSpecialVideos') === 'true'}_${searchQuery}`;
   
   if (tagCache && tagCache.key === cacheKey) {
+    if (renderVersion !== tagRenderVersion || dataVersion !== tagDataVersion) return;
     renderTagCloud(tagCache.data);
     return;
   }
   
-  const visibleVideos = showSpecialVideos ? allVideos : allVideos.filter(item => !hasSpecialTags(item));
+  const visibleVideos = getVisibleVideosForTagPage();
   const { tagMap, tagToVideos } = await buildTagIndex(visibleVideos);
+  if (renderVersion !== tagRenderVersion || dataVersion !== tagDataVersion) return;
   
   let filteredTags = Array.from(tagMap.keys());
 
@@ -1359,6 +1471,7 @@ async function buildTagCloud() {
     });
   }
   
+  const showSpecialVideos = localStorage.getItem('showSpecialVideos') === 'true';
   if (!showSpecialVideos) {
     filteredTags = filteredTags.filter(tag => !isSpecialTag(tag));
   }
@@ -1384,6 +1497,7 @@ async function buildTagCloud() {
     data: tagData
   };
   
+  if (renderVersion !== tagRenderVersion || dataVersion !== tagDataVersion) return;
   console.log(`Tag cloud built in ${Math.round(performance.now() - perfStart)}ms: ${filteredTags.length} tags`);
   renderTagCloud(tagData);
 }
@@ -1650,15 +1764,9 @@ function renderTagCloud({ tagMap, keys, filteredCount }) {
 }
 
 function updateVideoCounter(providedCount) {
-  const showSpecialVideos = localStorage.getItem('showSpecialVideos') === 'true';
-  
   let count = providedCount;
   if (typeof count !== 'number') {
-    let filteredVideos = allVideos;
-    if (!showSpecialVideos) {
-      filteredVideos = allVideos.filter(item => !hasSpecialTags(item));
-    }
-    count = filteredVideos.length;
+    count = getVisibleVideosForTagPage().length;
   }
   const countStr = count.toString().padStart(5, '0');
   
@@ -1698,6 +1806,65 @@ async function loadAllVideosAndPlaylistsForAutocomplete() {
   }
   
   return await AutocompleteDataLoader.loadData();
+}
+
+function filterAutocompleteResultsForTagPage(results) {
+  if (!results || typeof results !== 'object') return results;
+
+  const visibleVideos = getVisibleVideosForTagPage();
+  if (window.YouviAutocompleteFilterHelper && typeof window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos === 'function') {
+    return window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos(
+      results,
+      visibleVideos,
+      autocompleteSourcePlaylists
+    );
+  }
+  const visibleVideoNames = new Set(visibleVideos.map(v => v && v.name).filter(Boolean));
+
+  const visibleTagNames = new Set();
+  const visibleChannelNames = new Set();
+  visibleVideos.forEach(video => {
+    const tags = Array.isArray(video && video.tags) ? video.tags : [];
+    tags.forEach(tag => {
+      const tagStr = String(tag || '').trim();
+      if (!tagStr) return;
+      if (tagStr.includes('(ка)') || tagStr.includes('(РєР°)')) {
+        visibleChannelNames.add(tagStr.replace(/\s*\((ка|РєР°)\)\s*$/i, '').trim().toLowerCase());
+      } else {
+        visibleTagNames.add(tagStr.toLowerCase());
+      }
+    });
+  });
+
+  const filteredVideos = (results.videos || []).filter(video => {
+    const value = (video && (video.value || video.name)) || '';
+    return visibleVideoNames.has(value);
+  });
+
+  const filteredTags = (results.tags || []).filter(tag => {
+    const rawName = String((tag && (tag.name || tag.value || tag.content || tag.displayName)) || '').trim();
+    if (!rawName) return false;
+    if (visibleTagNames.has(rawName.toLowerCase())) return true;
+    const noSuffix = rawName.replace(/\s*\([a-zа-я]{2,3}\)\s*$/i, '').trim().toLowerCase();
+    if (!noSuffix) return false;
+    for (const visibleTag of visibleTagNames) {
+      if (visibleTag === noSuffix || visibleTag.startsWith(noSuffix + ' (')) return true;
+    }
+    return false;
+  });
+
+  const filteredChannels = (results.channels || []).filter(channel => {
+    const channelName = String((channel && (channel.value || channel.name)) || '').trim().toLowerCase();
+    if (!channelName) return false;
+    return visibleChannelNames.has(channelName);
+  });
+
+  return {
+    ...results,
+    videos: filteredVideos,
+    tags: filteredTags,
+    channels: filteredChannels
+  };
 }
 
 const debouncedBuildTagCloud = debounceTagSearch(buildTagCloud, 300);
@@ -1792,16 +1959,14 @@ document.getElementById('clearTagSearch').addEventListener('click', () => {
                   switch (type) {
                     case 'tags_changed':
                       if (YOUVI_TAGS_DEBUG) console.log('[Tags] Tags changed for video:', data.videoName);
-                      tagCache = null;
-                      tagIndex = null;
+                      invalidateTagCaches();
                       await buildTagCloud();
                       if (YOUVI_TAGS_DEBUG) console.log('[Tags] Tag cloud rebuilt after tags changed');
                       break;
                       
                     case 'video_added':
                       if (YOUVI_TAGS_DEBUG) console.log('[Tags] Video added:', data.videoName);
-                      tagCache = null;
-                      tagIndex = null;
+                      invalidateTagCaches();
                       await buildTagCloud();
                       if (YOUVI_TAGS_DEBUG) console.log('[Tags] Tag cloud rebuilt after video added');
                       break;
@@ -1809,24 +1974,21 @@ document.getElementById('clearTagSearch').addEventListener('click', () => {
                     case 'video_removed':
                       if (YOUVI_TAGS_DEBUG) console.log('[Tags] Video removed:', data.videoName);
 
-                      tagCache = null;
-                      tagIndex = null;
+                      invalidateTagCaches();
                       await buildTagCloud();
                       if (YOUVI_TAGS_DEBUG) console.log('[Tags] Tag cloud rebuilt after video removed');
                       break;
                       
                     case 'metadata_changed':
                       if (YOUVI_TAGS_DEBUG) console.log('[Tags] Metadata changed for video:', data.videoName);
-                      tagCache = null;
-                      tagIndex = null;
+                      invalidateTagCaches();
                       await buildTagCloud();
                       if (YOUVI_TAGS_DEBUG) console.log('[Tags] Tag cloud rebuilt after metadata changed');
                       break;
                       
                     case 'database_updated':
                       if (YOUVI_TAGS_DEBUG) console.log('[Tags] Database updated');
-                      tagCache = null;
-                      tagIndex = null;
+                      invalidateTagCaches();
                       await buildTagCloud();
                       if (YOUVI_TAGS_DEBUG) console.log('[Tags] Tag cloud rebuilt after database updated');
                       break;
@@ -1841,8 +2003,7 @@ document.getElementById('clearTagSearch').addEventListener('click', () => {
                 document.addEventListener('visibilitychange', async () => {
                   if (!document.hidden && videoDirectoryHandle) {
                     if (YOUVI_TAGS_DEBUG) console.log('[Tags] Tab became visible, checking for updates...');
-                    tagCache = null;
-                    tagIndex = null;
+                    invalidateTagCaches();
                     await buildTagCloud();
                     if (YOUVI_TAGS_DEBUG) console.log('[Tags] Tag cloud refreshed on tab visibility change');
                   }
@@ -1861,6 +2022,7 @@ document.getElementById('clearTagSearch').addEventListener('click', () => {
             if (searchInput && typeof AutocompleteIntegration !== 'undefined' && typeof YouviAutocomplete !== 'undefined') {
             
               const { videos, playlists } = await loadAllVideosAndPlaylistsForAutocomplete();
+              autocompleteSourcePlaylists = Array.isArray(playlists) ? playlists : [];
               
               const cacheValid = await window.autocompleteCache.isCacheValid(
                 videos.length,
@@ -1871,7 +2033,8 @@ document.getElementById('clearTagSearch').addEventListener('click', () => {
               await autocompleteIntegration.init(searchInput, {
                 videoDirectoryHandle: videoDirectoryHandle,
                 allVideos: cacheValid ? [] : videos,
-                allPlaylists: cacheValid ? [] : playlists
+                allPlaylists: cacheValid ? [] : playlists,
+                filterResults: filterAutocompleteResultsForTagPage
               });
               if (YOUVI_TAGS_DEBUG) console.log('[Autocomplete] ✅ Initialized on youvi_tags.html');
             }
@@ -1893,6 +2056,7 @@ document.getElementById('clearTagSearch').addEventListener('click', () => {
 })();
 
   document.addEventListener('DOMContentLoaded', () => {
+    updateFooterRatingFilterUi();
     const headerSearchInput = document.getElementById('headerSearchInput');
     const headerSearchBtn = document.getElementById('doSearch');
     

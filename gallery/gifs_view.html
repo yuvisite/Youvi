@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIF View | 8Site</title>
+    <script>
+        (function() {
+            var theme = localStorage.getItem('youvi-theme');
+            var sidebar = localStorage.getItem('sidebarCollapsed');
+            
+            var htmlClasses = [];
+            if (theme === 'dark') htmlClasses.push('dark-theme');
+            else if (theme === 'skeuo') htmlClasses.push('skeuo-theme');
+            if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+            if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
+        })();
+    </script>
+    
+    <!-- Header styles -->
+    <link rel="stylesheet" href="../youvi/header/youvi-header.css">
+    
+    <!-- Sidebar styles -->
+    <link rel="stylesheet" href="../youvi/sidebar.css">
+    <link rel="stylesheet" href="../youvi/sidebar-scroll.css">
+    
+    <!-- Theme System -->
+    <link rel="stylesheet" href="../youvi/themes/dark-theme.css">
+    <link rel="stylesheet" href="../youvi/themes/theme-dropdown.css">
+    
+    <!-- Sticky layout -->
+    <link rel="stylesheet" href="../youvi/sticky-video.css">
+    
+    <!-- Wide Screen Mode -->
+    <link rel="stylesheet" href="../youvi/widescreen-mode.css">
+    
+    <!-- Parent-Child Relations Styles -->
+    <link rel="stylesheet" href="gifs_pc_styles.css">
+    
+    <!-- Scripts -->
+    <script src="../youvi/themes/theme-toggle.js"></script>
+    <script src="../youvi/header/youvi-header.js"></script>
+    <script src="../youvi/sidebar-toggle.js"></script>
+    <script src="../youvi/sidebar-scroll.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            width: 100%;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+            color: #111;
+            max-width: 100vw;
+        }
+        
+        /* Top nav overrides */
+        .top-nav-content {
+            max-width: none !important;
+            margin: 0 !important;
+        }
+        
+        /* Header overrides */
+        .header-content-wrapper {
+            max-width: none !important;
+            margin: 0 !important;
+        }
+        
+        .container {
+            width: 100%;
+            margin: 0;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            max-width: 1500px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            padding-top: 5px;
+        }
+        
+        .player-section {
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        body.dark-theme .player-section {
+            background: #2a2a2a;
+        }
+        
+        .gif-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gif-display {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .video-info {
+            padding: 0;
+            padding-top: 12px;
+        }
+
+        .video-title {
+            font-size: 24px;
+            font-weight: 400;
+            color: #000;
+            margin-bottom: 8px;
+            line-height: 1.4
+        }
+
+        body.dark-theme .video-title {
+            color: #e0e0e0
+        }
+
+        .video-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 2px 0 2px;
+            align-items: center
+        }
+
+        .video-tag {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 11px;
+            color: #333
+        }
+
+        .edit-tags-btn {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 11px;
+            color: #333;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            cursor: pointer
+        }
+
+        .edit-tags-btn:hover {
+            background: #f5f5f5;
+            border-color: #ff69b4;
+            color: #ff69b4
+        }
+
+        .edit-tags-btn svg {
+            width: 10px;
+            height: 10px;
+            flex-shrink: 0
+        }
+
+        body.dark-theme .video-tag,
+        body.dark-theme .edit-tags-btn {
+            background: #2a2a2a;
+            border-color: #444;
+            color: #ccc;
+        }
+
+        body.dark-theme .edit-tags-btn:hover {
+            background: #3a3a3a;
+            border-color: #ff69b4;
+            color: #ff69b4;
+        }
+
+        .tags-edit-form {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 6px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .tags-edit-controls {
+            flex: 1
+        }
+
+        .tags-edit-controls input {
+            width: 100%;
+            padding: 4px 8px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box
+        }
+
+        .tags-edit-actions {
+            display: flex;
+            gap: 5px
+        }
+
+        .tags-edit-cancel,
+        .tags-edit-save {
+            padding: 3px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s
+        }
+
+        .tags-edit-cancel {
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #ddd
+        }
+
+        .tags-edit-cancel:hover {
+            background: #e5e5e5
+        }
+
+        .tags-edit-save {
+            background: #ff69b4;
+            color: #fff
+        }
+
+        .tags-edit-save:hover {
+            background: #d94b88
+        }
+
+        .video-description {
+            background: white;
+            border-radius: 4px;
+            padding: 6px;
+            margin-bottom: 8px;
+            border: 1px solid #eee
+        }
+
+        body.dark-theme .video-description {
+            background: #2a2a2a;
+            border-color: #444;
+        }
+
+        .description-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            cursor: pointer;
+            position: relative
+        }
+
+        .description-header h3 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin: 0;
+            line-height: 1.2;
+            flex: 1
+        }
+
+        body.dark-theme .description-header h3 {
+            color: #e0e0e0;
+        }
+
+        .description-toggle {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .description-toggle:hover {
+            background: #f5f5f5;
+            color: #ff69b4
+        }
+
+        body.dark-theme .description-toggle {
+            color: #999;
+        }
+
+        body.dark-theme .description-toggle:hover {
+            background: #3a3a3a;
+            color: #ff69b4;
+        }
+
+        .description-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s
+        }
+
+        .description-toggle.collapsed svg {
+            transform: rotate(-90deg)
+        }
+
+        .description-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease
+        }
+
+        .description-content.collapsed {
+            max-height: 0
+        }
+
+        .description-content.expanded {
+            max-height: none;
+            overflow: visible
+        }
+
+        .description-text {
+            font-size: 13px;
+            color: #111;
+            line-height: 1.5;
+            white-space: pre-line
+        }
+
+        body.dark-theme .description-text {
+            color: #ccc;
+        }
+
+        .edit-description-btn {
+            background: none;
+            border: none;
+            padding: 2px;
+            font-size: 11px;
+            color: #666;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            cursor: pointer;
+            border-radius: 3px
+        }
+
+        .edit-description-btn:hover {
+            background: #f5f5f5;
+            color: #ff69b4
+        }
+
+        .edit-description-btn svg {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0
+        }
+
+        body.dark-theme .edit-description-btn {
+            color: #999;
+        }
+
+        body.dark-theme .edit-description-btn:hover {
+            background: #3a3a3a;
+            color: #ff69b4;
+        }
+
+        .description-edit-form {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 6px;
+            margin-top: 8px;
+            display: none
+        }
+
+        body.dark-theme .description-edit-form {
+            background: #2a2a2a;
+            border-color: #444;
+        }
+
+        .description-edit-controls {
+            flex: 1
+        }
+
+        .description-edit-controls textarea {
+            width: 100%;
+            padding: 4px 8px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            min-height: 80px;
+            resize: vertical;
+            font-family: inherit
+        }
+
+        body.dark-theme .description-edit-controls textarea {
+            background: #1a1a1a;
+            border-color: #555;
+            color: #ccc;
+        }
+
+        .description-edit-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px
+        }
+
+        .description-edit-cancel,
+        .description-edit-save {
+            padding: 3px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s
+        }
+
+        .description-edit-cancel {
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #ddd
+        }
+
+        .description-edit-cancel:hover {
+            background: #e5e5e5
+        }
+
+        .description-edit-save {
+            background: #ff69b4;
+            color: #fff
+        }
+
+        .description-edit-save:hover {
+            background: #d94b88
+        }
+
+        body.dark-theme .description-edit-cancel {
+            background: #3a3a3a;
+            border-color: #555;
+            color: #999;
+        }
+
+        body.dark-theme .description-edit-cancel:hover {
+            background: #444;
+        }
+
+        .video-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px
+        }
+
+        body.dark-theme .video-meta {
+            color: #aaa
+        }
+
+        .video-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 0
+        }
+
+        .channel-info-left {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .actions-right {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .action-btn {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .action-btn:hover {
+            background: #f5f5f5;
+            border-color: #ff69b4;
+            color: #ff69b4
+        }
+
+        .action-btn.liked {
+            background: #ff69b4;
+            color: white;
+            border-color: #ff69b4
+        }
+
+        .action-btn.disliked {
+            background: #d94b88;
+            color: white;
+            border-color: #d94b88
+        }
+
+        .reaction-count {
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        body.dark-theme .action-btn {
+            border-color: #555;
+            color: #ccc;
+        }
+
+        body.dark-theme .action-btn:hover {
+            background: #3a3a3a;
+            border-color: #ff69b4;
+            color: #ff69b4;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        
+        .right-sidebar {
+            width: 402px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            padding-top: 5px;
+            gap: 10px;
+        }
+        
+        .sidebar-section-right {
+            background: #fafafa;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        body.dark-theme .sidebar-section-right {
+            background: #2a2a2a;
+        }
+        
+        .section-title-right {
+            padding: 4px 12px;
+            background: #f5f5f5;
+            font-size: 11px;
+            font-weight: 600;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+        
+        body.dark-theme .section-title-right {
+            background: #333;
+            border-bottom-color: #444;
+            color: #e0e0e0;
+        }
+        
+        .recommendations-tabs {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            padding: 0 10px 0 0;
+            background: transparent;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 2px;
+        }
+
+        .recs-tab-btn {
+            border: 1px solid #eee;
+            background: #fff;
+            color: #555;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            box-shadow: none;
+            max-width: 100%;
+        }
+
+        #recsFolderBtnText {
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+
+        .recs-tab-btn:hover {
+            background: rgba(255, 105, 180, 0.12);
+            color: #333;
+        }
+
+        .recs-tab-btn.active {
+            background: #ff69b4;
+            color: #fff;
+            box-shadow: none;
+        }
+
+        .recs-tab-btn.disabled {
+            opacity: 0.55;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        #gifRecommendationsSidebar {
+            background: transparent !important;
+            border: none !important;
+            margin-top: -6px;
+            padding: 0;
+        }
+
+        #gifRecommendationsSidebar .section-title-right {
+            background: transparent !important;
+            border-bottom: none !important;
+        }
+
+        .dark-theme .recommendations-tabs {
+            background: transparent;
+            border-color: transparent;
+        }
+
+        .dark-theme .recs-tab-btn {
+            background: #2a2a2a;
+            color: #888;
+            border-color: #444;
+            box-shadow: none;
+        }
+
+        .dark-theme .recs-tab-btn:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        .dark-theme .recs-tab-btn.active {
+            background: #ff69b4;
+            color: #fff;
+            border-color: #ff69b4;
+        }
+        
+        #gifRecommendationsSidebar {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            padding: 8px;
+        }
+
+        .related-video {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .related-video:hover {
+            transform: scale(1.02);
+        }
+
+        .related-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #f0f0f0;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            object-fit: cover;
+        }
+
+        .related-duration {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2px 4px;
+            font-size: 10px;
+            border-radius: 2px;
+        }
+
+        .related-info {
+            display: none;
+        }
+
+        .related-title {
+            display: none;
+        }
+
+        .related-meta {
+            display: none;
+        }
+
+        body.dark-theme .related-thumb {
+            background: #1a1a1a;
+        }
+        
+        .footer {
+            background: #2c2c2c;
+            color: #fff;
+            padding: 25px 0 15px 0;
+            margin-top: 0;
+        }
+        
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        
+        .footer-logo {
+            flex-shrink: 0;
+            width: 200px;
+        }
+        
+        .footer-logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .footer-logo p {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #ccc;
+            line-height: 1.3;
+        }
+        
+        .footer-sections {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+        
+        .footer-main {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+        
+        .footer-right {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        
+        .footer-mascot {
+            flex-shrink: 0;
+        }
+        
+        .footer-mascot img {
+            height: 180px;
+            width: auto;
+        }
+        
+        .footer-section {
+            flex: 1;
+        }
+        
+        .footer-section h3 {
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-section li {
+            margin-bottom: 6px;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 11px;
+            transition: color 0.2s;
+        }
+        
+        .footer-section a:hover {
+            color: #ff69b4;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1440px) {
+            body:not(.cinema-mode) .sidebar {
+                position: fixed !important;
+                top: var(--ui-top, 80px) !important;
+                left: 0 !important;
+                bottom: 0 !important;
+                width: 200px !important;
+                height: calc(100vh - var(--ui-top, 80px)) !important;
+                z-index: 1500 !important;
+                overflow-y: auto !important;
+                box-shadow: none !important;
+                display: block !important;
+                margin-left: 0 !important;
+                background: #fff !important;
+                transform: translateX(-200px) !important;
+                transition: transform 0.25s ease !important;
+            }
+
+            body:not(.cinema-mode):not(.sidebar-collapsed) .sidebar {
+                transform: translateX(0) !important;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            body.dark-theme:not(.cinema-mode) .sidebar {
+                background: #1e1e1e !important;
+            }
+
+            .container {
+                padding-left: 20px;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-wrapper {
+                max-width: 1500px;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .right-sidebar {
+                display: none;
+            }
+            
+            .content-wrapper {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            .video-actions {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .channel-info-left,
+            .actions-right {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .action-btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .video-title {
+                font-size: 16px;
+            }
+            
+            .video-meta {
+                font-size: 10px;
+                gap: 8px;
+            }
+            
+            .action-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+            
+            .action-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+        }
+    </style>
+</head>
+<link rel="icon" href="../favicon/youvi/favicon.ico" type="image/x-icon">
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="top-nav">
+        <div class="top-nav-content">
+            <a href="../youvi_main.html">Видео</a>
+            <a href="../index.html">Управление</a>
+            <a href="../youvi_ch_list.html">Каналы</a>
+            <a href="../youvi_playlists_list.html">Плейлисты</a>
+            <a href="gifs_main.html" class="active">GIFs</a>
+            <a href="../forum/forum.html">Форумы</a>
+            <a href="../wiki/index.html">Wiki</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content-wrapper">
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </button>
+                
+                <div class="logo">
+                    <a href="../youvi_main.html">
+                        <img src="../images/logo_youvi_ind.png" alt="Youvi logo">
+                    </a>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="search-area autocomplete-wrapper">
+                    <input type="text" id="gifSearch" placeholder="Поиск GIF..." class="search-input">
+                    <button id="doSearch" class="search-btn">Найти</button>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="user-actions">
+                    <div class="settings-container">
+                        <a href="#" class="settings-btn">⚙</a>
+                        <div class="theme-dropdown">
+                            <button class="theme-dropdown-item" data-theme="light">Белая</button>
+                            <button class="theme-dropdown-item" data-theme="dark">Черная</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Навигация</div>
+                <a href="../youvi_main.html" class="sidebar-item nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    <span>Youvi</span>
+                </a>
+                <a href="gifs_main.html" class="sidebar-item nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="1.5">
+                        <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
+                        <line x1="7" y1="2" x2="7" y2="22"/>
+                        <line x1="17" y1="2" x2="17" y2="22"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/>
+                        <line x1="2" y1="7" x2="7" y2="7"/>
+                        <line x1="2" y1="17" x2="7" y2="17"/>
+                        <line x1="17" y1="17" x2="22" y2="17"/>
+                        <line x1="17" y1="7" x2="22" y2="7"/>
+                    </svg>
+                    <span>GIFs</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- Main Content -->
+            <main class="main-content">
+                <div id="gifContent">
+                    <div class="loading">Loading GIF...</div>
+                </div>
+            </main>
+            
+            <!-- Right Sidebar -->
+            <aside class="right-sidebar">
+                <!-- Recommendations Tabs -->
+                <div class="recommendations-tabs" id="gifRecommendationsTabs">
+                    <button class="recs-tab-btn active" data-mode="similar" id="gifRecsSimilarBtn">
+                        <span>Похожие</span>
+                    </button>
+                    <button class="recs-tab-btn" data-mode="folder" id="gifRecsFolderBtn">
+                        <span>Из папки</span>
+                    </button>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="sidebar-section-right" id="gifRecommendationsSidebar">
+                    <div class="section-title-right" style="display: none;">Другие GIFs</div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-logo">
+                    <img src="../images/logo_youvi_ind_ex.png" alt="Youvi">
+                    <p data-i18n="footer.description">Платформа для просмотра видео контента. Сохраняйте, категоризируйте и смотрите видео.</p>
+                </div>
+                <div class="footer-sections">
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.sections">Разделы</h3>
+                        <ul>
+                            <li><a href="../youvi_main.html" data-i18n="footer.video">Видео</a></li>
+                            <li><a href="../youvi_tags.html" data-i18n="sidebar.tags">Теги</a></li>
+                            <li><a href="gifs_main.html">GIFs</a></li>
+                            <li><a href="../forum/forum.html">Форумы</a></li>
+                            <li><a href="../index.html" data-i18n="nav.management">Управление</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="sidebar.library">Библиотека</h3>
+                        <ul>
+                            <li><a href="../youvi_ch_list.html" data-i18n="sidebar.channels">Каналы</a></li>
+                            <li><a href="../youvi_playlists_list.html" data-i18n="sidebar.playlists">Плейлисты</a></li>
+                            <li><a href="../youvi_subscriptions.html" data-i18n="sidebar.subscriptions">Подписки</a></li>
+                            <li><a href="../youvi_fav.html" data-i18n="sidebar.favorites">Избранное</a></li>
+                            <li><a href="../youvi_history.html" data-i18n="sidebar.history">История</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="nav.wiki">Wiki</h3>
+                        <ul>
+                            <li><a href="../wiki/index.html" data-i18n="sidebar.home">Главная</a></li>
+                            <li><a href="../wiki/player.html" data-i18n="footer.wiki.player">Плеер</a></li>
+                            <li><a href="../wiki/danmaku.html" data-i18n="footer.wiki.danmaku">Данмаку</a></li>
+                            <li><a href="../wiki/tags/general.html" data-i18n="sidebar.tags">Теги</a></li>
+                            <li><a href="../wiki/tags/rules.html" data-i18n="footer.wiki.taggingRules">Правила тегирования</a></li>
+                            <li><a href="../wiki/search/general.html" data-i18n="footer.wiki.search">Поиск</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.pgc">PGC</h3>
+                        <ul>
+                            <li><a href="../youvi_main.html?tag=Anime (ct)" data-i18n="footer.categories.anime">Anime</a></li>
+                            <li><a href="../youvi_main.html?tag=Animation (ct)" data-i18n="footer.categories.animation">Animation</a></li>
+                            <li><a href="../youvi_main.html?tag=Movies (ct)" data-i18n="footer.categories.movies">Movies</a></li>
+                            <li><a href="../youvi_main.html?tag=Series (ct)" data-i18n="footer.categories.series">Series</a></li>
+                            <li><a href="../youvi_main.html?tag=Music (ct)" data-i18n="footer.categories.music">Music</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.ugc">UGC</h3>
+                        <ul>
+                            <li><a href="../youvi_main.html?tag=Games (ct)" data-i18n="footer.categories.games">Games</a></li>
+                            <li><a href="../youvi_main.html?tag=Technology (ct)" data-i18n="footer.categories.tech">Technology</a></li>
+                            <li><a href="../youvi_main.html?tag=Entertainment (ct)" data-i18n="footer.categories.entertainment">Entertainment</a></li>
+                            <li><a href="../youvi_main.html?tag=IRL (ct)" data-i18n="footer.categories.irl">IRL</a></li>
+                            <li><a href="../youvi_main.html?tag=TV (ct)" data-i18n="footer.categories.tv">TV</a></li>
+                            <li><a href="../youvi_main.html?tag=Education (ct)" data-i18n="footer.categories.education">Education</a></li>
+                            <li><a href="../youvi_main.html?tag=Other (ct)" data-i18n="footer.categories.other">Other</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3 data-i18n="footer.about">О сайте</h3>
+                        <ul>
+                            <li><a href="../wiki/about.html" data-i18n="footer.aboutSite">Про сайт</a></li>
+                            <li><a href="../wiki/docs.html" data-i18n="footer.docs">Документация</a></li>
+                            <li><a href="../wiki/tech.html" data-i18n="footer.tech">Технологии</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-right">
+                <div class="footer-mascot">
+                    <img src="../images/mascot1.png" alt="Yuvi">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="gifs_loader.js?v=20260212001"></script>
+    <script>
+        // Load specific GIF from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const gifName = urlParams.get('gif');
+        
+        if (gifName) {
+            loadSingleGif(gifName);
+        } else {
+            document.getElementById('gifContent').innerHTML = `
+                <div class="video-info">
+                    <p>No GIF specified.</p>
+                    <a href="gifs_main.html" class="action-btn">← Back to GIFs</a>
+                </div>
+            `;
+        }
+    </script>
+
+    <!-- Parent-Child Relations Script -->
+    <script>
+        (function() {
+            const pcState = {
+                parents: [],
+                children: [],
+                currentGifName: null,
+                currentFolderHandle: null,
+                selectedSearchResults: new Set(),
+                allGifs: []
+            };
+
+            const els = {
+                childCarousel: null,
+                parentCarousel: null,
+                addBtn: null,
+                searchPanel: null,
+                searchInput: null,
+                searchResults: null,
+                searchClose: null,
+                addChildrenBtn: null,
+                addParentsBtn: null
+            };
+
+            async function init() {
+                // Wait for GIF to load
+                const checkInterval = setInterval(async () => {
+                    if (window.currentGif && window.currentGif.name) {
+                        clearInterval(checkInterval);
+                        pcState.currentGifName = window.currentGif.name;
+                        pcState.currentFolderHandle = window.currentGif.folderHandle;
+                        
+                        // Add relations UI to the page - EXACT COPY FROM youvi_video.html
+                        const gifContent = document.getElementById('gifContent');
+                        if (gifContent) {
+                            const relationsHTML = `
+                                <div class="parent-child-section" id="parentChildSection">
+                                    <div class="pc-header">
+                                        <h3>Связанные GIFs</h3>
+                                        <div class="pc-add-btn-wrapper">
+                                            <button id="addRelatedGifBtn" class="action-btn">
+                                                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                </svg>
+                                                <span>Добавить</span>
+                                            </button>
+                                            <div id="relatedGifSearchPanel" class="pc-search-panel" style="display:none;">
+                                                <h4 class="pc-search-title">Добавить связанный GIF</h4>
+                                                <div class="pc-search-input-wrapper">
+                                                    <input type="text" id="relatedSearchInput" placeholder="Поиск по имени..." autocomplete="off">
+                                                </div>
+                                                <div id="relatedSearchResults" class="pc-search-results"></div>
+                                                <div class="pc-search-actions">
+                                                    <button id="addSelectedToChildrenBtn" class="pc-btn-primary">Child</button>
+                                                    <button id="addSelectedToParentsBtn" class="pc-btn-primary">Parent</button>
+                                                    <button id="closeRelatedSearchBtn" class="pc-btn-secondary">Отмена</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pc-carousel-container">
+                                        <h4>CHILD GIFS</h4>
+                                        <div class="pc-carousel-wrapper">
+                                            <button class="pc-nav-btn prev" data-carousel="childGifsCarousel">◀</button>
+                                            <div class="pc-carousel" id="childGifsCarousel">
+                                                <div class="pc-empty-state">Child GIFs не добавлены</div>
+                                            </div>
+                                            <button class="pc-nav-btn next" data-carousel="childGifsCarousel">▶</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="pc-carousel-container">
+                                        <h4>PARENT GIFS</h4>
+                                        <div class="pc-carousel-wrapper">
+                                            <button class="pc-nav-btn prev" data-carousel="parentGifsCarousel">◀</button>
+                                            <div class="pc-carousel" id="parentGifsCarousel">
+                                                <div class="pc-empty-state">Parent GIFs не добавлены</div>
+                                            </div>
+                                            <button class="pc-nav-btn next" data-carousel="parentGifsCarousel">▶</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            gifContent.insertAdjacentHTML('beforeend', relationsHTML);
+                            
+                            els.childCarousel = document.getElementById('childGifsCarousel');
+                            els.parentCarousel = document.getElementById('parentGifsCarousel');
+                            els.addBtn = document.getElementById('addRelatedGifBtn');
+                            els.searchPanel = document.getElementById('relatedGifSearchPanel');
+                            els.searchInput = document.getElementById('relatedSearchInput');
+                            els.searchResults = document.getElementById('relatedSearchResults');
+                            els.searchClose = document.getElementById('closeRelatedSearchBtn');
+                            els.addChildrenBtn = document.getElementById('addSelectedToChildrenBtn');
+                            els.addParentsBtn = document.getElementById('addSelectedToParentsBtn');
+                            
+                            bindEvents();
+                            await loadAllGifs();
+                            await loadData();
+                        }
+                    }
+                }, 100);
+            }
+
+            async function loadAllGifs() {
+                try {
+                    if (!pcState.currentFolderHandle) return;
+                    
+                    const gifs = [];
+                    for await (const entry of pcState.currentFolderHandle.values()) {
+                        if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.gif')) {
+                            gifs.push({ name: entry.name });
+                        }
+                    }
+                    pcState.allGifs = gifs;
+                } catch (e) {
+                    console.error('Error loading all GIFs:', e);
+                }
+            }
+
+            async function loadData() {
+                if (!pcState.currentGifName || !pcState.currentFolderHandle) {
+                    pcState.parents = [];
+                    pcState.children = [];
+                    renderCarousels();
+                    return;
+                }
+
+                try {
+                    const relations = await window.getGifRelations(pcState.currentFolderHandle, pcState.currentGifName);
+                    pcState.parents = relations.parents || [];
+                    pcState.children = relations.children || [];
+                } catch (e) {
+                    console.warn('Failed to load relations:', e);
+                    pcState.parents = [];
+                    pcState.children = [];
+                }
+                
+                renderCarousels();
+            }
+
+            async function saveData() {
+                if (!pcState.currentGifName || !pcState.currentFolderHandle) return;
+
+                try {
+                    await window.saveGifRelations(pcState.currentFolderHandle, pcState.currentGifName, {
+                        parents: pcState.parents,
+                        children: pcState.children
+                    });
+                } catch (e) {
+                    console.error('Failed to save relations:', e);
+                }
+            }
+
+            function bindEvents() {
+                if (els.addBtn) {
+                    els.addBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        els.searchPanel.style.display = 'flex';
+                        els.searchInput.value = '';
+                        els.searchInput.focus();
+                        performSearch('');
+                    });
+                }
+
+                if (els.searchClose) {
+                    els.searchClose.addEventListener('click', closeSearch);
+                }
+
+                if (els.searchInput) {
+                    els.searchInput.addEventListener('input', (e) => {
+                        performSearch(e.target.value);
+                    });
+                }
+
+                if (els.addChildrenBtn) {
+                    els.addChildrenBtn.addEventListener('click', () => addSelected('children'));
+                }
+
+                if (els.addParentsBtn) {
+                    els.addParentsBtn.addEventListener('click', () => addSelected('parents'));
+                }
+
+                document.addEventListener('click', (e) => {
+                    if (els.searchPanel && els.searchPanel.style.display === 'flex' &&
+                        !els.searchPanel.contains(e.target) &&
+                        els.addBtn && !els.addBtn.contains(e.target)) {
+                        closeSearch();
+                    }
+                });
+
+                document.querySelectorAll('.pc-nav-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const carouselId = btn.dataset.carousel;
+                        const carousel = document.getElementById(carouselId);
+                        if (!carousel) return;
+                        
+                        const cardWidth = 170;
+                        const visibleWidth = carousel.offsetWidth;
+                        const scrollAmount = Math.floor(visibleWidth / cardWidth) * cardWidth;
+                        
+                        if (btn.classList.contains('prev')) {
+                            carousel.scrollLeft -= scrollAmount;
+                        } else {
+                            carousel.scrollLeft += scrollAmount;
+                        }
+                        
+                        setTimeout(() => updateNavButtons(carousel), 300);
+                    });
+                });
+            }
+
+            function updateNavButtons(carousel) {
+                const wrapper = carousel.closest('.pc-carousel-wrapper');
+                if (!wrapper) return;
+                
+                const prevBtn = wrapper.querySelector('.pc-nav-btn.prev');
+                const nextBtn = wrapper.querySelector('.pc-nav-btn.next');
+                
+                if (prevBtn) {
+                    prevBtn.disabled = carousel.scrollLeft <= 0;
+                }
+                if (nextBtn) {
+                    nextBtn.disabled = carousel.scrollLeft >= carousel.scrollWidth - carousel.offsetWidth - 10;
+                }
+            }
+
+            function closeSearch() {
+                if (els.searchPanel) {
+                    els.searchPanel.style.display = 'none';
+                }
+                pcState.selectedSearchResults.clear();
+            }
+
+            function performSearch(query) {
+                const lowerQ = query.toLowerCase();
+                const results = pcState.allGifs.filter(g => 
+                    g.name && g.name.toLowerCase().includes(lowerQ) && g.name !== pcState.currentGifName
+                );
+                renderSearchResults(results.slice(0, 50));
+            }
+
+            function renderSearchResults(gifs) {
+                if (!els.searchResults) return;
+                
+                els.searchResults.innerHTML = '';
+                if (gifs.length === 0) {
+                    els.searchResults.innerHTML = `<div style="padding:10px;text-align:center;color:#999;">Ничего не найдено</div>`;
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+
+                gifs.forEach(g => {
+                    const item = document.createElement('div');
+                    item.className = 'pc-search-item';
+                    if (pcState.selectedSearchResults.has(g.name)) {
+                        item.classList.add('selected');
+                    }
+
+                    item.innerHTML = `
+                        <div class="pc-search-item-thumb loading"></div>
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(removeExtension(g.name))}</div>
+                        </div>
+                    `;
+
+                    const thumbEl = item.querySelector('.pc-search-item-thumb');
+                    
+                    // Load thumbnail
+                    (async () => {
+                        try {
+                            const fileHandle = await pcState.currentFolderHandle.getFileHandle(g.name);
+                            const file = await fileHandle.getFile();
+                            const url = URL.createObjectURL(file);
+                            const img = document.createElement('img');
+                            img.src = url;
+                            thumbEl.appendChild(img);
+                            thumbEl.classList.remove('loading');
+                        } catch (e) {
+                            thumbEl.classList.remove('loading');
+                        }
+                    })();
+
+                    item.addEventListener('click', () => {
+                        if (pcState.selectedSearchResults.has(g.name)) {
+                            pcState.selectedSearchResults.delete(g.name);
+                            item.classList.remove('selected');
+                        } else {
+                            pcState.selectedSearchResults.add(g.name);
+                            item.classList.add('selected');
+                        }
+                    });
+
+                    fragment.appendChild(item);
+                });
+
+                els.searchResults.appendChild(fragment);
+            }
+
+            async function addSelected(targetType) {
+                const selectedNames = Array.from(pcState.selectedSearchResults);
+                const gifsToAdd = pcState.allGifs
+                    .filter(g => selectedNames.includes(g.name))
+                    .map(g => ({ name: g.name }));
+
+                const currentNames = new Set(pcState[targetType].map(g => g.name));
+                const uniqueToAdd = gifsToAdd.filter(g => !currentNames.has(g.name));
+
+                pcState[targetType] = [...pcState[targetType], ...uniqueToAdd];
+                await saveData();
+                
+                // Add reverse relationships
+                const reverseType = targetType === 'parents' ? 'children' : 'parents';
+                for (const g of uniqueToAdd) {
+                    await addReverseRelationship(g.name, pcState.currentGifName, reverseType);
+                }
+                
+                renderCarousels();
+                closeSearch();
+            }
+
+            async function addReverseRelationship(targetGifName, currentGifName, relationshipType) {
+                try {
+                    const relations = await window.getGifRelations(pcState.currentFolderHandle, targetGifName);
+                    const list = relations[relationshipType] || [];
+                    
+                    if (!list.some(g => g.name === currentGifName)) {
+                        list.push({ name: currentGifName });
+                        relations[relationshipType] = list;
+                        await window.saveGifRelations(pcState.currentFolderHandle, targetGifName, relations);
+                    }
+                } catch (e) {
+                    console.warn('Failed to add reverse relationship:', e);
+                }
+            }
+
+            async function removeReverseRelationship(targetGifName, currentGifName, relationshipType) {
+                try {
+                    const relations = await window.getGifRelations(pcState.currentFolderHandle, targetGifName);
+                    if (relations && relations[relationshipType]) {
+                        relations[relationshipType] = relations[relationshipType].filter(g => g.name !== currentGifName);
+                        await window.saveGifRelations(pcState.currentFolderHandle, targetGifName, relations);
+                    }
+                } catch (e) {
+                    console.warn('Failed to remove reverse relationship:', e);
+                }
+            }
+
+            async function removeGif(type, name) {
+                pcState[type] = pcState[type].filter(g => g.name !== name);
+                await saveData();
+                
+                const reverseType = type === 'parents' ? 'children' : 'parents';
+                await removeReverseRelationship(name, pcState.currentGifName, reverseType);
+                
+                renderCarousels();
+            }
+
+            function renderCarousels() {
+                renderCarousel(els.childCarousel, pcState.children, 'children');
+                renderCarousel(els.parentCarousel, pcState.parents, 'parents');
+            }
+
+            function renderCarousel(container, gifs, type) {
+                if (!container) return;
+                
+                container.innerHTML = '';
+                if (gifs.length === 0) {
+                    const emptyText = type === 'parents' 
+                        ? 'Parent GIFs не добавлены'
+                        : 'Child GIFs не добавлены';
+                    container.innerHTML = `<div class="pc-empty-state">${emptyText}</div>`;
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+
+                gifs.forEach(g => {
+                    const card = document.createElement('div');
+                    card.className = 'pc-video-card';
+                    const gifUrl = `gifs_view.html?gif=${encodeURIComponent(g.name)}`;
+
+                    card.innerHTML = `
+                        <div class="pc-video-thumb loading">
+                            <img style="display:none;">
+                        </div>
+                        <div class="pc-video-info">
+                            <div class="pc-video-title"><a href="${gifUrl}" title="${removeExtension(g.name)}">${removeExtension(g.name)}</a></div>
+                        </div>
+                        <button class="pc-remove-btn" title="Удалить">✕</button>
+                    `;
+
+                    const thumbEl = card.querySelector('.pc-video-thumb');
+                    const imgEl = thumbEl.querySelector('img');
+                    
+                    // Load thumbnail
+                    (async () => {
+                        try {
+                            const fileHandle = await pcState.currentFolderHandle.getFileHandle(g.name);
+                            const file = await fileHandle.getFile();
+                            const url = URL.createObjectURL(file);
+                            imgEl.src = url;
+                            imgEl.style.display = 'block';
+                            thumbEl.classList.remove('loading');
+                        } catch (e) {
+                            thumbEl.classList.remove('loading');
+                        }
+                    })();
+
+                    card.querySelector('.pc-remove-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        removeGif(type, g.name);
+                    });
+
+                    card.addEventListener('click', (e) => {
+                        if (e.target.tagName === 'A') return;
+                        if (e.target.closest('.pc-remove-btn')) return;
+                        window.location.href = gifUrl;
+                    });
+
+                    fragment.appendChild(card);
+                });
+                
+                container.appendChild(fragment);
+                updateNavButtons(container);
+            }
+
+            function removeExtension(name) {
+                return name ? name.replace(/\.[^/.]+$/, "") : "";
+            }
+
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text || '';
+                return div.innerHTML;
+            }
+
+            init();
+        })();
+    </script>
+</body>
+</html>

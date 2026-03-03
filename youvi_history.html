@@ -31,6 +31,7 @@
     
     <!-- Video ID System -->
     <script src="youvi/video-id.js"></script>
+    <script src="youvi/filter/filter-engine.js"></script>
     
     <style>
         * {
@@ -427,6 +428,26 @@
         .history-list .video-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
         
         .video-duration { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.8); padding: 2px 4px; border-radius: 2px; font-size: 11px; color: #fff; z-index: 2; }
+        .video-rating-badge {
+            position: absolute;
+            left: 5px;
+            bottom: 8px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            background: rgba(244, 67, 54, 0.95);
+            z-index: 3;
+            pointer-events: none;
+        }
+        .video-rating-badge.rating-questionable {
+            background: rgba(255, 152, 0, 0.95);
+        }
+        .video-rating-badge.rating-explicit {
+            background: rgba(244, 67, 54, 0.95);
+        }
 
         .progress {
             position: absolute;
@@ -737,6 +758,11 @@
 
         .footer-section a:hover {
             color: #ff69b4;
+        }
+
+        .footer-section a.active {
+            color: #ff69b4;
+            font-weight: 600;
         }
 
         .footer-bottom {
@@ -1050,6 +1076,14 @@
               <li><a href="wiki/tech.html" data-i18n="footer.tech">Технологии</a></li>
             </ul>
                         </div>
+          <div class="footer-section">
+            <h3 data-i18n="sidebar.filter">Фильтр</h3>
+            <ul>
+              <li><a href="#" id="footerFilterAll" data-i18n="sidebar.filterAll">Все</a></li>
+              <li><a href="#" id="footerFilterGeneral" data-i18n="sidebar.filterGeneral">Общие</a></li>
+              <li><a href="#" id="footerFilterArchived" data-i18n="sidebar.filterArchived">Архив</a></li>
+            </ul>
+          </div>
                     </div>
                 </div>
                 <div class="footer-right">
@@ -1720,13 +1754,17 @@
         previewObserver.observe(img);
       }
       let perPage=20,currentPage=1,currentQuery='',currentFilter='all';
+      let currentRatingFilter = 'all';
+      let autocompleteSourceVideos = [];
+      let autocompleteSourcePlaylists = [];
       if (DEBUG_MODE) console.log('Debug: currentFilter initialized as:', currentFilter);
       
       let timeCalculationCache = {
         data: null,
         timestamp: 0,
         filter: '',
-        query: ''
+        query: '',
+        rating: 'all'
       };
       
       function invalidateCaches() {
@@ -1734,7 +1772,8 @@
           data: null,
           timestamp: 0,
           filter: '',
-          query: ''
+          query: '',
+          rating: 'all'
         };
         statsCache = {
           data: null,
@@ -1745,6 +1784,117 @@
       }
       function updatePageParam(){ try{ const url=new URL(window.location.href); if(currentPage && currentPage>1) url.searchParams.set('page', String(currentPage)); else url.searchParams.delete('page'); window.history.replaceState({},'',url.toString()); }catch(_){}}
       function readInitialPage(){ try{ const p=parseInt(new URL(window.location.href).searchParams.get('page')||'1',10); if(isFinite(p)&&p>0) currentPage=p; }catch(_){ currentPage=1; }}
+      function normalizeRatingFilter(mode){
+        return mode === 'general' || mode === 'archived' ? mode : 'all';
+      }
+      function readInitialRatingFilter(){
+        try{
+          const url = new URL(window.location.href);
+          const fromUrl = url.searchParams.get('rating');
+          const fromStorage = localStorage.getItem('youvi_rating_filter');
+          currentRatingFilter = normalizeRatingFilter(fromUrl || fromStorage || 'all');
+        }catch(_){ currentRatingFilter = 'all'; }
+      }
+      function syncFooterRatingFilterUI(){
+        const links = ['footerFilterAll','footerFilterGeneral','footerFilterArchived']
+          .map(id => document.getElementById(id))
+          .filter(Boolean);
+        links.forEach(el => el.classList.remove('active'));
+        const map = {
+          all: 'footerFilterAll',
+          general: 'footerFilterGeneral',
+          archived: 'footerFilterArchived'
+        };
+        const active = document.getElementById(map[currentRatingFilter] || map.all);
+        if (active) active.classList.add('active');
+      }
+      function getHistoryVideoRating(tags){
+        const arr = Array.isArray(tags) ? tags : [];
+        if (window.YouviFilterEngine && typeof window.YouviFilterEngine.getVideoRating === 'function') {
+          return window.YouviFilterEngine.getVideoRating(arr);
+        }
+        let result = 'safe';
+        for (const raw of arr) {
+          const normalized = String(raw || '').toLowerCase().trim();
+          if (!normalized) continue;
+          const match = normalized.match(/^(.+?)\s*\(ra\)$/);
+          if (!match) continue;
+          const value = match[1].trim();
+          if (value === 'explicit') return 'explicit';
+          if (value === 'questionable' && result !== 'explicit') result = 'questionable';
+        }
+        return result;
+      }
+      function applyRatingFilterToHistoryList(list, mode){
+        const items = Array.isArray(list) ? list : [];
+        const effectiveMode = normalizeRatingFilter(mode || currentRatingFilter || 'all');
+        if (effectiveMode === 'all') return items;
+        return items.filter((it) => {
+          const rating = getHistoryVideoRating(it && it.tags ? it.tags : []);
+          if (effectiveMode === 'general') return rating === 'safe';
+          if (effectiveMode === 'archived') return rating === 'questionable' || rating === 'explicit';
+          return true;
+        });
+      }
+      function getHistoryRatingBadgeHtml(it){
+        const rating = getHistoryVideoRating(it && it.tags ? it.tags : []);
+        if (rating !== 'questionable' && rating !== 'explicit') return '';
+        return `<div class="video-rating-badge rating-${rating}">Archived</div>`;
+      }
+      async function enrichHistoryWithMetadata(list){
+        const items = Array.isArray(list) ? list : [];
+        if (!videoDirectoryHandle || items.length === 0) return items;
+        let changed = false;
+        const enriched = await Promise.all(items.map(async (it) => {
+          if (!it || !it.name) return it;
+          if (Array.isArray(it.tags) && it.tags.length > 0) return it;
+          try {
+            let dir = videoDirectoryHandle;
+            const pl = (it.playlist || '').trim();
+            if (pl) {
+              try { dir = await videoDirectoryHandle.getDirectoryHandle(pl); } catch (_) {}
+            }
+            const meta = await getVideoMetadata(dir, it.name);
+            const tags = Array.isArray(meta.tags) ? meta.tags : [];
+            if (!tags.length) return it;
+            changed = true;
+            return { ...it, tags };
+          } catch (_) {
+            return it;
+          }
+        }));
+        if (changed) {
+          try { await saveHistory(enriched); } catch (_) {}
+        }
+        return enriched;
+      }
+      function setRatingFilter(mode){
+        const next = normalizeRatingFilter(mode);
+        if(currentRatingFilter===next) return;
+        currentRatingFilter = next;
+        try { localStorage.setItem('youvi_rating_filter', currentRatingFilter); } catch(_){}
+        try{
+          const url = new URL(window.location.href);
+          if(currentRatingFilter==='all') url.searchParams.delete('rating');
+          else url.searchParams.set('rating', currentRatingFilter);
+          window.history.replaceState({},'',url.toString());
+        }catch(_){}
+        syncFooterRatingFilterUI();
+        currentPage = 1;
+        updatePageParam();
+        invalidateCaches();
+        renderHistory();
+        try { window.dispatchEvent(new CustomEvent('youvi:ratingFilterChanged', { detail: { mode: currentRatingFilter } })); } catch(_){}
+      }
+      function setupFooterRatingFilter(){
+        const allLink = document.getElementById('footerFilterAll');
+        const generalLink = document.getElementById('footerFilterGeneral');
+        const archivedLink = document.getElementById('footerFilterArchived');
+        if(allLink) allLink.addEventListener('click', (e)=>{ e.preventDefault(); setRatingFilter('all'); });
+        if(generalLink) generalLink.addEventListener('click', (e)=>{ e.preventDefault(); setRatingFilter('general'); });
+        if(archivedLink) archivedLink.addEventListener('click', (e)=>{ e.preventDefault(); setRatingFilter('archived'); });
+        syncFooterRatingFilterUI();
+      }
       function groupByDate(items){
         const map=new Map();
         if (DEBUG_MODE) console.log('Debug: groupByDate called with', items.length, 'items');
@@ -1812,9 +1962,12 @@
       function buildVideoUrl(it){
         const n=encodeURIComponent(it.name||'');
         const p=encodeURIComponent(it.playlist||'');
+        const ratingSuffix = currentRatingFilter && currentRatingFilter !== 'all'
+          ? `&rating=${encodeURIComponent(currentRatingFilter)}`
+          : '';
         const url = window.VideoID 
-            ? window.VideoID.buildVideoUrl(it.name, it.playlist)
-            : `youvi_video.html?name=${n}&playlist=${p}`;
+            ? window.VideoID.buildVideoUrl(it.name, it.playlist) + ratingSuffix
+            : `youvi_video.html?name=${n}&playlist=${p}${ratingSuffix}`;
         if (DEBUG_MODE) console.log('Debug: buildVideoUrl: item:', it.name, 'url:', url);
         return url;
       }
@@ -1886,12 +2039,12 @@
       
       async function updateTotalTime(list) {
         try {
-          const cacheKey = `${currentFilter}_${currentQuery}_${list.length}`;
           const now = Date.now();
           
           if (timeCalculationCache.data && 
               timeCalculationCache.filter === currentFilter && 
               timeCalculationCache.query === currentQuery &&
+              timeCalculationCache.rating === currentRatingFilter &&
               (now - timeCalculationCache.timestamp) < 30000) {
             
             if (DEBUG_MODE) console.log('Debug: updateTotalTime: using cached result');
@@ -1920,7 +2073,8 @@
             data: formattedTime,
             timestamp: now,
             filter: currentFilter,
-            query: currentQuery
+            query: currentQuery,
+            rating: currentRatingFilter
           };
           
           if (DEBUG_MODE) console.log('Debug: updateTotalTime: calculated', Math.round(watched), 'seconds, formatted as', formattedTime);
@@ -1965,6 +2119,7 @@
           return;
         }
         let list=await loadHistory();
+        list = await enrichHistoryWithMetadata(list);
         if (DEBUG_MODE) console.log('Debug: renderHistory: loaded', list.length, 'items');
         
         if(currentQuery){
@@ -1975,6 +2130,8 @@
         
         list=list.filter(passesFilter);
         if (DEBUG_MODE) console.log('Debug: renderHistory: after date filter:', list.length, 'items');
+        list=applyRatingFilterToHistoryList(list, currentRatingFilter);
+        if (DEBUG_MODE) console.log('Debug: renderHistory: after rating filter:', currentRatingFilter, list.length, 'items');
         list.sort((a,b)=>(b.lastWatchedAt||0)-(a.lastWatchedAt||0));
         const total=list.length;
         if(total===0){
@@ -2005,6 +2162,10 @@
             const link=document.createElement('a');link.href=buildVideoUrl(it);link.className='video-thumbnail';
             const img=document.createElement('img');link.appendChild(img);
             const dur=document.createElement('div');dur.className='video-duration';dur.textContent='...';link.appendChild(dur);
+            const ratingBadgeHtml = getHistoryRatingBadgeHtml(it);
+            if (ratingBadgeHtml) {
+              link.insertAdjacentHTML('beforeend', ratingBadgeHtml);
+            }
             const prog=document.createElement('div');prog.className='progress';const bar=document.createElement('div');bar.className='bar';bar.style.width=Math.round((it.progress||0)*100)+'%';prog.appendChild(bar);link.appendChild(prog);
             
             const infoWrap=document.createElement('div');infoWrap.className='video-info';
@@ -2226,14 +2387,66 @@
         return { videos: result.videos || [], playlists: result.playlists || [] };
       }
 
+      async function backfillHistoryTagsFromGlobalVideos(videos) {
+        try {
+          const source = Array.isArray(videos) ? videos : [];
+          if (!source.length) return false;
+          const byName = new Map();
+          source.forEach(v => {
+            const name = String(v && v.name ? v.name : '').trim();
+            if (!name) return;
+            const tags = Array.isArray(v.tags) ? v.tags : [];
+            if (!tags.length) return;
+            if (!byName.has(name)) byName.set(name, tags);
+          });
+
+          const list = await loadHistory();
+          if (!Array.isArray(list) || !list.length) return false;
+          let changed = false;
+          const enriched = list.map(it => {
+            if (!it || !it.name) return it;
+            if (Array.isArray(it.tags) && it.tags.length) return it;
+            const tags = byName.get(String(it.name).trim());
+            if (!Array.isArray(tags) || !tags.length) return it;
+            changed = true;
+            return { ...it, tags: tags.slice() };
+          });
+          if (!changed) return false;
+          await saveHistory(enriched);
+          invalidateCaches();
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function filterAutocompleteResultsByRating(results) {
+        try {
+          if (!window.YouviAutocompleteFilterHelper || typeof window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos !== 'function') {
+            return results;
+          }
+          const sourceVideos = Array.isArray(autocompleteSourceVideos) ? autocompleteSourceVideos : [];
+          const sourcePlaylists = Array.isArray(autocompleteSourcePlaylists) ? autocompleteSourcePlaylists : [];
+          const visibleVideos = (window.YouviFilterEngine && typeof window.YouviFilterEngine.applyRatingFilterToVideos === 'function')
+            ? window.YouviFilterEngine.applyRatingFilterToVideos(sourceVideos, currentRatingFilter)
+            : applyRatingFilterToHistoryList(sourceVideos, currentRatingFilter);
+          return window.YouviAutocompleteFilterHelper.filterResultsByVisibleVideos(results, visibleVideos, sourcePlaylists);
+        } catch (e) {
+          console.warn('[Autocomplete] rating filter failed on history page:', e);
+          return results;
+        }
+      }
+
         async function startHistory(){
           if (DEBUG_MODE) console.log('Debug: init started');
           await initVideoHandle();
           await setPauseBtn();
           readInitialPage(); 
+          readInitialRatingFilter();
           currentQuery = '';
           if (DEBUG_MODE) console.log('Debug: init: setting initial filter to "all"');
           setActiveFilterButton('all');
+          setupFooterRatingFilter();
           if (DEBUG_MODE) console.log('Debug: init: calling renderHistory');
           renderHistory();
           updateStats();
@@ -2264,6 +2477,10 @@
             const searchInput = document.getElementById('headerSearchInput');
             if (searchInput && typeof AutocompleteIntegration !== 'undefined' && typeof YouviAutocomplete !== 'undefined') {
               const { videos, playlists } = await loadAllVideosAndPlaylistsForAutocomplete();
+              autocompleteSourceVideos = Array.isArray(videos) ? videos : [];
+              autocompleteSourcePlaylists = Array.isArray(playlists) ? playlists : [];
+              const backfilled = await backfillHistoryTagsFromGlobalVideos(videos);
+              if (backfilled) await renderHistory();
               
               const cacheValid = await window.autocompleteCache.isCacheValid(
                 videos.length,
@@ -2274,7 +2491,8 @@
               await autocompleteIntegration.init(searchInput, {
                 videoDirectoryHandle: videoDirectoryHandle,
                 allVideos: cacheValid ? [] : videos,
-                allPlaylists: cacheValid ? [] : playlists
+                allPlaylists: cacheValid ? [] : playlists,
+                filterResults: async (results) => filterAutocompleteResultsByRating(results)
               });
               if (DEBUG_MODE) console.log('[Autocomplete] ✅ Initialized on youvi_history.html');
             }
