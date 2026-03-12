@@ -75,7 +75,12 @@ const VIDEO_ID_DEBUG = false;
         if (!filename) return null;
         
         if (nameToId[filename]) {
-            return nameToId[filename];
+            const existingId = nameToId[filename];
+            // Ensure bidirectional mapping is consistent (repair if idToName is missing)
+            if (!idToName[existingId] || idToName[existingId] !== filename) {
+                idToName[existingId] = filename;
+            }
+            return existingId;
         }
 
         let id = generateId(filename);
@@ -184,16 +189,30 @@ const VIDEO_ID_DEBUG = false;
                 const metaDir = await dirHandle.getDirectoryHandle('.metadata', { create: false });
                 const fileHandle = await metaDir.getFileHandle('video-index.json');
                 const file = await fileHandle.getFile();
-                const data = JSON.parse(await file.text());
+                const text = await file.text();
+                const data = JSON.parse(text);
                 
                 if (data.idToName) idToName = { ...idToName, ...data.idToName };
                 if (data.nameToId) nameToId = { ...nameToId, ...data.nameToId };
                 
+                // Auto-repair inconsistent bidirectional mappings
+                let repaired = 0;
+                for (const name in nameToId) {
+                    const id = nameToId[name];
+                    if (!idToName[id] || idToName[id] !== name) {
+                        idToName[id] = name;
+                        repaired++;
+                    }
+                }
+                if (repaired > 0) {
+                    console.warn(`[VideoID] Repaired ${repaired} inconsistent mappings in index`);
+                }
+                
                 indexLoaded = true;
-                if (VIDEO_ID_DEBUG) console.log('[VideoID] Index loaded:', Object.keys(idToName).length, 'videos');
+                console.log('[VideoID] Index loaded:', Object.keys(idToName).length, 'videos');
                 return true;
             } catch (e) {
-                if (VIDEO_ID_DEBUG) console.log('[VideoID] No existing index, starting fresh');
+                console.warn('[VideoID] Failed to load index:', e.message || e);
                 return false;
             } finally {
                 indexPromise = null;

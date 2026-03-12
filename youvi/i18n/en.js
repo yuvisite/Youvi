@@ -1,6 +1,7 @@
 window.en = {
     pageTitle: {
-        main: 'Home | Youvi'
+        main: 'Home | Youvi',
+        sitemap: 'Site Map | Youvi'
     },
 
     channelView: {
@@ -159,6 +160,7 @@ window.en = {
         qms: 'QMS',
         wiki: 'Wiki',
         download: 'Download',
+        more: 'More',
         chooseLang: 'Choose a language'
     },
 
@@ -209,6 +211,8 @@ window.en = {
         autoplay: 'Autoplay',
         noSubscriptions: 'No subscriptions',
         loadingError: 'Loading error',
+        hideLatestPlaylists: 'Hide playlists (Latest Videos)',
+        hideLatestPlaylistsTitle: 'Hide playlists section in Latest Videos mode',
         cleanView: 'Clean view',
         cleanViewTitle: 'Hide right sidebar for more space',
         forumActivity: 'Forum activity',
@@ -363,6 +367,11 @@ window.en = {
         folderPlaylist: 'Folder playlist',
         playlist: 'Playlist',
         togglePlaylist: 'Toggle playlist',
+        transcript: 'Transcript',
+        transcriptFollow: 'Follow current line',
+        transcriptNoSubs: 'No subtitles',
+        transcriptEmpty: 'No subtitle lines',
+        transcriptLoading: 'Loading subtitles...',
         enterTagsPlaceholder: 'Enter tags separated by commas...',
         enterDescriptionPlaceholder: 'Enter video description...',
         relatedVideosSection: 'Related videos',
@@ -1003,6 +1012,63 @@ window.en = {
         checkingServer: 'Checking server...',
         tools: 'Tools',
         search: 'Search'
+    },
+
+    sitemap: {
+        title: 'Site Map',
+        description: 'All pages of the Youvi platform',
+        groups: {
+            video: 'Video',
+            library: 'Library',
+            channels: 'Channels',
+            forum: 'Forum',
+            wiki: 'Wiki',
+            tagLists: 'Tag Lists',
+            download: 'Download',
+            management: 'Management'
+        },
+        subgroups: {
+            wikiCore: 'Wiki Core',
+            wikiSearch: 'Wiki Search',
+            wikiTags: 'Wiki Tags'
+        },
+        links: {
+            home: 'Home',
+            search: 'Search',
+            tags: 'Tags',
+            history: 'History',
+            favorites: 'Favorites',
+            playlists: 'Playlists',
+            subscriptions: 'Subscriptions',
+            channelList: 'Channel List',
+            forumHome: 'Forum Home',
+            forumMain: 'Forum Main',
+            board: 'Board',
+            thread: 'Thread',
+            recentPosts: 'Recent Posts',
+            forumSearch: 'Forum Search',
+            members: 'Members',
+            forumFavorites: 'Forum Favorites',
+            wikiHome: 'Wiki Home',
+            about: 'About',
+            technologies: 'Technologies',
+            documentation: 'Documentation',
+            player: 'Player',
+            danmaku: 'Danmaku',
+            forums: 'Forums',
+            searchGeneral: 'General',
+            searchOperators: 'Operators',
+            tagsGeneral: 'General',
+            aliases: 'Aliases',
+            implications: 'Implications',
+            rules: 'Rules',
+            archiveSystem: 'Archive System',
+            aliasesList: 'Aliases List',
+            implicationsList: 'Implications List',
+            relations: 'Relations',
+            download: 'Download',
+            managementPanel: 'Management Panel'
+        }
     },
 
     widgets: {

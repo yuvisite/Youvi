@@ -141,25 +141,38 @@ class DocumentPiPManager {
 
         const pipStyle = pipDoc.createElement('style');
         pipStyle.textContent = `
-            body {
-                margin: 0;
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                overflow: hidden !important;
                 background: #000 !important;
-                display: flex;
-                flex-direction: column;
-                height: 100vh;
-                overflow: hidden;
             }
             .pip-wrapper {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-                width: 100%;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
             }
             #videoContainer {
+                contain: none !important;
+                position: relative !important;
                 width: 100% !important;
-                flex: 1;
-                height: auto !important;
-                max-height: calc(100vh - 40px); 
+                height: 0 !important;
+                flex: 1 1 auto !important;
+                overflow: hidden !important;
+            }
+            #videoContainer video {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain !important;
             }
             .kaomoji-picker-popup:not(.show) {
                 display: none !important;
@@ -1159,11 +1172,22 @@ class DocumentPiPManager {
                     resizeObserver.observe(videoContainer);
                 }
                 
-                window.addEventListener('resize', updatePiPDanmakuScale);
+                window.addEventListener('resize', () => {
+                    requestAnimationFrame(updatePiPDanmakuScale);
+                });
                 setTimeout(updatePiPDanmakuScale, 100);
             })();
         `;
         pipDoc.body.appendChild(script);
+
+        pipWin.addEventListener('resize', () => {
+            // Force layout recalculation on window resize
+            const vc = pipDoc.getElementById('videoContainer');
+            if (vc) void vc.offsetHeight;
+            if (typeof window.updateDanmakuScale === 'function') {
+                requestAnimationFrame(() => window.updateDanmakuScale());
+            }
+        });
 
         pipWin.addEventListener('pagehide', () => {
             this.restoreElements();

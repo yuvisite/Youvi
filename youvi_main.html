@@ -7,6 +7,7 @@
   <title data-i18n-title="pageTitle.main">Главная | Youvi</title>
   <!-- Load header CSS FIRST to prevent layout shifts -->
   <link rel="stylesheet" href="youvi/header/youvi-header.css">
+  <link rel="stylesheet" href="youvi/mobile/mobile-navbar.css">
   <script>
     (function () {
       var theme = localStorage.getItem('youvi-theme');
@@ -2384,6 +2385,7 @@
 
   <!-- Shared (forum dir, DB) for sidebar forum block -->
   <script src="youvi_shared.js"></script>
+  <script src="youvi/mobile/mobile-navbar.js"></script>
   <script src="youvi/filter/filter-state.js"></script>
   <script src="youvi/filter/filter-engine.js"></script>
   <!-- YouVi Hover Preview System -->
@@ -2441,6 +2443,7 @@
       <a href="forum/forum.html" data-i18n="nav.forums">Forums</a>
       <a href="download/youvi_download.html" data-i18n="nav.download">Download</a>
       <a href="wiki/index.html" data-i18n="nav.wiki">Wiki</a>
+      <a href="youvi_sitemap.html" data-i18n="nav.more">Ещё</a>
 
 
       <div class="lang-switcher">
@@ -2518,6 +2521,16 @@
             <line x1="7" y1="7" x2="7.01" y2="7" />
           </svg>
           <span data-i18n="sidebar.allTags">Все теги</span>
+        </a>
+        <a href="#" id="hideLatestPlaylistsToggle" class="sidebar-item nav-item" role="button" aria-pressed="false"
+          title="Скрыть раздел плейлистов в режиме Свежие видео" data-i18n-title="sidebar.hideLatestPlaylistsTitle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="14" rx="2" />
+            <line x1="7" y1="9" x2="17" y2="9" />
+            <line x1="7" y1="13" x2="14" y2="13" />
+            <line x1="4" y1="20" x2="20" y2="4" />
+          </svg>
+          <span data-i18n="sidebar.hideLatestPlaylists">Скрыть плейлисты (Свежие видео)</span>
         </a>
         <a href="#" id="cleanViewToggle" class="sidebar-item nav-item" role="button" aria-pressed="false"
           title="Скрыть правую панель, 6 видео в ряд" data-i18n-title="sidebar.cleanViewTitle">
@@ -4783,14 +4796,10 @@
 
         applyFiltersAndRender();
 
-        const lastScanTime = localStorage.getItem('lastVideoScan');
         const currentTime = Date.now();
-        const SCAN_INTERVAL = 5 * 60 * 1000;
 
-        const shouldScan = !lastScanTime || (currentTime - parseInt(lastScanTime)) > SCAN_INTERVAL;
-
-        if (shouldScan) {
-          debug.log('🔄 Starting background verification scan (cache is old)...');
+        {
+          debug.log('🔄 Starting background verification scan...');
           localStorage.setItem('lastVideoScan', currentTime.toString());
 
 
@@ -4799,6 +4808,14 @@
 
             if (document.hidden) {
               debug.log('⏸️ Tab hidden, deferring background scan...');
+              const onVisible = () => {
+                document.removeEventListener('visibilitychange', onVisible);
+                if (!document.hidden) {
+                  debug.log('👁️ Tab visible again, starting deferred background scan');
+                  loadAllVideosProgressive();
+                }
+              };
+              document.addEventListener('visibilitychange', onVisible);
               return;
             }
             debug.log('🔄 Starting background verification scan after grace period...');
@@ -4907,12 +4924,18 @@
 
             allVideos = deduplicatedVideos;
 
+            const videosChanged = allVideos.length !== oldCount;
             debug.log(`✅ Background scan completed in ${Math.round(performance.now() - scanStart)}ms`);
             debug.log(`📊 Total videos: ${allVideos.length} (was ${oldCount} in cache, removed ${tempVideos.length - deduplicatedVideos.length} duplicates)`);
 
 
             localStorage.setItem('lastVideoScan', currentTime.toString());
-            debug.log('✅ Background scan completed silently, cache updated');
+            debug.log('✅ Background scan completed, cache updated');
+
+            if (videosChanged) {
+              debug.log(`🔄 Video count changed (${oldCount} → ${allVideos.length}), re-rendering...`);
+              applyFiltersAndRender();
+            }
 
             requestIdleCallback(() => {
               const failedThumbnails = document.querySelectorAll('.video-thumbnail[data-preview-loaded="false"], .video-thumbnail:not([data-preview-loaded])');
@@ -4932,9 +4955,7 @@
                 }
               });
             });
-          }, 5000);
-        } else {
-          debug.log('⚡ Skipping background scan - cache is fresh (less than 5 minutes old)');
+          }, 2000);
         }
       } else {
 
@@ -5202,10 +5223,12 @@
 
         topContainer.innerHTML = '';
         const playlistsContainerEl = document.getElementById('playlistsContainer');
+        const isLatestMode = currentPage === 1 && currentFilter === 'all' && currentSort === 'new' && !currentSearchQuery;
+        const hideLatestPlaylists = localStorage.getItem('youvi_hide_latest_playlists') === 'true';
+        const showLatestPlaylists = isLatestMode && !hideLatestPlaylists;
         if (playlistsContainerEl) {
           playlistsContainerEl.innerHTML = '';
-          const showPlaylists = currentPage === 1 && currentFilter === 'all' && currentSort === 'new' && !currentSearchQuery;
-          if (!showPlaylists) {
+          if (!showLatestPlaylists) {
             playlistsContainerEl.style.cssText = 'min-height: 0; margin: 0; padding: 0;';
           }
         }
@@ -5396,7 +5419,7 @@
             renderMixedContent();
           }
 
-          if (currentPage === 1 && currentFilter === 'all' && currentSort === 'new' && !currentSearchQuery) {
+          if (showLatestPlaylists) {
 
             const playlistsContainer = document.getElementById('playlistsContainer');
             if (playlistsContainer) {
@@ -7664,6 +7687,23 @@
           setTimeout(() => {
             if (typeof renderMixedContent === 'function') renderMixedContent();
           }, 50);
+        });
+      }
+
+      const hideLatestPlaylistsToggle = document.getElementById('hideLatestPlaylistsToggle');
+      if (hideLatestPlaylistsToggle) {
+        const isHidden = () => localStorage.getItem('youvi_hide_latest_playlists') === 'true';
+        hideLatestPlaylistsToggle.setAttribute('aria-pressed', isHidden() ? 'true' : 'false');
+        hideLatestPlaylistsToggle.classList.toggle('active', isHidden());
+        hideLatestPlaylistsToggle.addEventListener('click', (e) => {
+          e.preventDefault();
+          const next = !isHidden();
+          localStorage.setItem('youvi_hide_latest_playlists', next ? 'true' : 'false');
+          hideLatestPlaylistsToggle.setAttribute('aria-pressed', next ? 'true' : 'false');
+          hideLatestPlaylistsToggle.classList.toggle('active', next);
+          currentPage = 1;
+          updateUrlParameter('page', null);
+          applyFiltersAndRender();
         });
       }
 

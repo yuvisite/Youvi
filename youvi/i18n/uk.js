@@ -1,6 +1,7 @@
 window.uk = {
     pageTitle: {
-        main: 'Головна | Youvi'
+        main: 'Головна | Youvi',
+        sitemap: 'Карта сайту | Youvi'
     },
     
     channelView: {
@@ -158,6 +159,7 @@ window.uk = {
         forums: 'Форуми',
         wiki: 'Вікі',
         download: 'Завантаження',
+        more: 'Ще',
         chooseLang: 'Обери мову'
     },
     
@@ -206,6 +208,8 @@ window.uk = {
         tags: 'Теги',
         allTagsLink: 'Всі теги',
         autoplay: 'Автопрогравання',
+        hideLatestPlaylists: 'Сховати плейлісти (Свіжі відео)',
+        hideLatestPlaylistsTitle: 'Сховати розділ плейлистів у режимі Свіжі відео',
         cleanView: 'Чистий вигляд',
         cleanViewTitle: 'Сховати праву панель для більшого простору',
         forumActivity: 'Активність форуму',
@@ -362,6 +366,11 @@ window.uk = {
         folderPlaylist: 'Плейліст з папки',
         playlist: 'Плейліст',
         togglePlaylist: 'Перемкнути плейліст',
+        transcript: 'Субтитри',
+        transcriptFollow: 'Слідкувати за поточним рядком',
+        transcriptNoSubs: 'Немає субтитрів',
+        transcriptEmpty: 'Немає рядків субтитрів',
+        transcriptLoading: 'Завантаження субтитрів...',
         enterTagsPlaceholder: 'Введіть теги через кому...',
         enterDescriptionPlaceholder: 'Введіть опис відео...',
         relatedVideosSection: 'Пов\'язані відео',
@@ -1018,6 +1027,63 @@ window.uk = {
         checkingServer: 'Перевірка сервера...',
         tools: 'Інструменти',
         search: 'Пошук'
+    },
+
+    sitemap: {
+        title: 'Карта сайту',
+        description: 'Всі сторінки платформи Youvi',
+        groups: {
+            video: 'Відео',
+            library: 'Бібліотека',
+            channels: 'Канали',
+            forum: 'Форум',
+            wiki: 'Вікі',
+            tagLists: 'Списки тегів',
+            download: 'Завантаження',
+            management: 'Управління'
+        },
+        subgroups: {
+            wikiCore: 'Вікі: Основне',
+            wikiSearch: 'Вікі: Пошук',
+            wikiTags: 'Вікі: Теги'
+        },
+        links: {
+            home: 'Головна',
+            search: 'Пошук',
+            tags: 'Теги',
+            history: 'Історія',
+            favorites: 'Обране',
+            playlists: 'Плейлісти',
+            subscriptions: 'Підписки',
+            channelList: 'Список каналів',
+            forumHome: 'Головна форуму',
+            forumMain: 'Основний форум',
+            board: 'Розділ',
+            thread: 'Тема',
+            recentPosts: 'Нові пости',
+            forumSearch: 'Пошук по форуму',
+            members: 'Учасники',
+            forumFavorites: 'Обране форуму',
+            wikiHome: 'Головна вікі',
+            about: 'Про сайт',
+            technologies: 'Технології',
+            documentation: 'Документація',
+            player: 'Плеєр',
+            danmaku: 'Данмаку',
+            forums: 'Форуми',
+            searchGeneral: 'Загальне',
+            searchOperators: 'Оператори',
+            tagsGeneral: 'Загальне',
+            aliases: 'Аліаси',
+            implications: 'Імплікації',
+            rules: 'Правила',
+            archiveSystem: 'Архівна система',
+            aliasesList: 'Список аліасів',
+            implicationsList: 'Список імплікацій',
+            relations: 'Звʼязки',
+            download: 'Завантаження',
+            managementPanel: 'Панель керування'
+        }
     },
     
     widgets: {

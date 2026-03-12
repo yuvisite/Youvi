@@ -98,6 +98,17 @@ body.wide-screen-mode #sidebarPanelCombined {
     max-height: none !important;
 }
 
+/* Responsive: stack widescreen bottom layout on narrow viewports */
+@media (max-width: 1100px) {
+    .widescreen-bottom-layout {
+        flex-direction: column;
+    }
+
+    .widescreen-right-column {
+        width: 100% !important;
+    }
+}
+
 /* Limit playlist height in widescreen mode */
 body.wide-screen-mode #playlistTabContent {
     max-height: 500px;

@@ -270,60 +270,16 @@ class SubtitleTrackManager {
     }
 
     /**
-     * Load FFmpeg for subtitle extraction
+     * Load FFmpeg for subtitle extraction — uses shared singleton
      */
     async loadFFmpeg() {
         try {
-            const ffmpegBasePath = 'player/multi-audio/fmpeg12';
-            
-            try {
-                const testResponse = await fetch(`${ffmpegBasePath}/ffmpeg-core.wasm`, { method: 'HEAD' });
-                if (!testResponse.ok) {
-                    throw new Error('FFmpeg files not found');
-                }
-            } catch (e) {
-                subDebug.warn('FFmpeg not available, MKV subtitle extraction disabled');
+            if (!window._sharedFFmpeg) {
+                subDebug.warn('Shared FFmpeg loader not available, MKV subtitle extraction disabled');
                 return;
             }
 
-            if (!window.FFmpegUtil) {
-                const utilScript = document.createElement('script');
-                utilScript.src = `${ffmpegBasePath}/ffmpeg-util.min.js`;
-                await new Promise((resolve, reject) => {
-                    utilScript.onload = resolve;
-                    utilScript.onerror = reject;
-                    document.head.appendChild(utilScript);
-                });
-            }
-
-            if (!window.FFmpegWASM) {
-                const script = document.createElement('script');
-                script.src = `${ffmpegBasePath}/ffmpeg.min.js`;
-                await new Promise((resolve, reject) => {
-                    script.onload = resolve;
-                    script.onerror = reject;
-                    document.head.appendChild(script);
-                });
-            }
-
-            let attempts = 0;
-            while (!window.FFmpegWASM && attempts < 50) {
-                await new Promise(r => setTimeout(r, 100));
-                attempts++;
-            }
-
-            if (!window.FFmpegWASM) {
-                throw new Error('FFmpeg failed to load');
-            }
-
-            const { FFmpeg } = window.FFmpegWASM;
-            this.ffmpeg = new FFmpeg();
-
-            const baseURL = new URL(ffmpegBasePath + '/', document.baseURI).href;
-            await this.ffmpeg.load({
-                coreURL: baseURL + 'ffmpeg-core.js',
-                wasmURL: baseURL + 'ffmpeg-core.wasm'
-            });
+            this.ffmpeg = await window._sharedFFmpeg.get();
 
             this.ffmpeg.on('log', ({ type, message }) => {
                 if (type === 'stderr' && message.includes('Stream')) {
@@ -332,7 +288,7 @@ class SubtitleTrackManager {
             });
 
             this.state.loaded = true;
-            subDebug.log('FFmpeg loaded successfully');
+            subDebug.log('FFmpeg loaded successfully via shared singleton');
 
         } catch (error) {
             console.error('[Subtitles] Failed to load FFmpeg:', error);

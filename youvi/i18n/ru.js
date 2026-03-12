@@ -1,6 +1,7 @@
 ﻿window.ru = {
     pageTitle: {
-        main: 'Главная | Youvi'
+        main: 'Главная | Youvi',
+        sitemap: 'Карта сайта | Youvi'
     },
 
     channelView: {
@@ -147,6 +148,7 @@
         qms: 'QMS',
         wiki: 'Вики',
         download: 'Загрузки',
+        more: 'Ещё',
         chooseLang: 'Выбери язык'
     },
 
@@ -197,6 +199,8 @@
         autoplay: 'Автоплей',
         noSubscriptions: 'Нет подписок',
         loadingError: 'Ошибка загрузки',
+        hideLatestPlaylists: 'Скрыть плейлисты (Свежие видео)',
+        hideLatestPlaylistsTitle: 'Скрыть раздел плейлистов в режиме Свежие видео',
         cleanView: 'Чистый вид',
         cleanViewTitle: 'Скрыть правую панель для большего пространства',
         forumActivity: 'Активность форума',
@@ -351,6 +355,11 @@
         folderPlaylist: 'Плейлист из папки',
         playlist: 'Плейлист',
         togglePlaylist: 'Переключить плейлист',
+        transcript: 'Субтитры',
+        transcriptFollow: 'Следить за текущей строкой',
+        transcriptNoSubs: 'Нет субтитров',
+        transcriptEmpty: 'Нет строк субтитров',
+        transcriptLoading: 'Загрузка субтитров...',
         enterTagsPlaceholder: 'Введите теги через запятую...',
         enterDescriptionPlaceholder: 'Введите описание видео...',
         relatedVideosSection: 'Связанные видео',
@@ -992,6 +1001,63 @@
         checkingServer: 'Проверка сервера...',
         tools: 'Инструменты',
         search: 'Поиск'
+    },
+
+    sitemap: {
+        title: 'Карта сайта',
+        description: 'Все страницы платформы Youvi',
+        groups: {
+            video: 'Видео',
+            library: 'Библиотека',
+            channels: 'Каналы',
+            forum: 'Форум',
+            wiki: 'Вики',
+            tagLists: 'Списки тегов',
+            download: 'Загрузки',
+            management: 'Управление'
+        },
+        subgroups: {
+            wikiCore: 'Вики: Основное',
+            wikiSearch: 'Вики: Поиск',
+            wikiTags: 'Вики: Теги'
+        },
+        links: {
+            home: 'Главная',
+            search: 'Поиск',
+            tags: 'Теги',
+            history: 'История',
+            favorites: 'Избранное',
+            playlists: 'Плейлисты',
+            subscriptions: 'Подписки',
+            channelList: 'Список каналов',
+            forumHome: 'Главная форума',
+            forumMain: 'Основной форум',
+            board: 'Раздел',
+            thread: 'Тема',
+            recentPosts: 'Новые посты',
+            forumSearch: 'Поиск по форуму',
+            members: 'Участники',
+            forumFavorites: 'Избранное форума',
+            wikiHome: 'Главная вики',
+            about: 'О сайте',
+            technologies: 'Технологии',
+            documentation: 'Документация',
+            player: 'Плеер',
+            danmaku: 'Данмаку',
+            forums: 'Форумы',
+            searchGeneral: 'Общее',
+            searchOperators: 'Операторы',
+            tagsGeneral: 'Общее',
+            aliases: 'Алиасы',
+            implications: 'Импликации',
+            rules: 'Правила',
+            archiveSystem: 'Архивная система',
+            aliasesList: 'Список алиасов',
+            implicationsList: 'Список импликаций',
+            relations: 'Связи',
+            download: 'Загрузки',
+            managementPanel: 'Панель управления'
+        }
     },
 
     widgets: {

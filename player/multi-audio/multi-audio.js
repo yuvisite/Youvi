@@ -13,6 +13,70 @@ const maDebug = {
 
 maDebug.log('Loading multi-audio.js script...');
 
+/**
+ * Shared FFmpeg singleton loader.
+ * Ensures only one FFmpeg instance and one wasm download across
+ * multi-audio and subtitles managers.
+ */
+window._sharedFFmpeg = window._sharedFFmpeg || {
+    instance: null,
+    loadPromise: null,
+
+    async get() {
+        if (this.instance) return this.instance;
+        if (this.loadPromise) return this.loadPromise;
+
+        this.loadPromise = this._load();
+        return this.loadPromise;
+    },
+
+    async _load() {
+        const ffmpegBasePath = 'player/multi-audio/fmpeg12';
+
+        if (!window.FFmpegUtil) {
+            const utilScript = document.createElement('script');
+            utilScript.src = `${ffmpegBasePath}/ffmpeg-util.min.js`;
+            await new Promise((resolve, reject) => {
+                utilScript.onload = resolve;
+                utilScript.onerror = reject;
+                document.head.appendChild(utilScript);
+            });
+        }
+
+        if (!window.FFmpegWASM) {
+            const script = document.createElement('script');
+            script.src = `${ffmpegBasePath}/ffmpeg.min.js`;
+            await new Promise((resolve, reject) => {
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        let attempts = 0;
+        while (!window.FFmpegWASM && attempts < 50) {
+            await new Promise(r => setTimeout(r, 100));
+            attempts++;
+        }
+
+        if (!window.FFmpegWASM) {
+            throw new Error('FFmpeg library failed to load after 5 seconds');
+        }
+
+        const { FFmpeg } = window.FFmpegWASM;
+        const ffmpeg = new FFmpeg();
+        const baseURL = new URL(ffmpegBasePath + '/', document.baseURI).href;
+
+        await ffmpeg.load({
+            coreURL: baseURL + 'ffmpeg-core.js',
+            wasmURL: baseURL + 'ffmpeg-core.wasm'
+        });
+
+        this.instance = ffmpeg;
+        return ffmpeg;
+    }
+};
+
 class MultiAudioTrackManager {
     constructor(videoElement) {
         maDebug.log('[MultiAudio] Constructor called with video element:', videoElement);
@@ -52,26 +116,7 @@ class MultiAudioTrackManager {
 
     async init() {
         try {
-            let useLocal = false;
-            
-            const ffmpegBasePath = 'player/multi-audio/fmpeg12';
-            
-            try {
-                const testResponse = await fetch(`${ffmpegBasePath}/ffmpeg-core.wasm`, { method: 'HEAD' });
-                if (testResponse.ok) {
-                    useLocal = true;
-                    maDebug.log('[MultiAudio] Local FFmpeg v0.12 files detected at', ffmpegBasePath);
-                }
-            } catch (e) {
-                maDebug.log('[MultiAudio] Local FFmpeg v0.12 files not found at', ffmpegBasePath, '- Error:', e.message);
-                throw new Error('Local FFmpeg files required but not found at ' + ffmpegBasePath);
-            }
-            
-            if (useLocal) {
-                await this.loadLocalFFmpeg();
-            } else {
-                throw new Error('Only local FFmpeg is supported (no internet allowed)');
-            }
+            await this.loadLocalFFmpeg();
             
             this.ffmpeg.on('log', ({ type, message }) => {
                 maDebug.log(`[FFmpeg ${type}]`, message);
@@ -259,88 +304,13 @@ class MultiAudioTrackManager {
     }
 
     /**
-     * Load FFmpeg from local files (v0.12)
+     * Load FFmpeg from local files (v0.12) — uses shared singleton
      */
     async loadLocalFFmpeg() {
-        maDebug.log('[MultiAudio] Loading local FFmpeg v0.12...');
-        
-        const ffmpegBasePath = 'player/multi-audio/fmpeg12';
-        
-        if (!window.FFmpegUtil) {
-            maDebug.log('[MultiAudio] Loading FFmpeg util...');
-            const utilScript = document.createElement('script');
-            utilScript.src = `${ffmpegBasePath}/ffmpeg-util.min.js`;
-            
-            await new Promise((resolve, reject) => {
-                utilScript.onload = resolve;
-                utilScript.onerror = reject;
-                document.head.appendChild(utilScript);
-            });
-            
-            maDebug.log('[MultiAudio] FFmpeg util library loaded');
-        }
-        
-        if (!window.FFmpegWASM) {
-            maDebug.log('[MultiAudio] Loading FFmpeg WASM library...');
-            const script = document.createElement('script');
-            script.src = `${ffmpegBasePath}/ffmpeg.min.js`;
-            
-            await new Promise((resolve, reject) => {
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-            
-            maDebug.log('[MultiAudio] FFmpeg library script loaded');
-        }
-        
-        maDebug.log('[MultiAudio] Waiting for FFmpegWASM to be available...');
-        let attempts = 0;
-        while (!window.FFmpegWASM && attempts < 50) {
-            await new Promise(r => setTimeout(r, 100));
-            attempts++;
-        }
-        
-        if (!window.FFmpegWASM) {
-            throw new Error('FFmpeg library failed to load after 5 seconds');
-        }
-        
-        maDebug.log('[MultiAudio] FFmpegWASM is available');
-        
-        const { FFmpeg } = window.FFmpegWASM;
-        const { toBlobURL } = window.FFmpegUtil || window.FFmpegWASM;
-        
-        if (!toBlobURL) {
-            throw new Error('toBlobURL function not found');
-        }
-        
-        maDebug.log('[MultiAudio] Creating FFmpeg instance...');
-        
-        this.ffmpeg = new FFmpeg();
-        
-        const baseURL = new URL(ffmpegBasePath + '/', document.baseURI).href;
-        
-        maDebug.log('[MultiAudio] Loading FFmpeg core from:', baseURL);
-        
-        try {
-            const coreURL = baseURL + 'ffmpeg-core.js';
-            const wasmURL = baseURL + 'ffmpeg-core.wasm';
-            
-            maDebug.log('[MultiAudio] Core URL:', coreURL);
-            maDebug.log('[MultiAudio] WASM URL:', wasmURL);
-            
-            maDebug.log('[MultiAudio] Starting FFmpeg core load...');
-            await this.ffmpeg.load({
-                coreURL: coreURL,
-                wasmURL: wasmURL
-            });
-            
-            maDebug.log('[MultiAudio] Local FFmpeg v0.12 core loaded successfully');
-            return true;
-        } catch (error) {
-            console.error('[MultiAudio] Error during FFmpeg load:', error);
-            throw error;
-        }
+        maDebug.log('[MultiAudio] Loading local FFmpeg v0.12 via shared singleton...');
+        this.ffmpeg = await window._sharedFFmpeg.get();
+        maDebug.log('[MultiAudio] Local FFmpeg v0.12 core loaded successfully');
+        return true;
     }
 
     /**
