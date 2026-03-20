@@ -33,6 +33,11 @@ class YouviAutocomplete {
   }
 
   init() {
+    if (!this.input) {
+      console.error('[Autocomplete] Input element not found');
+      return;
+    }
+
     if (!this.input.parentElement) {
       console.error('[Autocomplete] Input element has no parent!', this.input);
       return;
@@ -47,6 +52,10 @@ class YouviAutocomplete {
 
     this.dropdown = document.createElement('div');
     this.dropdown.className = 'autocomplete-dropdown';
+    if (!this.input.parentElement) {
+      console.error('[Autocomplete] Input parent disappeared before dropdown mount');
+      return;
+    }
     this.input.parentElement.appendChild(this.dropdown);
 
     if (AUTOCOMPLETE_DEBUG) console.log('[Autocomplete] Created wrapper and dropdown:', {

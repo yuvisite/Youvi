@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Мокап тегов (мобилка) | Youvi</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --chrome: #f2f2f7;
+      --field: #f2f2f7;
+      --line: #d8d8de;
+      --text: #111111;
+      --muted: #7a7a85;
+      --accent: #ff4f9f;
+      --type-channel: #9ca3af;
+      --type-general: #6b7280;
+      --type-character: #6b9e4d;
+      --type-author: #ef6c7d;
+      --type-genre: #6b9bd1;
+      --type-type: #f59e6c;
+      --type-year: #eab676;
+      --type-studio: #f28b8b;
+      --type-category: #67c5d6;
+      --type-rating: #f5a3c7;
+      --type-anime: #a78bdb;
+      --type-serial: #8db8d6;
+      --type-movie: #d4a373;
+      --type-animation: #9dd6a8;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background: var(--chrome);
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .phone {
+      max-width: 430px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: var(--bg);
+      border-left: 1px solid #e4e4ea;
+      border-right: 1px solid #e4e4ea;
+    }
+
+    .app {
+      padding: calc(10px + var(--safe-top)) 16px calc(84px + var(--safe-bottom));
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .brand img {
+      height: 30px;
+      width: auto;
+      display: block;
+    }
+
+    .page-chip {
+      border-radius: 14px;
+      background: #ffedf6;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .search-row {
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .search-row svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 17px;
+      height: 17px;
+      stroke: #8b8b94;
+      fill: none;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .search-row input {
+      width: 100%;
+      height: 40px;
+      border: none;
+      border-radius: 12px;
+      background: var(--field);
+      color: var(--text);
+      font-size: 17px;
+      letter-spacing: -0.01em;
+      padding: 0 12px 0 36px;
+      outline: none;
+    }
+
+    .search-row input::placeholder {
+      color: #8b8b94;
+    }
+
+    .quick-filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin-bottom: 12px;
+      padding-bottom: 2px;
+    }
+
+    .quick-filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter {
+      flex: 0 0 auto;
+      border: none;
+      border-radius: 18px;
+      background: var(--field);
+      color: #3a3a43;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .filter.active {
+      background: #ffedf6;
+      color: var(--accent);
+    }
+
+    .tag-section {
+      margin-bottom: 12px;
+      border-radius: 14px;
+      background: #ffffff;
+      padding: 12px;
+      border: 1px solid #e9e9ef;
+    }
+
+    .tag-section[data-type="channel"] .tag {
+      display: none;
+    }
+
+    .tag-section-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #30303a;
+      letter-spacing: -0.01em;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .tag {
+      text-decoration: none;
+      border-radius: 18px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+
+    .tag[data-type="channel"] { background: var(--type-channel); }
+    .tag[data-type="general"] { background: var(--type-general); }
+    .tag[data-type="character"] { background: var(--type-character); }
+    .tag[data-type="author"] { background: var(--type-author); }
+    .tag[data-type="genre"] { background: var(--type-genre); }
+    .tag[data-type="type"] { background: var(--type-type); }
+    .tag[data-type="year"] { background: var(--type-year); }
+    .tag[data-type="studio"] { background: var(--type-studio); }
+    .tag[data-type="category"] { background: var(--type-category); }
+    .tag[data-type="rating"] { background: var(--type-rating); }
+    .tag[data-type="anime"] { background: var(--type-anime); }
+    .tag[data-type="serial"] { background: var(--type-serial); }
+    .tag[data-type="movie"] { background: var(--type-movie); }
+    .tag[data-type="animation"] { background: var(--type-animation); }
+
+    .mobile-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+      width: 100%;
+      max-width: 430px;
+      height: calc(64px + var(--safe-bottom));
+      padding-bottom: var(--safe-bottom);
+      border-top: 1px solid #d9d9de;
+      background: rgba(249, 249, 251, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      z-index: 20;
+    }
+
+    .mobile-nav a {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      color: #7b7b86;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      padding-top: 2px;
+    }
+
+    .mobile-nav a svg {
+      width: 21px;
+      height: 21px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .mobile-nav a.active {
+      color: var(--accent);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <main class="app">
+      <header class="top">
+        <a class="brand" href="youvi_main_mobile_mockup.html">
+          <img src="images/logo_youvi_ind.png" alt="Youvi">
+        </a>
+        <span class="page-chip">Теги</span>
+      </header>
+
+      <section class="search-row" aria-label="Поиск тегов">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6"></circle>
+          <path d="M16 16L21 21"></path>
+        </svg>
+        <input type="text" placeholder="Поиск по тегам">
+      </section>
+
+      <nav class="quick-filters" aria-label="Фильтры тегов">
+        <button class="filter active" type="button">Все</button>
+        <button class="filter" type="button">Категории</button>
+        <button class="filter" type="button">Жанры</button>
+        <button class="filter" type="button">Темы</button>
+        <button class="filter" type="button">Служебные</button>
+      </nav>
+
+      <section class="tag-section" data-type="category">
+        <h2 class="tag-section-title">Category</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="category" href="#">Anime (ct)</a>
+          <a class="tag" data-type="category" href="#">Animation (ct)</a>
+          <a class="tag" data-type="category" href="#">Games (ct)</a>
+          <a class="tag" data-type="category" href="#">Movies (ct)</a>
+          <a class="tag" data-type="category" href="#">Series (ct)</a>
+          <a class="tag" data-type="category" href="#">Music (ct)</a>
+          <a class="tag" data-type="category" href="#">Technology (ct)</a>
+          <a class="tag" data-type="category" href="#">Education (ct)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="genre">
+        <h2 class="tag-section-title">Genre</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="genre" href="#">Action (ge)</a>
+          <a class="tag" data-type="genre" href="#">Comedy (ge)</a>
+          <a class="tag" data-type="genre" href="#">Drama (ge)</a>
+          <a class="tag" data-type="genre" href="#">Sci-Fi (ge)</a>
+          <a class="tag" data-type="genre" href="#">Documentary (ge)</a>
+          <a class="tag" data-type="genre" href="#">Slice of Life (ge)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="type">
+        <h2 class="tag-section-title">Type</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="type" href="#">Tutorial (tp)</a>
+          <a class="tag" data-type="type" href="#">Review (tp)</a>
+          <a class="tag" data-type="type" href="#">Compilation (tp)</a>
+          <a class="tag" data-type="type" href="#">Live (tp)</a>
+          <a class="tag" data-type="type" href="#">News (tp)</a>
+          <a class="tag" data-type="type" href="#">Guide (tp)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="anime">
+        <h2 class="tag-section-title">Anime</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="anime" href="#">Naruto (at)</a>
+          <a class="tag" data-type="anime" href="#">Bleach (at)</a>
+          <a class="tag" data-type="anime" href="#">One Piece (at)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="serial">
+        <h2 class="tag-section-title">Serial</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="serial" href="#">Breaking Bad (st)</a>
+          <a class="tag" data-type="serial" href="#">The Office (st)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="movie">
+        <h2 class="tag-section-title">Movie</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="movie" href="#">Inception (mt)</a>
+          <a class="tag" data-type="movie" href="#">Interstellar (mt)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="animation">
+        <h2 class="tag-section-title">Animation</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="animation" href="#">Pixar (ant)</a>
+          <a class="tag" data-type="animation" href="#">DreamWorks (ant)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="general">
+        <h2 class="tag-section-title">General</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="general" href="#">new (gt)</a>
+          <a class="tag" data-type="general" href="#">trending (gt)</a>
+          <a class="tag" data-type="general" href="#">featured (gt)</a>
+          <a class="tag" data-type="general" href="#">random (gt)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="character">
+        <h2 class="tag-section-title">Character</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="character" href="#">Asuka (ch)</a>
+          <a class="tag" data-type="character" href="#">Luffy (ch)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="author">
+        <h2 class="tag-section-title">Author/Artist</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="author" href="#">Miyazaki (ar)</a>
+          <a class="tag" data-type="author" href="#">Shinkai (ar)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="studio">
+        <h2 class="tag-section-title">Studio</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="studio" href="#">Ghibli (sd)</a>
+          <a class="tag" data-type="studio" href="#">MAPPA (sd)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="year">
+        <h2 class="tag-section-title">Year</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="year" href="#">2023 (yr)</a>
+          <a class="tag" data-type="year" href="#">2024 (yr)</a>
+        </div>
+      </section>
+
+      <section class="tag-section" data-type="rating">
+        <h2 class="tag-section-title">Rating</h2>
+        <div class="tag-list">
+          <a class="tag" data-type="rating" href="#">safe (rt)</a>
+          <a class="tag" data-type="rating" href="#">16+ (rt)</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Нижняя навигация">
+    <a href="youvi_main_mobile_mockup.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V20h14V9.5"></path><path d="M9.5 20v-5h5V20"></path></svg>
+      <span>Главная</span>
+    </a>
+    <a href="youvi_tags_mobile_mockup.html" class="active">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12 12 20 4 12V5h8l8 7Z"></path><circle cx="8" cy="8" r="1.3"></circle></svg>
+      <span>Теги</span>
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7.5" height="7.5" rx="1.4"></rect><rect x="13.5" y="4" width="7.5" height="7.5" rx="1.4"></rect><rect x="3" y="14.5" width="7.5" height="7.5" rx="1.4"></rect><rect x="13.5" y="14.5" width="7.5" height="7.5" rx="1.4"></rect></svg>
+      <span>Разделы</span>
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h12a1 1 0 0 1 1 1v16l-7-3-7 3v-16a1 1 0 0 1 1-1Z"></path></svg>
+      <span>Подписки</span>
+    </a>
+    <a href="#">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg>
+      <span>Мой профиль</span>
+    </a>
+  </nav>
+</body>
+</html>

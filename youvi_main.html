@@ -6909,6 +6909,10 @@
 
     function renderPagination(totalPages) {
       const container = document.getElementById('paginationContainer');
+      if (!container) {
+        debug.warn('paginationContainer not found, skipping legacy pagination render');
+        return;
+      }
       if (totalPages <= 1) { container.innerHTML = ''; return; }
 
       const pag = document.createElement('div');
