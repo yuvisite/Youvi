@@ -6,8 +6,6 @@ Youvi is an offline video library with video hosting interface, featuring danmak
 
 [![image.png](https://i.postimg.cc/R0wvnBF7/image.png)](https://postimg.cc/Jy7f9Sj0)
 
-[![image.png](https://i.postimg.cc/fRNZXb3c/image.png)](https://postimg.cc/crXVG0BC)
-
 Avaible on Russian, Ukrainian, English, Japanese, Traditional and Simplified Chinese 
 
 ## Features
@@ -188,6 +186,9 @@ Niconico: native timed comments/danmaku track, description. `Comments` saves it 
 Bilibili: native danmaku, description.  
 No need to copy, rename and manually place files anymore.
 
+[![image.png](https://i.postimg.cc/fRNZXb3c/image.png)](https://postimg.cc/crXVG0BC)
+
+Danmaku in theater mode
 
 ## Parent-Child Relations
 
