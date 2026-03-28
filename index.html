@@ -563,6 +563,9 @@ body.dark-theme.default-background {
   <script src="youvi/i18n/ru.js"></script>
   <script src="youvi/i18n/en.js"></script>
   <script src="youvi/i18n/uk.js"></script>
+  <script src="youvi/i18n/ja.js"></script>
+  <script src="youvi/i18n/zh_cn.js"></script>
+  <script src="youvi/i18n/zh_tw.js"></script>
   <script src="youvi/i18n/i18n.js"></script>
   <script src="youvi/filter/filter-engine.js"></script>
 </head>
@@ -583,9 +586,12 @@ body.dark-theme.default-background {
       <span style="color: #fff; font-size: 11px; margin-right: 8px;">Выбери язык / Choose language -----></span>
       <div class="lang-switcher" style="margin-left: auto;">
         <select id="langSwitcher" class="lang-select">
-          <option value="ru">🇷🇺 RU</option>
-          <option value="en">🇬🇧 EN</option>
-          <option value="uk">🇺🇦 UK</option>
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                    <option value="uk">Українська</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh_cn">中文 (简体)</option>
+                    <option value="zh_tw">中文 (繁體)</option>
         </select>
       </div>
     </div>
@@ -1541,7 +1547,7 @@ function getVideoRatingBadgeHtml(item) {
   if (!item || !window.YouviFilterEngine || typeof window.YouviFilterEngine.getVideoRating !== 'function') return '';
   const rating = window.YouviFilterEngine.getVideoRating(item.tags || []);
   if (rating !== 'questionable' && rating !== 'explicit') return '';
-  return `<div class="video-rating-badge rating-${rating}">R-18</div>`;
+  return `<div class="video-rating-badge rating-${rating}">Archived</div>`;
 }
 
 function createLazyPreviewTask(item, thumb) {

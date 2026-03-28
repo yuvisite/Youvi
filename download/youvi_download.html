@@ -30,10 +30,13 @@
     <script src="../youvi/sidebar-scroll.js"></script>
     
     <!-- i18n System -->
-    <script src="../youvi/i18n/ru.js"></script>
-    <script src="../youvi/i18n/en.js"></script>
-    <script src="../youvi/i18n/uk.js"></script>
-    <script src="../youvi/i18n/i18n.js"></script>
+  <script src="youvi/i18n/ru.js"></script>
+  <script src="youvi/i18n/en.js"></script>
+  <script src="youvi/i18n/uk.js"></script>
+  <script src="youvi/i18n/ja.js"></script>
+  <script src="youvi/i18n/zh_cn.js"></script>
+  <script src="youvi/i18n/zh_tw.js"></script>
+  <script src="youvi/i18n/i18n.js"></script>
     <style>
         * {
             margin: 0;
@@ -259,12 +262,12 @@
             font-size: 14px;
         }
 
-        .checkbox-item.youtube-only {
+        .checkbox-item.platform-limited {
             opacity: 0.5;
             pointer-events: none;
         }
 
-        .checkbox-item.youtube-only.enabled {
+        .checkbox-item.platform-limited.enabled {
             opacity: 1;
             pointer-events: auto;
         }
@@ -753,9 +756,12 @@
             <a href="../youvi_sitemap.html" data-i18n="nav.more">Ещё</a>
             <div class="lang-switcher">
                 <select id="langSwitcher" class="lang-select">
-                    <option value="ru">RU</option>
-                    <option value="en">EN</option>
-                    <option value="uk">UK</option>
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                    <option value="uk">Українська</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh_cn">中文 (简体)</option>
+                    <option value="zh_tw">中文 (繁體)</option>
                 </select>
             </div>
         </div>
@@ -936,19 +942,19 @@
                                 <input type="checkbox" id="downloadVideo" checked />
                                 <label for="downloadVideo" data-i18n="download.optionVideo">Video (yt-dlp)</label>
                             </div>
-                            <div class="checkbox-item youtube-only">
+                            <div class="checkbox-item platform-limited" data-platforms="youtube,niconico">
                                 <input type="checkbox" id="downloadComments" />
                                 <label for="downloadComments" data-i18n="download.optionComments">Comments (JSON)</label>
                             </div>
-                            <div class="checkbox-item youtube-only">
+                            <div class="checkbox-item platform-limited" data-platforms="youtube,niconico,bilibili">
                                 <input type="checkbox" id="downloadDanmaku" />
                                 <label for="downloadDanmaku" data-i18n="download.optionDanmaku">Danmaku (from comments)</label>
                             </div>
-                            <div class="checkbox-item youtube-only">
+                            <div class="checkbox-item platform-limited" data-platforms="youtube">
                                 <input type="checkbox" id="downloadLiveChat" />
                                 <label for="downloadLiveChat" data-i18n="download.optionLiveChat">Live Chat (as danmaku)</label>
                             </div>
-                            <div class="checkbox-item youtube-only">
+                            <div class="checkbox-item platform-limited" data-platforms="youtube,niconico,bilibili">
                                 <input type="checkbox" id="downloadDescription" />
                                 <label for="downloadDescription" data-i18n="download.optionDescription">Description (TXT)</label>
                             </div>

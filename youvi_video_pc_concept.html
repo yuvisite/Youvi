@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Youvi — Просмотр видео (PC концепт)</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --surface: #f7f7f9;
+  --chrome: #f2f2f7;
+  --line: #e2e2e8;
+  --text: #111111;
+  --muted: #6f6f7a;
+  --accent: #ff4f9f;
+  --accent-bg: #ffedf6;
+  --accent-border: #ffd3e7;
+
+  --tag-channel:#9ca3af; --tag-general:#6b7280; --tag-character:#6b9e4d;
+  --tag-author:#ef6c7d; --tag-genre:#6b9bd1; --tag-type:#f59e6c;
+  --tag-year:#eab676; --tag-studio:#f28b8b; --tag-category:#67c5d6;
+  --tag-rating:#f5a3c7; --tag-anime:#a78bdb; --tag-serial:#8db8d6;
+  --tag-movie:#d4a373; --tag-animation:#9dd6a8;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--chrome);color:var(--text);line-height:1.35;}
+
+/* ── Header ── */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+  height:50px;
+}
+.header-inner{
+  max-width:1600px;
+  margin:0 auto;
+  padding:0 20px;
+  height:100%;
+  display:flex;align-items:center;gap:16px;
+}
+.header-logo{
+  display:flex;align-items:center;flex-shrink:0;text-decoration:none;
+}
+.header-logo img{height:28px;width:auto;}
+.header-search{
+  flex:1;max-width:540px;
+  display:flex;align-items:center;
+  border:1px solid var(--line);border-radius:8px;
+  background:var(--surface);height:34px;overflow:hidden;
+}
+.header-search input{
+  flex:1;border:none;background:transparent;
+  padding:0 12px;font-size:13px;color:var(--text);outline:none;
+}
+.header-search input::placeholder{color:var(--muted);}
+.header-search button{
+  border:none;background:transparent;
+  width:36px;height:34px;
+  color:var(--muted);display:flex;align-items:center;justify-content:center;
+  border-left:1px solid var(--line);flex-shrink:0;
+}
+.header-search button svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.header-actions{margin-left:auto;display:flex;align-items:center;gap:6px;}
+.hdr-btn{
+  border:none;background:transparent;color:var(--muted);
+  font-size:13px;font-weight:500;
+  padding:5px 10px;border-radius:6px;
+  display:flex;align-items:center;gap:5px;
+}
+.hdr-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.hdr-btn.primary{background:var(--accent);color:#fff;font-weight:600;}
+
+/* ── Layout ── */
+.layout{display:flex;gap:0;max-width:1600px;margin:0 auto;padding:20px 20px 0;align-items:flex-start;}
+.main-col{flex:1;min-width:0;margin-right:20px;}
+.side-col{width:380px;flex-shrink:0;position:sticky;top:70px;max-height:calc(100vh - 80px);overflow-y:auto;scrollbar-width:thin;align-self:flex-start;}
+.side-col::-webkit-scrollbar{width:4px;}
+.side-col::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px;}
+
+/* ── Player ── */
+.player-wrap{
+  width:100%;aspect-ratio:16/9;
+  background:#111;border-radius:10px;
+  overflow:hidden;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+}
+.player-badge-q{position:absolute;left:10px;top:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px;z-index:2;}
+.player-play{
+  width:64px;height:64px;border-radius:50%;border:none;
+  background:rgba(0,0,0,.46);color:#fff;
+  display:flex;align-items:center;justify-content:center;z-index:2;
+}
+.player-play svg{width:28px;height:28px;fill:currentColor;}
+.player-controls{position:absolute;left:12px;right:12px;bottom:10px;z-index:2;}
+.progress{height:3px;background:rgba(255,255,255,.28);border-radius:6px;overflow:hidden;margin-bottom:8px;}
+.progress-fill{height:100%;width:28%;background:var(--accent);}
+.player-row{display:flex;align-items:center;justify-content:space-between;color:#fff;font-size:12px;}
+.player-row-btns{display:flex;gap:8px;}
+.pctrl{border:none;background:transparent;color:#fff;width:26px;height:26px;display:flex;align-items:center;justify-content:center;padding:0;}
+.pctrl svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── Video info block ── */
+.video-title{font-size:17px;font-weight:700;line-height:1.3;margin-bottom:6px;}
+.meta-row{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--muted);font-size:12px;padding-bottom:12px;border-bottom:1px solid var(--line);}
+
+/* ── Channel row ── */
+.channel-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);}
+.avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0;}
+.channel-info{flex:1;min-width:0;}
+.channel-name{font-size:14px;font-weight:600;}
+.channel-subs{font-size:12px;color:var(--muted);}
+.sub-btn{border:none;border-radius:20px;background:var(--accent);color:#fff;padding:7px 16px;font-size:13px;font-weight:600;flex-shrink:0;}
+
+/* ── Actions ── */
+.actions{display:flex;gap:6px;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.act-btn{
+  border:1px solid var(--line);background:var(--bg);color:#444;
+  border-radius:20px;height:32px;padding:0 12px;
+  display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;
+}
+.act-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.act-btn.on{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border);}
+
+/* ── Tags ── */
+.tags{display:flex;flex-wrap:wrap;gap:5px;padding:10px 0;border-bottom:1px solid var(--line);}
+.tag{border-radius:6px;padding:4px 9px;font-size:12px;line-height:1;text-decoration:none;color:#333;background:#f0f0f4;}
+.tag[data-type="channel"]  {background:color-mix(in srgb,var(--tag-channel) 20%,white);color:color-mix(in srgb,var(--tag-channel) 90%,#111);}
+.tag[data-type="general"]  {background:color-mix(in srgb,var(--tag-general) 16%,white);color:color-mix(in srgb,var(--tag-general) 90%,#111);}
+.tag[data-type="character"]{background:color-mix(in srgb,var(--tag-character) 20%,white);color:color-mix(in srgb,var(--tag-character) 90%,#111);}
+.tag[data-type="author"]   {background:color-mix(in srgb,var(--tag-author) 18%,white);color:color-mix(in srgb,var(--tag-author) 90%,#111);}
+.tag[data-type="genre"]    {background:color-mix(in srgb,var(--tag-genre) 18%,white);color:color-mix(in srgb,var(--tag-genre) 90%,#111);}
+.tag[data-type="type"]     {background:color-mix(in srgb,var(--tag-type) 22%,white);color:color-mix(in srgb,var(--tag-type) 90%,#111);}
+.tag[data-type="year"]     {background:color-mix(in srgb,var(--tag-year) 24%,white);color:color-mix(in srgb,var(--tag-year) 90%,#111);}
+.tag[data-type="studio"]   {background:color-mix(in srgb,var(--tag-studio) 20%,white);color:color-mix(in srgb,var(--tag-studio) 90%,#111);}
+.tag[data-type="category"] {background:color-mix(in srgb,var(--tag-category) 22%,white);color:color-mix(in srgb,var(--tag-category) 90%,#111);}
+.tag[data-type="rating"]   {background:color-mix(in srgb,var(--tag-rating) 24%,white);color:color-mix(in srgb,var(--tag-rating) 90%,#111);}
+.tag[data-type="anime"]    {background:color-mix(in srgb,var(--tag-anime) 20%,white);color:color-mix(in srgb,var(--tag-anime) 90%,#111);}
+.tag[data-type="serial"]   {background:color-mix(in srgb,var(--tag-serial) 22%,white);color:color-mix(in srgb,var(--tag-serial) 90%,#111);}
+.tag[data-type="movie"]    {background:color-mix(in srgb,var(--tag-movie) 22%,white);color:color-mix(in srgb,var(--tag-movie) 90%,#111);}
+.tag[data-type="animation"]{background:color-mix(in srgb,var(--tag-animation) 22%,white);color:color-mix(in srgb,var(--tag-animation) 90%,#111);}
+
+/* ── Danmaku bar ── */
+.dmk-bar{display:flex;gap:6px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);}
+.dmk-ctrl{border:1px solid var(--line);background:var(--bg);color:#444;border-radius:8px;width:34px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dmk-ctrl svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.dmk-dot{width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,.12);}
+.dmk-input{flex:1;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text);height:32px;padding:0 10px;font-size:13px;outline:none;}
+.dmk-send{border:none;border-radius:8px;background:var(--accent);color:#fff;width:34px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dmk-send svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── Section nav (like mobile) ── */
+.section-nav{
+  display:flex;overflow-x:auto;scrollbar-width:none;
+  border-bottom:1px solid var(--line);
+  margin-bottom:16px;
+}
+.section-nav::-webkit-scrollbar{display:none;}
+.section-nav a{
+  text-decoration:none;color:var(--muted);font-size:13px;font-weight:600;
+  min-height:42px;padding:0 14px;flex-shrink:0;
+  display:inline-flex;align-items:center;white-space:nowrap;
+  border-bottom:2px solid transparent;
+}
+.section-nav a.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ── Tab panels ── */
+.tab-panel{display:none;} .tab-panel.active{display:block;}
+
+/* ── Description ── */
+.desc-toggle{
+  width:100%;border:1px solid var(--line);background:var(--surface);border-radius:8px;
+  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;
+  font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;
+}
+.desc-icon{color:var(--muted);transition:transform .2s;}
+.desc-toggle.collapsed .desc-icon{transform:rotate(-90deg);}
+.desc-body{font-size:13px;color:#333;white-space:pre-line;line-height:1.5;padding-bottom:14px;}
+.desc-body.hidden{display:none;}
+
+/* ── PC video links ── */
+.links-section{margin-bottom:16px;}
+.links-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.links-row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.links-row::-webkit-scrollbar{display:none;}
+.link-card{text-decoration:none;color:inherit;flex-shrink:0;width:180px;}
+.link-thumb{width:100%;aspect-ratio:16/9;border-radius:8px;background:#e4e4ec;position:relative;overflow:hidden;margin-bottom:6px;}
+.link-dur{position:absolute;right:5px;bottom:5px;background:rgba(0,0,0,.7);color:#fff;border-radius:3px;padding:1px 5px;font-size:10px;font-weight:600;}
+.link-name{font-size:12px;font-weight:600;color:#222;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.link-meta{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ── Comments ── */
+.comments-compose{display:flex;gap:10px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line);}
+.comp-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.comp-right{flex:1;display:flex;flex-direction:column;gap:6px;}
+.comp-nick{border:1px solid var(--line);border-radius:6px;background:var(--surface);height:28px;padding:0 8px;font-size:12px;color:var(--text);outline:none;width:160px;}
+.comp-input{border:1px solid var(--line);border-radius:8px;background:var(--surface);width:100%;padding:8px 10px;font-size:13px;color:var(--text);outline:none;resize:none;font-family:inherit;line-height:1.4;}
+.comp-send{align-self:flex-end;border:none;border-radius:8px;background:var(--accent);color:#fff;padding:6px 14px;font-size:13px;font-weight:600;}
+
+.comments-list{display:grid;gap:0;padding-bottom:30px;}
+.comment-item{display:grid;grid-template-columns:36px 1fr 44px;gap:10px;padding:12px 0;border-bottom:1px solid #f0f0f5;align-items:start;}
+.c-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;}
+.c-body{display:flex;flex-direction:column;gap:2px;}
+.c-author{font-size:13px;font-weight:700;}
+.c-badge{font-size:10px;font-weight:700;color:var(--accent);}
+.c-time{font-size:11px;color:var(--muted);}
+.c-text{font-size:13px;color:#1a1a22;white-space:pre-wrap;line-height:1.35;}
+.c-actions{display:flex;gap:12px;margin-top:2px;}
+.c-act{border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:600;padding:0;}
+.c-like-col{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.c-like-btn{border:none;background:transparent;color:var(--muted);width:22px;height:22px;display:flex;align-items:center;justify-content:center;padding:0;}
+.c-like-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.c-like-btn.on{color:var(--accent);}
+.c-like-count{font-size:11px;color:var(--muted);font-weight:600;}
+.c-replies-wrap{grid-column:2/-1;}
+.toggle-rep-btn{border:none;background:transparent;color:var(--accent);font-size:12px;font-weight:600;padding:2px 0;display:flex;align-items:center;gap:4px;}
+.toggle-rep-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.replies-list{display:grid;gap:0;padding-left:14px;border-left:1px solid #d0d0da;margin-top:6px;}
+.reply-item{display:grid;grid-template-columns:28px 1fr 36px;gap:8px;padding:8px 0;align-items:start;}
+.r-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;}
+.inline-reply{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:10px;padding:0 10px;height:30px;margin-top:4px;}
+.inline-reply input{flex:1;border:none;background:transparent;font-size:13px;color:var(--text);outline:none;}
+.inline-reply .ir-cancel{border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:600;}
+.inline-reply .ir-send{border:none;background:transparent;color:var(--accent);font-size:16px;}
+
+/* ── Right sidebar ── */
+.side-tabs{
+  display:flex;overflow-x:auto;scrollbar-width:none;
+  border-bottom:1px solid var(--line);margin-bottom:12px;
+}
+.side-tabs::-webkit-scrollbar{display:none;}
+.side-tab{
+  border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:600;
+  padding:0 12px;min-height:38px;flex-shrink:0;
+  border-bottom:2px solid transparent;white-space:nowrap;
+}
+.side-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.side-panel{display:none;} .side-panel.active{display:block;}
+
+/* Related list (like mobile cards, vertical) */
+.related-list{display:grid;gap:12px;padding-bottom:14px;}
+.related-item{text-decoration:none;color:inherit;display:grid;grid-template-columns:148px 1fr;gap:10px;align-items:start;}
+.related-thumb{width:148px;aspect-ratio:16/9;border-radius:8px;background:#e4e4ec;position:relative;overflow:hidden;}
+.related-dur{position:absolute;right:5px;bottom:5px;background:rgba(0,0,0,.72);color:#fff;border-radius:3px;padding:1px 5px;font-size:10px;font-weight:600;}
+.related-q{position:absolute;left:5px;top:5px;background:rgba(255,79,159,.88);color:#fff;border-radius:3px;padding:2px 5px;font-size:10px;font-weight:700;}
+.related-title{font-size:13px;font-weight:600;color:#1e1e26;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:3px;}
+.related-meta{font-size:12px;color:var(--muted);}
+
+/* Playlists sidebar */
+.pl-head{margin-bottom:10px;}
+.pl-head-title{font-size:14px;font-weight:700;color:#1e1e26;}
+.pl-head-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.pl-sort{border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:3px 8px;font-size:12px;color:#333;margin-bottom:10px;outline:none;}
+.pl-list{display:grid;gap:10px;padding-bottom:14px;}
+.pl-item{display:grid;grid-template-columns:108px 1fr;gap:8px;text-decoration:none;color:inherit;align-items:start;}
+.pl-thumb{width:108px;aspect-ratio:16/9;border-radius:7px;background:#e4e4ec;position:relative;overflow:hidden;}
+.pl-count{position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.72);color:#fff;border-radius:3px;padding:1px 4px;font-size:10px;font-weight:600;}
+.pl-title{font-size:13px;font-weight:600;color:#1e1e26;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:2px;}
+.pl-meta{font-size:11px;color:var(--muted);}
+
+/* Transcript sidebar */
+.ts-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-bottom:8px;}
+.ts-source{border:1px solid var(--line);background:var(--bg);border-radius:6px;height:26px;padding:0 6px;font-size:12px;color:#333;outline:none;}
+.ts-follow{border:1px solid var(--line);background:var(--bg);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:var(--muted);}
+.ts-follow svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.ts-follow.on{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent);}
+.ts-list{display:grid;gap:2px;max-height:60vh;overflow:auto;padding-right:2px;}
+.ts-list::-webkit-scrollbar{width:3px;} .ts-list::-webkit-scrollbar-thumb{background:var(--line);}
+.ts-line{display:grid;grid-template-columns:46px 1fr;gap:6px;padding:7px 6px;border-radius:6px;font-size:12px;color:#353540;line-height:1.35;}
+.ts-line.active{background:var(--accent-bg);}
+.ts-time{color:var(--muted);font-size:11px;font-weight:600;padding-top:1px;}
+.ts-text{color:#1b1b22;}
+
+/* pc-links section in description tab */
+.block-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;margin-top:4px;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+<div class="header-inner">
+  <a class="header-logo" href="#"><img src="images/logo_youvi_ind.png" alt="Youvi"></a>
+  <div class="header-search">
+    <input type="search" id="searchInput" placeholder="Поиск видео...">
+    <button aria-label="Поиск"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+  </div>
+  <div class="header-actions">
+    <button class="hdr-btn" onclick="location.href='youvi_main.html'">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Главная
+    </button>
+    <button class="hdr-btn">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Избранное
+    </button>
+    <button class="hdr-btn">
+      <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> История
+    </button>
+    <button class="hdr-btn primary">Войти</button>
+  </div>
+</div>
+</header>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- MAIN COLUMN -->
+  <div class="main-col">
+
+    <!-- PLAYER -->
+    <div class="player-wrap" id="playerWrap">
+      <span class="player-badge-q" id="qualityBadge">1080p</span>
+      <button class="player-play" aria-label="Воспроизвести">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <div class="player-controls">
+        <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="player-row">
+          <span id="timeLabel">3:02 / 10:52</span>
+          <div class="player-row-btns">
+            <button class="pctrl" aria-label="Звук"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+            <button class="pctrl" aria-label="Настройки"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+            <button class="pctrl" aria-label="Полный экран"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DANMAKU BAR (under player) -->
+    <div class="dmk-bar">
+      <button class="dmk-ctrl" id="dmkColorBtn" aria-label="Цвет"><span class="dmk-dot" id="dmkDot"></span></button>
+      <button class="dmk-ctrl" id="dmkPosBtn" aria-label="Позиция"><svg id="dmkPosIcon" viewBox="0 0 24 24"><path d="M3 12h18"/><path d="m14 7 5 5-5 5"/></svg></button>
+      <input class="dmk-input" id="dmkText" type="text" maxlength="50" placeholder="Данмаку...">
+      <button class="dmk-send" id="dmkSend" aria-label="Отправить"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg></button>
+    </div>
+
+    <!-- TITLE + META -->
+    <h1 class="video-title" id="videoTitle">Загрузка...</h1>
+    <div class="meta-row">
+      <span id="viewsCount">0 просмотров</span><span>•</span>
+      <span id="likesCount">0 лайков</span><span>•</span>
+      <span id="dateLabel">Сегодня</span>
+    </div>
+
+    <!-- CHANNEL -->
+    <div class="channel-row">
+      <div class="avatar" id="channelAvatar">Y</div>
+      <div class="channel-info">
+        <div class="channel-name" id="channelName">Канал</div>
+        <div class="channel-subs">1.2K подписчиков</div>
+      </div>
+      <button class="sub-btn">Подписаться</button>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="act-btn" id="likeBtn"><svg viewBox="0 0 24 24"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg> Нравится</button>
+      <button class="act-btn" id="dislikeBtn"><svg viewBox="0 0 24 24"><path d="M12 20l8-8h-6V4h-4v8H4z"/></svg> Не нравится</button>
+      <button class="act-btn" id="favBtn"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.4-9.3-8A5.4 5.4 0 0 1 12 5.4 5.4 5.4 0 0 1 21.3 13C19 16.6 12 21 12 21Z"/></svg> Избранное</button>
+      <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M5 21h14"/></svg> Скачать</button>
+      <button class="act-btn"><svg viewBox="0 0 24 24"><path d="M4 6h10"/><path d="M4 12h10"/><path d="M4 18h7"/><path d="M17 14v6"/><path d="M14 17h6"/></svg> В плейлист</button>
+      <button class="act-btn"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Поделиться</button>
+    </div>
+
+    <!-- TAGS -->
+    <div class="tags" id="tagsRow"></div>
+
+
+    <!-- SECTION NAV (mobile style) -->
+    <nav class="section-nav" id="sectionNav">
+      <a href="#" data-target="tabDesc">Описание</a>
+      <a href="#" data-target="tabComments" class="active" id="commentsNavLink">Комментарии</a>
+    </nav>
+
+    <!-- TAB: DESCRIPTION -->
+    <div class="tab-panel" id="tabDesc">
+      <button class="desc-toggle" id="descToggle">
+        <span>Описание</span><span class="desc-icon">&#8964;</span>
+      </button>
+      <div class="desc-body" id="descBody">Описание не найдено.</div>
+
+      <div class="block-label" style="margin-top:8px;">Связи видео</div>
+      <div class="links-section">
+        <div class="links-label">Дочерние видео</div>
+        <div class="links-row" id="childLinks"></div>
+      </div>
+      <div class="links-section">
+        <div class="links-label">Родительские видео</div>
+        <div class="links-row" id="parentLinks"></div>
+      </div>
+    </div>
+
+    <!-- TAB: COMMENTS -->
+    <div class="tab-panel active" id="tabComments">
+      <div class="comments-compose">
+        <div class="comp-avatar" id="composeAvatar">В</div>
+        <div class="comp-right">
+          <textarea class="comp-input" id="commentInput" placeholder="Добавить комментарий..." rows="1"></textarea>
+          <button class="comp-send" id="postComment">Отправить</button>
+        </div>
+      </div>
+      <div class="comments-list" id="commentsList"></div>
+    </div>
+
+  </div><!-- /main-col -->
+
+  <!-- SIDEBAR -->
+  <aside class="side-col">
+
+    <!-- SIDE TABS (like section-nav in mobile) -->
+    <div class="side-tabs" id="sideTabs">
+      <button class="side-tab active" data-panel="sideRelated">Рекомендации</button>
+      <button class="side-tab" data-panel="sidePlaylists">Плейлисты</button>
+      <button class="side-tab" data-panel="sideDanmaku">Данмаку</button>
+      <button class="side-tab" data-panel="sideTranscript">Транскрипт</button>
+    </div>
+
+    <!-- RELATED -->
+    <div class="side-panel active" id="sideRelated">
+      <div class="related-list" id="relatedList"></div>
+    </div>
+
+    <!-- PLAYLISTS -->
+    <div class="side-panel" id="sidePlaylists">
+      <div class="pl-head">
+        <div class="pl-head-title" id="plName">Плейлист</div>
+        <div class="pl-head-sub" id="plSub">Содержимое</div>
+      </div>
+      <select class="pl-sort" id="plSort">
+        <option value="desc">Сортировка: по спад</option>
+        <option value="asc">Сортировка: по возр</option>
+        <option value="rand">Случайно</option>
+      </select>
+      <div class="pl-list" id="plList"></div>
+    </div>
+
+    <!-- DANMAKU PRINT -->
+    <div class="side-panel" id="sideDanmaku">
+      <div class="ts-toolbar">
+        <button class="ts-follow" id="dmkFollowBtn" aria-label="Фоллов режим">
+          <svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 10h14"/><circle cx="12" cy="12" r="7"/></svg>
+        </button>
+      </div>
+      <div class="ts-list" id="dmkPrintList"></div>
+    </div>
+
+    <!-- TRANSCRIPT -->
+    <div class="side-panel" id="sideTranscript">
+      <div class="ts-toolbar">
+        <select class="ts-source" id="tsSource"></select>
+        <button class="ts-follow" id="tsFollowBtn" aria-label="Фоллов режим">
+          <svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 10h14"/><circle cx="12" cy="12" r="7"/></svg>
+        </button>
+      </div>
+      <div class="ts-list" id="tsList"></div>
+    </div>
+
+  </aside>
+
+</div><!-- /layout -->
+
+<script>
+function esc(t){return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtN(n){n=Number(n)||0;if(n>=1e6)return(n/1e6).toFixed(1).replace(/\.0$/,'')+'M';if(n>=1e3)return(n/1e3).toFixed(1).replace(/\.0$/,'')+'K';return String(n);}
+function fmtDur(v){var s=String(v||'').trim();if(/^\d+:\d{2}(:\d{2})?$/.test(s))return s;var sec=Number(s);if(!isFinite(sec)||sec<0)return'0:00';var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),z=Math.floor(sec%60);return h>0?h+':'+String(m).padStart(2,'0')+':'+String(z).padStart(2,'0'):m+':'+String(z).padStart(2,'0');}
+function fmtTime(ts){var d=Math.max(0,Math.floor((Date.now()-Number(ts))/60000));if(d<1)return'только что';if(d<60)return d+' мин назад';var h=Math.floor(d/60);if(h<24)return h+' ч назад';return Math.floor(h/24)+' д назад';}
+function clr(str){var h=0,s=String(str||'U');for(var i=0;i<s.length;i++)h=s.charCodeAt(i)+((h<<5)-h);return'#'+('000000'+((h&0xFFFFFF).toString(16))).slice(-6);}
+function ini(n){return String(n||'').trim().charAt(0).toUpperCase()||'U';}
+function tagType(t){var m=/\(([^)]+)\)\s*$/.exec(String(t||''));if(!m)return'general';var c=m[1].trim().toLowerCase();var map={ka:'channel',gt:'general',ch:'character',ar:'author',au:'author',ge:'genre',tp:'type',yr:'year',sd:'studio',st:'studio',ct:'category',ra:'rating',rt:'rating',at:'anime',ser:'serial',mt:'movie',nat:'animation',ant:'animation'};return map[c]||'general';}
+
+var video={name:'Demo PC Concept — на базе мобильного мокапа',views:24800,likes:1840,duration:'10:52',quality:'1080p',uploader:'Канал Youvi',date:'Сегодня',
+  description:'Это PC-концепт, построенный на визуальном языке мобильного мокапа Youvi.\n\nРозовый акцент, чистые линии, таб-навигация — всё из мобильной версии, адаптированное для десктопного экрана.',
+  tags:['Аниме (ct)','Экшен (ge)','Обзор (tp)','2024 (yr)','Youvi (ka)'],
+  transcriptSources:[{id:'sub_ru',label:'Субтитры RU',cues:[{time:'00:01',text:'PC концепт на базе мобильного мокапа Youvi.'},{time:'00:10',text:'Правый сайдбар с вкладками — как в мобиле, но для десктопа.'},{time:'00:20',text:'Кнопки-пилюли из мобильного дизайна.'},{time:'00:30',text:'Транскрипт, данмаку, плейлисты — всё в сайдбаре.'},{time:'00:40',text:'Follow-режим автоматически прокручивает.'},{time:'00:50',text:'Комментарии с ответами работают.'}]},{id:'asr',label:'ASR авто',cues:[{time:'00:02',text:'авто: мобильный стиль на десктопе'},{time:'00:12',text:'авто: розовый акцент'},{time:'00:22',text:'авто: сайдбар с вкладками'},{time:'00:42',text:'авто: follow режим'}]}],
+  danmakuPrint:[{time:'00:05',text:'PC концепт огонь!'},{time:'00:12',text:'Стиль мобилки — на десктопе.'},{time:'00:20',text:'Таб-сайдбар удобен.'},{time:'00:30',text:'Пилюли-кнопки супер.'},{time:'00:55',text:'Данмаку работает на ПК!'}],
+  comments:[{id:'c1',nick:'@mika7',text:'Лучший PC концепт! Мобильный стиль отлично зашёл',likes:52,createdAt:Date.now()-4500000,likedByCreator:true,replies:[]},{id:'c2',nick:'Sky Wee',text:'Вау, чисто и аккуратно',likes:38,createdAt:Date.now()-3600000,replies:[{id:'r1',nick:'John.dev',text:'Точно! Особенно сайдбар.',likes:5,createdAt:Date.now()-3500000}]},{id:'c3',nick:'Tokyo.dev',text:'Пилюли-кнопки — топ идея для PC.',likes:29,createdAt:Date.now()-2100000,replies:[]},{id:'c4',nick:'Sarah Chen',text:'Строгий, чистый дизайн. Нравится!',likes:21,createdAt:Date.now()-1500000,replies:[]},{id:'c5',nick:'KimA',text:'Когда это попадёт в продакшн?',likes:14,createdAt:Date.now()-900000,replies:[]}]
+};
+
+var commentsState=video.comments.slice(),openReplies={},replyEd={key:null,pid:null,nick:'',text:''},plSort='desc',tsState={sid:'',follow:false,ai:0},dmkState={follow:false,ai:0};
+
+function renderInfo(){
+  document.getElementById('videoTitle').textContent=video.name;
+  document.getElementById('viewsCount').textContent=fmtN(video.views)+' просмотров';
+  document.getElementById('likesCount').textContent=fmtN(video.likes)+' лайков';
+  document.getElementById('dateLabel').textContent=video.date;
+  document.getElementById('qualityBadge').textContent=video.quality;
+  document.getElementById('timeLabel').textContent='3:02 / '+fmtDur(video.duration);
+  document.getElementById('channelName').textContent=video.uploader;
+  var av=document.getElementById('channelAvatar');av.textContent=ini(video.uploader);av.style.background=clr(video.uploader);
+  var ca=document.getElementById('composeAvatar');ca.style.background=clr('Вы');
+  document.getElementById('descBody').textContent=video.description;
+  document.getElementById('tagsRow').innerHTML=(video.tags||[]).map(function(t){return'<a class="tag" data-type="'+tagType(t)+'" href="#">'+esc(t)+'</a>';}).join('');
+  renderRelated();renderLinks();renderPlaylists();renderComments();renderTranscript();renderDanmaku();
+}
+
+var thumbColors=['#2d2040','#1a3040','#402018','#183030','#301828','#20182e','#283820','#302010'];
+function renderRelated(){
+  var qs=['1080p','4K','720p','480p'];
+  document.getElementById('relatedList').innerHTML=[1,2,3,4,5,6,7,8].map(function(i){
+    var n=video.name+' #'+i,q=qs[i%qs.length],bg=thumbColors[(i-1)%thumbColors.length];
+    return'<a class="related-item" href="youvi_video_pc_concept.html?v='+encodeURIComponent(n)+'">'+'<div class="related-thumb" style="background:'+bg+';display:flex;align-items:center;justify-content:center;"><svg width="28" height="28" viewBox="0 0 24 24" style="opacity:.4;fill:#fff;"><path d="M8 5v14l11-7z"/></svg><span class="related-q">'+esc(q)+'</span><span class="related-dur">'+fmtDur(video.duration)+'</span></div>'+'<div><div class="related-title">'+esc(n)+'</div><div class="related-meta">'+fmtN(video.views+i*900)+' просмотров</div></div></a>';
+  }).join('');
+}
+
+function renderLinks(){
+  function cards(items,host){document.getElementById(host).innerHTML=items.map(function(it){return'<a class="link-card" href="#"><div class="link-thumb"><span class="link-dur">'+esc(fmtDur(video.duration))+'</span></div><div class="link-name">'+esc(it.name)+'</div><div class="link-meta">'+esc(it.meta||'')+'</div></a>';}).join('');}
+  var b=video.name;
+  cards([1,2,3].map(function(i){return{name:b+' — часть '+i,meta:video.uploader+' • '+fmtN(video.views+i*400)+' просмотров'};}), 'childLinks');
+  cards([1,2].map(function(i){return{name:'Источник: '+b+' ('+i+')',meta:'Архивный • '+fmtN(video.views+i*600)+' просмотров'};}), 'parentLinks');
+}
+
+function renderPlaylists(){
+  var items=[1,2,3,4,5,6].map(function(i){return{name:video.name+' серия '+i,dur:fmtDur(video.duration),views:video.views+i*700,pos:i};});
+  if(plSort==='asc')items.sort(function(a,b){return a.pos-b.pos;});else if(plSort==='rand')items.sort(function(){return Math.random()-.5;});else items.sort(function(a,b){return b.pos-a.pos;});
+  document.getElementById('plName').textContent=video.name+' — плейлист';
+  document.getElementById('plSub').textContent=items.length+' видео';
+  document.getElementById('plList').innerHTML=items.map(function(it){return'<a class="pl-item" href="#"><div class="pl-thumb"><span class="pl-count">'+esc(it.dur)+'</span></div><div><div class="pl-title">'+esc(it.name)+'</div><div class="pl-meta">№'+it.pos+' • '+fmtN(it.views)+' просмотров</div></div></a>';}).join('');
+}
+
+var upSvg='<svg viewBox="0 0 24 24"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>';
+function renderComments(){
+  var host=document.getElementById('commentsList');
+  if(!commentsState.length){host.innerHTML='<p style="color:#999;font-size:13px;">Нет комментариев.</p>';return;}
+  host.innerHTML=commentsState.map(function(c,ix){
+    var cid=String(c.id||'c'+ix),nick=esc(c.nick||'User'),isOpen=!!openReplies[cid],reps=Array.isArray(c.replies)?c.replies:[],repHtml='';
+    if(reps.length){
+      var arr=isOpen?'rotate(180deg)':'rotate(0deg)';
+      var tog='<button class="toggle-rep-btn" data-action="toggle" data-cid="'+cid+'"><svg viewBox="0 0 24 24" style="transform:'+arr+'"><path d="M6 9l6 6 6-6"/></svg>'+reps.length+' ответ(а)</button>';
+      var rl=isOpen?'<div class="replies-list">'+reps.map(function(r,ri){var rn=esc(r.nick||'User');return'<div class="reply-item"><div class="r-avatar" style="background:'+clr(r.nick||'')+'">'+ini(r.nick)+'</div><div class="c-body"><span class="c-author">'+rn+'</span><span class="c-time">'+fmtTime(r.createdAt||Date.now())+'</span><p class="c-text">'+esc(r.text||'')+'</p><div class="c-actions"><button class="c-act" data-action="reply" data-cid="'+cid+'" data-nick="'+rn+'">Ответить</button></div></div><div class="c-like-col"><button class="c-like-btn" data-action="like-r" data-cid="'+cid+'" data-rid="'+ri+'">'+upSvg+'</button><span class="c-like-count">'+String(r.likes||0)+'</span></div></div>';}).join('')+'</div>':'';
+      var inl=(replyEd.key==='c:'+cid)?renderInline():'';
+      repHtml='<div class="c-replies-wrap">'+inl+tog+rl+'</div>';
+    } else {
+      repHtml=(replyEd.key==='c:'+cid)?'<div class="c-replies-wrap">'+renderInline()+'</div>':'';
+    }
+    return'<div class="comment-item" data-cid="'+cid+'"><div class="c-avatar" style="background:'+clr(c.nick||'')+'">'+ini(c.nick)+'</div><div class="c-body"><span class="c-author">'+nick+'</span>'+(c.likedByCreator?'<span class="c-badge">▲ Апвоут автора</span>':'')+'<span class="c-time">'+fmtTime(c.createdAt)+'</span><p class="c-text">'+esc(c.text||'')+'</p><div class="c-actions"><button class="c-act" data-action="reply" data-cid="'+cid+'" data-nick="'+nick+'">Ответить</button></div></div><div class="c-like-col"><button class="c-like-btn" data-action="like" data-cid="'+cid+'">'+upSvg+'</button><span class="c-like-count">'+String(c.likes||0)+'</span></div>'+repHtml+'</div>';
+  }).join('');
+}
+function renderInline(){return'<div class="inline-reply"><input data-action="inline-in" placeholder="Ответ для '+esc(replyEd.nick||'')+'..." value="'+esc(replyEd.text||'')+'"><button class="ir-cancel" data-action="cancel">Отмена</button><button class="ir-send" data-action="send">→</button></div>';}
+document.getElementById('commentsList').addEventListener('click',function(e){
+  var btn=e.target.closest('[data-action]');if(!btn)return;
+  var a=btn.getAttribute('data-action'),cid=btn.getAttribute('data-cid'),idx=commentsState.findIndex(function(c){return String(c.id)===cid;});
+  if(a==='like'&&idx>=0){commentsState[idx].likes=(commentsState[idx].likes||0)+1;renderComments();}
+  if(a==='like-r'&&idx>=0){var ri=Number(btn.getAttribute('data-rid'));if(commentsState[idx].replies&&commentsState[idx].replies[ri])commentsState[idx].replies[ri].likes=(commentsState[idx].replies[ri].likes||0)+1;renderComments();}
+  if(a==='reply'){replyEd.key='c:'+cid;replyEd.pid=cid;replyEd.nick=btn.getAttribute('data-nick')||'';replyEd.text='';if(idx>=0)openReplies[cid]=true;renderComments();}
+  if(a==='toggle'){openReplies[cid]=!openReplies[cid];renderComments();}
+  if(a==='cancel'){replyEd.key=null;replyEd.pid=null;replyEd.text='';renderComments();}
+  if(a==='send'){var txt=(replyEd.text||'').trim();if(!txt||!replyEd.pid)return;var pi=commentsState.findIndex(function(c){return String(c.id)===String(replyEd.pid);});if(pi<0)return;if(!Array.isArray(commentsState[pi].replies))commentsState[pi].replies=[];commentsState[pi].replies.push({id:'r'+Date.now(),nick:'Вы',text:txt,likes:0,createdAt:Date.now()});openReplies[String(replyEd.pid)]=true;replyEd.key=null;replyEd.pid=null;replyEd.text='';renderComments();}
+});
+document.getElementById('commentsList').addEventListener('input',function(e){if(e.target.dataset.action==='inline-in')replyEd.text=e.target.value||'';});
+document.getElementById('postComment').addEventListener('click',function(){var inp=document.getElementById('commentInput'),txt=(inp.value||'').trim();if(!txt)return;commentsState.unshift({id:'c'+Date.now(),nick:'Вы',text:txt,likes:0,createdAt:Date.now(),replies:[]});inp.value='';renderComments();});
+
+function getSrcs(){return Array.isArray(video.transcriptSources)&&video.transcriptSources.length?video.transcriptSources:[{id:'s',label:'Субтитры',cues:[{time:'00:00',text:'Транскрипт недоступен.'}]}];}
+function renderTranscript(){
+  var srcs=getSrcs();if(!tsState.sid||!srcs.find(function(s){return s.id===tsState.sid;}))tsState.sid=srcs[0].id;
+  var sel=document.getElementById('tsSource');sel.innerHTML=srcs.map(function(s){return'<option value="'+esc(s.id)+'"'+(s.id===tsState.sid?' selected':'')+'>'+esc(s.label||s.id)+'</option>';}).join('');
+  var src=srcs.find(function(s){return s.id===tsState.sid;})||srcs[0];var cues=Array.isArray(src.cues)?src.cues:[];if(tsState.ai>=cues.length)tsState.ai=0;
+  document.getElementById('tsList').innerHTML=cues.map(function(c,i){return'<div class="ts-line'+(i===tsState.ai?' active':'')+'" data-idx="'+i+'"><span class="ts-time">'+esc(c.time||'00:00')+'</span><span class="ts-text">'+esc(c.text||'')+'</span></div>';}).join('');
+}
+document.getElementById('tsSource').addEventListener('change',function(){tsState.sid=this.value;tsState.ai=0;renderTranscript();});
+document.getElementById('tsFollowBtn').addEventListener('click',function(){tsState.follow=!tsState.follow;this.classList.toggle('on',tsState.follow);});
+document.getElementById('tsList').addEventListener('click',function(e){var l=e.target.closest('.ts-line');if(!l)return;tsState.ai=Number(l.getAttribute('data-idx'));renderTranscript();});
+setInterval(function(){var p=document.getElementById('sideTranscript');if(!p||!p.classList.contains('active')||!tsState.follow)return;var src=getSrcs().find(function(s){return s.id===tsState.sid;})||getSrcs()[0];var cues=Array.isArray(src.cues)?src.cues:[];if(!cues.length)return;tsState.ai=(tsState.ai+1)%cues.length;renderTranscript();var al=document.querySelector('#tsList .ts-line.active');if(al)al.scrollIntoView({block:'nearest',behavior:'smooth'});},1800);
+
+function getDmkLines(){return Array.isArray(video.danmakuPrint)&&video.danmakuPrint.length?video.danmakuPrint:[{time:'00:00',text:'Нет данмаку.'}];}
+function renderDanmaku(){var ls=getDmkLines();if(dmkState.ai>=ls.length)dmkState.ai=0;document.getElementById('dmkPrintList').innerHTML=ls.map(function(l,i){return'<div class="ts-line'+(i===dmkState.ai?' active':'')+'" data-idx="'+i+'"><span class="ts-time">'+esc(l.time||'00:00')+'</span><span class="ts-text">'+esc(l.text||'')+'</span></div>';}).join('');}
+document.getElementById('dmkFollowBtn').addEventListener('click',function(){dmkState.follow=!dmkState.follow;this.classList.toggle('on',dmkState.follow);});
+document.getElementById('dmkPrintList').addEventListener('click',function(e){var l=e.target.closest('.ts-line');if(!l)return;dmkState.ai=Number(l.getAttribute('data-idx'));renderDanmaku();});
+setInterval(function(){var p=document.getElementById('sideDanmaku');if(!p||!p.classList.contains('active')||!dmkState.follow)return;var ls=getDmkLines();if(!ls.length)return;dmkState.ai=(dmkState.ai+1)%ls.length;renderDanmaku();var al=document.querySelector('#dmkPrintList .ts-line.active');if(al)al.scrollIntoView({block:'nearest',behavior:'smooth'});},1800);
+
+(function(){var cols=['#ffffff','#ff4f9f','#ffcc00','#00d1ff'],ci=0,pos='scroll',dot=document.getElementById('dmkDot');
+  function sync(){if(dot)dot.style.background=cols[ci];}
+  document.getElementById('dmkColorBtn').addEventListener('click',function(){ci=(ci+1)%cols.length;sync();});
+  document.getElementById('dmkPosBtn').addEventListener('click',function(){pos=pos==='scroll'?'top':'scroll';var ic=document.getElementById('dmkPosIcon');ic.innerHTML=pos==='top'?'<path d="M4 8h16"/><path d="m12 4 4 4"/><path d="m12 4-4 4"/>':'<path d="M3 12h18"/><path d="m14 7 5 5-5 5"/>';});
+  document.getElementById('dmkSend').addEventListener('click',function(){var inp=document.getElementById('dmkText'),txt=(inp.value||'').trim();if(!txt)return;alert('Данмаку: '+txt+' ['+pos+', '+cols[ci]+']');inp.value='';inp.focus();});
+  document.getElementById('dmkText').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();document.getElementById('dmkSend').click();}});
+  sync();
+})();
+
+document.querySelectorAll('#sectionNav a[data-target]').forEach(function(a){
+  a.addEventListener('click',function(e){e.preventDefault();var t=a.getAttribute('data-target');document.querySelectorAll('#sectionNav a').forEach(function(x){x.classList.remove('active');});a.classList.add('active');document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id===t);});});
+});
+document.querySelectorAll('#sideTabs .side-tab').forEach(function(btn){
+  btn.addEventListener('click',function(){var pid=btn.getAttribute('data-panel');document.querySelectorAll('#sideTabs .side-tab').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');document.querySelectorAll('.side-panel').forEach(function(p){p.classList.toggle('active',p.id===pid);});});
+});
+['likeBtn','dislikeBtn','favBtn'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('click',function(){this.classList.toggle('on');});});
+document.querySelectorAll('.act-btn').forEach(function(b){b.addEventListener('click',function(){this.classList.toggle('on');});});
+document.getElementById('descToggle').addEventListener('click',function(){var body=document.getElementById('descBody');var collapsed=body.classList.toggle('hidden');this.classList.toggle('collapsed',collapsed);});
+document.getElementById('plSort').addEventListener('change',function(){plSort=this.value;renderPlaylists();});
+renderInfo();
+</script>
+</body>
+</html>

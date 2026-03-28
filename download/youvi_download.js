@@ -7,6 +7,7 @@
 
 let selectedPath = '';
 let tagAutocomplete = null;
+let activeDownloadServerBase = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
@@ -31,6 +32,7 @@ function initializeI18n() {
             const newLang = e.target.value;
             await i18n.setLanguage(newLang);
             
+            updatePlatformOptions();
             // Re-check server status to update with new language
             checkServerStatus();
         });
@@ -177,13 +179,91 @@ async function ensureTagDatabaseHasData() {
     }
 }
 
+function normalizeServerBase(base) {
+    return String(base || '').trim().replace(/\/+$/, '');
+}
+
+function getCustomDownloadServerBase() {
+    const runtimeValue = typeof window !== 'undefined' ? (window.YOUVI_DOWNLOAD_SERVER_URL || window.__YOUVI_DOWNLOAD_SERVER__) : '';
+    if (runtimeValue) return normalizeServerBase(runtimeValue);
+
+    try {
+        const stored = localStorage.getItem('youvi_download_server_url');
+        if (stored) return normalizeServerBase(stored);
+    } catch (e) {
+    }
+
+    return '';
+}
+
+function getDownloadServerCandidates() {
+    const candidates = [];
+    const addCandidate = (value) => {
+        const normalized = normalizeServerBase(value);
+        if (!normalized) return;
+        if (!candidates.includes(normalized)) candidates.push(normalized);
+    };
+
+    addCandidate(getCustomDownloadServerBase());
+
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+
+    if (protocol !== 'file:') {
+        addCandidate(window.location.origin);
+
+        // Support reverse proxy setups such as nginx -> node backend
+        addCandidate(`${window.location.origin}/download-api`);
+
+        if (protocol === 'http:' && hostname) {
+            addCandidate(`http://${hostname}:3000`);
+        }
+    }
+
+    // Keep file://, loopback, and custom local HTTP aliases working
+    if (protocol === 'file:' || protocol === 'http:' || hostname === 'localhost' || hostname === '127.0.0.1') {
+        addCandidate('http://localhost:3000');
+        addCandidate('http://127.0.0.1:3000');
+    }
+
+    return candidates;
+}
+
+function buildDownloadServerUrl(base, path) {
+    const normalizedBase = normalizeServerBase(base);
+    const normalizedPath = String(path || '').startsWith('/') ? path : `/${path || ''}`;
+    return `${normalizedBase}${normalizedPath}`;
+}
+
+async function probeDownloadServer(force = false) {
+    if (activeDownloadServerBase && !force) {
+        return activeDownloadServerBase;
+    }
+
+    const candidates = getDownloadServerCandidates();
+    for (const candidate of candidates) {
+        try {
+            const response = await fetch(buildDownloadServerUrl(candidate, '/health'));
+            const health = await response.json().catch(() => null);
+            if (response.ok && health && health.status === 'ok') {
+                activeDownloadServerBase = candidate;
+                return activeDownloadServerBase;
+            }
+        } catch (error) {
+        }
+    }
+
+    activeDownloadServerBase = null;
+    return null;
+}
+
 async function checkServerStatus() {
     const statusEl = document.getElementById('serverStatus');
     const statusText = statusEl.querySelector('span:last-child');
     
     try {
-        const response = await fetch('http://localhost:3000/health');
-        if (response.ok) {
+        const base = await probeDownloadServer(true);
+        if (base) {
             statusEl.className = 'server-status online';
             statusText.setAttribute('data-i18n', 'download.serverOnline');
             if (window.i18n) {
@@ -191,7 +271,18 @@ async function checkServerStatus() {
             } else {
                 statusText.textContent = 'Server Online';
             }
+            statusEl.title = base;
+            return;
         }
+
+        statusEl.className = 'server-status offline';
+        statusText.setAttribute('data-i18n', 'download.serverOffline');
+        if (window.i18n) {
+            statusText.textContent = i18n.t('download.serverOffline', 'Server Offline');
+        } else {
+            statusText.textContent = 'Server Offline';
+        }
+        statusEl.title = '';
     } catch (error) {
         statusEl.className = 'server-status offline';
         statusText.setAttribute('data-i18n', 'download.serverOffline');
@@ -200,29 +291,87 @@ async function checkServerStatus() {
         } else {
             statusText.textContent = 'Server Offline';
         }
+        statusEl.title = '';
     }
 }
 
 function updatePlatformOptions() {
     const activeBtn = document.querySelector('.platform-btn.active');
     const platform = activeBtn ? activeBtn.dataset.platform : 'youtube';
-    const youtubeOnlyItems = document.querySelectorAll('.youtube-only');
+    const platformLimitedItems = document.querySelectorAll('.platform-limited');
     const platformNote = document.getElementById('platformNote');
-    
-    if (platform === 'youtube') {
-        youtubeOnlyItems.forEach(item => item.classList.add('enabled'));
-        platformNote.textContent = '';
-    } else {
-        youtubeOnlyItems.forEach(item => {
-            item.classList.remove('enabled');
-            const checkbox = item.querySelector('input[type="checkbox"]');
-            if (checkbox) checkbox.checked = false;
-        });
-        
-        platformNote.textContent = '';
-    }
-    
+
+    platformLimitedItems.forEach(item => {
+        const supportedPlatforms = String(item.dataset.platforms || '')
+            .split(',')
+            .map(value => value.trim())
+            .filter(Boolean);
+
+        const enabled = !supportedPlatforms.length || supportedPlatforms.includes(platform);
+        item.classList.toggle('enabled', enabled);
+
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.disabled = !enabled;
+            if (!enabled) checkbox.checked = false;
+        }
+    });
+
+    updateCommentsLabel(platform);
+    updateDanmakuLabel(platform);
+    platformNote.textContent = getPlatformNoteText(platform);
     updateUrlPlaceholder(platform);
+}
+
+function updateCommentsLabel(platform) {
+    const commentsLabel = document.querySelector('label[for="downloadComments"]');
+    if (!commentsLabel) return;
+
+    if (platform === 'niconico') {
+        commentsLabel.textContent = 'Comments (same timed danmaku, saved as comments)';
+        return;
+    }
+
+    if (window.i18n) {
+        commentsLabel.textContent = i18n.t('download.optionComments', 'Comments (JSON)');
+        return;
+    }
+
+    commentsLabel.textContent = 'Comments (JSON)';
+}
+
+function updateDanmakuLabel(platform) {
+    const danmakuLabel = document.querySelector('label[for="downloadDanmaku"]');
+    if (!danmakuLabel) return;
+
+    if (platform === 'niconico') {
+        danmakuLabel.textContent = 'Danmaku (native comments track)';
+        return;
+    }
+
+    if (platform === 'bilibili') {
+        danmakuLabel.textContent = 'Danmaku (native XML track)';
+        return;
+    }
+
+    if (window.i18n) {
+        danmakuLabel.textContent = i18n.t('download.optionDanmaku', 'Danmaku (from comments)');
+        return;
+    }
+
+    danmakuLabel.textContent = 'Danmaku (from comments)';
+}
+
+function getPlatformNoteText(platform) {
+    if (platform === 'niconico') {
+        return 'Niconico has one native timed comments/danmaku stream here: Comments saves it as Youvi comments list, Danmaku saves the same stream as overlay danmaku.';
+    }
+
+    if (platform === 'bilibili') {
+        return 'Bilibili can import native XML danmaku. Regular site comments are not downloaded here.';
+    }
+
+    return '';
 }
 
 function updateUrlPlaceholder(platform) {
@@ -272,13 +421,9 @@ async function handleDownload() {
     }
 
     // Check if server is running
-    try {
-        const healthCheck = await fetch('http://localhost:3000/health');
-        if (!healthCheck.ok) {
-            throw new Error('Server not responding');
-        }
-    } catch (error) {
-        showStatus('❌ Download server not running! Please start: node download-server.js', 'error');
+    const serverBase = await probeDownloadServer();
+    if (!serverBase) {
+        showStatus('❌ Download server not running or not reachable from this page', 'error');
         return;
     }
 
@@ -298,7 +443,7 @@ async function handleDownload() {
     let progressInterval;
     progressInterval = setInterval(async () => {
         try {
-            const pr = await fetch('http://localhost:3000/progress');
+            const pr = await fetch(buildDownloadServerUrl(serverBase, '/progress'));
             if (!pr.ok) return;
             const data = await pr.json();
             const pct = (data.phase === 'metadata' ? (data.percent ?? 100) : data.percent) || 0;
@@ -318,7 +463,7 @@ async function handleDownload() {
     showStatus('Downloading...', 'info');
 
     try {
-        const response = await fetch('http://localhost:3000/download', {
+        const response = await fetch(buildDownloadServerUrl(serverBase, '/download'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

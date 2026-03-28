@@ -13,8 +13,34 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const {
+    convertNiconicoCommentsToYouviComments,
+    parseBilibiliDanmakuXml,
+    parseNiconicoDanmakuJson
+} = require('./danmaku-importers');
 
 const PORT = 3000;
+const BIND_HOST = process.env.YOUVI_BIND_HOST || '127.0.0.1';
+
+function parseEnvList(name) {
+    return String(process.env[name] || '')
+        .split(',')
+        .map(value => value.trim())
+        .filter(Boolean);
+}
+
+function normalizeOriginValue(value) {
+    if (!value) return '';
+
+    try {
+        return new URL(value).origin.toLowerCase();
+    } catch (error) {
+        return '';
+    }
+}
+
+const EXTRA_ALLOWED_ORIGINS = new Set(parseEnvList('YOUVI_ALLOWED_ORIGINS').map(normalizeOriginValue).filter(Boolean));
+const EXTRA_ALLOWED_HOSTS = new Set(parseEnvList('YOUVI_ALLOWED_HOSTS').map(value => value.toLowerCase()));
 
 /** Force yt-dlp (and embedded Python) to use UTF-8; unbuffer so progress/logs stream in real time. */
 const UTF8_ENV = { ...process.env, PYTHONIOENCODING: 'utf-8', PYTHONUTF8: '1', PYTHONUNBUFFERED: '1' };
@@ -44,37 +70,128 @@ function getFormatString(quality) {
 /**
  * Detect platform from video URL
  */
-function detectPlatform(url) {
+function detectPlatformKey(url) {
     const urlLower = url.toLowerCase();
-    if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be')) return 'YouTube';
-    if (urlLower.includes('nicovideo.jp')) return 'niconico';
-    if (urlLower.includes('bilibili.com')) return 'Bilibili';
-    if (urlLower.includes('tiktok.com')) return 'TikTok';
-    if (urlLower.includes('odysee.com')) return 'Odysee';
-    if (urlLower.includes('vimeo.com')) return 'Vimeo';
-    if (urlLower.includes('dailymotion.com')) return 'Dailymotion';
-    if (urlLower.includes('mover.uz')) return 'Mover.uz';
+    if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be')) return 'youtube';
+    if (urlLower.includes('nicovideo.jp') || urlLower.includes('nico.ms')) return 'niconico';
+    if (urlLower.includes('bilibili.com') || urlLower.includes('b23.tv')) return 'bilibili';
+    if (urlLower.includes('tiktok.com')) return 'tiktok';
+    if (urlLower.includes('odysee.com')) return 'odysee';
+    if (urlLower.includes('vimeo.com')) return 'vimeo';
+    if (urlLower.includes('dailymotion.com')) return 'dailymotion';
+    if (urlLower.includes('mover.uz')) return 'mover';
+    return 'unknown';
+}
+
+function detectPlatform(url) {
+    const key = detectPlatformKey(url);
+    const labels = {
+        youtube: 'YouTube',
+        niconico: 'Niconico',
+        bilibili: 'Bilibili',
+        tiktok: 'TikTok',
+        odysee: 'Odysee',
+        vimeo: 'Vimeo',
+        dailymotion: 'Dailymotion',
+        mover: 'Mover.uz'
+    };
+    if (labels[key]) return labels[key];
     return 'Unknown';
 }
 
 // Maximum request body size (1 MB) to prevent memory exhaustion
 const MAX_BODY_SIZE = 1 * 1024 * 1024;
 
-// Allowed CORS origins (localhost only)
-const ALLOWED_ORIGINS = [
-    'http://localhost', 'https://localhost',
-    'http://127.0.0.1', 'https://127.0.0.1',
-    'null'  // local file:// pages send Origin: null
-];
+const API_PREFIXES = ['/download-api'];
+
+function getHeaderValue(headers, name) {
+    const value = headers?.[name];
+    if (Array.isArray(value)) return value[0] || '';
+    return String(value || '').split(',')[0].trim();
+}
+
+function getHostnameFromValue(value) {
+    if (!value) return '';
+
+    try {
+        const candidate = value.includes('://') ? value : `http://${value}`;
+        return new URL(candidate).hostname.toLowerCase();
+    } catch (error) {
+        return '';
+    }
+}
+
+function isLoopbackHostname(hostname) {
+    const normalized = String(hostname || '').toLowerCase();
+    return normalized === 'localhost' ||
+        normalized === '::1' ||
+        normalized === '[::1]' ||
+        normalized === '127.0.0.1' ||
+        normalized.startsWith('127.');
+}
+
+function getAllowedCorsOrigin(req) {
+    const origin = getHeaderValue(req?.headers, 'origin');
+    if (!origin) return '*';
+    if (origin === 'null') return 'null';
+
+    const normalizedOrigin = normalizeOriginValue(origin);
+    const originHostname = getHostnameFromValue(origin);
+    const requestHost = getHeaderValue(req?.headers, 'x-forwarded-host') || getHeaderValue(req?.headers, 'host');
+    const requestHostname = getHostnameFromValue(requestHost);
+
+    if (!originHostname || !requestHostname) {
+        return 'http://localhost';
+    }
+
+    if (EXTRA_ALLOWED_ORIGINS.has(normalizedOrigin)) {
+        return origin;
+    }
+
+    if (originHostname === requestHostname) {
+        return origin;
+    }
+
+    if (isLoopbackHostname(originHostname) && isLoopbackHostname(requestHostname)) {
+        return origin;
+    }
+
+    if (EXTRA_ALLOWED_HOSTS.has(originHostname) &&
+        (isLoopbackHostname(requestHostname) || EXTRA_ALLOWED_HOSTS.has(requestHostname))) {
+        return origin;
+    }
+
+    return 'http://localhost';
+}
+
+function normalizeApiPath(pathname) {
+    let normalized = String(pathname || '/');
+
+    for (const prefix of API_PREFIXES) {
+        if (normalized === prefix) {
+            normalized = '/';
+            break;
+        }
+
+        if (normalized.startsWith(`${prefix}/`)) {
+            normalized = normalized.slice(prefix.length);
+            break;
+        }
+    }
+
+    if (normalized.length > 1) {
+        normalized = normalized.replace(/\/+$/, '');
+    }
+
+    return normalized || '/';
+}
 
 function getCorsHeaders(req) {
-    const origin = req?.headers?.origin || '';
-    const isAllowed = origin === 'null' ||
-        ALLOWED_ORIGINS.some(allowed => origin === allowed || origin.startsWith(allowed + ':'));
     return {
-        'Access-Control-Allow-Origin': isAllowed ? origin : 'http://localhost',
+        'Access-Control-Allow-Origin': getAllowedCorsOrigin(req),
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
+        'Vary': 'Origin',
         'Content-Type': 'application/json'
     };
 }
@@ -143,7 +260,7 @@ function sanitizeFilename(name) {
 
 const server = http.createServer((req, res) => {
     const requestUrl = new URL(req.url, `http://${req.headers.host}`);
-    const pathname = requestUrl.pathname;
+    const pathname = normalizeApiPath(requestUrl.pathname);
 
     const corsHeaders = getCorsHeaders(req);
 
@@ -277,11 +394,12 @@ async function downloadWithYtDlp(videoUrl, outputPath, tags, options, corsHeader
     if (tags) console.log(`→ Tags: ${tags}`);
     
     // Platform-specific info
-    if (platform === 'niconico') {
+    if (platform === 'Niconico') {
         console.log('→ Niconico download notes:');
         console.log('  • May require login for some videos (use --cookies if needed)');
         console.log('  • Comments will be fetched from Niconico separately');
         console.log('  • Some videos may have regional restrictions');
+        console.log('  • Using single-fragment yt-dlp mode with extra retries to reduce Windows fragment errors');
     } else if (platform === 'Mover.uz') {
         console.log('→ Mover.uz download notes:');
         console.log('  • Using yt-dlp extractor (direct download deprecated)');
@@ -295,9 +413,17 @@ async function downloadWithYtDlp(videoUrl, outputPath, tags, options, corsHeader
         '--no-restrict-filenames',  // Keep full Unicode in filenames (JP, RU, emoji, etc.)
         '--write-info-json',  // Write yt-dlp's info JSON
         '--print', 'after_move:filepath',
-        '--js-runtimes', 'nodejs'  // Use Node.js for YouTube JS extraction
+        '--js-runtimes', 'node'  // Use supported JS runtime name for yt-dlp-ejs
         // Do not use --windows-filenames so Unicode (e.g. テレパシー能力者) is preserved
     ];
+
+    if (platform === 'Niconico') {
+        args.push(
+            '--concurrent-fragments', '1',
+            '--fragment-retries', '10',
+            '--file-access-retries', '10'
+        );
+    }
 
     // Add metadata if tags provided
     if (tags) {
@@ -518,8 +644,9 @@ async function createYouviSidecarData(outputPath, videoUrl, metaContext, options
     }
 
     let danmakuItems = [];
+    const platformKey = detectPlatformKey(videoUrl);
 
-    if (options?.downloadComments || options?.downloadDanmaku) {
+    if (platformKey === 'youtube' && (options?.downloadComments || options?.downloadDanmaku)) {
         if (downloadProgress.phase === 'metadata') {
             downloadProgress.message = 'Fetching comments...';
         }
@@ -550,9 +677,61 @@ async function createYouviSidecarData(outputPath, videoUrl, metaContext, options
             console.log('⚠ No timestamped comments for danmaku');
         }
 
+    } else if (platformKey === 'niconico' && (options?.downloadComments || options?.downloadDanmaku)) {
+        if (downloadProgress.phase === 'metadata') {
+            downloadProgress.message = 'Fetching Niconico comments...';
+        }
+
+        try {
+            console.log(`в†’ Fetching Niconico comments for: ${videoBaseName}`);
+            const niconicoComments = await downloadNiconicoComments(videoUrl);
+            console.log(`  Found ${niconicoComments.length} Niconico comments`);
+
+            if (options?.downloadComments) {
+                const youviComments = convertNiconicoCommentsToYouviComments(niconicoComments);
+                if (youviComments.length) {
+                    if (downloadProgress.phase === 'metadata') downloadProgress.message = 'Saving comments...';
+                    const commentsPath = path.join(metaDir, `${videoFileName}.comments.json`);
+                    fs.writeFileSync(commentsPath, JSON.stringify(youviComments, null, 2), 'utf8');
+                    console.log(`вњ“ Created YouVi comments: ${commentsPath}`);
+                } else {
+                    console.log('вљ  No comments to save');
+                }
+            }
+
+            if (options?.downloadDanmaku) {
+                const niconicoDanmaku = parseNiconicoDanmakuJson(niconicoComments);
+                if (niconicoDanmaku.length) {
+                    danmakuItems = danmakuItems.concat(niconicoDanmaku);
+                    console.log(`  Converted ${niconicoDanmaku.length} danmaku from Niconico comments`);
+                } else {
+                    console.log('вљ  No Niconico danmaku items to save');
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to fetch Niconico comments:', error.message);
+        }
+    } else if (platformKey === 'bilibili' && options?.downloadDanmaku) {
+        if (downloadProgress.phase === 'metadata') {
+            downloadProgress.message = 'Fetching Bilibili danmaku...';
+        }
+
+        try {
+            console.log(`в†’ Fetching Bilibili danmaku for: ${videoBaseName}`);
+            const bilibiliXml = await downloadBilibiliDanmakuXml(videoUrl);
+            const bilibiliDanmaku = parseBilibiliDanmakuXml(bilibiliXml);
+            if (bilibiliDanmaku.length) {
+                danmakuItems = danmakuItems.concat(bilibiliDanmaku);
+                console.log(`  Converted ${bilibiliDanmaku.length} Bilibili danmaku items`);
+            } else {
+                console.log('вљ  No Bilibili danmaku items to save');
+            }
+        } catch (error) {
+            console.warn('Failed to fetch Bilibili danmaku:', error.message);
+        }
     }
 
-    if (options?.downloadLiveChat) {
+    if (platformKey === 'youtube' && options?.downloadLiveChat) {
         if (downloadProgress.phase === 'metadata') downloadProgress.message = 'Fetching live chat...';
         try {
             const liveChatDanmaku = await downloadLiveChatDanmaku(videoUrl);
@@ -597,7 +776,7 @@ function fetchCommentsWithYtDlp(videoUrl) {
             '--skip-download',
             '--no-warnings',
             '--extractor-args', 'youtube:max_comments=all,all,all,all',
-            '--js-runtimes', 'nodejs',
+            '--js-runtimes', 'node',
             '-o', path.join(tmpDir, '%(id)s.%(ext)s'),
             videoUrl
         ];
@@ -911,8 +1090,16 @@ function parseTimestamp(ts) {
 function normalizeTimestamp(value) {
     if (!value) return Date.now();
     
-    // Handle string timestamps (e.g., "2 years ago", "1 month ago")
-    if (typeof value === 'string') return Date.now();
+    if (typeof value === 'string') {
+        const trimmed = value.trim();
+        if (/^\d+(?:\.\d+)?$/.test(trimmed)) {
+            const numeric = Number(trimmed);
+            return numeric > 1e12 ? numeric : numeric * 1000;
+        }
+
+        // Handle relative timestamps (e.g. "2 years ago") by falling back to "now".
+        return Date.now();
+    }
     
     const num = Number(value);
     if (Number.isNaN(num)) return Date.now();
@@ -921,6 +1108,58 @@ function normalizeTimestamp(value) {
     // Timestamps < 1e12 are likely in seconds (e.g., 1707700000)
     // Current time in seconds is ~1.7 billion (2024-2026)
     return num > 1e12 ? num : num * 1000;
+}
+
+async function downloadSubtitleTrackWithYtDlp(videoUrl, subLang, expectedSuffix, label) {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), `youvi-${subLang}-`));
+    const args = [
+        '--write-subs',
+        '--sub-langs', subLang,
+        '--skip-download',
+        '--no-warnings',
+        '-o', path.join(tempDir, '%(id)s.%(ext)s'),
+        videoUrl
+    ];
+
+    try {
+        const result = await runYtDlp(args, { cwd: tempDir });
+        if (result.code !== 0) {
+            throw new Error(result.stderr || `yt-dlp ${label || subLang} failed`);
+        }
+
+        const normalizedSuffix = String(expectedSuffix || '').toLowerCase();
+        const subtitleFile = fs.readdirSync(tempDir).find(name => {
+            const lower = name.toLowerCase();
+            return lower.endsWith(normalizedSuffix) || (lower.includes(subLang.toLowerCase()) && (!normalizedSuffix || lower.endsWith(normalizedSuffix.split('.').pop())));
+        });
+
+        if (!subtitleFile) {
+            return null;
+        }
+
+        return fs.readFileSync(path.join(tempDir, subtitleFile), 'utf8');
+    } finally {
+        try {
+            fs.rmSync(tempDir, { recursive: true, force: true });
+        } catch (e) {
+        }
+    }
+}
+
+async function downloadNiconicoComments(videoUrl) {
+    const raw = await downloadSubtitleTrackWithYtDlp(videoUrl, 'comments', '.comments.json', 'Niconico comments');
+    if (!raw) return [];
+
+    try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+        throw new Error(`Failed to parse Niconico comments JSON: ${error.message}`);
+    }
+}
+
+async function downloadBilibiliDanmakuXml(videoUrl) {
+    return downloadSubtitleTrackWithYtDlp(videoUrl, 'danmaku', '.danmaku.xml', 'Bilibili danmaku');
 }
 
 async function downloadLiveChatDanmaku(videoUrl) {
@@ -1372,15 +1611,24 @@ function fetchUrl(url, maxRedirects = 3) {
     });
 }
 
-server.listen(PORT, () => {
+server.listen(PORT, BIND_HOST, () => {
     console.log('╔════════════════════════════════════════════════════════╗');
     console.log('║                                                        ║');
     console.log('║          YouVi Download Server is running!            ║');
     console.log('║                                                        ║');
     console.log('╚════════════════════════════════════════════════════════╝');
     console.log('');
-    console.log(`  Server:  http://localhost:${PORT}`);
-    console.log(`  Health:  http://localhost:${PORT}/health`);
+    console.log(`  Server:  http://${BIND_HOST}:${PORT}`);
+    console.log(`  Health:  http://${BIND_HOST}:${PORT}/health`);
+    if (BIND_HOST !== 'localhost') {
+        console.log(`  Alias:   http://localhost:${PORT}`);
+    }
+    if (EXTRA_ALLOWED_HOSTS.size) {
+        console.log(`  Allowed hosts:   ${Array.from(EXTRA_ALLOWED_HOSTS).join(', ')}`);
+    }
+    if (EXTRA_ALLOWED_ORIGINS.size) {
+        console.log(`  Allowed origins: ${Array.from(EXTRA_ALLOWED_ORIGINS).join(', ')}`);
+    }
     console.log('');
     console.log('  Now open youvi_download.html in your browser');
     console.log('');

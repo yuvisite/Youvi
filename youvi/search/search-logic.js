@@ -1,8 +1,10 @@
 
 let currentQuery = '';
 let currentSort = localStorage.getItem('youvi_sort') || 'newest';
-let currentRatingFilter = new URLSearchParams(window.location.search).get('rating') || localStorage.getItem('youvi_rating_filter') || 'all';
-window.currentRatingFilter = currentRatingFilter;
+let searchLogicRatingFilter = window.currentRatingFilter || new URLSearchParams(window.location.search).get('rating') || localStorage.getItem('youvi_rating_filter') || 'all';
+if (!window.currentRatingFilter) {
+  window.currentRatingFilter = searchLogicRatingFilter;
+}
 
 let currentFilters = {
   quality: null,
@@ -23,7 +25,7 @@ let searchIndex = new Map();
 let lastIndexBuild = 0;
 
 function getCurrentRatingMode() {
-  return window.currentRatingFilter || currentRatingFilter || 'all';
+  return window.currentRatingFilter || searchLogicRatingFilter || 'all';
 }
 
 function applyRatingModeToVideos(videos) {

@@ -5785,9 +5785,12 @@
             <a href="youvi_sitemap.html" data-i18n="nav.more">Ещё</a>
             <div class="lang-switcher">
                 <select id="langSwitcher" class="lang-select">
-                    <option value="ru">RU</option>
-                    <option value="en">EN</option>
-                    <option value="uk">UK</option>
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                    <option value="uk">Українська</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh_cn">中文 (简体)</option>
+                    <option value="zh_tw">中文 (繁體)</option>
                 </select>
             </div>
         </div>
@@ -8392,7 +8395,7 @@
             }
         }
 
-        async function getPreviewAndDuration(video) {
+        window.getPreviewAndDuration = async function(video) {
             const dirHandle = video.dirHandle || videoDirectoryHandle;
 
             try {
@@ -11139,6 +11142,16 @@
 
 
             video.addEventListener("play", () => {
+                const overlayEl = document.getElementById('videoOverlay');
+                if (overlayEl) {
+                    overlayEl.style.opacity = '0';
+                    setTimeout(() => {
+                        if (!video.paused) {
+                            overlayEl.style.display = 'none';
+                        }
+                    }, 200);
+                }
+
                 hasStarted = true;
                 updateLogoVisibility();
                 updateClockVisibility();
@@ -12933,7 +12946,11 @@
                 hasStarted = true;
 
                 if (!videoContainer.classList.contains('fullscreen')) {
-                    hideControls();
+                    if (document.body.classList.contains('youvi-mobile-mode')) {
+                        showControls();
+                    } else {
+                        hideControls();
+                    }
                 } else {
                     showControls();
                 }
@@ -13362,7 +13379,15 @@
                                 }
 
                                 if (currentVideo) {
-                                    await renderCombinedPlaylist(playlistId, currentVideo.dirHandle, currentVideo.name);
+                                    const playlistContentEl = document.getElementById('playlistContent');
+                                    const hasRenderedPlaylistItems = !!(playlistContentEl && playlistContentEl.querySelector('.related-video, .video-card, .related-item'));
+                                    const shouldRerenderPlaylist = !virtualPlaylistRenderer || !hasRenderedPlaylistItems;
+
+                                    if (shouldRerenderPlaylist) {
+                                        await renderCombinedPlaylist(playlistId, currentVideo.dirHandle, currentVideo.name);
+                                    } else {
+                                        debug.log('[Background] Skip playlist re-render: already rendered');
+                                    }
                                     updateRecommendationsDebounced();
                                 }
                             } catch (err) {
@@ -16682,6 +16707,10 @@
             }
             const remaining = sortedComments.length - renderedCount;
             btn.textContent = `Показать ещё (${remaining})`;
+            // If the previous click disabled the button, re-enable it before cloning,
+            // otherwise the next "Show more" instance remains disabled forever.
+            btn.disabled = false;
+            btn.removeAttribute('disabled');
             // Replace handler
             const newBtn = btn.cloneNode(true);
             btn.replaceWith(newBtn);
@@ -18203,6 +18232,9 @@
     <script src="youvi/i18n/ru.js"></script>
     <script src="youvi/i18n/en.js"></script>
     <script src="youvi/i18n/uk.js"></script>
+    <script src="youvi/i18n/ja.js"></script>
+    <script src="youvi/i18n/zh_cn.js"></script>
+    <script src="youvi/i18n/zh_tw.js"></script>
     <script src="youvi/i18n/i18n.js"></script>
     <!-- Recommendations Module -->
     <script src="youvi/recommendations_video_watch.js"></script>

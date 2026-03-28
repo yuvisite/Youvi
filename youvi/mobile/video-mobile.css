@@ -65,7 +65,7 @@ body.youvi-mobile-mode #youviMobileVideoMount {
   padding: 8px 16px;
   background: rgba(255, 255, 255, 0.92);
   border-bottom: 1px solid #ececf2;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter is expensive on many mobile browsers; avoid it */
   display: grid;
   grid-template-columns: 40px 1fr 40px;
   align-items: center;
@@ -130,6 +130,8 @@ body.youvi-mobile-mode #youviMobileVideoMount {
   max-width: 100% !important;
   margin: 0 !important;
   border-radius: 0 !important;
+  /* let the browser decide containment; forcing "none" hurts optimizations */
+  contain: initial !important;
 }
 
 .mvv-player-bridge video,
@@ -137,17 +139,16 @@ body.youvi-mobile-mode #youviMobileVideoMount {
   width: 100% !important;
   height: 100% !important;
   display: block !important;
-  object-fit: cover;
+  object-fit: contain !important;
   background: #000;
   opacity: 1 !important;
   visibility: visible !important;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-.mvv-player-bridge #videoContainer #videoOverlay,
-.mvv-player-bridge #videoContainer .video-overlay,
 .mvv-player-bridge #videoContainer .error-overlay,
-.mvv-player-bridge #videoContainer #fullscreen-danmaku-overlay,
-.mvv-player-bridge #videoContainer .danmaku-overlay,
 .mvv-player-bridge #videoContainer #fullscreenDanmakuFormOverlay {
   display: none !important;
 }
@@ -376,6 +377,11 @@ body.youvi-mobile-mode #youviMobileVideoMount {
   text-overflow: ellipsis;
 }
 
+.mvv-channel-link {
+  color: inherit;
+  text-decoration: none;
+}
+
 .mvv-channel-stats {
   color: #7a7a85;
   font-size: 12px;
@@ -389,6 +395,10 @@ body.youvi-mobile-mode #youviMobileVideoMount {
   padding: 0 14px;
   background: var(--mvv-accent);
   color: #fff;
+}
+
+.mvv-sub-btn.subscribed {
+  background: #7a7a85;
 }
 
 .mvv-actions {
@@ -441,6 +451,11 @@ body.youvi-mobile-mode #youviMobileVideoMount {
   padding: 6px 11px;
   font-size: 13px;
   background: #f1f1f5;
+  color: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
 }
 
 .mvv-tag.mvv-tag-type-channel { background: color-mix(in srgb, var(--mvv-type-channel) 22%, white); color: color-mix(in srgb, var(--mvv-type-channel) 84%, #1f2937); }
@@ -460,7 +475,8 @@ body.youvi-mobile-mode #youviMobileVideoMount {
 
 .mvv-section-nav {
   position: sticky;
-  top: calc(52px + env(safe-area-inset-top, 0px));
+  /* When the player switches to fixed "following", keep tabs visible under it */
+  top: calc(52px + env(safe-area-inset-top, 0px) + var(--mvv-follow-player-height, 0px));
   z-index: 10;
   display: flex;
   overflow-x: auto;
@@ -486,6 +502,11 @@ body.youvi-mobile-mode #youviMobileVideoMount {
 .mvv-section-nav a.active {
   color: var(--mvv-accent);
   border-bottom-color: var(--mvv-accent);
+}
+
+.mvv-section-nav a:hover {
+  color: var(--mvv-accent);
+  border-bottom-color: rgba(255, 79, 159, 0.65);
 }
 
 .mvv-panel {
@@ -615,10 +636,18 @@ body.youvi-mobile-mode #youviMobileVideoMount {
   border-radius: 10px;
   padding: 9px 8px;
   font-size: 13px;
+  min-width: 0;
 }
 
 .mvv-line.active {
   background: #ffedf6;
+}
+
+/* Fix "long unbroken text" layout break for transcript/danmaku lines */
+.mvv-line span:last-child {
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .mvv-comments-toolbar {
@@ -650,13 +679,22 @@ body.youvi-mobile-mode #youviMobileVideoMount {
 .mvv-comment-avatar {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   font-size: 14px;
   font-weight: 700;
+  overflow: hidden;
+}
+
+.mvv-comment-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
 }
 
 .mvv-comment-content {
@@ -689,6 +727,8 @@ body.youvi-mobile-mode #youviMobileVideoMount {
   color: #17171c;
   white-space: pre-wrap;
   line-height: 1.35;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .mvv-comment-actions {
@@ -811,6 +851,24 @@ body.youvi-mobile-mode #youviMobileVideoMount {
 .mvv-comments-empty {
   font-size: 13px;
   color: #8b8b94;
+}
+
+.mvv-comments-more {
+  border: 1px solid #d9d9e3;
+  background: #fff;
+  color: #555563;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  display: block;
+  margin: 10px auto 110px auto;
+  cursor: pointer;
+}
+
+.mvv-comments-more:disabled {
+  opacity: 0.7;
+  cursor: default;
 }
 
 .mvv-compose {
@@ -982,8 +1040,68 @@ body.youvi-mobile-mode #youviMobileVideoMount {
   gap: 10px;
 }
 
+.mvv-playlist-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mvv-playlist-btn {
+  border: 1px solid #d9d9e3;
+  background: #fff;
+  color: #555563;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.mvv-playlist-btn.active {
+  border-color: var(--mvv-accent);
+  background: var(--mvv-accent);
+  color: #fff;
+}
+
+.mvv-playlist-source-btn {
+  margin-right: auto;
+}
+
+.mvv-playlist-groups {
+  display: grid;
+  gap: 14px;
+}
+
+.mvv-playlist-group {
+  display: grid;
+  gap: 8px;
+}
+
+.mvv-playlist-heading {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: #7a7a86;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.mvv-playlist-empty {
+  margin: 0;
+  font-size: 12px;
+  color: #8b8b95;
+  padding: 2px 0 6px;
+}
+
 .mvv-playlist-item {
   display: grid;
   grid-template-columns: 126px 1fr;
   gap: 12px;
+}
+
+.mvv-playlist-item.is-current {
+  border-radius: 12px;
+  padding: 3px;
+  background: rgba(255, 79, 159, 0.12);
 }
