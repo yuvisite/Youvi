@@ -7,7 +7,6 @@ Youvi is an offline video library with video hosting interface, featuring danmak
 [![image.png](https://i.postimg.cc/R0wvnBF7/image.png)](https://postimg.cc/Jy7f9Sj0)
 [![image.png](https://i.postimg.cc/7L2MDvdV/image.png)](https://postimg.cc/8FTrBY1J)
 Avaible on Russian, Ukrainian, English, Japanese, Traditional and Simplified Chinese 
-(last three added with ai so it can have some mistakes; RU, UA and EN are checekd by me)
 
 ## Features
 
