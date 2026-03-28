@@ -1,14 +1,8 @@
 # Youvi
 [![22Novyj-proekt(1)(3)(1)(1)(1)-(4).png](https://i.postimg.cc/N0dthTVS/22Novyj-proekt(1)(3)(1)(1)(1)-(4).png)](https://postimg.cc/R3JyK3vL)
 
-> Personal tool in maintenance mode. 
-> 
-> Issues welcome but responses not guaranteed. Fork freely if you want. I will be happy to see any activity
 
-> If I encounter a problem that will interfere with me personally, I will fix it, but of course there is no schedule.
->
-
-Youvi is an offline video library with video hosting interface, featuring danmaku, comments, tags (including aliases and implications), subtitles and more. Fully local and portable (localhost needed for subtitles and multiple audio tracks), works without internet.
+Youvi is an offline video library with video hosting interface, featuring danmaku, comments, tags (including aliases and implications), subtitles and more. Fully local and portable (localhost needed for subtitles and multiple audio tracks), works without internet. Download videos from Youtube, Niconico, Bilibili with danmaku.
 
 [![image.png](https://i.postimg.cc/R0wvnBF7/image.png)](https://postimg.cc/Jy7f9Sj0)
 [![image.png](https://i.postimg.cc/7L2MDvdV/image.png)](https://postimg.cc/8FTrBY1J)
@@ -183,4 +177,10 @@ I'm not a professional coder, so the code may be rough. AI-assisted development,
 MIT License - see LICENSE file for details
 
 ## 
+> Personal tool in maintenance mode. 
+> 
+> Issues welcome but responses not guaranteed. Fork freely if you want. I will be happy to see any activity
+
+> If I encounter a problem that will interfere with me personally, I will fix it, but of course there is no schedule.
+>
 Sorry for my English
