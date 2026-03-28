@@ -2,7 +2,7 @@
 [![22Novyj-proekt(1)(3)(1)(1)(1)-(4).png](https://i.postimg.cc/N0dthTVS/22Novyj-proekt(1)(3)(1)(1)(1)-(4).png)](https://postimg.cc/R3JyK3vL)
 
 
-Youvi is an offline video library with video hosting interface, featuring danmaku, comments, tags (including aliases and implications), subtitles and more. Fully local and portable (localhost needed for subtitles and multiple audio tracks), works without internet. Download videos from Youtube, Niconico, Bilibili with danmaku.
+Youvi is an offline video library with video hosting interface, featuring danmaku, comments, tags (including aliases and implications), subtitles and more. Fully local and portable (localhost needed for subtitles and multiple audio tracks), works without internet. Download videos from Youtube, Niconico, Bilibili with danmaku and watch in videohosting UI, or add you own videos, or all together!
 
 [![image.png](https://i.postimg.cc/R0wvnBF7/image.png)](https://postimg.cc/Jy7f9Sj0)
 [![image.png](https://i.postimg.cc/7L2MDvdV/image.png)](https://postimg.cc/8FTrBY1J)
@@ -21,24 +21,52 @@ Avaible on Russian, Ukrainian, English, Japanese, Traditional and Simplified Chi
 ## Requirements
 
 - Chromium-based browser (Chrome, Edge, Brave, Vivaldi, etc on Chromium) (Firefox sadly doesnt work (μ_μ) )
-- Python 3 (for sub/audio tracks server)
+- Python 3 (for local HTTP server, subtitles and audio-track extraction)
 - Node js (for the Downloads tab backend)
+- yt-dlp and ffmpeg in PATH (only for the Downloads tab)
 
-For custom local names, keep the download backend local-only and explicitly allow your alias:
-`set YOUVI_BIND_HOST=127.0.0.1`
-`set YOUVI_ALLOWED_HOSTS=youvi.moe`
-
-If the site is served over HTTPS, use nginx (or another reverse proxy) and proxy `/download-api/` to `http://127.0.0.1:3000/`. Do not expose the Node download backend directly to the public internet.
-
-## Quick Start
+## Quick Start (Full Functionality)
 
 1. Download and extract files
 2. Move your video folders into one parent folder
-3. Open `index.html` in browser from extarcted archive with site code.
-4. Select language (top right)
-5. Click "Select Folder" and choose your video folder
+3. Open terminal in project folder and start a local site server:
+```bash
+python -m http.server 8000
+```
+4. In another terminal start the download backend:
+```bash
+node download/download-server.js
+```
+5. Open `http://localhost:8000/index.html`
+6. Select language (top right)
+7. Click "Select Folder" and choose your video folder
 
-Videos process automatically. Navigate through pages to generate all previews.
+This launch mode gives the full usual setup: subtitle/audio extraction through FFmpeg WASM, and the Downloads tab backend.
+
+If you only need the basic offline site without subtitle/audio extraction and without the Downloads tab, you can still open `index.html` directly through `file:///`.
+
+## Downloads Tab
+
+The Downloads tab needs the Node.js backend, plus `yt-dlp` and `ffmpeg` installed on the same machine where that backend runs.
+
+Start it from project root:
+```bash
+node download/download-server.js
+```
+
+It can be used from:
+- `file:///`
+- `http://localhost/...`
+- `nginx` or another local reverse-proxy setup
+
+For custom local names, keep the backend local-only and explicitly allow your alias:
+```bash
+set YOUVI_BIND_HOST=127.0.0.1
+set YOUVI_ALLOWED_HOSTS=youvi.moe
+node download/download-server.js
+```
+
+If the site is served over HTTPS, use nginx (or another reverse proxy) and proxy `/download-api/` to `http://127.0.0.1:3000/`. Do not expose the Node download backend directly to the public internet.
 
 # In detail
 This is a web application working through File System Access API 
@@ -47,7 +75,7 @@ This is a web application working through File System Access API
 
 There are scripts (and now also built-in download tab) for importing comments/danmaku into Youvi JSON files. You can import YouTube comments as regular comments and danmaku (from timestamped comments or live chat), import Niconico timed comments/danmaku track (the same stream can be saved as Youvi comments list or as Youvi danmaku), and import native danmaku from Bilibili. This is one of the reasons why this thing was made. And you can also obviously write comments and danmaku by yourself. 
 
-Only external components are FFmpeg wasm (downloaded) and Lucid Icons (SVG code in files) AND Node JS. Works out of the box except Node js, you need to download it.
+Only external components are FFmpeg wasm (downloaded), Lucid Icons (SVG code in files), and optional local backends/tools such as Python for subtitle/audio mode and Node.js + yt-dlp + ffmpeg for the Downloads tab.
 
  Site works without internet. Available in 6 languages: English, Russian, Ukrainian, Japanese, Simplified Chinese, Traditional Chinese.
  
@@ -61,7 +89,7 @@ Although the site's tags are used for everything, they are primarily designed fo
 
 **YouTube / Niconico / Bilibili archival:** 
 You can preserve complete backups including video files (via yt-dlp), description, comments and danmaku - creating a fully offline mirror with a browseable interface. For YouTube it can import regular comments, timestamp-based danmaku and also live chat. For Niconico it can import its native timed comments/danmaku track and save it either as Youvi comments or as Youvi danmaku. For Bilibili it can import native danmaku. So now it is not only YouTube archival anymore. 
-You can download videos with all this stuff directly on site in downloads tab. The Downloads tab needs the Node.js backend, and it can be used from file://, localhost, or nginx as long as the page can reach the backend directly or through a reverse proxy. FFmpeg/yt-dlp must be installed on the machine where that backend runs.
+You can download videos with all this stuff directly on site in downloads tab. Setup for it is described in the separate Downloads Tab section above.
 
 **And in general, just categorize any video**
 Anything can be categorized; the tag system is universal and suitable for everything.
@@ -79,6 +107,7 @@ The site will start processing videos, wait until previews appear. When it finis
 
 ## Navbar
 [![image.png](https://i.postimg.cc/X7fRjmS3/image.png)](https://postimg.cc/SJKTVZxt)
+
 **Videos** - Youvi main page
 
 **Management** - page for video selection
@@ -110,6 +139,7 @@ Ka is a tag for channels. Yes, channels are just a tag. To add a channel you nee
 Gt (general tag) is a universal tag. 
 
 Ra is a rating tag, you decide how to set it - either like on booru safe/questionable etc or ratings like regulators such as R-18, PG-13 or 12+ or whatever you want. Nothing is strictly defined, choose by yourself. 
+
 Ra tag can filter video from site. questionable/explicit tag under video hides if if sort option General enabled in footer. Video completly hided from everywhere. Questionable video have yellow badge, explicit red. Other tags doesnt filter.
 
 Nat (not anime title) is intended as a tag for all animation except anime, including Chinese and Korean. 
