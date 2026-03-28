@@ -123,8 +123,7 @@ Nat (not anime title) is intended as a tag for all animation except anime, inclu
 The only mandatory requirement hardcoded is that video must have a ka tag. But for recommendations on the video playback page and better search, it's better to tag all videos in detail.
 
 **Tags page:** When hovering over a tag, two buttons appear - aliases and implications. Aliases should be written without tag type, the type will be picked up automatically, implications with type. Bottom of the modal displays all tags that will be set. Implications are automatically set or removed (depending on what you chose) from all videos where the tag you configured was present. Page is divided into the same 14 types.
-(I am too lazy to translate banners so its remains on russian)
-[![image.png](https://i.postimg.cc/NGzM8y5L/image.png)](https://postimg.cc/Dm1nnwQK)
+
 
 ## Youvi Main
 
@@ -132,7 +131,9 @@ This is the main page. Huge banner with logo and site mascot - Yuvi. Under the b
 
 Sidebar has site categories, tags, everything is clear. First 2 rows - latest playlists with 6 or more videos. Only on page 1 and only in latest mode. Then videos follow.
 
-[![image.png](https://i.postimg.cc/N06tdS8z/image.png)](https://postimg.cc/R3Z2FPD7)
+[![image.png](https://i.postimg.cc/NGzM8y5L/image.png)](https://postimg.cc/Dm1nnwQK)
+(I am too lazy to translate banners so its remains on russian)
+
 
 ## Subtitles
 
