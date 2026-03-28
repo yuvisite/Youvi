@@ -706,18 +706,19 @@
               <li><a href="#overview">Overview</a></li>
               <li><a href="#features">Features</a></li>
               <li><a href="#requirements">Requirements</a></li>
-              <li><a href="#quick-start">Quick Start</a></li>
+              <li><a href="#quick-start">Quick Start (Full Functionality)</a></li>
+              <li><a href="#downloads-tab">Downloads Tab</a></li>
               <li><a href="#details">In Detail</a></li>
               <li><a href="#use-cases">Use Cases</a></li>
-              <li><a href="#interface">Interface & Navbar</a></li>
-              <li><a href="#tags">Tagging System</a></li>
-              <li><a href="#technical">Technical Details</a></li>
+              <li><a href="#interface">Navbar</a></li>
+              <li><a href="#tags">Tags</a></li>
+              <li><a href="#technical">Subtitles / Danmaku / Data Storage</a></li>
             </ul>
           </div>
         </div>
 
         <section class="tech-section" id="overview">
-            <p>Personal offline video platform with all features of major video hosting sites - danmaku (including for YouTube videos via live chat/timestamped comment import), comments, advanced tagging system (aliases, implications), channels, playlists. Runs locally without installation, portable, works from USB drive/external HDD.</p>
+            <p>Youvi is an offline video library with video hosting interface, featuring danmaku, comments, tags (including aliases and implications), subtitles and more. Fully local and portable (localhost needed for subtitles and multiple audio tracks), works without internet. Download videos from Youtube, Niconico, Bilibili with danmaku and watch in videohosting UI, or add you own videos, or all together!</p>
             
             <div style="margin: 20px 0; text-align: center;">
                 <a href="https://postimg.cc/cKfGJt52">
@@ -725,17 +726,17 @@
                 </a>
             </div>
 
-            <p>Youvi is an offline video library with video hosting interface, featuring danmaku, comments, tags (including aliases and implications), subtitles and more. Fully local and portable (localhost needed for subtitles and multiple audio tracks), works without internet.</p>
+            <p>Avaible on Russian, Ukrainian, English, Japanese, Traditional and Simplified Chinese</p>
         </section>
 
         <section class="tech-section" id="features">
           <h2>Features</h2>
           <ul>
-            <li><strong>Danmaku overlays</strong> - Niconico-style comments on videos (including YouTube imports)</li>
-            <li><strong>Advanced tagging</strong> - 14 tag types with aliases, implications, boolean search</li>
-            <li><strong>YouTube archival</strong> - Import videos with comments/timestamps as danmaku</li>
-            <li><strong>Channels & playlists</strong> - Organize content like video hosting sites</li>
-            <li><strong>Subtitle support</strong> - ASS/SRT/SSA with font extraction from MKV</li>
+            <li><strong>Danmaku</strong> - Niconico-style comments on videos (native import from Niconico/Bilibili and YouTube comments/live chat import)</li>
+            <li><strong>Tagging</strong> - 14 tag types with aliases, implications, boolean search</li>
+            <li><strong>Video archival</strong> - Import videos with metadata, description, comments and danmaku through yt-dlp (YouTube, Niconico, Bilibili)</li>
+            <li><strong>Channels & playlists</strong> - Nothing special, just the basic functionality of a typical video hosting service. But it's your personal local "video hosting."</li>
+            <li><strong>Subtitle support</strong> - ASS/SRT/SSA with font extraction from MKV (via FFmpeg WASM)</li>
             <li><strong>Fully portable</strong> - Works from USB drive, no installation required</li>
           </ul>
         </section>
@@ -743,50 +744,75 @@
         <section class="tech-section" id="requirements">
             <h2>Requirements</h2>
             <ul>
-                <li>Chromium-based browser (Chrome, Edge, Brave, Vivaldi, etc on Chromium) (writed at 01.2026)</li>
-                <li>Python 3 (only for sub/audio tracks server)</li>
+                <li>Chromium-based browser (Chrome, Edge, Brave, Vivaldi, etc on Chromium) (Firefox sadly doesnt work (Ој_Ој) )</li>
+                <li>Python 3 (for local HTTP server, subtitles and audio-track extraction)</li>
+                <li>Node js (for the Downloads tab backend)</li>
+                <li>yt-dlp and ffmpeg in PATH (only for the Downloads tab)</li>
             </ul>
         </section>
 
         <section class="tech-section" id="quick-start">
-            <h2>Quick Start</h2>
+            <h2>Quick Start (Full Functionality)</h2>
             <ol>
                 <li>Download and extract files</li>
                 <li>Move your video folders into one parent folder</li>
-                <li>Open <code>index.html</code> in browser from extracted archive with site code</li>
+                <li>Open terminal in project folder and start a local site server:
+                    <pre style="background:#f4f4f4; padding:10px; border-radius:5px; margin-top:8px;"><code>python -m http.server 8000</code></pre>
+                </li>
+                <li>In another terminal start the download backend:
+                    <pre style="background:#f4f4f4; padding:10px; border-radius:5px; margin-top:8px;"><code>node download/download-server.js</code></pre>
+                </li>
+                <li>Open <code>http://localhost:8000/index.html</code></li>
                 <li>Select language (top right)</li>
                 <li>Click "Select Folder" and choose your video folder</li>
             </ol>
             <div class="callout info">
-                Videos process automatically. Navigate through pages to generate all previews.
+                This launch mode gives the full usual setup: normal site browsing, previews, subtitle/audio extraction through FFmpeg WASM, and the Downloads tab backend.
             </div>
+            <p>If you only need the basic offline site without subtitle/audio extraction and without the Downloads tab, you can still open <code>index.html</code> directly through <code>file:///</code>.</p>
+        </section>
+
+        <section class="tech-section" id="downloads-tab">
+            <h2>Downloads Tab</h2>
+            <p>The Downloads tab needs the Node.js backend, plus <code>yt-dlp</code> and <code>ffmpeg</code> installed on the same machine where that backend runs.</p>
+            <p><code>yt-dlp</code> must be installed on your computer for downloads to work.</p>
+            <p>Start it from project root:</p>
+            <pre style="background:#f4f4f4; padding:10px; border-radius:5px;"><code>node download/download-server.js</code></pre>
+            <p>It can be used from <code>file:///</code>, <code>http://localhost/...</code>, or nginx / another local reverse-proxy setup.</p>
+            <p>For custom local names, keep the backend local-only and explicitly allow your alias:</p>
+            <pre style="background:#f4f4f4; padding:10px; border-radius:5px;"><code>set YOUVI_BIND_HOST=127.0.0.1
+set YOUVI_ALLOWED_HOSTS=youvi.moe
+node download/download-server.js</code></pre>
+            <p>If the site is served over HTTPS, use nginx (or another reverse proxy) and proxy <code>/download-api/</code> to <code>http://127.0.0.1:3000/</code>. Do not expose the Node download backend directly to the public internet.</p>
         </section>
 
         <section class="tech-section" id="details">
-            <h2>In Detail</h2>
+            <h2>In detail</h2>
             <p>This is a web application working through <strong>File System Access API</strong>.</p>
             <p>Through it you can organize videos on your hard drive and watch them like on a video hosting site. Tag and search videos through a tag system with 14 types, aliases, implications, boolean search, set parent-child video relations, organize videos by channels and playlists.</p>
-            <p>There are scripts (in folder named "scripts") for importing comments from YouTube as regular comments and danmaku (import either live chat from streams/premieres or selection of comments with timestamps). You can watch YouTube videos like on Niconico with danmaku! This is one of the reasons why this thing was made. And you can also obviously write comments and danmaku by yourself.</p>
-            <p>Only external dependencies are FFmpeg wasm and Lucid Icons (SVG code in files).</p>
-            <p>Site works without internet. Available in three languages: English, Russian, and Ukrainian.</p>
-            <p>Site is portable - works from USB flash drive, external HDD, any location. You can carry it with you and plug in the flash drive to watch from any PC. Everything except ffmpeg wasm (subtitles and multilingual tracks) works through launching via <code>file:///</code></p>
+            <p>There are scripts (and now also built-in download tab) for importing comments/danmaku into Youvi JSON files. You can import YouTube comments as regular comments and danmaku (from timestamped comments or live chat), import Niconico timed comments/danmaku track (the same stream can be saved as Youvi comments list or as Youvi danmaku), and import native danmaku from Bilibili. This is one of the reasons why this thing was made. And you can also obviously write comments and danmaku by yourself.</p>
+            <p>Only external components are FFmpeg wasm (downloaded), Lucid Icons (SVG code in files), and optional local backends/tools such as Python for subtitle/audio mode and Node.js + yt-dlp + ffmpeg for the Downloads tab.</p>
+            <p>Site works without internet. Available in 6 languages: English, Russian, Ukrainian, Japanese, Simplified Chinese, Traditional Chinese.</p>
+            <p>Site is portable - works from USB flash drive, external HDD, any location. You can carry it with you and plug in the flash drive to watch from any PC. Everything except ffmpeg wasm (subtitles and multilingual tracks) and the optional Node.js download backend works through launching via <code>file:///</code></p>
+            <p>Since I absolutely loooooove the internet I tried to polish the interface as much as possible. That's why the site feels like a real large video hosting service to me. There are lots of different micro-moments, and the overall appearance is great (in my opinion).</p>
         </section>
 
         <section class="tech-section" id="use-cases">
-            <h2>What site can be useful for?</h2>
+            <h2>What can the site be useful for?</h2>
             
-            <h3>Viewing and storing anime (PGC)</h3>
-            <p>Although the site's tags are used for everything, they are primarily focused on anime. Also there are ASS/SRT/SSA subtitles and audio tracks that were added to site because anime.</p>
+            <h3>Viewing and storing anime (as well as movies, TV shows, and other PGC)</h3>
+            <p>Although the site's tags are used for everything, they are primarily designed for anime. Also there are ASS/SRT/SSA subtitles and audio tracks that were added to site because anime.</p>
 
-            <h3>YouTube archival</h3>
-            <p>You can preserve complete channel backups including video files (via yt-dlp), all comments with timestamps, description - creating a fully offline mirror of YouTube content with a browseable interface.</p>
+            <h3>YouTube / Niconico / Bilibili archival</h3>
+            <p>You can preserve complete backups including video files (via yt-dlp), description, comments and danmaku - creating a fully offline mirror with a browseable interface. For YouTube it can import regular comments, timestamp-based danmaku and also live chat. For Niconico it can import its native timed comments/danmaku track and save it either as Youvi comments or as Youvi danmaku. For Bilibili it can import native danmaku. So now it is not only YouTube archival anymore.</p>
+            <p>You can download videos with all this stuff directly on site in downloads tab. Setup for it is described in the separate Downloads Tab section above.</p>
 
-            <h3>Categorize any video</h3>
+            <h3>And in general, just categorize any video</h3>
             <p>Anything can be categorized; the tag system is universal and suitable for everything.</p>
         </section>
 
         <section class="tech-section" id="launch">
-            <h2>How to Launch?</h2>
+            <h2>Basic Offline Launch</h2>
             <ol>
                 <li>Download file</li>
                 <li>Open <code>index.html</code></li>
@@ -798,7 +824,7 @@
         </section>
 
         <section class="tech-section" id="interface">
-            <h2>Interface & Navbar</h2>
+            <h2>Navbar</h2>
             <div style="margin: 20px 0; text-align: center;">
                 <a href="https://postimg.cc/DWxdLBD8">
                     <img src="https://i.postimg.cc/ZRS7kQxF/Snimok-ekrana-2026-01-12-165552.png" alt="Navbar Screenshot" style="max-width: 100%; border-radius: 8px; border: 1px solid #ddd;">
@@ -806,63 +832,56 @@
             </div>
             <ul>
                 <li><strong>Videos</strong> - Youvi main page</li>
-                <li><strong>Management</strong> - Page for video selection. (Legacy 2000s-style list).</li>
-                <li><strong>Channels</strong> - List of channels</li>
-                <li><strong>Playlists</strong> - List of playlists</li>
-                <li><strong>Forums</strong> - Youvi Forums</li>
+                <li><strong>Management</strong> - page for video selection</li>
+                <li><strong>Channels</strong> - list of channels</li>
+                <li><strong>Playlists</strong> - list of playlists</li>
+                <li><strong>Forums</strong> - Forum (place where you can write notes, text and other things in forum ui)</li>
+                <li><strong>Downloads</strong> - Download video from other sites to Youvi</li>
                 <li><strong>Wiki</strong> - Wiki (omg wow)</li>
+                <li><strong>More</strong> - Tag tables and sitemap</li>
             </ul>
+            <p>Why 2 pages? Because the project grew and cutting out core functions from the old main page turned out to be difficult, so I just lefted it. (it used to be a 2000s-style video hosting which is visible in the design. Legacy level just like real sites) But now it have PC First "overloaded" (that what i like) but modern UI)</p>
             
-            <h3>Youvi Main Page</h3>
-            <p>This is the main page. Huge banner with logo and site mascot - Yuvi. Under the banner are categories. Buttons 2-6 control the number of cards per row.</p>
-            <p>Sidebar has site categories and tags. First 2 rows show latest playlists with 6 or more videos.</p>
+            <h3>Youvi Main</h3>
+            <p>This is the main page. Huge banner with logo and site mascot - Yuvi. Under the banner are categories. Categories are a tag of type ct, I selected certain categories for classification, videos from which will appear here. Buttons 2-7 - number of cards per row.</p>
+            <p>Sidebar has site categories, tags, everything is clear. First 2 rows - latest playlists with 6 or more videos. Only on page 1 and only in latest mode. Then videos follow.</p>
         </section>
 
         <section class="tech-section" id="tags">
-            <h2>Tags System</h2>
-            <p>Site has 14 tag types. Format: <code>Name (type)</code>.</p>
-            
-            <h3>Tag Types</h3>
-            <ul>
-                <li><span class="tag-example tag-ct">ka</span> = Channel (Mandatory)</li>
-                <li><span class="tag-example tag-gt">gt</span> = General</li>
-                <li><span class="tag-example tag-ct">ch</span> = Character</li>
-                <li><span class="tag-example tag-ct">au/ar</span> = Author/Artist</li>
-                <li><span class="tag-example tag-ct">ge</span> = Genre</li>
-                <li><span class="tag-example tag-ct">tp</span> = Type</li>
-                <li><span class="tag-example tag-ct">yr</span> = Year</li>
-                <li><span class="tag-example tag-ct">st</span> = Studio</li>
-                <li><span class="tag-example tag-ct">ct</span> = Category</li>
-                <li><span class="tag-example tag-ct">ra</span> = Rating (Safe/R-18/PG-13 etc.)</li>
-                <li><span class="tag-example tag-ct">at</span> = Anime Title</li>
-                <li><span class="tag-example tag-ct">ser</span> = Series</li>
-                <li><span class="tag-example tag-ct">mt</span> = Movie</li>
-                <li><span class="tag-example tag-nat">nat</span> = Animation (Non-anime)</li>
-            </ul>
-
-            <div class="callout">
-                <strong>Important:</strong> The only mandatory requirement hardcoded is that video must have a <strong>(ka)</strong> tag.
-            </div>
-
-            <h3>Aliases & Implications</h3>
-            <p>When hovering over a tag, buttons for aliases and implications appear. Aliases are written without type. Implications are automatically set/removed from videos where the configured tag is present.</p>
+            <h2>Tags</h2>
+            <p>Site has 14 tag types:</p>
+            <p>Format: Name (type). Types: (ka)=channel, (gt)=general, (ch)=character, (au/ar)=author/artist, (ge)=genre, (tp)=type, (yr)=year, (st)=studio, (ct)=category, (ra)=rating, (at)=anime, (ser)=series, (mt)=movie, (nat)=animation</p>
+            <p>Ka is a tag for channels. Yes, channels are just a tag. To add a channel you need to write somename (ka) under the video and go to the channel after which it will be created and you can subscribe to it and write in its text section, create playlists from its videos.</p>
+            <p>Gt (general tag) is a universal tag.</p>
+            <p>Ra is a rating tag, you decide how to set it - either like on booru safe/questionable etc or ratings like regulators such as R-18, PG-13 or 12+ or whatever you want. Nothing is strictly defined, choose by yourself.</p>
+            <p>Ra tag can filter video from site. questionable/explicit tag under video hides if if sort option General enabled in footer. Video completly hided from everywhere. Questionable video have yellow badge, explicit red. Other tags doesnt filter.</p>
+            <p>Nat (not anime title) is intended as a tag for all animation except anime, including Chinese and Korean.</p>
+            <p>The only mandatory requirement hardcoded is that video must have a ka tag. But for recommendations on the video playback page and better search, it's better to tag all videos in detail.</p>
+            <p><strong>Tags page:</strong> When hovering over a tag, two buttons appear - aliases and implications. Aliases should be written without tag type, the type will be picked up automatically, implications with type. Bottom of the modal displays all tags that will be set. Implications are automatically set or removed (depending on what you chose) from all videos where the tag you configured was present. Page is divided into the same 14 types.</p>
         </section>
 
         <section class="tech-section" id="technical">
-            <h2>Technical Details</h2>
-
-            <h3>Subtitles & Audio</h3>
-            <p>Supports ASS, SRT, extracts from MKV files (including fonts) and supports external loading. For operation, a regular Python server is enough:</p>
+            <h2>Subtitles</h2>
+            <p>Supports ASS, SRT, extracts from MKV files and supports external loading. Works through ffmpeg wasm. Extracts everything including fonts and puts in .subs folder. For operation, a regular Python server is enough:</p>
             <pre style="background:#f4f4f4; padding:10px; border-radius:5px;"><code>cd your_folder
 python -m http.server</code></pre>
+            <p>Multiple audio tracks are extracted from MKV files, to extract click the wave button in the player and click the needed one, wait and audio will play. Places in tracks folder next to video.</p>
 
             <h3>Danmaku</h3>
-            <p>For scripts you need <code>yt-dlp</code>. Find the script, open PowerShell and write:</p>
+            <p>Danmaku and its input is everywhere in all video modes (even in PIP via Document-PIP API). Old standalone script way is still there for YouTube timestamp comments, if you want:</p>
             <pre style="background:#f4f4f4; padding:10px; border-radius:5px;"><code>py yt_comments_to_danmaku.py https://www.youtube.com/watch?v=smth</code></pre>
-            <p>Rename the downloaded file to <code>video_name.extension.danmaku.json</code> and put it in the <code>.metadata</code> folder.</p>
+            <p>(obsolete option - Rename the downloaded file to video name dot extension dot danmaku, i.e. if video is name.mp4, danmaku file will be name.mp4.danmaku.json. Put in .metadata folder (create if it doesn't exist) next to video. Comments are the same but write comments instead of danmaku. I optimized them and they works without lags on 3200 danmakus on 3 min video!)</p>
+            <p>NEW OPTION! AUTO ADDING DANMAKU, COMMENTS AND ETC WITH VIDEO WHILE DOWNLOADING IT ON SITE.</p>
+            <p>YouTube: comments, timestamp-based danmaku, live chat as danmaku, description.<br>
+            Niconico: native timed comments/danmaku track, description. <code>Comments</code> saves it as Youvi comments, <code>Danmaku</code> saves the same track as Youvi danmaku.<br>
+            Bilibili: native danmaku, description.<br>
+            No need to copy, rename and manually place files anymore.</p>
 
-            <h3>Data Storage</h3>
-            <p>Single JSON for tags in Youvi folder, single JSON for URL codes. Everything else is stored separately per video in a <code>.metadata</code> folder (meta.json, description txt, danmaku, comments). You can load any folder like this and the site will pick up the data.</p>
+            <h3>Parent-Child Relations</h3>
+            <p>You can set video parent and child. Like on Niconico.</p>
+
+            <h3>How is Data Stored?</h3>
+            <p>Single JSON for tags in Youvi folder, single JSON for URL codes. Everything else separately. Each video has in metadata folder: meta.json (info about video, preview, tags of this video, parent-child relation), description in txt file, danmaku, comments. Each video has its own files. You can load any folder like this and the site will pick up the data.</p>
         </section>
 
       </div>

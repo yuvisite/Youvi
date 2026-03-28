@@ -5,7 +5,9 @@
 Youvi is an offline video library with video hosting interface, featuring danmaku, comments, tags (including aliases and implications), subtitles and more. Fully local and portable (localhost needed for subtitles and multiple audio tracks), works without internet. Download videos from Youtube, Niconico, Bilibili with danmaku and watch in videohosting UI, or add you own videos, or all together!
 
 [![image.png](https://i.postimg.cc/R0wvnBF7/image.png)](https://postimg.cc/Jy7f9Sj0)
-[![image.png](https://i.postimg.cc/7L2MDvdV/image.png)](https://postimg.cc/8FTrBY1J)
+
+[![image.png](https://i.postimg.cc/fRNZXb3c/image.png)](https://postimg.cc/crXVG0BC)
+
 Avaible on Russian, Ukrainian, English, Japanese, Traditional and Simplified Chinese 
 
 ## Features
@@ -40,13 +42,14 @@ node download/download-server.js
 6. Select language (top right)
 7. Click "Select Folder" and choose your video folder
 
-This launch mode gives the full usual setup: subtitle/audio extraction through FFmpeg WASM, and the Downloads tab backend.
+This launch mode gives the full usual setup: normal site browsing, previews, subtitle/audio extraction through FFmpeg WASM, and the Downloads tab backend.
 
 If you only need the basic offline site without subtitle/audio extraction and without the Downloads tab, you can still open `index.html` directly through `file:///`.
 
 ## Downloads Tab
 
 The Downloads tab needs the Node.js backend, plus `yt-dlp` and `ffmpeg` installed on the same machine where that backend runs.
+`yt-dlp` must be installed on your computer for downloads to work.
 
 Start it from project root:
 ```bash
@@ -90,10 +93,12 @@ Although the site's tags are used for everything, they are primarily designed fo
 You can preserve complete backups including video files (via yt-dlp), description, comments and danmaku - creating a fully offline mirror with a browseable interface. For YouTube it can import regular comments, timestamp-based danmaku and also live chat. For Niconico it can import its native timed comments/danmaku track and save it either as Youvi comments or as Youvi danmaku. For Bilibili it can import native danmaku. So now it is not only YouTube archival anymore. 
 You can download videos with all this stuff directly on site in downloads tab. Setup for it is described in the separate Downloads Tab section above.
 
+[![Snimok-ekrana-2026-03-28-171725.png](https://i.postimg.cc/nLKJ0fDg/Snimok-ekrana-2026-03-28-171725.png)](https://postimg.cc/sB2qg8K4)
+
 **And in general, just categorize any video**
 Anything can be categorized; the tag system is universal and suitable for everything.
 
-## How to Launch?
+## Basic Offline Launch
 
 1. Download file
 2. Open index.html
@@ -167,8 +172,6 @@ python -m http.server
 ```
 
 Multiple audio tracks are extracted from MKV files, to extract click the wave button in the player and click the needed one, wait and audio will play. Places in tracks folder next to video.
-
-[![image.png](https://i.postimg.cc/dV9nn9ZY/image.png)](https://postimg.cc/TKpr3gc7)
 
 ## Danmaku
 
