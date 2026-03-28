@@ -1,5 +1,5 @@
 /**
- * YouVi Download Server
+ * Youvi Download Server
  * Simple Node.js backend for handling video downloads with yt-dlp
  * 
  * Usage:
@@ -274,7 +274,7 @@ const server = http.createServer((req, res) => {
     // Health check endpoint
     if (pathname === '/health' && req.method === 'GET') {
         res.writeHead(200, corsHeaders);
-        res.end(JSON.stringify({ status: 'ok', message: 'YouVi Download Server is running' }));
+        res.end(JSON.stringify({ status: 'ok', message: 'Youvi Download Server is running' }));
         return;
     }
 
@@ -506,7 +506,7 @@ async function downloadWithYtDlp(videoUrl, outputPath, tags, options, corsHeader
             console.log('→ Video download completed successfully');
             downloadProgress = { phase: 'metadata', percent: 100, message: 'Creating metadata...' };
 
-            // Create YouVi-compatible metadata
+            // Create Youvi-compatible metadata
             try {
                 const downloadedPath = extractDownloadedPath(output);
                 const metaContext = await createYouviMetadata(outputPath, tags, videoUrl, downloadedPath);
@@ -522,7 +522,7 @@ async function downloadWithYtDlp(videoUrl, outputPath, tags, options, corsHeader
                 if (tags) console.log(`✓ Tags: Applied`);
                 console.log('=======================');
             } catch (metaError) {
-                console.error('Failed to create YouVi metadata:', metaError);
+                console.error('Failed to create Youvi metadata:', metaError);
                 downloadProgress = { phase: 'idle', percent: 0, message: '' };
             }
 
@@ -600,7 +600,7 @@ async function createYouviMetadata(outputPath, tags, videoUrl, downloadedPath) {
             fs.mkdirSync(metadataDir, { recursive: true });
         }
 
-        // Create YouVi metadata structure
+        // Create Youvi metadata structure
         const youviMetadata = {
             tags: tagArray,
             description: ytdlpInfo?.description || '',
@@ -621,12 +621,12 @@ async function createYouviMetadata(outputPath, tags, videoUrl, downloadedPath) {
         const metaFilePath = path.join(metadataDir, `${videoFileName}.meta.json`);
         fs.writeFileSync(metaFilePath, JSON.stringify(youviMetadata, null, 2), 'utf8');
         
-        console.log(`✓ Created YouVi metadata: ${metaFilePath}`);
+        console.log(`✓ Created Youvi metadata: ${metaFilePath}`);
 
         return { videoFileName, videoBaseName, ytdlpInfo };
 
     } catch (error) {
-        console.error('Error creating YouVi metadata:', error);
+        console.error('Error creating Youvi metadata:', error);
         throw error;
     }
 }
@@ -665,7 +665,7 @@ async function createYouviSidecarData(outputPath, videoUrl, metaContext, options
             if (downloadProgress.phase === 'metadata') downloadProgress.message = 'Saving comments...';
             const commentsPath = path.join(metaDir, `${videoFileName}.comments.json`);
             fs.writeFileSync(commentsPath, JSON.stringify(youviComments, null, 2), 'utf8');
-            console.log(`✓ Created YouVi comments: ${commentsPath}`);
+            console.log(`✓ Created Youvi comments: ${commentsPath}`);
         } else if (options?.downloadComments) {
             console.log('⚠ No comments to save');
         }
@@ -693,7 +693,7 @@ async function createYouviSidecarData(outputPath, videoUrl, metaContext, options
                     if (downloadProgress.phase === 'metadata') downloadProgress.message = 'Saving comments...';
                     const commentsPath = path.join(metaDir, `${videoFileName}.comments.json`);
                     fs.writeFileSync(commentsPath, JSON.stringify(youviComments, null, 2), 'utf8');
-                    console.log(`вњ“ Created YouVi comments: ${commentsPath}`);
+                    console.log(`вњ“ Created Youvi comments: ${commentsPath}`);
                 } else {
                     console.log('вљ  No comments to save');
                 }
@@ -748,7 +748,7 @@ async function createYouviSidecarData(outputPath, videoUrl, metaContext, options
         danmakuItems.sort((a, b) => (a.time || 0) - (b.time || 0));
         const danmakuPath = path.join(metaDir, `${videoFileName}.danmaku.json`);
         fs.writeFileSync(danmakuPath, JSON.stringify(danmakuItems, null, 2), 'utf8');
-        console.log(`✓ Created YouVi danmaku: ${danmakuPath} (${danmakuItems.length} items)`);
+        console.log(`✓ Created Youvi danmaku: ${danmakuPath} (${danmakuItems.length} items)`);
     } else if (options?.downloadDanmaku || options?.downloadLiveChat) {
         console.log('⚠ No danmaku items to save');
     }
@@ -1464,7 +1464,7 @@ async function downloadMover(videoUrl, outputPath, tags, corsHeaders, res) {
                 // Parse tags
                 const tagArray = tags ? tags.split(',').map(t => t.trim()).filter(t => t) : [];
 
-                // Create YouVi metadata
+                // Create Youvi metadata
                 const metadata = {
                     tags: tagArray,
                     description: '',
@@ -1486,7 +1486,7 @@ async function downloadMover(videoUrl, outputPath, tags, corsHeaders, res) {
                 const metaFile = path.join(metadataDir, `${title}.mp4.meta.json`);
                 fs.writeFileSync(metaFile, JSON.stringify(metadata, null, 2), 'utf8');
                 
-                console.log(`✓ Created YouVi metadata: ${metaFile}`);
+                console.log(`✓ Created Youvi metadata: ${metaFile}`);
                 console.log('');
                 console.log('=== Download Summary ===');
                 console.log(`✓ Video: ${title}.mp4`);
@@ -1614,7 +1614,7 @@ function fetchUrl(url, maxRedirects = 3) {
 server.listen(PORT, BIND_HOST, () => {
     console.log('╔════════════════════════════════════════════════════════╗');
     console.log('║                                                        ║');
-    console.log('║          YouVi Download Server is running!            ║');
+    console.log('║          Youvi Download Server is running!             ║');
     console.log('║                                                        ║');
     console.log('╚════════════════════════════════════════════════════════╝');
     console.log('');

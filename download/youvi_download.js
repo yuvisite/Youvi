@@ -1,5 +1,5 @@
 /**
- * YouVi Download Manager
+ * Youvi Download Manager
  * Downloads videos via local Node.js server
  */
 

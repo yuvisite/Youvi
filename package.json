@@ -1,7 +1,7 @@
 {
   "name": "youvi-download-server",
   "version": "1.0.0",
-  "description": "Local server for YouVi video downloads",
+  "description": "Local server for Youvi video downloads",
   "main": "download/download-server.js",
   "scripts": {
     "start": "node download/download-server.js",
