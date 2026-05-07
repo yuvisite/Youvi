@@ -205,6 +205,8 @@ You can set video parent and child. Like on Niconico.
 
 Single JSON for tags in Youvi Player folder, single JSON for URL codes. Everything else separately. Each video has in metadata folder: meta.json (info about video, preview, tags of this video, parent-child relation), description in txt file, danmaku, comments. Each video has its own files. You can load any folder like this and the site will pick up the data.
 
+Docs: https://yuvisite.moe/docs
+
 Optimized it a lot so it doesn't lag, on my not-so-powerful computers with 500 videos it works fast.
 
 I'm not a professional coder, so the code may be rough. AI-assisted development,100k-150k+ lines.  All decisions regarding branding, UI, and architecture, as well as the overall concept of this software, are mine. AI only helped with coding. Full-featured portable "video hosting" with many features. This is my personal project created by me for myself, the most important thing is that it works and satisfies me. I worked on this project for 8 months. This was my first project where I applied programming beyond academic tasks, and since there was no ready-made local first working witohout server mix of YouTube, NicoNico, booru sites and a player with subtitle support on the internet, I made this.
