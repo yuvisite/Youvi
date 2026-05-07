@@ -1,0 +1,286 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * Autocomplete Styles
+ * Minimal design without heavy shadows or hovers
+ */
+
+.autocomplete-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-width: 0;
+}
+
+.autocomplete-wrapper .search-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 99999;
+  display: none;
+  margin-top: -1px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.autocomplete-dropdown.active {
+  display: block !important;
+}
+
+.autocomplete-section-title {
+  padding: 4px 12px 2px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  background: #f8f8f8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.autocomplete-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.15s;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+  background: #f9f9f9;
+}
+
+.autocomplete-item-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #999;
+}
+
+.autocomplete-item-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.autocomplete-item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.autocomplete-item-title {
+  font-size: 13px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.autocomplete-item-meta {
+  font-size: 11px;
+  color: #999;
+}
+
+.autocomplete-item-count {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #999;
+  padding: 2px 8px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  margin-left: auto;
+}
+
+.autocomplete-highlight {
+  font-weight: 600;
+  color: #ff69b4;
+}
+
+.autocomplete-empty {
+  padding: 16px 12px;
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+}
+
+/* Tag icon */
+.autocomplete-item-icon.tag-icon::before {
+  content: '#';
+  font-weight: 600;
+  color: #ff69b4;
+}
+
+/* Video icon */
+.autocomplete-item-icon.video-icon::before {
+  content: '▶';
+  font-size: 12px;
+}
+
+/* Playlist icon */
+.autocomplete-item-icon.playlist-icon::before {
+  content: '☰';
+  font-size: 14px;
+}
+
+/* Channel icon - uses avatar image instead */
+
+/* Dark theme support */
+body.dark-theme .autocomplete-dropdown {
+  background: #2c2c2c !important;
+  border-color: #444;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-theme .autocomplete-dropdown.active {
+  background: #2c2c2c !important;
+}
+
+body.dark-theme .autocomplete-section-title {
+  background: #1a1a1a;
+  color: #aaa;
+}
+
+body.dark-theme .autocomplete-item {
+  border-bottom-color: #333;
+}
+
+body.dark-theme .autocomplete-item:hover,
+body.dark-theme .autocomplete-item.selected {
+  background: #3a3a3a !important;
+}
+
+body.dark-theme .autocomplete-item-title {
+  color: #e0e0e0;
+}
+
+body.dark-theme .autocomplete-item-meta {
+  color: #888;
+}
+
+body.dark-theme .autocomplete-item-count {
+  background: #3a3a3a;
+  color: #aaa;
+}
+
+body.dark-theme .autocomplete-empty {
+  color: #666;
+}
+
+body.dark-theme .autocomplete-item-icon {
+  color: #666;
+}
+
+body.dark-theme .autocomplete-loading {
+  color: #666;
+}
+
+/* Scrollbar styling */
+.autocomplete-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+body.dark-theme .autocomplete-dropdown::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+body.dark-theme .autocomplete-dropdown::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+/* Loading state */
+.autocomplete-loading {
+  padding: 12px;
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+}
+
+
+/* Tag prefix styling (for queries like "general:anime") */
+.autocomplete-item-title .tag-prefix {
+  color: #888;
+  font-weight: 400;
+}
+
+.autocomplete-item-title .tag-prefix::after {
+  content: ':';
+  color: #888;
+}
+
+body.dark-theme .autocomplete-item-title .tag-prefix {
+  color: #777;
+}
+
+body.dark-theme .autocomplete-item-title .tag-prefix::after {
+  color: #777;
+}
+
+
+/* Tag type badge (for regular tags like "anime (at)") */
+.autocomplete-item-title .tag-type-badge {
+  display: inline-block;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+  color: #fff;
+  margin-right: 6px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+/* Selected item highlight */
+.autocomplete-item.selected {
+  background: #fff0f5 !important;
+  border-left: 3px solid #ff69b4;
+}
+
+body.dark-theme .autocomplete-item.selected {
+  background: #3a2a35 !important;
+  border-left: 3px solid #ff69b4;
+}

@@ -1,0 +1,141 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * Tag Input Autocomplete Styles
+ */
+
+.tag-autocomplete-wrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.tag-autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 99999;
+  display: none;
+  margin-top: -1px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tag-autocomplete-dropdown.active {
+  display: block;
+}
+
+.tag-autocomplete-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.1s;
+  font-size: 13px;
+}
+
+.tag-autocomplete-item:hover,
+.tag-autocomplete-item.selected {
+  background: #fff0f5;
+}
+
+.tag-autocomplete-item.selected {
+  border-left: 3px solid #ff69b4;
+}
+
+.tag-autocomplete-item .tag-type-badge {
+  display: inline-block;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.tag-autocomplete-item .tag-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #333;
+}
+
+.tag-autocomplete-item .tag-count {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #999;
+  padding: 2px 6px;
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+.tag-autocomplete-item .tag-highlight {
+  font-weight: 600;
+  color: #ff69b4;
+}
+
+/* Dark theme support */
+body.dark-theme .tag-autocomplete-dropdown {
+  background: #2c2c2c;
+  border-color: #444;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-theme .tag-autocomplete-item:hover,
+body.dark-theme .tag-autocomplete-item.selected {
+  background: #3a2a35;
+}
+
+body.dark-theme .tag-autocomplete-item .tag-name {
+  color: #e0e0e0;
+}
+
+body.dark-theme .tag-autocomplete-item .tag-count {
+  background: #3a3a3a;
+  color: #aaa;
+}
+
+/* Scrollbar styling */
+.tag-autocomplete-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tag-autocomplete-dropdown::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+.tag-autocomplete-dropdown::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+body.dark-theme .tag-autocomplete-dropdown::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+body.dark-theme .tag-autocomplete-dropdown::-webkit-scrollbar-thumb {
+  background: #555;
+}

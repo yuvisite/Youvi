@@ -1,0 +1,227 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * Tag Types Styles
+ * Color-coded tag system with different tag types
+ */
+
+/* Base tag styles - inherited from main styles */
+.video-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: #fff !important;
+    text-decoration: none !important;
+    transition: opacity 0.2s;
+    font-weight: 500;
+    border: none;
+}
+
+.video-tag:hover {
+    opacity: 0.9;
+}
+
+/* Tag icon styles */
+.tag-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.tag-icon svg {
+    display: block;
+    stroke: #fff;
+    fill: none;
+}
+
+/* Tag type specific styles with color coding - using CSS color names */
+
+/* Channel tag - gray, not displayed by default */
+.video-tag-channel {
+    background-color: darkgray;
+    display: none;
+}
+
+/* General tag - darker gray */
+.video-tag-general_tag {
+    background-color: gray;
+}
+
+/* Character tag - green */
+.video-tag-character {
+    background-color: olivedrab;
+}
+
+/* Author/Artist tag - red/pink */
+.video-tag-author {
+    background-color: indianred;
+}
+
+/* Genre tag - blue */
+.video-tag-genre {
+    background-color: cornflowerblue;
+}
+
+/* Type tag - orange */
+.video-tag-type {
+    background-color: coral;
+}
+
+/* Year tag - yellow/gold */
+.video-tag-year {
+    background-color: goldenrod;
+}
+
+/* Studio tag - red */
+.video-tag-studio {
+    background-color: lightcoral;
+}
+
+/* Category tag - cyan */
+.video-tag-category {
+    background-color: cadetblue;
+}
+
+/* Rating tag - pink */
+.video-tag-rating {
+    background-color: hotpink;
+}
+
+/* Anime Title tag - purple */
+.video-tag-anime_title {
+    background-color: mediumpurple;
+}
+
+/* Serial Title tag - blue */
+.video-tag-serial_title {
+    background-color: steelblue;
+}
+
+/* Movie Title tag - brown/gold */
+.video-tag-movie_title {
+    background-color: peru;
+}
+
+/* Animation Title tag - green */
+.video-tag-animation_title {
+    background-color: mediumseagreen;
+}
+
+/* Tag input validation styles */
+.tag-input-error {
+    border-color: #c41e3a !important;
+    background-color: #fff5f5 !important;
+}
+
+.tag-error-message {
+    color: #c41e3a;
+    font-size: 11px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Tag type indicator in edit mode */
+.tag-type-hint {
+    font-size: 10px;
+    color: #666;
+    margin-top: 4px;
+    padding: 4px 8px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    line-height: 1.4;
+}
+
+.tag-type-hint strong {
+    color: #333;
+}
+
+/* Tag type examples */
+.tag-type-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+    padding: 6px;
+    background: #fafafa;
+    border-radius: 4px;
+    font-size: 10px;
+}
+
+.tag-type-example {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: #fff;
+    border: 1px solid #eee;
+}
+
+.tag-type-example-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.tag-type-example-text {
+    color: #666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .video-tag {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+    
+    .tag-type-hint,
+    .tag-type-examples {
+        font-size: 9px;
+    }
+}
+
+/* Dark theme support - colors remain the same for visibility */
+
+body.dark-theme .tag-type-hint {
+    background: #2a2a2a;
+    color: #ccc;
+}
+
+body.dark-theme .tag-type-hint strong {
+    color: #fff;
+}
+
+body.dark-theme .tag-type-examples {
+    background: #2a2a2a;
+}
+
+body.dark-theme .tag-type-example {
+    background: #1a1a1a;
+    border-color: #444;
+}
+
+body.dark-theme .tag-type-example-text {
+    color: #ccc;
+}
+
+body.dark-theme .tag-input-error {
+    background-color: #2a1a1a !important;
+}

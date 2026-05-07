@@ -1,0 +1,500 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * Tag Implication Manager Styles
+ * Matching tag-alias-manager.css design
+ */
+
+.tag-implication-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  animation: fadeInImpl 0.2s ease;
+}
+
+@keyframes fadeInImpl {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tag-implication-modal-content {
+  background-color: #fff;
+  border-radius: 4px;
+  width: 400px;
+  max-height: 500px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+}
+
+.tag-implication-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  background: #f5f5f5;
+}
+
+.tag-implication-header h3 {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+.tag-implication-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag-implication-body {
+  padding: 16px;
+  overflow-y: auto;
+  overflow-x: visible; /* Allow autocomplete to extend beyond bounds */
+  flex: 1;
+}
+
+.current-tag-info {
+  background: #fff0f5;
+  border: 1px solid #ffb6c1;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #333;
+}
+
+.current-tag-info strong {
+  color: #ff69b4;
+  margin-right: 6px;
+}
+
+.current-tag-info span {
+  font-weight: 500;
+  color: #333;
+}
+
+.implications-section {
+  margin-bottom: 16px;
+}
+
+.implications-section h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.implications-list {
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.no-implications {
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+  margin: 20px 0;
+}
+
+.implication-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.implication-name {
+  font-size: 12px;
+  color: #333;
+  font-weight: 500;
+  flex: 1;
+}
+
+.implication-type {
+  font-size: 10px;
+  color: #888;
+  margin-left: 8px;
+  padding: 2px 6px;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+}
+
+.btn-remove-implication {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 2px 6px;
+  cursor: pointer;
+  color: #666;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove-implication:hover {
+  background: #ff4444;
+  border-color: #ff4444;
+  color: #fff;
+}
+
+.add-implication-section h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-implication-form {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.implication-input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.implication-input:focus {
+  outline: none;
+  border-color: #ff69b4;
+}
+
+.implication-input::placeholder {
+  color: #999;
+}
+
+.btn-add-implication {
+  padding: 6px 12px;
+  background: #ff69b4;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-add-implication:hover {
+  background: #ff5aa0;
+}
+
+.implication-hint {
+  font-size: 11px;
+  color: #777;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* Autocomplete specific fixes for modal */
+.tag-implication-modal .tag-autocomplete-dropdown {
+  z-index: 10001; /* Higher than modal */
+  position: fixed; /* Break out of modal bounds */
+  min-width: 250px; /* Ensure reasonable width */
+}
+
+.tag-implication-modal .tag-autocomplete-wrapper {
+  position: static; /* Let dropdown position freely */
+}
+
+.tag-implication-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  border-top: 1px solid #ddd;
+  background: #f5f5f5;
+}
+
+.btn-close {
+  padding: 6px 16px;
+  background: #fff;
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Computed implications section */
+.computed-implications-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+
+.computed-implications-section h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.computed-badge {
+  font-size: 10px;
+  color: #888;
+  background-color: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: normal;
+  text-transform: none;
+}
+
+.computed-implications-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.computed-implication-tag {
+  background-color: #f5f5f5;
+  color: #666;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+}
+
+.no-computed {
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+/* Message notifications */
+.implication-message {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10001;
+  animation: slideInImpl 0.3s ease-out;
+}
+
+@keyframes slideInImpl {
+  from {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.implication-message-success {
+  background: #4caf50;
+  color: #fff;
+}
+
+.implication-message-error {
+  background: #f44336;
+  color: #fff;
+}
+
+.implication-message-warning {
+  background: #ff9800;
+  color: #fff;
+}
+
+.implication-message-info {
+  background: #2196f3;
+  color: #fff;
+}
+
+
+/* ========================================
+   DARK THEME STYLES
+   ======================================== */
+
+body.dark-theme .tag-implication-modal-content {
+  background-color: #2c2c2c;
+  border-color: #444;
+}
+
+body.dark-theme .tag-implication-header {
+  background: #3a3a3a;
+  border-bottom-color: #444;
+}
+
+body.dark-theme .tag-implication-header h3 {
+  color: #fff;
+}
+
+body.dark-theme .tag-implication-close {
+  color: #fff;
+}
+
+body.dark-theme .current-tag-info {
+  background: #3a2a35;
+  border-color: #6a4a5a;
+}
+
+body.dark-theme .current-tag-info strong {
+  color: #ff69b4;
+}
+
+body.dark-theme .current-tag-info span {
+  color: #fff;
+}
+
+body.dark-theme .implications-section h4,
+body.dark-theme .add-implication-section h4 {
+  color: #ccc;
+}
+
+body.dark-theme .no-implications {
+  color: #777;
+}
+
+body.dark-theme .implication-item {
+  background: #2a2a2a;
+  border-color: #444;
+}
+
+body.dark-theme .implication-name {
+  color: #fff;
+}
+
+body.dark-theme .implication-type {
+  color: #aaa;
+  background-color: #3a3a3a;
+}
+
+body.dark-theme .btn-remove-implication {
+  background: #3a3a3a;
+  border-color: #555;
+  color: #ccc;
+}
+
+body.dark-theme .implication-input {
+  background: #3a3a3a;
+  border-color: #555;
+  color: #fff;
+}
+
+body.dark-theme .implication-input::placeholder {
+  color: #888;
+}
+
+body.dark-theme .implication-input:focus {
+  border-color: #ff69b4;
+}
+
+body.dark-theme .implication-hint {
+  color: #aaa;
+}
+
+body.dark-theme .tag-implication-footer {
+  background: #3a3a3a;
+  border-top-color: #444;
+}
+
+body.dark-theme .btn-close {
+  background: #4a4a4a;
+  color: #fff;
+  border-color: #555;
+}
+
+body.dark-theme .computed-implications-section {
+  border-top-color: #444;
+}
+
+body.dark-theme .computed-implications-section h4 {
+  color: #ccc;
+}
+
+body.dark-theme .computed-badge {
+  color: #aaa;
+  background-color: #3a3a3a;
+}
+
+body.dark-theme .computed-implication-tag {
+  background-color: #2a2a2a;
+  color: #ccc;
+  border-color: #444;
+}
+
+body.dark-theme .no-computed {
+  color: #777;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .tag-implication-modal-content {
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .tag-implication-header {
+    padding: 12px 16px;
+  }
+  
+  .tag-implication-body {
+    padding: 16px;
+  }
+  
+  .add-implication-form {
+    flex-direction: column;
+  }
+  
+  .btn-add-implication {
+    width: 100%;
+  }
+}

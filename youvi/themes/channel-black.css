@@ -1,0 +1,291 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+body.channel-theme-black {
+    --channel-accent: #27272a;
+    --channel-accent-strong: #18181b;
+    --channel-accent-border: #09090b;
+    --channel-accent-soft: rgba(39, 39, 42, 0.2);
+    --channel-accent-soft-strong: rgba(39, 39, 42, 0.14);
+    --channel-accent-pale: #f3f4f6;
+    --channel-accent-pale-border: #d4d4d8;
+    --channel-accent-link-hover: #111111;
+    --channel-accent-link-border: #52525b;
+    --channel-header-dark-bg: #0f0f10;
+    --channel-header-dark-border: #2a2a2c;
+}
+
+/* Keep text/logo readable for black channel theme in dark mode. */
+body.dark-theme.channel-theme-black {
+    --channel-nav-link-hover: #f3f4f6;
+    --channel-nav-link-active: #ffffff;
+    --youvi-logo-filter: brightness(0) invert(1);
+}
+
+html.dark-theme body.channel-theme-black {
+    --channel-nav-link-hover: #f3f4f6;
+    --channel-nav-link-active: #ffffff;
+    --youvi-logo-filter: brightness(0) invert(1);
+}
+
+html.dark-theme body.channel-theme-black .top-nav a:hover,
+html.dark-theme body.channel-theme-black .top-nav a.active {
+    color: #ffffff !important;
+}
+
+body.dark-theme.channel-theme-black .nav-links a,
+body.dark-theme.channel-theme-black .user-actions a,
+body.dark-theme.channel-theme-black .settings-btn,
+body.dark-theme.channel-theme-black .sidebar-toggle-btn {
+    color: #f5f5f5 !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-toggle-btn svg {
+    fill: #f5f5f5 !important;
+}
+
+body.dark-theme.channel-theme-black .nav-links a:hover,
+body.dark-theme.channel-theme-black .nav-links a.active,
+body.dark-theme.channel-theme-black .user-actions a:hover {
+    color: #ffffff !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-panel-tab {
+    color: #bfbfbf !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-panel-tab:hover {
+    color: #efefef !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-panel-tab.active {
+    color: #ffffff !important;
+    background: #1e1e1e !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-panel-tab:hover span,
+body.dark-theme.channel-theme-black .sidebar-panel-tab.active span {
+    color: #ffffff !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-panel-btn {
+    color: #b0b0b0 !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-panel-btn:hover,
+body.dark-theme.channel-theme-black .sidebar-panel-btn.active {
+    color: #ffffff !important;
+}
+
+body.dark-theme.channel-theme-black .recs-tab-btn {
+    color: #e5e5e5 !important;
+    border-color: #4c4c4c !important;
+    background: #2a2a2a !important;
+}
+
+body.dark-theme.channel-theme-black .recs-tab-btn:hover {
+    color: #ffffff !important;
+    background: #343434 !important;
+}
+
+body.dark-theme.channel-theme-black .recs-tab-btn.active {
+    color: #ffffff !important;
+    background: #3a3a3a !important;
+    border-color: #5c5c5c !important;
+}
+
+body.dark-theme.channel-theme-black #recommendationsSidebar .related-channel {
+    color: #bfbfbf !important;
+}
+
+body.dark-theme.channel-theme-black #recommendationsSidebar .related-channel:hover {
+    color: #ffffff !important;
+}
+
+body.dark-theme.channel-theme-black #recommendationsSidebar .related-video .related-title {
+    color: #f2f2f2 !important;
+}
+
+body.dark-theme.channel-theme-black #recommendationsSidebar .related-video:hover .related-title {
+    color: #ffffff !important;
+}
+
+body.dark-theme.channel-theme-black #recommendationsSidebar .related-video .related-meta {
+    color: #b7b7b7 !important;
+}
+
+body.dark-theme.channel-theme-black #playlistTabContent .related-channel,
+body.dark-theme.channel-theme-black #playlistContent .related-channel,
+body.dark-theme.channel-theme-black .virtual-playlist-container .related-channel,
+body.dark-theme.channel-theme-black .pc-video-channel {
+    color: #d2d2d2 !important;
+}
+
+body.dark-theme.channel-theme-black #playlistTabContent .related-channel:hover,
+body.dark-theme.channel-theme-black #playlistContent .related-channel:hover,
+body.dark-theme.channel-theme-black .virtual-playlist-container .related-channel:hover,
+body.dark-theme.channel-theme-black .pc-video-channel:hover {
+    color: #ffffff !important;
+}
+
+body.dark-theme.channel-theme-black #playlistTabContent .related-video:hover .related-title,
+body.dark-theme.channel-theme-black #playlistTabContent .related-video:hover .related-meta,
+body.dark-theme.channel-theme-black #playlistTabContent .related-video:hover .related-channel,
+body.dark-theme.channel-theme-black #playlistContent .related-video:hover .related-title,
+body.dark-theme.channel-theme-black #playlistContent .related-video:hover .related-meta,
+body.dark-theme.channel-theme-black #playlistContent .related-video:hover .related-channel,
+body.dark-theme.channel-theme-black .virtual-playlist-container .related-video:hover .related-title,
+body.dark-theme.channel-theme-black .virtual-playlist-container .related-video:hover .related-meta,
+body.dark-theme.channel-theme-black .virtual-playlist-container .related-video:hover .related-channel {
+    color: #ffffff !important;
+}
+
+body.dark-theme.channel-theme-black #playlistTabContent .related-video.current-video,
+body.dark-theme.channel-theme-black #playlistContent .related-video.current-video,
+body.dark-theme.channel-theme-black .virtual-playlist-container .related-video.current-video {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #8a8a8a !important;
+}
+
+body.dark-theme.channel-theme-black #playlistTabContent .related-video.current-video .related-title,
+body.dark-theme.channel-theme-black #playlistContent .related-video.current-video .related-title,
+body.dark-theme.channel-theme-black .virtual-playlist-container .related-video.current-video .related-title {
+    color: #ffffff !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-item:hover,
+body.dark-theme.channel-theme-black .sidebar-item.active {
+    color: #f2f2f2 !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar .sidebar-item.nav-item:hover svg,
+body.dark-theme.channel-theme-black .sidebar .sidebar-item.nav-item.active svg,
+body.dark-theme.channel-theme-black .sidebar .sidebar-item.library-item:hover svg,
+body.dark-theme.channel-theme-black .sidebar .sidebar-item.library-item.active svg {
+    stroke: #f2f2f2 !important;
+}
+
+body.cinema-mode.dark-theme.channel-theme-black .sidebar-item:hover,
+body.cinema-mode.dark-theme.channel-theme-black .sidebar-item.active {
+    color: #ffffff !important;
+}
+
+body.cinema-mode.dark-theme.channel-theme-black .sidebar .sidebar-item.nav-item:hover svg,
+body.cinema-mode.dark-theme.channel-theme-black .sidebar .sidebar-item.nav-item.active svg,
+body.cinema-mode.dark-theme.channel-theme-black .sidebar .sidebar-item.library-item:hover svg,
+body.cinema-mode.dark-theme.channel-theme-black .sidebar .sidebar-item.library-item.active svg {
+    stroke: #ffffff !important;
+}
+
+/* Full right-panel readability fix: Danmaku / Playlist / Transcript */
+body.dark-theme.channel-theme-black .sidebar-panel-combined {
+    background: rgba(24, 24, 24, 0.92) !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-panel-tabs {
+    background: rgba(31, 31, 31, 0.95) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-panel-content,
+body.dark-theme.channel-theme-black .sidebar-tab-content,
+body.dark-theme.channel-theme-black #danmakuTabContent,
+body.dark-theme.channel-theme-black #playlistTabContent,
+body.dark-theme.channel-theme-black #transcriptTabContent,
+body.dark-theme.channel-theme-black #playlistContent,
+body.dark-theme.channel-theme-black #transcriptList {
+    background: rgba(23, 23, 23, 0.86) !important;
+    color: #ececec !important;
+}
+
+body.dark-theme.channel-theme-black .danmaku-comment-item,
+body.dark-theme.channel-theme-black .playlist-item,
+body.dark-theme.channel-theme-black .transcript-cue-item {
+    color: #e8e8e8 !important;
+    border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-theme.channel-theme-black .danmaku-comment-item:hover,
+body.dark-theme.channel-theme-black .playlist-item:hover,
+body.dark-theme.channel-theme-black .transcript-cue-item:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.dark-theme.channel-theme-black .danmaku-comment-item.current,
+body.dark-theme.channel-theme-black .transcript-cue-item.current {
+    background: rgba(255, 255, 255, 0.12) !important;
+}
+
+body.dark-theme.channel-theme-black .danmaku-comment-text,
+body.dark-theme.channel-theme-black .transcript-cue-text,
+body.dark-theme.channel-theme-black .playlist-title,
+body.dark-theme.channel-theme-black #playlistTitle {
+    color: #f3f3f3 !important;
+}
+
+body.dark-theme.channel-theme-black .danmaku-comment-meta,
+body.dark-theme.channel-theme-black .danmaku-comment-date,
+body.dark-theme.channel-theme-black .related-meta,
+body.dark-theme.channel-theme-black .playlist-meta,
+body.dark-theme.channel-theme-black .transcript-empty,
+body.dark-theme.channel-theme-black #playlistOpenLink {
+    color: #bdbdbd !important;
+}
+
+body.dark-theme.channel-theme-black .danmaku-comment-time,
+body.dark-theme.channel-theme-black .transcript-cue-time,
+body.dark-theme.channel-theme-black .time-code,
+body.dark-theme.channel-theme-black #playlistOpenLink:hover {
+    color: #ffffff !important;
+}
+
+body.dark-theme.channel-theme-black .transcript-track-header,
+body.dark-theme.channel-theme-black #playlistHeader {
+    background: rgba(28, 28, 28, 0.95) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+body.dark-theme.channel-theme-black .transcript-track-select,
+body.dark-theme.channel-theme-black .playlist-control-btn {
+    background: #2a2a2a !important;
+    color: #e7e7e7 !important;
+    border-color: #4d4d4d !important;
+}
+
+body.dark-theme.channel-theme-black .playlist-control-btn:hover {
+    background: #343434 !important;
+    color: #ffffff !important;
+    border-color: #666 !important;
+}
+
+body.dark-theme.channel-theme-black .playlist-control-btn.active {
+    background: #3a3a3a !important;
+    color: #ffffff !important;
+    border-color: #6a6a6a !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-tab-content::-webkit-scrollbar-thumb,
+body.dark-theme.channel-theme-black #playlistContent::-webkit-scrollbar-thumb,
+body.dark-theme.channel-theme-black #transcriptList::-webkit-scrollbar-thumb {
+    background: #5b5b5b !important;
+}
+
+body.dark-theme.channel-theme-black .sidebar-tab-content::-webkit-scrollbar-thumb:hover,
+body.dark-theme.channel-theme-black #playlistContent::-webkit-scrollbar-thumb:hover,
+body.dark-theme.channel-theme-black #transcriptList::-webkit-scrollbar-thumb:hover {
+    background: #787878 !important;
+}

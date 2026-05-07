@@ -1,0 +1,15 @@
+{
+  "name": "youvi-download-server",
+  "version": "1.0.0",
+  "description": "Local server for Youvi video downloads",
+  "main": "download/download-server.js",
+  "scripts": {
+    "start": "node download/download-server.js",
+    "dev": "node download/download-server.js",
+    "remote:start": "node remote/signaling-server.js",
+    "remote:dev": "node remote/signaling-server.js"
+  },
+  "keywords": ["youvi", "download", "yt-dlp"],
+  "author": "",
+  "license": "GPL v3.0"
+}

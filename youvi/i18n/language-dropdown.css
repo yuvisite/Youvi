@@ -1,0 +1,173 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Language Dropdown Styles */
+
+.language-selector-container {
+    position: relative;
+    display: inline-block;
+    z-index: 99999 !important;
+    isolation: isolate;
+}
+
+.language-selector-btn {
+    color: #111;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.language-selector-btn:hover {
+    background: rgba(255, 105, 180, 0.1);
+}
+
+.language-selector-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Top-nav specific styles */
+.top-nav .language-selector-btn {
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 0;
+}
+
+.top-nav .language-selector-btn:hover {
+    color: #ffd6ea;
+    background: transparent;
+}
+
+.language-dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    padding: 6px 0;
+    min-width: 140px;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100000;
+}
+
+.language-dropdown.show {
+    display: block;
+}
+
+.language-dropdown-item {
+    background: none;
+    border: none;
+    color: #111;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 8px 16px;
+    display: block;
+    width: 100%;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.language-dropdown-item:hover {
+    background: rgba(255, 105, 180, 0.1);
+}
+
+.language-dropdown-item.active {
+    background: rgba(255, 105, 180, 0.15);
+    color: #ff69b4;
+    font-weight: 600;
+}
+
+/* Dark Theme */
+body.dark-theme .language-selector-btn {
+    color: #fff;
+}
+
+body.dark-theme .language-selector-btn:hover {
+    background: rgba(255, 105, 180, 0.2);
+}
+
+body.dark-theme .language-dropdown {
+    background: #2a2a2a;
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-theme .language-dropdown-item {
+    color: #fff;
+}
+
+body.dark-theme .language-dropdown-item:hover {
+    background: rgba(255, 105, 180, 0.2);
+}
+
+body.dark-theme .language-dropdown-item.active {
+    background: rgba(255, 105, 180, 0.25);
+    color: #ff69b4;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .language-selector-btn {
+        font-size: 12px;
+        padding: 3px 6px;
+    }
+    
+    .top-nav .language-selector-btn {
+        font-size: 11px;
+        padding: 2px 0;
+    }
+    
+    .language-dropdown {
+        min-width: 120px;
+    }
+    
+    .language-dropdown-item {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .language-selector-btn {
+        font-size: 11px;
+        padding: 2px 5px;
+    }
+    
+    .top-nav .language-selector-btn {
+        font-size: 10px;
+        padding: 1px 0;
+    }
+    
+    .language-dropdown {
+        min-width: 100px;
+        right: -10px;
+    }
+    
+    .language-dropdown-item {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+}

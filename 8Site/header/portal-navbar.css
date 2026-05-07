@@ -1,0 +1,254 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Portal Navigation Bar */
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.wrap {
+  margin: 0 auto !important;
+  padding: 8px !important;
+  padding-top: 40px !important;
+  max-width: 1400px;
+}
+
+.unified-header {
+  margin: 0 !important;
+  margin-bottom: 8px !important;
+}
+
+.portal-navbar {
+  background: var(--accent-dark, #35a62e);
+  border-bottom: 1px solid var(--accent, #64d35d);
+  padding: 4px 0;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.portal-navbar-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.portal-navbar a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+  padding: 2px 0;
+  transition: color 0.2s;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif;
+}
+
+.portal-navbar a:hover {
+  color: var(--muted, #def8de);
+}
+
+.portal-navbar a.active {
+  color: var(--muted, #def8de);
+  font-weight: 600;
+}
+
+/* Theme adaptations for portal navbar */
+body.theme-win95 .portal-navbar {
+  background: #000080;
+  border-bottom: 1px solid #000040;
+}
+
+body.theme-win95 .portal-navbar a:hover {
+  color: #c0c0c0;
+}
+
+body.theme-win95 .portal-navbar a.active {
+  color: #c0c0c0;
+}
+
+body.theme-win95pink .portal-navbar {
+  background: #E75899;
+  border-bottom: 1px solid #C2185B;
+}
+
+body.theme-win95pink .portal-navbar a:hover {
+  color: #FFB6C1;
+}
+
+body.theme-win95pink .portal-navbar a.active {
+  color: #FFB6C1;
+}
+
+body.theme-pink .portal-navbar {
+  background: #d94b88;
+  border-bottom: 1px solid #c2185b;
+}
+
+body.theme-pink .portal-navbar a:hover {
+  color: #ffd6ea;
+}
+
+body.theme-pink .portal-navbar a.active {
+  color: #ffd6ea;
+}
+
+body.theme-lime .portal-navbar {
+  background: #35a62e;
+  border-bottom: 1px solid #2d8a26;
+}
+
+body.theme-lime .portal-navbar a:hover {
+  color: #a8e6a3;
+}
+
+body.theme-lime .portal-navbar a.active {
+  color: #a8e6a3;
+}
+
+body.theme-red .portal-navbar {
+  background: #d9363e;
+  border-bottom: 1px solid #b71c1c;
+}
+
+body.theme-red .portal-navbar a:hover {
+  color: #ffcdd2;
+}
+
+body.theme-red .portal-navbar a.active {
+  color: #ffcdd2;
+}
+
+body.theme-gold .portal-navbar {
+  background: #b89c00;
+  border-bottom: 1px solid #9c7c00;
+}
+
+body.theme-gold .portal-navbar a:hover {
+  color: #fff3a0;
+}
+
+body.theme-gold .portal-navbar a.active {
+  color: #fff3a0;
+}
+
+body.theme-cyan .portal-navbar {
+  background: #08979c;
+  border-bottom: 1px solid #00695c;
+}
+
+body.theme-cyan .portal-navbar a:hover {
+  color: #ccf5f7;
+}
+
+body.theme-cyan .portal-navbar a.active {
+  color: #ccf5f7;
+}
+
+body.theme-purple .portal-navbar {
+  background: #8a008a;
+  border-bottom: 1px solid #6a006a;
+}
+
+body.theme-purple .portal-navbar a:hover {
+  color: #f0ccff;
+}
+
+body.theme-purple .portal-navbar a.active {
+  color: #f0ccff;
+}
+
+body.theme-cherry .portal-navbar {
+  background: #7a0030;
+  border-bottom: 1px solid #5a0020;
+}
+
+body.theme-cherry .portal-navbar a:hover {
+  color: #e07a97;
+}
+
+body.theme-cherry .portal-navbar a.active {
+  color: #e07a97;
+}
+
+body.theme-darkblue .portal-navbar {
+  background: #12224d;
+  border-bottom: 1px solid #0a1429;
+}
+
+body.theme-darkblue .portal-navbar a:hover {
+  color: #d6e0ff;
+}
+
+body.theme-darkblue .portal-navbar a.active {
+  color: #d6e0ff;
+}
+
+body.theme-aqua .portal-navbar {
+  background: #12bfb0;
+  border-bottom: 1px solid #0d8a7c;
+}
+
+body.theme-aqua .portal-navbar a:hover {
+  color: #d0fffa;
+}
+
+body.theme-aqua .portal-navbar a.active {
+  color: #d0fffa;
+}
+
+body.theme-orange .portal-navbar {
+  background: #d48806;
+  border-bottom: 1px solid #b8860b;
+}
+
+body.theme-orange .portal-navbar a:hover {
+  color: #ffe7cc;
+}
+
+body.theme-orange .portal-navbar a.active {
+  color: #ffe7cc;
+}
+
+body.theme-darkgreen .portal-navbar {
+  background: #1a3d1a;
+  border-bottom: 1px solid #0d2a0d;
+}
+
+body.theme-darkgreen .portal-navbar a:hover {
+  color: #d4e8d4;
+}
+
+body.theme-darkgreen .portal-navbar a.active {
+  color: #d4e8d4;
+}
+
+body.theme-lilac .portal-navbar {
+  background: #b300b3;
+  border-bottom: 1px solid #8a008a;
+}
+
+body.theme-lilac .portal-navbar a:hover {
+  color: #e6ccff;
+}
+
+body.theme-lilac .portal-navbar a.active {
+  color: #e6ccff;
+}

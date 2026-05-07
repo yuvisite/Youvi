@@ -1,0 +1,2006 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Dark Theme for Youvi - Based on Screen colors */
+body.dark-theme {
+    background: #0d0d0d;
+    color: #fff;
+}
+
+/* Global Scrollbar Styles */
+body.dark-theme ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+body.dark-theme ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Top Navigation Bar - EXACT MATCH TO PORTAL */
+body.dark-theme .top-nav {
+    background: #d94b88 !important;
+    border-bottom: 1px solid #c2185b !important;
+    padding: 4px 0 !important;
+}
+
+body.dark-theme .top-nav-content {
+    margin: 0 auto !important;
+    display: flex !important;
+    gap: 20px !important;
+    align-items: center !important;
+}
+
+body.dark-theme .top-nav a {
+    color: #fff !important;
+    text-decoration: none !important;
+    font-size: 12px !important;
+    padding: 2px 0 !important;
+    transition: color 0.2s !important;
+}
+
+body.dark-theme .top-nav a:hover {
+    color: #ffd6ea !important;
+}
+
+body.dark-theme .top-nav a.active {
+    color: #ffd6ea !important;
+    font-weight: 600 !important;
+}
+
+/* Header */
+body.dark-theme .header {
+    background: #2c1810;
+    border-bottom: 1px solid #444;
+}
+
+body.dark-theme .nav-links a {
+    color: #fff;
+}
+
+body.dark-theme .user-actions a {
+    color: #fff;
+}
+
+body.dark-theme .user-actions a:hover {
+    color: #ff69b4;
+}
+
+/* Sidebar Toggle Button */
+body.dark-theme .sidebar-toggle-btn {
+    color: #fff;
+}
+
+body.dark-theme .sidebar-toggle-btn svg {
+    fill: #fff;
+}
+
+/* Search Input */
+body.dark-theme .search-input {
+    background: #4A3A34;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+body.dark-theme .search-input::placeholder {
+    color: #b8a9a4;
+    opacity: 1;
+}
+
+body.dark-theme .search-input:-ms-input-placeholder {
+    color: #b8a9a4;
+}
+
+body.dark-theme .search-input::-ms-input-placeholder {
+    color: #b8a9a4;
+}
+
+body.dark-theme .search-input:focus {
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 2px rgba(255,105,180,0.2);
+    background: #342219;
+}
+
+/* Sidebar */
+body.dark-theme .sidebar {
+    background: #1a1a1a;
+}
+
+body.dark-theme .sidebar-title {
+    color: #999;
+}
+
+body.dark-theme .sidebar-item {
+    color: #ccc;
+}
+
+body.dark-theme .sidebar-item:hover {
+    color: #ffadcd;
+    border-left-color: #ff85b4;
+}
+
+body.dark-theme .sidebar-item.active {
+    color: #fff;
+    border-left-color: #ff69b4;
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item svg {
+    stroke: #999;
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item:hover svg {
+    stroke: #ffadcd;
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item.active svg {
+    stroke: #ff69b4;
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item svg {
+    stroke: #999;
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item:hover svg {
+    stroke: #ffadcd;
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item.active svg {
+    stroke: #ff69b4;
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item.active {
+    color: #fff;
+    border-left-color: #ff69b4;
+}
+
+/* Sidebar SVG icons - generic stroke color */
+body.dark-theme .sidebar svg {
+    stroke: #999;
+}
+
+body.dark-theme .sidebar .sidebar-item:hover svg {
+    stroke: #ffadcd;
+}
+
+body.dark-theme .sidebar .sidebar-item.active svg {
+    stroke: #ff69b4;
+}
+
+/* Video Player */
+body.dark-theme .video-player {
+    background: #000;
+}
+
+body.dark-theme .video-meta {
+    color: #ccc;
+}
+
+/* Section Titles */
+body.dark-theme .section-title,
+body.dark-theme .playlist-section-title,
+body.dark-theme .latest-title,
+body.dark-theme .playlists-header-title,
+body.dark-theme .results-title {
+    color: #fff;
+}
+
+/* View and Type Switcher Buttons */
+body.dark-theme .view-btn,
+body.dark-theme .type-btn {
+    background: #2a2a2a;
+    color: #ccc;
+    border: 1px solid #444;
+}
+
+body.dark-theme .view-btn:hover,
+body.dark-theme .type-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+body.dark-theme .view-btn.active,
+body.dark-theme .type-btn.active {
+    background: #ff69b4;
+    color: #fff;
+    border-color: #ff69b4;
+}
+
+/* Feed Mode Toggle Buttons (Сетка/Список on subscriptions) */
+body.dark-theme .feed-mode-toggle-buttons {
+    background: #2a2a2a;
+    border: 1px solid #444;
+}
+
+body.dark-theme .feed-mode-btn {
+    background: transparent;
+    color: #ccc;
+}
+
+body.dark-theme .feed-mode-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+body.dark-theme .feed-mode-btn.active {
+    background: #ff69b4;
+    color: #fff;
+}
+
+/* Grid Switcher Buttons */
+body.dark-theme .grid-switcher .grid-btn {
+    background: #2a2a2a;
+    color: #ccc;
+    border: 1px solid #444;
+}
+
+body.dark-theme .grid-switcher .grid-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+body.dark-theme .grid-switcher .grid-btn.active {
+    background: #ff69b4;
+    color: #fff;
+    border-color: #ff69b4;
+}
+
+/* Tags */
+body.dark-theme .tag-item {
+    color: #999;
+}
+
+body.dark-theme .tag-item:hover {
+    color: #ff69b4;
+    background: rgba(255, 105, 180, 0.15);
+}
+
+body.dark-theme .tag-item.active {
+    color: #ff69b4;
+}
+
+/* Video Cards */
+body.dark-theme .video-card {
+    background: transparent !important; /* Match page background, NO GREY */
+}
+
+body.dark-theme .video-thumbnail {
+    background: #444;
+}
+
+body.dark-theme .video-card-title,
+body.dark-theme .video-title {
+    color: #fff !important; /* Force white titles */
+}
+
+body.dark-theme .video-title-link {
+    color: #fff !important; /* Force white title links */
+}
+
+body.dark-theme .video-category {
+    color: #999;
+}
+
+body.dark-theme .video-tag-link,
+body.dark-theme .video-category-link {
+    color: #999;
+}
+
+body.dark-theme .video-info {
+    background: transparent !important; /* Match page background */
+}
+
+body.dark-theme .video-meta,
+body.dark-theme .video-views,
+body.dark-theme .video-date {
+    color: #aaa;
+}
+
+/* Latest Videos Grid */
+body.dark-theme .latest-thumb {
+    background: #444;
+}
+
+body.dark-theme .latest-card-title {
+    color: #fff;
+}
+
+body.dark-theme .latest-info {
+    color: #999;
+}
+
+/* Video Meta and Description */
+body.dark-theme .video-meta-line {
+    color: #999;
+}
+
+body.dark-theme .video-desc {
+    color: #aaa;
+}
+
+body.dark-theme .playlist-channel {
+    color: #ff69b4;
+}
+
+body.dark-theme .playlist-channel-link {
+    color: #ff69b4;
+}
+
+body.dark-theme .video-channel-row {
+    color: #ccc;
+}
+
+/* Playlist Items */
+body.dark-theme .playlist-item {
+    background: transparent; /* No card background, blend with page */
+    border: none;
+}
+
+body.dark-theme .playlist-thumb {
+    background: #444;
+    color: #888;
+    border: none;
+}
+
+body.dark-theme .playlist-info {
+    background: transparent; /* Same as page background */
+    border: none;
+}
+
+body.dark-theme .playlist-title {
+    color: #fff;
+}
+
+body.dark-theme .playlist-meta {
+    color: #aaa;
+}
+
+/* Playlist View Page */
+body.dark-theme .playlist-view-header h1 {
+    color: #fff !important;
+}
+
+body.dark-theme .playlist-view-meta {
+    color: rgba(255,255,255,0.8) !important;
+}
+
+body.dark-theme .playlist-view-categories {
+    color: rgba(255,255,255,0.8) !important;
+}
+
+body.dark-theme .category-tag {
+    color: #aaa;
+}
+
+/* Channel Cards */
+body.dark-theme .channel-card {
+    background: #1a1a1a;
+    border: 1px solid #444;
+}
+
+body.dark-theme .channel-avatar {
+    border: 2px solid #333;
+}
+
+body.dark-theme .channel-name {
+    color: #fff;
+}
+
+body.dark-theme .channel-stats {
+    color: #999;
+}
+
+body.dark-theme .subscribe-toggle-btn.subscribed {
+    background: #666;
+    color: #fff;
+}
+
+/* Channel List/Compact Rows */
+body.dark-theme .channel-row {
+    background: #1a1a1a;
+    border: 1px solid #444;
+}
+
+/* Sidebar Subscribed Channels */
+body.dark-theme #subscribedChannelsList .channel-name {
+    color: #ccc;
+}
+
+body.dark-theme #subscribedChannelsList .channel-name:hover {
+    color: #ff69b4;
+}
+
+body.dark-theme #subscribedChannelsContainer .sidebar-item {
+    color: #ccc;
+}
+
+body.dark-theme #subscribedChannelsContainer .sidebar-item:hover {
+    color: #ffadcd;
+}
+
+body.dark-theme #subscribedChannelsContainer .sidebar-item span {
+    color: inherit;
+}
+
+/* Footer */
+body.dark-theme .footer {
+    background: #2c2c2c;
+    color: #fff;
+}
+
+body.dark-theme .footer-logo p {
+    color: #ccc;
+}
+
+body.dark-theme .footer-section h3 {
+    color: #fff;
+}
+
+body.dark-theme .footer-section a {
+    color: #ccc;
+}
+
+body.dark-theme .footer-section a:hover {
+    color: #ff69b4;
+}
+
+body.dark-theme .footer-bottom {
+    border-top: 1px solid #444;
+    color: #999;
+}
+
+/* Hide only floating banner */
+body.dark-theme .floating-banner {
+    display: none !important;
+}
+
+/* Feed Section (youvi_ch_feed.html) - Dark Theme Adaptation */
+body.dark-theme #feedSection,
+body.dark-theme div#feedSection,
+body.dark-theme [id="feedSection"] {
+    background: transparent !important;
+}
+
+/* Main content for youvi_feed_all.html */
+body.dark-theme .main-content {
+    background: transparent !important;
+}
+
+/* Feed posts container for youvi_feed_all.html */
+body.dark-theme .feed-posts,
+body.dark-theme #feedPosts {
+    background: transparent !important;
+}
+
+/* Remove padding only in compact mode, keep timeline centered */
+body.dark-theme .feed-posts:not(.social-mode) {
+    padding: 0 !important;
+}
+
+body.dark-theme .feed-post {
+    background: transparent !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .post-bubble {
+    background: transparent !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .post-bubble::before {
+    border-right-color: transparent !important;
+}
+
+body.dark-theme .post-bubble::after {
+    border-right-color: #444 !important;
+}
+
+body.dark-theme .post-info,
+body.dark-theme .post-header {
+    background: transparent !important;
+    color: #fff !important;
+}
+
+body.dark-theme .post-author {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .post-content {
+    background: transparent !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .post-date {
+    color: #999 !important;
+}
+
+body.dark-theme .post-actions {
+    color: #ccc !important;
+}
+
+/* Feed comments and containers */
+body.dark-theme .feed-comment {
+    background: transparent !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .comment-container {
+    background: transparent !important;
+}
+
+body.dark-theme .comment-bubble,
+body.dark-theme div.comment-bubble {
+    background: transparent !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .reply-bubble,
+body.dark-theme .nested-reply-bubble {
+    background: #1a1a1a !important;
+    border-color: #444 !important;
+}
+
+/* Nicknames in replies */
+body.dark-theme .reply-nick,
+body.dark-theme .nested-reply-nick,
+body.dark-theme .comment-nick {
+    color: #fff !important;
+}
+
+/* Bubble arrows for dark theme */
+body.dark-theme .comment-bubble::before {
+    border-right-color: transparent !important;
+}
+
+body.dark-theme .comment-bubble::after {
+    border-right-color: #444 !important;
+}
+
+body.dark-theme .reply-bubble::before,
+body.dark-theme .nested-reply-bubble::before {
+    border-right-color: #1a1a1a !important;
+}
+
+body.dark-theme .reply-bubble::after,
+body.dark-theme .nested-reply-bubble::after {
+    border-right-color: #444 !important;
+}
+
+body.dark-theme .post-item,
+body.dark-theme .timeline-post,
+body.dark-theme .compact-post {
+    background: transparent !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .post-content {
+    background: transparent !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .post-header,
+body.dark-theme .comment-header {
+    background: transparent !important;
+    color: #fff !important;
+}
+
+body.dark-theme .post-author,
+body.dark-theme .comment-nick {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .post-text,
+body.dark-theme .comment-text {
+    color: #ccc !important;
+}
+
+body.dark-theme .post-meta,
+body.dark-theme .comment-date {
+    color: #999 !important;
+}
+
+body.dark-theme .reply-item,
+body.dark-theme .nested-reply-item {
+    background: transparent !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .reply-text,
+body.dark-theme .nested-reply-text {
+    color: #ccc !important;
+}
+
+body.dark-theme .reply-author {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .comment-actions {
+    color: #ccc !important;
+}
+
+body.dark-theme .like-btn,
+body.dark-theme .dislike-btn {
+    color: #ccc !important;
+}
+
+body.dark-theme .replies-count {
+    color: #999 !important;
+}
+
+/* Feed Editor - Override inline styles */
+body.dark-theme #feedInput,
+body.dark-theme .compact-editor,
+body.dark-theme div#feedInput,
+body.dark-theme div.compact-editor,
+body.dark-theme [contenteditable="true"].compact-editor {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme #feedInput:focus,
+body.dark-theme .compact-editor:focus {
+    border-color: #ff69b4 !important;
+}
+
+body.dark-theme #feedNick,
+body.dark-theme input#feedNick {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme #feedNick::placeholder {
+    color: #777 !important;
+}
+
+/* Reply inputs - nick inputs */
+body.dark-theme .reply-nick-input,
+body.dark-theme input.reply-nick-input {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .reply-nick-input::placeholder {
+    color: #888 !important;
+}
+
+/* Reply inputs - text editors (contenteditable) */
+body.dark-theme .compact-editor,
+body.dark-theme [contenteditable].compact-editor,
+body.dark-theme div[id^="replyInput_"],
+body.dark-theme div[id^="nestedReplyInput_"] {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme textarea[id^="replyText_"] {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+    color: #ccc !important;
+}
+
+/* Nested reply forms - transparent backgrounds */
+body.dark-theme .nested-reply-form,
+body.dark-theme .nested-reply-form > div,
+body.dark-theme .reply-form {
+    background: transparent !important;
+}
+
+/* Reply form styling */
+
+body.dark-theme .compact-editor-toolbar {
+    background: transparent !important;
+}
+
+body.dark-theme .compact-editor-toolbar button {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .compact-editor-toolbar button:hover {
+    background: #ff69b4 !important;
+    border-color: #ff69b4 !important;
+}
+
+body.dark-theme .feed-form {
+    background: transparent !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme .reply-form {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Filter panel for youvi_feed_all.html */
+body.dark-theme .filter-panel {
+    background: #1a1a1a !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .filter-title {
+    color: #fff !important;
+}
+
+body.dark-theme .filter-toggle {
+    background: #2a2a2a !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .filter-btn {
+    color: #ccc !important;
+}
+
+body.dark-theme .filter-btn.active {
+    background: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .filter-btn:hover:not(.active) {
+    background: #3a3a3a !important;
+    color: #fff !important;
+}
+
+/* Images - Remove white borders */
+body.dark-theme .comment-image,
+body.dark-theme .reply-image,
+body.dark-theme .nested-reply-image,
+body.dark-theme .comment-text img,
+body.dark-theme .reply-text img,
+body.dark-theme .nested-reply-text img {
+    border-color: #444 !important;
+}
+
+body.dark-theme .lazy {
+    background: #2a2a2a !important;
+    border-color: #444 !important;
+}
+
+/* Editor and input borders */
+body.dark-theme .compact-editor,
+body.dark-theme input[type="text"],
+body.dark-theme textarea {
+    border-color: #444 !important;
+}
+
+body.dark-theme .compact-editor:focus,
+body.dark-theme input[type="text"]:focus,
+body.dark-theme textarea:focus {
+    border-color: #ff69b4 !important;
+    box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.2) !important;
+}
+
+body.dark-theme .compact-editor-toolbar {
+    background: #1a1a1a !important;
+    border-color: #444 !important;
+}
+
+/* Add spacing before footer */
+body.dark-theme .container {
+    margin-bottom: 0;
+}
+
+/* Empty State and Loading */
+body.dark-theme .empty-state {
+    color: #aaa;
+}
+
+body.dark-theme .loading {
+    color: #ccc;
+}
+
+/* Playlist Section All Link */
+body.dark-theme .playlist-section-all-link {
+    color: white;
+}
+
+/* List View Mode - Date Groups and Titles */
+body.dark-theme .date-group-title {
+    color: #fff;
+}
+
+body.dark-theme .list-views {
+    color: #aaa;
+}
+
+body.dark-theme .list-item {
+    background: transparent !important; /* Match page background */
+}
+
+body.dark-theme .list-item:hover {
+    background: #1a1a1a !important;
+}
+
+body.dark-theme .list-thumbnail {
+    background: #444;
+}
+
+body.dark-theme .list-title {
+    color: #fff !important;
+}
+
+body.dark-theme .list-channel {
+    color: #ff69b4;
+}
+
+body.dark-theme .list-meta {
+    color: #aaa;
+}
+
+body.dark-theme .list-date,
+body.dark-theme .list-views {
+    color: #999;
+}
+
+/* History and Favorites Pages */
+body.dark-theme .history-item,
+body.dark-theme .fav-item {
+    background: transparent !important; /* Match page background */
+}
+
+body.dark-theme .history-item:hover {
+    background: #1a1a1a !important;
+}
+
+body.dark-theme .history-thumbnail {
+    background: #444;
+}
+
+body.dark-theme .history-title {
+    color: #fff !important;
+}
+
+body.dark-theme .history-title a {
+    color: #fff !important;
+}
+
+body.dark-theme .history-channel {
+    color: #ff69b4;
+}
+
+body.dark-theme .history-meta,
+body.dark-theme .meta-small,
+body.dark-theme .meta-desc,
+body.dark-theme .meta-stat {
+    color: #aaa;
+}
+
+body.dark-theme .history-date,
+body.dark-theme .watch-count,
+body.dark-theme .fav-stats {
+    color: #888;
+}
+
+body.dark-theme .remove-btn {
+    background: #2a2a2a;
+    color: #aaa;
+}
+
+body.dark-theme .remove-btn:hover {
+    background: #ff69b4;
+    color: white;
+}
+
+body.dark-theme .action-btn {
+    color: #ccc;
+}
+
+body.dark-theme .action-btn:hover {
+    color: #ff69b4;
+}
+
+body.dark-theme .stats-box {
+    color: #ccc;
+}
+
+body.dark-theme .pagination-info {
+    color: #aaa;
+}
+
+/* Group Titles */
+body.dark-theme .group-title {
+    color: #fff;
+}
+
+/* Channel Pages Styles */
+body.dark-theme .channel-header {
+    border-bottom: 1px solid #333 !important;
+}
+
+body.dark-theme .channel-header:not(.custom-bg) {
+    background: #1a1a1a !important;
+}
+
+body.dark-theme .channel-header.custom-bg {
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+body.dark-theme .channel-avatar {
+    border: none !important;
+}
+
+body.dark-theme .channel-name {
+    color: #fff !important;
+}
+
+body.dark-theme .channel-stats {
+    color: #aaa;
+}
+
+/* Tab Navigation - Match Portal Navbar Colors */
+body.dark-theme .tabs {
+    background: #2c1810 !important;
+    border: none !important;
+    border-bottom: 1px solid #444 !important;
+}
+
+body.dark-theme .tab {
+    background: none !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 6px 20px !important;
+    flex: none !important;
+    min-width: auto !important;
+}
+
+body.dark-theme .tab:hover:not(.active) {
+    background: rgba(255, 105, 180, 0.15) !important;
+    color: #fff !important;
+}
+
+body.dark-theme .tab.active {
+    background: #ff69b4 !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+/* Main Content - Add Black Background When Wallpaper Enabled */
+body.dark-theme.custom-background .main-content {
+    background: #000 !important;
+}
+
+body.dark-theme.custom-background .tab-content {
+    background: #000 !important;
+}
+
+/* Tab Content */
+body.dark-theme .tab-content {
+    background: transparent;
+    color: #fff;
+}
+
+body.dark-theme .tab-content h3 {
+    color: #fff !important;
+}
+
+body.dark-theme .tab-content h2 {
+    color: #fff !important;
+}
+
+body.dark-theme .videos-grid {
+    background: transparent;
+}
+
+body.dark-theme #pinnedVideo {
+    background: #1a1a1a !important;
+    border-color: #333 !important;
+    color: #999 !important;
+}
+
+body.dark-theme #allVideosBtn {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .control-btn {
+    background: #2a2a2a;
+    color: #ccc;
+    border: 1px solid #444;
+}
+
+body.dark-theme .control-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+body.dark-theme .subscribe-btn {
+    background: #ff69b4;
+    color: #fff;
+}
+
+body.dark-theme .subscribe-btn.subscribed {
+    background: #666;
+    color: #fff;
+}
+
+/* Analytics Tab */
+body.dark-theme .analytics-container {
+    background: transparent !important;
+    color: #fff;
+}
+
+body.dark-theme .analytics-grid {
+    background: transparent !important;
+}
+
+body.dark-theme .analytics-card {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .analytics-card h3 {
+    color: #fff !important;
+}
+
+body.dark-theme .analytics-value {
+    color: #fff !important;
+}
+
+body.dark-theme .analytics-label {
+    color: #aaa !important;
+}
+
+body.dark-theme .analytics-icon {
+    color: #ff69b4 !important;
+    filter: brightness(1.2);
+}
+
+/* Preserve selected channel theme colors on channel pages in dark mode */
+body.dark-theme[class*="channel-theme-"] .top-nav {
+    background: var(--channel-accent-border) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .top-nav a:hover,
+body.dark-theme[class*="channel-theme-"] .top-nav a.active {
+    color: var(--channel-nav-link-active, color-mix(in srgb, var(--channel-accent) 44%, #fff)) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .header {
+    background: var(--channel-header-dark-bg, color-mix(in srgb, var(--channel-accent-pale) 28%, #101214)) !important;
+    border-bottom-color: var(--channel-header-dark-border, color-mix(in srgb, var(--channel-accent-pale-border) 38%, #2f3440)) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .user-actions a:hover,
+body.dark-theme[class*="channel-theme-"] .nav-links a:hover,
+body.dark-theme[class*="channel-theme-"] .nav-links a.active {
+    color: var(--channel-accent) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .search-input:focus {
+    border-color: var(--channel-accent) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--channel-accent) 26%, transparent) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .sidebar-item:hover {
+    color: var(--channel-accent-link-hover, var(--channel-accent-strong)) !important;
+    border-left-color: var(--channel-accent-link-border, var(--channel-accent)) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .sidebar-item.active {
+    border-left-color: var(--channel-accent) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .sidebar .sidebar-item:hover svg {
+    stroke: var(--channel-accent-link-hover, var(--channel-accent-strong)) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .sidebar .sidebar-item.active svg,
+body.dark-theme[class*="channel-theme-"] .sidebar .sidebar-item.library-item.active svg,
+body.dark-theme[class*="channel-theme-"] .sidebar .sidebar-item.nav-item.active svg {
+    stroke: var(--channel-accent) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .tabs {
+    background: var(--channel-header-dark-bg, #1f232b) !important;
+    border-bottom-color: var(--channel-header-dark-border, #323641) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .tab:hover:not(.active) {
+    background: var(--channel-accent-soft) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .tab.active {
+    background: var(--channel-accent) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] #allVideosBtn,
+body.dark-theme[class*="channel-theme-"] .analytics-icon {
+    color: var(--channel-accent) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .control-btn:hover,
+body.dark-theme[class*="channel-theme-"] .subscribe-btn,
+body.dark-theme[class*="channel-theme-"] .view-btn.active,
+body.dark-theme[class*="channel-theme-"] .type-btn.active,
+body.dark-theme[class*="channel-theme-"] .feed-mode-btn.active,
+body.dark-theme[class*="channel-theme-"] .grid-switcher .grid-btn.active {
+    background: var(--channel-accent) !important;
+    border-color: var(--channel-accent) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] .subscribe-btn:hover {
+    background: var(--channel-accent-strong) !important;
+    border-color: var(--channel-accent-strong) !important;
+}
+
+body.dark-theme .stat-card {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+
+body.dark-theme .stat-value {
+    color: #fff !important;
+}
+
+body.dark-theme .stat-label {
+    color: #aaa !important;
+}
+
+body.dark-theme .analytics-section {
+    background: transparent !important;
+    color: #fff !important;
+}
+
+body.dark-theme .analytics-section h4 {
+    color: #fff !important;
+}
+
+body.dark-theme .analytics-section h3 {
+    color: #fff !important;
+}
+
+/* Top Videos List */
+body.dark-theme .top-video-item {
+    background: transparent !important;
+}
+
+body.dark-theme .top-video-title {
+    color: #fff !important;
+}
+
+body.dark-theme .top-video-meta {
+    color: #aaa !important;
+}
+
+body.dark-theme .top-video-thumb {
+    background: #2a2a2a !important;
+}
+
+/* Top Videos Container - remove background to blend with page */
+body.dark-theme #topVideosList {
+    background: transparent !important;
+}
+
+/* Top 5 Videos block - black background - FIXED */
+body.dark-theme div[style*="width:320px"][style*="flex-shrink:0"] > div {
+    background: #000 !important;
+    border: none !important;
+}
+
+body.dark-theme div[style*="width:320px"][style*="flex-shrink:0"] > div h4 {
+    color: #fff !important;
+}
+
+/* Override inline background for video placeholders */
+body.dark-theme .top-video-thumb [style*="background:#333"],
+body.dark-theme .top-video-thumb [style*="background: #333"] {
+    background: #f0f0f0 !important;
+    color: #333 !important;
+}
+
+/* Analytics Lists */
+body.dark-theme .video-list-item {
+    background: #1a1a1a !important;
+    border-bottom: 1px solid #333 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .video-list-item:hover {
+    background: #2a2a2a !important;
+}
+
+body.dark-theme .video-rank {
+    background: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .video-views {
+    color: #aaa !important;
+}
+
+/* Analytics Cards Container */
+body.dark-theme .schedule-info {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .schedule-label {
+    color: #aaa !important;
+}
+
+body.dark-theme .schedule-value {
+    color: #fff !important;
+}
+
+/* Description Tab */
+body.dark-theme .description-container {
+    background: transparent !important;
+    color: #fff;
+}
+
+body.dark-theme .description-content {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .description-placeholder {
+    color: #666 !important;
+}
+
+body.dark-theme .description-text {
+    color: #ccc !important;
+}
+
+body.dark-theme .description-edit {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .description-edit:focus {
+    border-color: #ff69b4 !important;
+}
+
+/* Playlists Tab */
+body.dark-theme .playlists-container {
+    background: transparent !important;
+}
+
+body.dark-theme .playlists-grid {
+    background: transparent !important;
+}
+
+body.dark-theme .empty-playlists {
+    color: #999 !important;
+}
+
+/* Feed Tab */
+body.dark-theme .feed-container {
+    background: transparent !important;
+}
+
+body.dark-theme .feed-item {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .feed-title {
+    color: #fff !important;
+}
+
+body.dark-theme .feed-meta {
+    color: #aaa !important;
+}
+
+body.dark-theme .empty-feed {
+    color: #999 !important;
+}
+
+/* Buttons in tabs */
+body.dark-theme .btn {
+    background: #2a2a2a !important;
+    color: #ccc !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme .btn:hover {
+    background: #3a3a3a !important;
+    color: #fff !important;
+}
+
+body.dark-theme .btn.primary {
+    background: #ff69b4 !important;
+    color: #fff !important;
+    border: 1px solid #ff69b4 !important;
+}
+
+body.dark-theme .btn.primary:hover {
+    background: #ff69b4 !important;
+    color: #fff !important;
+    border: 1px solid #ff69b4 !important;
+    transform: none !important;
+}
+
+body.dark-theme .btn-primary {
+    background: #ff69b4 !important;
+    color: #fff !important;
+    border: 1px solid #ff69b4 !important;
+}
+
+body.dark-theme .btn-primary:hover {
+    background: #ff69b4 !important;
+    color: #fff !important;
+    border: 1px solid #ff69b4 !important;
+    transform: none !important;
+}
+
+/* Editor Toolbar - Pink Accents like Light Theme */
+body.dark-theme .editor-toolbar button {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .editor-toolbar button:hover {
+    background: #ff69b4 !important;
+    border-color: #ff69b4 !important;
+    color: #fff !important;
+}
+
+/* Form Groups and Labels */
+body.dark-theme .form-group label {
+    color: #fff !important;
+}
+
+body.dark-theme label {
+    color: #fff !important;
+}
+
+/* Description View and Edit Containers */
+body.dark-theme #descriptionView {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme #descriptionText {
+    color: #ccc !important;
+}
+
+body.dark-theme #descriptionEdit {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme #descriptionTitle {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme #descriptionTitle::placeholder {
+    color: #777 !important;
+}
+
+/* Description Editor */
+body.dark-theme .editor,
+body.dark-theme #descriptionEditor,
+body.dark-theme div#descriptionEditor.editor,
+body.dark-theme div.editor[contenteditable="true"] {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .editor:focus,
+body.dark-theme #descriptionEditor:focus,
+body.dark-theme div#descriptionEditor.editor:focus {
+    border-color: #ff69b4 !important;
+    outline: none !important;
+}
+
+body.dark-theme #descriptionEditor::placeholder,
+body.dark-theme div#descriptionEditor.editor::placeholder {
+    color: #666 !important;
+}
+
+body.dark-theme #descriptionEditor h3,
+body.dark-theme #descriptionEditor h4 {
+    color: #fff !important;
+}
+
+body.dark-theme #descriptionEditor p {
+    color: #ccc !important;
+}
+
+body.dark-theme #descriptionEditor a {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme #descriptionEditor ul,
+body.dark-theme #descriptionEditor ol {
+    color: #ccc !important;
+}
+
+/* Custom Scrollbar for Description Editor */
+body.dark-theme #descriptionEditor::-webkit-scrollbar {
+    width: 12px;
+}
+
+body.dark-theme #descriptionEditor::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+body.dark-theme #descriptionEditor::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+body.dark-theme #descriptionEditor::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Modal Styles - Playlist Creation/Edit */
+body.dark-theme .modal {
+    background: rgba(0, 0, 0, 0.8) !important;
+}
+
+body.dark-theme .modal-content {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme .modal-header {
+    border-bottom: 1px solid #444 !important;
+}
+
+body.dark-theme .modal-header h3 {
+    color: #fff !important;
+}
+
+body.dark-theme .close-btn {
+    color: #ccc !important;
+}
+
+body.dark-theme .close-btn:hover {
+    color: #fff !important;
+}
+
+body.dark-theme .playlist-input,
+body.dark-theme #newPlaylistTitle,
+body.dark-theme #newPlaylistCategories,
+body.dark-theme #editPlaylistTitle,
+body.dark-theme #editPlaylistCategories,
+body.dark-theme #videoSearch {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .playlist-input:focus,
+body.dark-theme #videoSearch:focus {
+    border-color: #ff69b4 !important;
+    outline: none !important;
+}
+
+body.dark-theme .playlist-input::placeholder,
+body.dark-theme #videoSearch::placeholder {
+    color: #777 !important;
+}
+
+body.dark-theme #selectionCounter {
+    color: #ff69b4 !important;
+}
+
+/* Video List in Modal - Dark Scrollbar and Borders */
+body.dark-theme .video-list,
+body.dark-theme #videoList {
+    background: #0a0a0a !important;
+    border: 1px solid #444 !important;
+}
+
+/* Custom Scrollbar for Modal Video List */
+body.dark-theme .video-list::-webkit-scrollbar,
+body.dark-theme #videoList::-webkit-scrollbar {
+    width: 12px;
+}
+
+body.dark-theme .video-list::-webkit-scrollbar-track,
+body.dark-theme #videoList::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+body.dark-theme .video-list::-webkit-scrollbar-thumb,
+body.dark-theme #videoList::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+body.dark-theme .video-list::-webkit-scrollbar-thumb:hover,
+body.dark-theme #videoList::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Video items in modal list */
+body.dark-theme #videoList > div {
+    border-bottom: 1px solid #333 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme #videoList > div:hover {
+    background: #2a2a2a !important;
+}
+
+body.dark-theme #videoList label {
+    color: #fff !important;
+}
+
+body.dark-theme #videoList input[type="checkbox"] {
+    border: 1px solid #444 !important;
+    background: #2a2a2a !important;
+}
+
+/* Birthday Modal Styles */
+body.dark-theme #birthdayModal .modal-content {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme #birthdayModal .modal-header {
+    border-bottom: 1px solid #444 !important;
+}
+
+body.dark-theme #birthdayModal .modal-header h3 {
+    color: #fff !important;
+}
+
+body.dark-theme #birthdayModal label {
+    color: #fff !important;
+}
+
+body.dark-theme #birthdayDay,
+body.dark-theme #birthdayMonth,
+body.dark-theme #birthdayYear {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme #birthdayDay:focus,
+body.dark-theme #birthdayMonth:focus,
+body.dark-theme #birthdayYear:focus {
+    border-color: #ff69b4 !important;
+    outline: none !important;
+}
+
+body.dark-theme #birthdayYear::placeholder {
+    color: #777 !important;
+}
+
+/* Birthday Modal Select Dropdown Options */
+body.dark-theme #birthdayDay option,
+body.dark-theme #birthdayMonth option {
+    background: #2a2a2a !important;
+    color: #fff !important;
+}
+
+body.dark-theme #videoList input[type="checkbox"]:checked {
+    background: #ff69b4 !important;
+    border-color: #ff69b4 !important;
+}
+
+/* Video metadata in modal */
+body.dark-theme #videoList .video-title {
+    color: #fff !important;
+}
+
+body.dark-theme #videoList .video-meta {
+    color: #aaa !important;
+}
+
+body.dark-theme #videoList span {
+    color: #ccc !important;
+}
+
+/* Modal Actions */
+body.dark-theme .modal-actions {
+    border-top: none !important;
+}
+
+body.dark-theme .btn.secondary {
+    background: #2a2a2a !important;
+    color: #ccc !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme .btn.secondary:hover {
+    background: #3a3a3a !important;
+    color: #fff !important;
+}
+
+/* Achievements System - Green for Unlocked (adapted for dark theme) */
+body.dark-theme .achievements-header h4 {
+    color: #fff !important;
+}
+
+body.dark-theme .progress-bar {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-theme .progress-fill {
+    background: linear-gradient(90deg, #4caf50, #66bb6a) !important;
+}
+
+body.dark-theme .achievements-grid {
+    background: transparent !important;
+}
+
+body.dark-theme .achievement {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .achievement.unlocked {
+    background: linear-gradient(135deg, #1a2e1a, #1e3a1e) !important;
+    border: 1px solid #4caf50 !important;
+}
+
+body.dark-theme .achievement.locked {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+    opacity: 0.5;
+}
+
+body.dark-theme .achievement-icon {
+    background: #ff69b4 !important;
+    box-shadow: none !important;
+}
+
+body.dark-theme .achievement.unlocked .achievement-icon {
+    background: #ff69b4 !important;
+}
+
+body.dark-theme .achievement.locked .achievement-icon {
+    background: #2a2a2a !important;
+}
+
+body.dark-theme .achievement-title {
+    color: #fff !important;
+}
+
+body.dark-theme .achievement-description {
+    color: #aaa !important;
+}
+
+body.dark-theme .achievement.unlocked .achievement-status {
+    color: #4caf50 !important;
+}
+
+body.dark-theme .achievement.locked .achievement-status {
+    color: #666 !important;
+}
+
+/* Achievement icons - recolor SVG stroke from pink to white */
+body.dark-theme .achievement-icon svg {
+    stroke: #fff !important;
+}
+
+body.dark-theme .achievement.unlocked .achievement-icon svg {
+    stroke: #fff !important;
+}
+
+body.dark-theme .achievement.locked .achievement-icon svg {
+    stroke: #fff !important;
+    opacity: 0.5;
+}
+
+/* Analytics Cards - Pink Icons */
+body.dark-theme .analytics-card svg {
+    stroke: #ff69b4 !important;
+}
+
+body.dark-theme .stat-card svg {
+    stroke: #ff69b4 !important;
+}
+
+body.dark-theme .analytics-icon svg {
+    stroke: #ff69b4 !important;
+}
+
+/* Analytics Sections */
+body.dark-theme .analytics-sections {
+    background: transparent !important;
+}
+
+body.dark-theme .analytics-section {
+    background: #1a1a1a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .analytics-section h4 {
+    color: #fff !important;
+}
+
+body.dark-theme .popular-videos {
+    background: transparent !important;
+}
+
+body.dark-theme .popular-video {
+    background: transparent !important;
+    border-bottom: 1px solid #333 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .popular-video:hover {
+    background: #2a2a2a !important;
+}
+
+body.dark-theme .popular-video .rank {
+    background: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .popular-video .title {
+    color: #fff !important;
+}
+
+body.dark-theme .popular-video .views {
+    color: #aaa !important;
+}
+
+body.dark-theme .upload-schedule {
+    background: transparent !important;
+}
+
+body.dark-theme .schedule-item {
+    background: transparent !important;
+    border-bottom: 1px solid #333 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .schedule-item .label {
+    color: #aaa !important;
+}
+
+body.dark-theme .schedule-item .value {
+    color: #fff !important;
+    font-weight: bold !important;
+}
+
+/* Pagination - Pink Active Buttons */
+body.dark-theme .pagination-btn {
+    background: #ff69b4 !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+body.dark-theme .pagination-btn.active {
+    background: #d94b88 !important;
+    color: #fff !important;
+    font-weight: bold !important;
+}
+
+body.dark-theme .pagination-btn:hover:not(:disabled) {
+    background: #d94b88 !important;
+}
+
+body.dark-theme .pagination-btn:disabled {
+    background: #555 !important;
+    color: #999 !important;
+    opacity: 0.6 !important;
+}
+
+/* Generic inline styled elements */
+body.dark-theme [style*="background:#fff"],
+body.dark-theme [style*="background: #fff"] {
+    background: #1a1a1a !important;
+}
+
+/* More specific override for editor with inline styles */
+body.dark-theme div[style*="background:#fff"].editor,
+body.dark-theme div[style*="background: #fff"].editor,
+body.dark-theme div#descriptionEditor[style*="background:#fff"],
+body.dark-theme div#descriptionEditor[style*="background: #fff"] {
+    background: #1a1a1a !important;
+}
+
+body.dark-theme [style*="color:#111"],
+body.dark-theme [style*="color: #111"] {
+    color: #fff !important;
+}
+
+body.dark-theme [style*="color:#333"],
+body.dark-theme [style*="color: #333"] {
+    color: #fff !important;
+}
+
+body.dark-theme [style*="color:#666"],
+body.dark-theme [style*="color: #666"] {
+    color: #aaa !important;
+}
+
+body.dark-theme [style*="color:#999"],
+body.dark-theme [style*="color: #999"] {
+    color: #777 !important;
+}
+
+body.dark-theme [style*="border:1px solid #ddd"],
+body.dark-theme [style*="border: 1px solid #ddd"] {
+    border-color: #444 !important;
+}
+
+body.dark-theme [style*="border:1px solid #eee"],
+body.dark-theme [style*="border: 1px solid #eee"] {
+    border-color: #444 !important;
+}
+
+body.dark-theme [style*="border-bottom:1px solid #eee"],
+body.dark-theme [style*="border-bottom: 1px solid #eee"] {
+    border-color: #444 !important;
+}
+
+body.dark-theme [style*="border:1px solid rgba(0,0,0,0.08)"],
+body.dark-theme [style*="border: 1px solid rgba(0,0,0,0.08)"] {
+    border-color: #444 !important;
+}
+
+body.dark-theme [style*="border:1px solid rgba(0,0,0,0.06)"],
+body.dark-theme [style*="border: 1px solid rgba(0,0,0,0.06)"] {
+    border-color: #444 !important;
+}
+
+/* Override SVG stroke colors in analytics to pink */
+body.dark-theme [style*="stroke:#d94b88"],
+body.dark-theme [style*="stroke: #d94b88"] {
+    stroke: #ff69b4 !important;
+}
+
+/* Ensure all buttons in editor toolbar use pink on hover */
+body.dark-theme button[data-cmd],
+body.dark-theme .editor-toolbar button,
+body.dark-theme div.editor-toolbar button[style*="background:#fff"],
+body.dark-theme button[style*="background:#fff"][data-cmd] {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme button[data-cmd]:hover,
+body.dark-theme .editor-toolbar button:hover,
+body.dark-theme div.editor-toolbar button[style*="background:#fff"]:hover {
+    background: #ff69b4 !important;
+    border-color: #ff69b4 !important;
+    color: #fff !important;
+}
+
+/* Additional text inputs */
+body.dark-theme input[type="text"]:not(.search-input),
+body.dark-theme input[type="text"][style*="background:#fff"]:not(.search-input) {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme input[type="text"]:focus,
+body.dark-theme input[type="text"][style*="background:#fff"]:focus {
+    border-color: #ff69b4 !important;
+}
+
+body.dark-theme input[type="text"]::placeholder {
+    color: #777 !important;
+}
+
+/* Textarea elements */
+body.dark-theme textarea {
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+
+body.dark-theme textarea:focus {
+    border-color: #ff69b4 !important;
+}
+
+body.dark-theme textarea::placeholder {
+    color: #777 !important;
+}
+
+/* Danmaku Styles for Dark Theme */
+body.dark-theme .danmaku-form {
+    background: rgba(0, 0, 0, 0.8) !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .danmaku-header {
+    background: linear-gradient(180deg, #2a2a2a, #1a1a1a) !important;
+    color: #fff !important;
+    border-bottom-color: #444 !important;
+}
+
+body.dark-theme .danmaku-input input {
+    background: #2a2a2a !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .danmaku-input input::placeholder {
+    color: #777 !important;
+}
+
+body.dark-theme .danmaku-controls select,
+body.dark-theme .danmaku-controls button {
+    background: #2a2a2a !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme .danmaku-controls select option {
+    background: #2a2a2a !important;
+    color: #fff !important;
+}
+
+body.dark-theme .danmaku-content {
+    background: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Cinema mode sidebar in dark theme - already defined above */
+
+/* Wiki Documentation - Tables and Code Blocks */
+body.dark-theme table {
+    background: #1a1a1a;
+    border-color: #333;
+}
+
+body.dark-theme th {
+    background: #2a2a2a !important;
+    color: #fff;
+    border-color: #333;
+}
+
+body.dark-theme td {
+    background: #1a1a1a;
+    color: #ccc;
+    border-color: #333;
+}
+
+body.dark-theme tr:nth-child(even) td {
+    background: #222;
+}
+
+body.dark-theme table a {
+    color: #ff8aba;
+}
+
+body.dark-theme table a:hover {
+    color: #ffb3d9;
+}
+
+/* Code blocks */
+body.dark-theme pre {
+    background: #2a2a2a !important;
+    color: #ddd !important;
+    border: 1px solid #333;
+}

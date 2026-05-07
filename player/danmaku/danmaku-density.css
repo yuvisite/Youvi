@@ -1,0 +1,71 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Danmaku Density Visualization */
+.danmaku-density {
+    position: absolute;
+    bottom: 50px;
+
+    left: 15px;
+    right: 15px;
+    height: 50px;
+
+    z-index: 10003;
+
+    pointer-events: none;
+    display: none;
+
+    opacity: 1;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    transform: translateY(0);
+    will-change: transform, opacity;
+}
+
+.danmaku-density canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.danmaku-density.autohide {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(45px);
+}
+
+.danmaku-density.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.danmaku-density.no-transition {
+    transition: none !important;
+}
+
+
+/* Raise density graph when fullscreen danmaku form is visible */
+.video-container.fullscreen:not(.fs-form-hidden) #danmakuDensity {
+    bottom: 100px;
+}
+
+/* Cinema mode - check if form is visible via videoContainer class */
+body.cinema-mode .video-container:not(.fs-form-hidden) #danmakuDensity {
+    bottom: 50px;
+}
+
+/* Cinema mode - when form is hidden, keep graph at normal position */
+body.cinema-mode .video-container.fs-form-hidden #danmakuDensity {
+    bottom: 50px !important;
+}

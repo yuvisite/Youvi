@@ -1,0 +1,217 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Comment Images Styles */
+
+/* Comment and reply images */
+.comment-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.comment-image, .reply-image {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 0;
+    cursor: pointer;
+    margin: 0;
+    display: inline-block;
+    transition: all 0.3s ease;
+    opacity: 1 !important;
+    filter: none !important;
+    vertical-align: top;
+}
+
+.comment-image.loaded, .reply-image.loaded {
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+.comment-text img, .reply-text img {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 0;
+    cursor: pointer;
+    margin: 4px;
+    display: inline-block;
+    opacity: 1 !important;
+    filter: none !important;
+    background: none !important;
+    vertical-align: top;
+}
+
+/* Image preview in comment textarea */
+.comment-image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+    padding: 6px;
+    background: #f9f9f9;
+    border-radius: 6px;
+    border: 1px solid #e5e5e5;
+}
+
+.comment-image-preview-item {
+    position: relative;
+    display: inline-block;
+}
+
+.comment-image-preview-item img {
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 0;
+    cursor: pointer;
+    display: block;
+    border: 1px solid #ddd;
+}
+
+.comment-image-preview-item .remove-image {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: transparent;
+    color: #000;
+    border: none;
+    border-radius: 0;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.comment-image-preview-item .remove-image:hover {
+    color: #ff69b4;
+}
+
+/* Image button for replies - icon style */
+.reply-image-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    color: #666;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.reply-image-btn:hover {
+    color: #ff69b4;
+}
+
+.reply-image-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Image modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    padding: 0;
+    margin: 0;
+}
+
+.modal .close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 32px;
+    font-weight: 100;
+    cursor: pointer;
+    z-index: 10001;
+    line-height: 1;
+}
+
+.modal .close:hover,
+.modal .close:focus {
+    color: #bbb;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90%;
+    max-height: 90vh;
+    padding: 0;
+    margin: 0;
+}
+
+.modal-content img {
+    display: block;
+    max-width: 100%;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* Dark theme support */
+body.dark-theme .comment-image-preview {
+    background: #2a2a2a;
+    border-color: #444;
+}
+
+body.dark-theme .comment-image-preview-item img {
+    border-color: #555;
+}
+
+body.dark-theme .comment-image-preview-item .remove-image {
+    color: #fff;
+}
+
+body.dark-theme .comment-image-preview-item .remove-image:hover {
+    color: #ff69b4;
+}
+
+body.dark-theme .reply-image-btn {
+    color: #ccc;
+}
+
+body.dark-theme .reply-image-btn:hover {
+    color: #ff69b4;
+}
+
+body.dark-theme .modal .close {
+    color: #fff;
+}
+
+body.dark-theme .modal .close:hover {
+    color: #ff69b4;
+}

@@ -1,0 +1,110 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Theme Dropdown Styles for Youvi */
+
+.settings-container {
+    position: relative;
+    display: inline-block;
+}
+
+.settings-btn {
+    background: none;
+    border: none;
+    color: #111;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: color 0.2s;
+}
+
+.settings-btn:hover {
+    color: #ff69b4;
+}
+
+.theme-dropdown,
+.settings-dropdown {
+    display: none;
+    position: fixed;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: 120px;
+    z-index: 10000;
+    overflow: hidden;
+}
+
+.theme-dropdown.show,
+.settings-dropdown.show {
+    display: block;
+}
+
+.theme-dropdown-item,
+.settings-option {
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 13px;
+    color: #111;
+    transition: background-color 0.2s;
+}
+
+.theme-dropdown-item:hover,
+.settings-option:hover {
+    background: #f5f5f5;
+}
+
+.theme-dropdown-item.active {
+    background: #ffe7f4;
+    color: #ff69b4;
+    font-weight: 500;
+}
+
+/* Dark theme styles for dropdown */
+body.dark-theme .settings-btn {
+    color: #fff;
+}
+
+body.dark-theme .settings-btn:hover {
+    color: #ff69b4;
+}
+
+body.dark-theme .theme-dropdown,
+body.dark-theme .settings-dropdown {
+    background: #2a2a2a;
+    border-color: #444;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+body.dark-theme .theme-dropdown-item,
+body.dark-theme .settings-option {
+    color: #ccc;
+}
+
+body.dark-theme .theme-dropdown-item:hover,
+body.dark-theme .settings-option:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+body.dark-theme .theme-dropdown-item.active {
+    background: #ff69b4;
+    color: #fff;
+}

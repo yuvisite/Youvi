@@ -1,0 +1,322 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Pink Skeuomorphic Theme - Нигде не использвуется */
+
+/* Body */
+body.skeuo-theme {
+    background: #e8e8e8 !important;
+}
+
+/* Header */
+body.skeuo-theme .header {
+    background: linear-gradient(180deg, #ffe7f4 0%, #ffd6ea 100%) !important;
+    border-bottom: 1px solid #ffb3d9 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+/* Sidebar */
+body.skeuo-theme .sidebar {
+    background: linear-gradient(90deg, #f5f5f5 0%, #e8e8e8 100%) !important;
+    border-right: 1px solid #d0d0d0 !important;
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.8), 2px 0 6px rgba(0,0,0,0.06) !important;
+}
+
+/* Player Section */
+body.skeuo-theme .player-section {
+    background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 1px solid #d0d0d0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 6px rgba(0,0,0,0.1) !important;
+}
+
+/* Video Info */
+body.skeuo-theme .video-info {
+    background: linear-gradient(180deg, #fff 0%, #f8f8f8 100%) !important;
+    border: 1px solid #d5d5d5 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+
+/* Buttons */
+body.skeuo-theme .search-btn,
+body.skeuo-theme .subscribe-btn,
+body.skeuo-theme #sendDanmaku,
+body.skeuo-theme .action-btn.favorite-active {
+    background: linear-gradient(180deg, #ff8fcc 0%, #ff69b4 50%, #d94b88 100%) !important;
+    border: 1px solid #c2185b !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.15) !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2) !important;
+}
+
+/* Action Buttons */
+body.skeuo-theme .action-btn {
+    background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%) !important;
+    border: 1px solid #c0c0c0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+/* Right Sidebar */
+body.skeuo-theme .right-sidebar {
+    background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 1px solid #d0d0d0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 6px rgba(0,0,0,0.08) !important;
+}
+
+/* Danmaku Form */
+body.skeuo-theme .danmaku-form {
+    background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 1px solid #d0d0d0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+
+/* Inputs */
+body.skeuo-theme .search-input,
+body.skeuo-theme .danmaku-input input {
+    background: #fff !important;
+    border: 1px solid #b0b0b0 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.08) !important;
+}
+
+/* Video Description */
+body.skeuo-theme .video-description {
+    background: linear-gradient(180deg, #fafafa 0%, #fff 100%) !important;
+    border: 1px solid #d5d5d5 !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.04) !important;
+}
+
+/* Tags */
+body.skeuo-theme .video-tag {
+    background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 1px solid #d0d0d0 !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important;
+}
+
+/* Related Videos */
+body.skeuo-theme .related-thumb {
+    border: 1px solid #d0d0d0 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+
+/* Progress Bar */
+body.skeuo-theme .progress-filled {
+    background: linear-gradient(180deg, #ff8fcc 0%, #ff69b4 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 0 4px rgba(255,105,180,0.4) !important;
+}
+
+/* Big Play Button */
+body.skeuo-theme .big-play-btn {
+    background: linear-gradient(135deg, #ff8fcc 0%, #ff69b4 50%, #d94b88 100%) !important;
+    border: 3px solid #fff !important;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.3) !important;
+}
+
+/* Footer */
+body.skeuo-theme .footer {
+    background: linear-gradient(180deg, #3a3a3a 0%, #2c2c2c 100%) !important;
+    border-top: 1px solid #555 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 -2px 6px rgba(0,0,0,0.15) !important;
+}
+
+
+/* Top Navigation */
+body.skeuo-theme .top-nav {
+    background: linear-gradient(180deg, #ff7dc0 0%, #ff69b4 50%, #d94b88 100%) !important;
+    border-bottom: 1px solid #b83870 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 6px rgba(0,0,0,0.2) !important;
+}
+
+/* Sidebar Toggle Button */
+body.skeuo-theme .sidebar-toggle-btn {
+    background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%) !important;
+    border: 1px solid #b0b0b0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+/* User Actions Links */
+body.skeuo-theme .user-actions a,
+body.skeuo-theme .user-actions .settings-btn {
+    color: #c2185b !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5) !important;
+}
+
+/* Sidebar Items */
+body.skeuo-theme .sidebar-item {
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8) !important;
+}
+
+body.skeuo-theme .sidebar-item.active {
+    background: linear-gradient(180deg, #ffe7f4 0%, #ffd6ea 100%) !important;
+    border-left: 3px solid #ff69b4 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6) !important;
+}
+
+/* Video Player */
+body.skeuo-theme .video-player {
+    border: 1px solid #999 !important;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.15) !important;
+}
+
+/* Video Title */
+body.skeuo-theme .video-title {
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8) !important;
+}
+
+/* Uploader Avatar */
+body.skeuo-theme .uploader-avatar {
+    background: linear-gradient(135deg, #ff8fcc 0%, #ff69b4 50%, #d94b88 100%) !important;
+    border: 2px solid #fff !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 6px rgba(0,0,0,0.2) !important;
+}
+
+/* Section Titles */
+body.skeuo-theme .section-title-right {
+    background: linear-gradient(180deg, #f8f8f8 0%, #ececec 100%) !important;
+    border-bottom: 1px solid #d5d5d5 !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6) !important;
+}
+
+/* Related Video Current */
+body.skeuo-theme .related-video.current-video {
+    background: linear-gradient(180deg, #ffe7f4 0%, #ffd6ea 100%) !important;
+    border: 2px solid #ffb3d9 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5) !important;
+}
+
+/* Danmaku Controls */
+body.skeuo-theme .danmaku-controls select {
+    background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 1px solid #b0b0b0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.08) !important;
+}
+
+/* Video Controls */
+body.skeuo-theme .play-btn {
+    background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.15) 100%) !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+/* Progress Bar */
+body.skeuo-theme .progress-bar {
+    background: rgba(255,255,255,0.3) !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3) !important;
+}
+
+body.skeuo-theme .progress-handle {
+    background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 2px solid #ff69b4 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+/* Volume Slider */
+body.skeuo-theme .volume-slider::-webkit-slider-thumb {
+    background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 2px solid #ff69b4 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+body.skeuo-theme .volume-slider::-moz-range-thumb {
+    background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 2px solid #ff69b4 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+/* Theme Dropdown */
+body.skeuo-theme .theme-dropdown {
+    background: linear-gradient(180deg, #fff 0%, #f8f8f8 100%) !important;
+    border: 1px solid #c0c0c0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+body.skeuo-theme .theme-dropdown-item.active {
+    background: linear-gradient(180deg, #ffe7f4 0%, #ffd6ea 100%) !important;
+    color: #c2185b !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5) !important;
+}
+
+/* Scrollbar */
+body.skeuo-theme .playlist-container::-webkit-scrollbar-track {
+    background: linear-gradient(180deg, #f5f5f5 0%, #e8e8e8 100%) !important;
+    border: 1px solid #d0d0d0 !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.08) !important;
+}
+
+body.skeuo-theme .playlist-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff8fcc 0%, #ff69b4 100%) !important;
+    border: 1px solid #d94b88 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4) !important;
+}
+
+/* Autoplay Toggle */
+body.skeuo-theme .autoplay-toggle {
+    background: linear-gradient(180deg, #d0d0d0 0%, #b0b0b0 100%) !important;
+    border: 1px solid #999 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15) !important;
+}
+
+body.skeuo-theme .autoplay-toggle.active {
+    background: linear-gradient(180deg, #ff8fcc 0%, #ff69b4 100%) !important;
+    border: 1px solid #d94b88 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 0 6px rgba(255,105,180,0.4) !important;
+}
+
+body.skeuo-theme .autoplay-toggle-handle {
+    background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 1px solid #c0c0c0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.25) !important;
+}
+
+/* Settings Menu */
+body.skeuo-theme .settings-menu {
+    background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%) !important;
+    border: 1px solid #555 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 12px rgba(0,0,0,0.4) !important;
+}
+
+body.skeuo-theme .settings-option.active {
+    background: linear-gradient(180deg, #ff8fcc 0%, #ff69b4 50%, #d94b88 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3) !important;
+}
+
+/* Description Toggle */
+body.skeuo-theme .description-toggle {
+    background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 1px solid #c0c0c0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.08) !important;
+}
+
+/* Edit Tags Button */
+body.skeuo-theme .edit-tags-btn {
+    background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%) !important;
+    border: 1px solid #d0d0d0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.06) !important;
+}
+
+/* Subscribe Button Subscribed State */
+body.skeuo-theme .subscribe-btn.subscribed {
+    background: linear-gradient(180deg, #999 0%, #777 100%) !important;
+    border: 1px solid #666 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 2px rgba(0,0,0,0.15) !important;
+}
+
+/* Cinema Mode */
+body.skeuo-theme.cinema-mode .sidebar {
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.8), 3px 0 12px rgba(0,0,0,0.15) !important;
+}
+
+body.skeuo-theme.cinema-mode .danmaku-form {
+    border-top: 1px solid #d0d0d0 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 -2px 6px rgba(0,0,0,0.1) !important;
+}

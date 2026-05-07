@@ -1,0 +1,432 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+body.dark-theme input#globalSearch.search-input {
+  background: #4a3a34 !important;
+  color: #fff !important;
+  border-color: #555 !important;
+}
+
+body {
+  --channel-accent: #ff69b4;
+  --channel-nav-link-hover: color-mix(in srgb, var(--channel-accent) 38%, #fff);
+  --channel-nav-link-active: color-mix(in srgb, var(--channel-accent) 44%, #fff);
+}
+/* Top Navigation Bar */
+.top-nav {
+  background: #d94b88;
+  border-bottom: 1px solid #c2185b;
+  padding: 4px 0;
+}
+
+.top-nav-content {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.top-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+  padding: 2px 0;
+  transition: color 0.2s;
+}
+
+.top-nav a:hover {
+  color: var(--channel-nav-link-hover, #ffd6ea);
+}
+
+.top-nav a.active {
+  color: var(--channel-nav-link-active, #ffd6ea);
+  font-weight: 600;
+}
+
+/* Header */
+.header {
+  background: #FFE7F4;
+  padding: 0;
+  border-bottom: 1px solid #f2cfe1;
+  min-height: 40px;
+  width: 100%;
+}
+
+.header-content-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+  min-height: 40px;
+}
+
+/* Header sections */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Sidebar toggle button */
+.sidebar-toggle-btn {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+  transition: background-color 0.2s;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.sidebar-toggle-btn:hover {
+  background: transparent;
+}
+
+.sidebar-toggle-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: #111;
+}
+
+/* Collapsed sidebar styles moved to sidebar.css for consistency */
+.sidebar-collapsed .container {
+  padding-left: 20px;
+}
+
+.sidebar-collapsed .main-content {
+  margin-left: 0;
+  max-width: 100%;
+}
+
+.sidebar-collapsed .nav-links {
+  display: none;
+}
+
+/* Keep logo visible when sidebar collapsed */
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0;
+  flex-shrink: 0;
+  height: 40px;
+}
+
+.logo img {
+  height: 30px;
+  width: auto;
+  max-height: 30px;
+  filter: var(--youvi-logo-filter, none);
+}
+
+/* Theme-safe recolor for header PNG logo (works on file://, no external mask fetch). */
+body.channel-theme-red {
+  --youvi-logo-filter: hue-rotate(38deg) saturate(1.45) brightness(0.95);
+}
+
+body.channel-theme-orange {
+  --youvi-logo-filter: hue-rotate(62deg) saturate(1.5) brightness(0.98);
+}
+
+body.channel-theme-black {
+  --youvi-logo-filter: grayscale(1) brightness(0.2) contrast(1.15);
+}
+
+body.channel-theme-white {
+  --youvi-logo-filter: grayscale(1) brightness(2.6) contrast(0.88);
+}
+
+body.channel-theme-yellow {
+  --youvi-logo-filter: hue-rotate(86deg) saturate(1.45) brightness(1.06);
+}
+
+body.channel-theme-light-green {
+  --youvi-logo-filter: hue-rotate(122deg) saturate(1.4) brightness(1.0);
+}
+
+body.channel-theme-light-blue {
+  --youvi-logo-filter: hue-rotate(228deg) saturate(1.35) brightness(1.04);
+}
+
+.search-area {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  width: 530px;
+  position: relative;
+}
+
+.search-area.autocomplete-wrapper {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  width: 530px;
+  position: relative;
+}
+
+.search-input {
+  width: 450px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.1);
+  font-size: 13px;
+  height: 32px;
+  box-sizing: border-box;
+}
+
+body[class*="channel-theme-"] .search-input {
+  background: color-mix(in srgb, var(--channel-accent-pale, #ffe7f4) 72%, #ffffff 28%);
+  border-color: color-mix(in srgb, var(--channel-accent-link-border, #f2cfe1) 65%, #ffffff 35%);
+  color: #1f2937;
+}
+
+body[class*="channel-theme-"] .search-input::placeholder {
+  color: color-mix(in srgb, var(--channel-accent-link-hover, #666666) 68%, #ffffff 32%);
+}
+
+body[class*="channel-theme-"] .search-input:focus {
+  outline: none;
+  border-color: var(--channel-accent, #ff69b4);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--channel-accent, #ff69b4) 22%, transparent);
+}
+
+body.dark-theme[class*="channel-theme-"] input.search-input,
+body.dark-theme[class*="channel-theme-"] input#globalSearch.search-input {
+  background: color-mix(in srgb, var(--channel-header-dark-bg, #2a2a2a) 76%, #ffffff 24%) !important;
+  color: #ffffff !important;
+  border-color: color-mix(in srgb, var(--channel-accent-link-border, #666666) 62%, #202020 38%) !important;
+}
+
+body.dark-theme[class*="channel-theme-"] input.search-input::placeholder,
+body.dark-theme[class*="channel-theme-"] input#globalSearch.search-input::placeholder {
+  color: color-mix(in srgb, var(--channel-accent-pale, #f3f4f6) 60%, #9ca3af 40%) !important;
+}
+
+.search-btn {
+  width: 70px;
+  height: 32px;
+  padding: 0;
+  background: #ff69b4;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1;
+  flex-shrink: 0;
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+}
+
+.search-btn:hover {
+  background: #ff85c3;
+}
+
+.user-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 0;
+  flex-shrink: 0;
+}
+
+.user-actions a, .settings-btn {
+  color: #111;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.settings-btn:hover {
+  color: #ff69b4;
+}
+
+/* Settings container for theme dropdown */
+.settings-container {
+  position: relative;
+  display: inline-block;
+}
+
+.settings-btn {
+  padding: 4px 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dark theme for header */
+body.dark-theme .header {
+  background: #2c1810;
+  border-bottom-color: #444;
+}
+
+body.dark-theme .sidebar-toggle-btn {
+  color: #fff;
+}
+
+body.dark-theme .sidebar-toggle-btn:hover {
+  color: #ff69b4;
+}
+
+body.dark-theme .user-actions a,
+body.dark-theme .settings-btn {
+  color: #fff;
+}
+
+body.dark-theme .user-actions a:hover,
+body.dark-theme .settings-btn:hover {
+  color: #ff69b4;
+}
+
+body.dark-theme .search-input {
+  background: #4a3a34 !important;
+  border-color: #555;
+  color: #fff;
+}
+
+body.dark-theme .search-input::placeholder {
+  color: #999;
+}
+
+/* Адаптивные ограничения ширины для больших экранов */
+@media (min-width: 1700px) {
+  .header-content-wrapper,
+  .top-nav-content {
+    max-width: 1700px;
+  }
+}
+
+@media (min-width: 2000px) {
+  .header-content-wrapper,
+  .top-nav-content {
+    max-width: 1800px;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .header-center {
+    max-width: 500px;
+    margin: 0 15px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .header-center {
+    max-width: 400px;
+    margin: 0 10px;
+  }
+  
+  .search-input {
+    min-width: 250px;
+  }
+  
+  .user-actions {
+    gap: 6px;
+  }
+  
+  .user-actions a, .settings-btn {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+}
+
+
+
+@media (max-width: 600px) {
+  .header-center {
+    max-width: 250px;
+    margin: 0 4px;
+  }
+  
+  .search-input {
+    min-width: 150px;
+  }
+}
+
+
+
+@media (max-width: 480px) {
+  .header-content-wrapper {
+    padding: 0 10px;
+  }
+  
+  .header-left {
+    gap: 8px;
+  }
+  
+  .header-center {
+    margin: 0;
+    max-width: 180px;
+  }
+  
+  .search-input {
+    min-width: 120px;
+    font-size: 12px;
+  }
+  
+  .search-btn {
+    font-size: 11px;
+  }
+  
+  .logo img {
+    height: 25px;
+  }
+}

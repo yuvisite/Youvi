@@ -1,0 +1,135 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Virtual Playlist Styles - Optimized for performance */
+
+.virtual-playlist-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    contain: layout style paint; /* CSS containment for better performance */
+}
+
+.virtual-playlist-container .related-video {
+    will-change: auto; /* Don't use will-change by default */
+    contain: layout style paint;
+    padding: 4px !important;
+    gap: 8px !important;
+}
+
+/* Compact layout for virtual playlist */
+.virtual-playlist-container .related-thumb {
+    width: 102px !important;
+    height: 58px !important;
+    min-width: 102px !important;
+    border-radius: 4px;
+    contain: layout style paint;
+    background: #f0f0f0;
+}
+
+.virtual-playlist-container .related-info {
+    padding-top: 0 !important;
+}
+
+.virtual-playlist-container .related-title {
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 2px !important;
+    font-weight: 500 !important;
+}
+
+.virtual-playlist-container .related-meta {
+    font-size: 10px !important;
+    margin-bottom: 2px !important;
+}
+
+.virtual-playlist-container .channel-row {
+    gap: 4px !important;
+}
+
+.virtual-playlist-container .channel-avatar {
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 8px !important;
+}
+
+.virtual-playlist-container .related-channel {
+    font-size: 10px !important;
+}
+
+.virtual-playlist-container .related-duration {
+    font-size: 9px !important;
+    padding: 1px 3px !important;
+}
+
+.virtual-playlist-container .rating-badge {
+    font-size: 9px !important;
+    padding: 1px 3px !important;
+}
+
+.virtual-playlist-container .lazy-thumb {
+    contain: layout style paint;
+}
+
+/* Optimize image rendering */
+.virtual-playlist-container img {
+    will-change: auto;
+    transform: translateZ(0); /* Force GPU acceleration only for images */
+}
+
+/* Scrollbar styling - identical to danmaku panel */
+#playlistContent > div::-webkit-scrollbar,
+.virtual-playlist-scroll::-webkit-scrollbar {
+    width: 4px !important;
+}
+
+#playlistContent > div::-webkit-scrollbar-track,
+.virtual-playlist-scroll::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+#playlistContent > div::-webkit-scrollbar-thumb,
+.virtual-playlist-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 105, 180, 0.4) !important;
+    border-radius: 2px !important;
+}
+
+#playlistContent > div::-webkit-scrollbar-thumb:hover,
+.virtual-playlist-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 105, 180, 0.6) !important;
+}
+
+/* Firefox */
+#playlistContent > div,
+.virtual-playlist-scroll {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(255, 105, 180, 0.4) transparent !important;
+}
+
+/* Dark theme scrollbar */
+body.dark-theme #playlistContent > div::-webkit-scrollbar-thumb,
+body.dark-theme .virtual-playlist-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 105, 180, 0.4) !important;
+}
+
+body.dark-theme #playlistContent > div::-webkit-scrollbar-thumb:hover,
+body.dark-theme .virtual-playlist-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 105, 180, 0.6) !important;
+}
+
+body.dark-theme #playlistContent > div,
+body.dark-theme .virtual-playlist-scroll {
+    scrollbar-color: rgba(255, 105, 180, 0.4) transparent !important;
+}

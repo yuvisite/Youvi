@@ -1,0 +1,745 @@
+<!-- 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tag Aliases List | Youvi</title>
+    <link rel="stylesheet" href="../../youvi/header/youvi-header.css">
+    <script>
+        (function() {
+            var theme = localStorage.getItem('youvi-theme');
+            var sidebar = localStorage.getItem('sidebarCollapsed');
+            var htmlClasses = [];
+            if (theme === 'dark') htmlClasses.push('dark-theme');
+            else if (theme === 'skeuo') htmlClasses.push('skeuo-theme');
+            if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+            if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
+        })();
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { width: 100%; }
+        body { font-family: Arial, sans-serif; background: #fff; color: #111; max-width: 100vw; }
+
+        /* ── Sidebar collapsed ── */
+        .sidebar-collapsed .sidebar,
+        html.sidebar-collapsed .sidebar {
+            width: 60px !important; padding: 10px 8px !important;
+            display: block !important; position: sticky !important;
+            top: 40px !important;
+            max-height: calc(var(--sidebar-max-height,100vh) - 75px) !important;
+            overflow-y: auto !important; overflow-x: hidden !important;
+        }
+        .sidebar-collapsed .sidebar-title, html.sidebar-collapsed .sidebar-title { display: none !important; }
+        .sidebar-collapsed .sidebar-item, html.sidebar-collapsed .sidebar-item {
+            padding: 8px !important; padding-left: 5px !important; padding-right: 8px !important;
+            justify-content: center !important; border-left: 3px solid transparent !important;
+            border-radius: 4px; font-size: 0 !important;
+        }
+        .sidebar-collapsed .sidebar-item:hover, html.sidebar-collapsed .sidebar-item:hover { background: rgba(255,105,180,.1); }
+        .sidebar-collapsed .sidebar-item.active, html.sidebar-collapsed .sidebar-item.active { background: rgba(255,105,180,.15); }
+        .sidebar-collapsed .sidebar-item svg, .sidebar-collapsed .sidebar-item img,
+        html.sidebar-collapsed .sidebar-item svg, html.sidebar-collapsed .sidebar-item img {
+            margin: 0 !important; width: 20px !important; height: 20px !important; font-size: 16px !important;
+        }
+        .sidebar-collapsed .library-item, .sidebar-collapsed .nav-item,
+        html.sidebar-collapsed .library-item, html.sidebar-collapsed .nav-item {
+            justify-content: center !important; gap: 0 !important;
+        }
+        .sidebar-collapsed .library-item span, .sidebar-collapsed .nav-item span,
+        html.sidebar-collapsed .library-item span, html.sidebar-collapsed .nav-item span { display: none !important; }
+        .sidebar-collapsed .library-item svg, .sidebar-collapsed .nav-item svg,
+        html.sidebar-collapsed .library-item svg, html.sidebar-collapsed .nav-item svg { margin: 0 !important; }
+        .sidebar-collapsed .sidebar-section:nth-child(3),
+        .sidebar-collapsed .sidebar-section:nth-child(4),
+        .sidebar-collapsed .sidebar-section:nth-child(5),
+        html.sidebar-collapsed .sidebar-section:nth-child(3),
+        html.sidebar-collapsed .sidebar-section:nth-child(4),
+        html.sidebar-collapsed .sidebar-section:nth-child(5) { display: none !important; }
+        .sidebar-collapsed .container, html.sidebar-collapsed .container { padding-left: 20px; }
+        .sidebar-collapsed .main-content, html.sidebar-collapsed .main-content { margin-left: 0; }
+        .sidebar-collapsed .content-wrapper, html.sidebar-collapsed .content-wrapper { max-width: 1500px; }
+
+        /* ── Layout ── */
+        .container {
+            width: 100%; margin: 0; padding: 0 20px 0 20px;
+            display: flex; gap: 20px; align-items: stretch;
+            min-height: calc(100vh - 200px);
+        }
+        .content-wrapper { display: flex; flex: 1; max-width: 1400px; margin: 0 auto; gap: 20px; }
+        .main-content { flex: 1; display: flex; flex-direction: column; padding-top: 20px; }
+
+        /* ── Top nav ── */
+        .top-nav { background: #d94b88; border-bottom: 1px solid #c2185b; padding: 4px 0; }
+        .top-nav-content { max-width: none !important; margin: 0 !important; padding: 0 20px; display: flex; gap: 20px; align-items: center; }
+        .top-nav a { color: #fff; text-decoration: none; font-size: 12px; padding: 2px 0; transition: color .2s; }
+        .top-nav a:hover { color: #ffd6ea; }
+        .top-nav a.active { color: #ffd6ea; font-weight: 600; }
+
+        /* ── Header ── */
+        .header { background: #FFE7F4; padding: 0; border-bottom: 1px solid #f2cfe1; min-height: 40px; width: 100%; }
+        body.dark-theme .header { background: #2c1810 !important; border-bottom: 1px solid #444 !important; }
+        .header-content-wrapper {
+            display: flex; align-items: center; position: relative; box-sizing: border-box;
+            max-width: none !important; margin: 0 !important; padding: 0 20px; width: 100%; min-height: 40px;
+        }
+
+        /* ── Page header ── */
+        .page-header { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 16px 18px; margin-bottom: 15px; }
+        .page-title { font-size: 21px; font-weight: 600; color: #111; margin-bottom: 6px; }
+        .page-desc { font-size: 13px; color: #666; }
+        body.dark-theme .page-header { background: #1a1a1a; border-color: #333; }
+        body.dark-theme .page-title { color: #fff; }
+        body.dark-theme .page-desc { color: #999; }
+
+        /* ── Breadcrumbs ── */
+        .breadcrumbs { font-size: 12px; color: #666; margin-bottom: 10px; }
+        .breadcrumbs a { color: #666; text-decoration: none; }
+        .breadcrumbs a:hover { color: #ff69b4; }
+        .breadcrumbs span { color: #111; }
+        body.dark-theme .breadcrumbs { color: #999; }
+        body.dark-theme .breadcrumbs a { color: #999; }
+        body.dark-theme .breadcrumbs span { color: #fff; }
+
+        /* ── Toolbar ── */
+        .toolbar {
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+            background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 6px;
+            padding: 10px 14px; margin-bottom: 12px;
+        }
+        body.dark-theme .toolbar { background: #1a1a1a; border-color: #333; }
+        .toolbar input[type=text] {
+            padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;
+            font-size: 13px; min-width: 220px; outline: none;
+        }
+        body.dark-theme .toolbar input[type=text] { background: #2a2a2a; border-color: #444; color: #fff; }
+        body.dark-theme .toolbar input[type=text]::placeholder { color: #888; }
+        .toolbar input[type=text]:focus { border-color: #ff69b4; }
+        .toolbar select {
+            padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;
+            font-size: 13px; cursor: pointer; background: #fff; outline: none;
+        }
+        body.dark-theme .toolbar select { background: #2a2a2a; border-color: #444; color: #fff; }
+        .toolbar .btn-open {
+            padding: 6px 14px; background: #f3f3f3;
+            border: 1px solid #d0d0d0; border-radius: 6px; cursor: pointer;
+            font-size: 12px; font-weight: 600; color: #333; white-space: nowrap;
+            transition: background .15s, border-color .15s;
+        }
+        .toolbar .btn-open:hover { background: #ebebeb; border-color: #c3c3c3; }
+        body.dark-theme .toolbar .btn-open { background: #2a2a2a; border-color: #555; color: #fff; }
+        .row-count { margin-left: auto; font-size: 12px; color: #888; white-space: nowrap; }
+        body.dark-theme .row-count { color: #999; }
+
+        /* ── Spreadsheet ── */
+        .spreadsheet-wrap {
+            flex: 1; border: 1px solid #e0e0e0; border-radius: 6px;
+            overflow: hidden; margin-bottom: 20px;
+        }
+        body.dark-theme .spreadsheet-wrap { border-color: #333; }
+        .spreadsheet-scroll { overflow-x: auto; overflow-y: auto; }
+        .spreadsheet {
+            width: 100%; border-collapse: collapse; font-size: 13px;
+            table-layout: auto;
+        }
+        .spreadsheet thead th {
+            background: #f0f0f0; border: 1px solid #ddd; padding: 8px 12px;
+            text-align: left; font-weight: 600; cursor: pointer; user-select: none;
+            position: sticky; top: 0; z-index: 10; white-space: nowrap;
+            font-size: 12px; color: #333;
+        }
+        .spreadsheet thead th:hover { background: #e4e4e4; }
+        .spreadsheet thead th.sort-asc::after { content: ' ▲'; font-size: 10px; color: #d94b88; }
+        .spreadsheet thead th.sort-desc::after { content: ' ▼'; font-size: 10px; color: #d94b88; }
+        body.dark-theme .spreadsheet thead th { background: #2a2a2a; border-color: #3a3a3a; color: #ddd; }
+        body.dark-theme .spreadsheet thead th:hover { background: #333; }
+        .spreadsheet tbody tr:nth-child(even) { background: #fafafa; }
+        .spreadsheet tbody tr:hover { background: #fff0f8; }
+        body.dark-theme .spreadsheet tbody tr:nth-child(even) { background: #111; }
+        body.dark-theme .spreadsheet tbody tr:hover { background: #1e1018; }
+        .spreadsheet tbody td {
+            border: 1px solid #eee; padding: 6px 12px;
+            vertical-align: middle; color: #333;
+        }
+        body.dark-theme .spreadsheet tbody td { border-color: #2a2a2a; color: #ccc; }
+        .spreadsheet .col-num { width: 50px; text-align: right; color: #999; font-size: 11px; }
+        .spreadsheet .col-alias { min-width: 180px; font-family: Arial, sans-serif; font-weight: 600; color: #111; }
+        body.dark-theme .spreadsheet .col-alias { color: #eee; }
+        .spreadsheet .col-arrow { width: 40px; text-align: center; color: #aaa; font-size: 14px; }
+        .spreadsheet .col-canonical { min-width: 200px; }
+        .spreadsheet .col-type { width: 100px; }
+        .spreadsheet .col-usage { width: 90px; text-align: right; }
+
+        /* ── Tag badge ── */
+        .tag-badge {
+            display: inline-block; padding: 2px 8px; border-radius: 4px;
+            color: #fff; font-size: 11px; font-weight: 500; white-space: nowrap;
+        }
+        .tag-link { color: inherit; text-decoration: none; }
+        .tag-link:hover { text-decoration: underline; }
+        .type-label {
+            display: inline-block; padding: 2px 7px; border-radius: 3px;
+            font-size: 11px; font-weight: 600; border: 1px solid;
+        }
+
+        /* ── Empty/status ── */
+        .status-box {
+            text-align: center; padding: 40px 20px; color: #888; font-size: 14px;
+        }
+        .status-box .icon {
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #9a9a9a;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .status-box .btn-open-big {
+            margin-top: 14px; padding: 8px 20px; background: #f3f3f3;
+            border: 1px solid #d0d0d0; border-radius: 8px; cursor: pointer;
+            font-size: 13px; font-weight: 600; color: #333;
+            transition: background .15s, border-color .15s;
+        }
+        .status-box .btn-open-big:hover { background: #ebebeb; border-color: #c3c3c3; }
+        body.dark-theme .status-box { color: #888; }
+        body.dark-theme .status-box .btn-open-big { background: #2a2a2a; border-color: #555; color: #ddd; }
+        .no-results { text-align: center; padding: 20px; color: #888; font-size: 13px; }
+
+        /* ── Footer ── */
+        .footer { background: #2c2c2c; color: #fff; padding: 25px 0 15px 0; margin-top: 0; }
+        .footer-content { max-width: 1600px !important; margin: 0 auto !important; padding: 0 20px !important; display: flex; gap: 30px; align-items: flex-start; }
+        .footer-main { display: flex; gap: 30px; flex: 1; }
+        .footer-logo { flex-shrink: 0; width: 200px; }
+        .footer-logo img { height: 40px; width: auto; }
+        .footer-logo p { margin-top: 8px; font-size: 11px; color: #ccc; line-height: 1.3; }
+        .footer-sections { display: flex; gap: 30px; flex: 1; }
+        .footer-right { display: flex; gap: 20px; align-items: flex-start; }
+        .footer-section { flex: 1; }
+        .footer-section h3 { font-size: 13px; margin-bottom: 10px; color: #fff; font-weight: 600; }
+        .footer-section ul { list-style: none; padding: 0; margin: 0; }
+        .footer-section li { margin-bottom: 6px; }
+        .footer-section a { color: #ccc; text-decoration: none; font-size: 11px; transition: color .2s; }
+        .footer-section a:hover { color: #ff69b4; }
+        .footer-bottom { border-top: 1px solid #444; margin-top: 20px; padding-top: 15px; text-align: center; color: #999; font-size: 10px; }
+
+        @media (max-width: 768px) {
+            .container { flex-direction: column; padding: 10px; }
+            .footer-content { flex-direction: column; gap: 20px; }
+            .footer-sections { flex-direction: column; gap: 15px; }
+            .footer-section { text-align: center; }
+            .toolbar { gap: 6px; }
+            .toolbar input[type=text] { min-width: 140px; }
+        }
+    </style>
+    <link rel="stylesheet" href="../../youvi/sidebar.css">
+    <link rel="stylesheet" href="../../youvi/sidebar-scroll.css">
+    <link rel="stylesheet" href="../../youvi/themes/dark-theme.css">
+    <link rel="stylesheet" href="../../youvi/themes/skeuo-theme.css">
+    <link rel="stylesheet" href="../../youvi/themes/theme-dropdown.css">
+    <link rel="stylesheet" href="../../youvi/sticky-video.css">
+    <link rel="stylesheet" href="../../youvi/pagination.css">
+    <link rel="icon" href="../../favicon/youvi/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="top-nav">
+        <div class="top-nav-content">
+            <a href="../../youvi_main.html">Videos</a>
+            <a href="../../index.html">Management</a>
+            <a href="../../youvi_ch_list.html">Channels</a>
+            <a href="../../youvi_playlists_list.html">Playlists</a>
+            <a href="../../forum/forum.html">Forums</a>
+            <a href="../../download/youvi_download.html">Download</a>
+            <a href="https://yuvisite.moe/docs" class="active">Wiki</a>
+            <a href="../../youvi_sitemap.html">More</a>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-content-wrapper">
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+                    <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                </button>
+                <div class="logo">
+                    <a href="../../youvi_main.html">
+                        <img src="../../images/logo_youvi_ind.png" alt="Youvi logo">
+                    </a>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="search-area">
+                    <input type="text" id="headerSearchInput" placeholder="Search videos..." class="search-input">
+                    <button id="doSearch" class="search-btn">Search</button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-actions">
+                    <div class="settings-container">
+                        <a href="#" class="settings-btn">⚙</a>
+                        <div class="theme-dropdown">
+                            <button class="theme-dropdown-item" data-theme="light">Light</button>
+                            <button class="theme-dropdown-item" data-theme="dark">Dark</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Navigation</div>
+                <a href="../../youvi_main.html" class="sidebar-item nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    <span>Home</span>
+                </a>
+                <a href="../../youvi_tags.html" class="sidebar-item nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                        <line x1="7" y1="7" x2="7.01" y2="7"/>
+                    </svg>
+                    <span>All Tags</span>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Library</div>
+                <a href="../../youvi_history.html" class="sidebar-item library-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                    <span>History</span>
+                </a>
+                <a href="../../youvi_fav.html" class="sidebar-item library-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span>Favorites</span>
+                </a>
+                <a href="../../youvi_playlists_list.html" class="sidebar-item library-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="8" y1="8" x2="16" y2="8"/>
+                        <line x1="8" y1="12" x2="16" y2="12"/>
+                        <line x1="8" y1="16" x2="16" y2="16"/>
+                        <circle cx="6" cy="8" r="1"/>
+                        <circle cx="6" cy="12" r="1"/>
+                        <circle cx="6" cy="16" r="1"/>
+                    </svg>
+                    <span>Playlists</span>
+                </a>
+                <a href="../../youvi_ch_list.html" class="sidebar-item library-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 1-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>Channels</span>
+                </a>
+                <a href="../../youvi_subscriptions.html" class="sidebar-item library-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                        <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/>
+                        <polyline points="17,2 12,7 7,2"/>
+                    </svg>
+                    <span>Subscriptions</span>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">List</div>
+                <a href="aliases-list.html" class="sidebar-item library-item active">Tags: Aliases List</a>
+                <a href="implications-list.html" class="sidebar-item library-item">Tags: Implications List</a>
+                <a href="relations-list.html" class="sidebar-item library-item">Videos: Parent/Child List</a>
+            </div>
+            
+        </aside>
+
+        <div class="content-wrapper">
+            <main class="main-content">
+                <div class="breadcrumbs">
+                    <a href="../index.html">Wiki</a> ›
+                    <a href="#">Tags</a> ›
+                    <span>Aliases List</span>
+                </div>
+
+                <div class="page-header">
+                    <div class="page-title">Tag Aliases — Full List</div>
+                    <div class="page-desc">All registered tag aliases loaded from the tag database. Each row maps an alias to its canonical tag.</div>
+                </div>
+
+                <div class="toolbar">
+                    <input type="text" id="searchBox" placeholder="Search alias or canonical tag…">
+                    <select id="typeFilter">
+                        <option value="">All types</option>
+                    </select>
+                    <select id="perPage" style="margin-left:auto;min-width:auto">
+                        <option value="50">50 per page</option>
+                        <option value="100" selected>100 per page</option>
+                        <option value="250">250 per page</option>
+                        <option value="500">500 per page</option>
+                        <option value="0">Show all</option>
+                    </select>
+                    <span class="row-count" id="rowCount"></span>
+                </div>
+
+                <div class="spreadsheet-wrap" id="tableWrap">
+                    <div class="status-box" id="statusBox">
+                        <div class="icon">Aliases</div>
+                        <div id="statusMsg">Waiting for saved folder access. Open main tags page once to grant folder permission.</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-main">
+        <div class="footer-logo">
+          <img src="../../images/logo_youvi_ind_ex.png" alt="Youvi" loading="lazy">
+          <p>Platform for watching video content. Save, categorize and watch videos.</p>
+        </div>
+        <div class="footer-sections">
+          <div class="footer-section">
+            <h3>Sections</h3>
+            <ul>
+              <li><a href="../../youvi_main.html">Videos</a></li>
+              <li><a href="../../youvi_tags.html">Tags</a></li>
+              <li><a href="../../forum/forum_main.html">Forums</a></li>
+              <li><a href="../../index.html">Management</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Library</h3>
+            <ul>
+              <li><a href="../../youvi_ch_list.html">Channels</a></li>
+              <li><a href="../../youvi_playlists_list.html">Playlists</a></li>
+              <li><a href="../../youvi_subscriptions.html">Subscribes</a></li>
+              <li><a href="../../youvi_fav.html">Favorites</a></li>
+              <li><a href="../../youvi_history.html">History</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-section">
+            <h3>PGC</h3>
+            <ul>
+              <li><a href="../../youvi_main.html?tag=Anime (ct)">Anime</a></li>
+              <li><a href="../../youvi_main.html?tag=Animation (ct)">Animation</a></li>
+              <li><a href="../../youvi_main.html?tag=Movies (ct)">Movies</a></li>
+              <li><a href="../../youvi_main.html?tag=Series (ct)">Series</a></li>
+              <li><a href="../../youvi_main.html?tag=Music (ct)">Music</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>UGC</h3>
+            <ul>
+              <li><a href="../../youvi_main.html?tag=Games (ct)">Games</a></li>
+              <li><a href="../../youvi_main.html?tag=Technologies (ct)">Technologies</a></li>
+              <li><a href="../../youvi_main.html?tag=Entertainment (ct)">Entertainment</a></li>
+              <li><a href="../../youvi_main.html?tag=IRL (ct)">IRL</a></li>
+              <li><a href="../../youvi_main.html?tag=TV (ct)">TV</a></li>
+              <li><a href="../../youvi_main.html?tag=Education (ct)">Education</a></li>
+              <li><a href="../../youvi_main.html?tag=Other (ct)">Other</a></li>
+            </ul>
+          </div>
+          
+        </div>
+      </div>
+      <div class="footer-right">
+      </div>
+    </div>
+  </footer>
+
+
+    <script src="../../youvi/header/youvi-header.js"></script>
+    <script src="../../youvi/sidebar-toggle.js"></script>
+    <script src="../../youvi/sidebar-scroll.js"></script>
+    <script src="../../youvi/themes/theme-toggle.js"></script>
+    <script>
+    // ── Constants ──────────────────────────────────────────────────────────────
+    const TAG_COLORS = {
+        'ка': '#9ca3af', 'gt': '#6b7280', 'ch': '#6b9e4d', 'au': '#ef6c7d',
+        'ge': '#6b9bd1', 'tp': '#f59e6c', 'yr': '#eab676', 'st': '#f28b8b',
+        'ct': '#67c5d6', 'ra': '#f5a3c7', 'at': '#a78bdb', 'ser': '#8db8d6',
+        'mt': '#d4a373', 'nat': '#9dd6a8'
+    };
+    const TAG_LABELS = {
+        'ка': 'Channel', 'gt': 'General', 'ch': 'Character', 'au': 'Author',
+        'ge': 'Genre', 'tp': 'Type', 'yr': 'Year', 'st': 'Studio',
+        'ct': 'Category', 'ra': 'Rating', 'at': 'Anime', 'ser': 'Serial',
+        'mt': 'Movie', 'nat': 'Animation'
+    };
+
+    function getTagColor(type) { return TAG_COLORS[type] || '#6b7280'; }
+    function getTagLabel(type) { return TAG_LABELS[type] || (type ? type.toUpperCase() : '?'); }
+
+    function extractType(canonical) {
+        const m = canonical.match(/\(([a-zа-я]{2,3})\)$/i);
+        return m ? m[1].toLowerCase() : null;
+    }
+
+    // ── IndexedDB helpers ──────────────────────────────────────────────────────
+    function openIDB() {
+        return new Promise((resolve, reject) => {
+            const req = indexedDB.open('8SiteDB', 1);
+            req.onupgradeneeded = () => {
+                if (!req.result.objectStoreNames.contains('handles'))
+                    req.result.createObjectStore('handles');
+            };
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = () => reject(req.error);
+        });
+    }
+
+    function idbGet(db, key) {
+        return new Promise(resolve => {
+            const r = db.transaction('handles', 'readonly').objectStore('handles').get(key);
+            r.onsuccess = () => resolve(r.result || null);
+            r.onerror = () => resolve(null);
+        });
+    }
+
+    // ── Tag database loader ────────────────────────────────────────────────────
+    async function loadTagDB(dirHandle) {
+        const youviDir = await dirHandle.getDirectoryHandle('.youvi', { create: false });
+        const fh = await youviDir.getFileHandle('tag-database.json', { create: false });
+        const file = await fh.getFile();
+        return JSON.parse(await file.text());
+    }
+
+    // ── Build rows ─────────────────────────────────────────────────────────────
+    function buildRows(db) {
+        const rows = [];
+        const tags = db.tags || {};
+        for (const [key, tag] of Object.entries(tags)) {
+            const canonical = tag.canonical || key;
+            const type = tag.type || extractType(canonical);
+            const aliases = Array.isArray(tag.aliases) ? tag.aliases : [];
+            const usage = tag.usageCount || 0;
+            for (const alias of aliases) {
+                if (!alias || !alias.trim()) continue;
+                rows.push({ alias: alias.trim(), canonical, type, usage, color: tag.color || getTagColor(type) });
+            }
+        }
+        return rows;
+    }
+
+    // ── State ──────────────────────────────────────────────────────────────────
+    let allRows = [];
+    let sortCol = 'alias';
+    let sortDir = 1; // 1 asc, -1 desc
+    let currentPage = 1;
+    let pageSize = 100;
+
+    // ── Render ─────────────────────────────────────────────────────────────────
+    function buildPagination(totalRows, page, perPage) {
+        if (!perPage || totalRows <= perPage) return '';
+        const totalPages = Math.ceil(totalRows / perPage);
+        let html = '<div class="pagination">';
+        html += `<span class="pagination-info">Page ${page} of ${totalPages}</span>`;
+        html += `<button class="pagination-btn" data-page="1" ${page===1?'disabled':''}>«</button>`;
+        html += `<button class="pagination-btn" data-page="${page-1}" ${page===1?'disabled':''}>‹</button>`;
+        const start = Math.max(1, page - 3);
+        const end = Math.min(totalPages, page + 3);
+        if (start > 1) html += '<span style="color:#999">…</span>';
+        for (let i = start; i <= end; i++) {
+            html += `<button class="pagination-btn${i===page?' active':''}" data-page="${i}">${i}</button>`;
+        }
+        if (end < totalPages) html += '<span style="color:#999">…</span>';
+        html += `<button class="pagination-btn" data-page="${page+1}" ${page===totalPages?'disabled':''}>›</button>`;
+        html += `<button class="pagination-btn" data-page="${totalPages}" ${page===totalPages?'disabled':''}>»</button>`;
+        html += '</div>';
+        return html;
+    }
+
+    function renderTable(rows) {
+        const wrap = document.getElementById('tableWrap');
+        if (!rows.length) {
+            wrap.innerHTML = '<div class="no-results">No aliases found matching the filter.</div>';
+            document.getElementById('rowCount').textContent = '0 rows';
+            return;
+        }
+
+        const totalRows = rows.length;
+        const totalPages = pageSize ? Math.ceil(totalRows / pageSize) : 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        const pageRows = pageSize ? rows.slice((currentPage - 1) * pageSize, currentPage * pageSize) : rows;
+        const offset = pageSize ? (currentPage - 1) * pageSize : 0;
+
+        const tbody = pageRows.map((r, i) => {
+            const color = r.color || getTagColor(r.type);
+            const label = getTagLabel(r.type);
+            const typeStyle = `background:${color}22;color:${color};border-color:${color}66`;
+            return `<tr>
+                <td class="col-num">${offset + i + 1}</td>
+                <td class="col-alias">${esc(r.alias)}</td>
+                <td class="col-arrow">→</td>
+                <td class="col-canonical">
+                    <span class="tag-badge" style="background:${color}">${esc(r.canonical)}</span>
+                </td>
+                <td class="col-type">
+                    <span class="type-label" style="${typeStyle}">${esc(label)}</span>
+                </td>
+                <td class="col-usage">${r.usage.toLocaleString()}</td>
+            </tr>`;
+        }).join('');
+
+        wrap.innerHTML = `
+            <div class="spreadsheet-scroll">
+                <table class="spreadsheet" id="sheet">
+                    <thead>
+                        <tr>
+                            <th class="col-num" data-col="num">#</th>
+                            <th class="col-alias" data-col="alias">Alias</th>
+                            <th class="col-arrow"></th>
+                            <th class="col-canonical" data-col="canonical">Canonical Tag</th>
+                            <th class="col-type" data-col="type">Type</th>
+                            <th class="col-usage" data-col="usage">Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tbody}</tbody>
+                </table>
+            </div>
+            ${buildPagination(totalRows, currentPage, pageSize)}`;
+
+        // Mark sort column
+        const th = wrap.querySelector(`th[data-col="${sortCol}"]`);
+        if (th) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+
+        // Sort click
+        wrap.querySelectorAll('thead th[data-col]').forEach(h => {
+            h.addEventListener('click', () => {
+                const col = h.dataset.col;
+                if (sortCol === col) sortDir *= -1;
+                else { sortCol = col; sortDir = 1; }
+                currentPage = 1;
+                applyFilter();
+            });
+        });
+
+        // Pagination click
+        wrap.querySelectorAll('.pagination-btn[data-page]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentPage = parseInt(btn.dataset.page);
+                applyFilter();
+                wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        const showing = pageSize ? `${offset+1}–${Math.min(offset+pageSize, totalRows)} of ${totalRows.toLocaleString()}` : `${totalRows.toLocaleString()} row${totalRows !== 1 ? 's' : ''}`;
+        document.getElementById('rowCount').textContent = showing;
+    }
+
+    function esc(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function applyFilter() {
+        const q = document.getElementById('searchBox').value.trim().toLowerCase();
+        const typeVal = document.getElementById('typeFilter').value;
+
+        let rows = allRows.filter(r => {
+            if (typeVal && r.type !== typeVal) return false;
+            if (q && !r.alias.toLowerCase().includes(q) && !r.canonical.toLowerCase().includes(q)) return false;
+            return true;
+        });
+        // Keep currentPage as-is (sort/page-click set it before calling applyFilter)
+
+        rows.sort((a, b) => {
+            let va, vb;
+            switch (sortCol) {
+                case 'alias':     va = a.alias.toLowerCase();     vb = b.alias.toLowerCase(); break;
+                case 'canonical': va = a.canonical.toLowerCase(); vb = b.canonical.toLowerCase(); break;
+                case 'type':      va = (a.type||'');              vb = (b.type||''); break;
+                case 'usage':     va = a.usage; vb = b.usage; break;
+                default:          va = 0; vb = 0;
+            }
+            if (va < vb) return -sortDir;
+            if (va > vb) return sortDir;
+            return 0;
+        });
+
+        renderTable(rows);
+    }
+
+    function populateTypeFilter(rows) {
+        const types = [...new Set(rows.map(r => r.type).filter(Boolean))].sort();
+        const sel = document.getElementById('typeFilter');
+        types.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t;
+            opt.textContent = `${getTagLabel(t)} (${t})`;
+            sel.appendChild(opt);
+        });
+    }
+
+    function onLoaded(db) {
+        allRows = buildRows(db);
+        populateTypeFilter(allRows);
+        sortCol = 'alias'; sortDir = 1;
+        applyFilter();
+
+        const total = allRows.length;
+        const tagCount = Object.keys(db.tags || {}).length;
+        document.querySelector('.page-desc').textContent =
+            `${total.toLocaleString()} alias${total !== 1 ? 'es' : ''} across ${tagCount.toLocaleString()} tag${tagCount !== 1 ? 's' : ''}. Data loaded from .youvi/tag-database.json.`;
+    }
+
+    // ── Auto-load from IndexedDB ───────────────────────────────────────────────
+    async function tryAutoLoad() {
+        try {
+            const idb = await openIDB();
+            const handle = await idbGet(idb, 'videoDirectoryHandle');
+            if (!handle) return false;
+            let perm = await handle.queryPermission({ mode: 'read' });
+            if (perm === 'prompt') perm = await handle.requestPermission({ mode: 'read' });
+            if (perm !== 'granted') return false;
+            const db = await loadTagDB(handle);
+            onLoaded(db);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // ── Init ───────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+        document.getElementById('searchBox').addEventListener('input', () => { currentPage = 1; applyFilter(); });
+        document.getElementById('typeFilter').addEventListener('change', () => { currentPage = 1; applyFilter(); });
+        document.getElementById('perPage').addEventListener('change', (e) => { pageSize = parseInt(e.target.value); currentPage = 1; applyFilter(); });
+
+        // Header search
+        const searchInput = document.getElementById('headerSearchInput');
+        const searchBtn = document.getElementById('doSearch');
+        if (searchBtn && searchInput) {
+            const go = () => { if (searchInput.value.trim()) window.location.href = `../../youvi_search.html?q=${encodeURIComponent(searchInput.value.trim())}`; };
+            searchBtn.addEventListener('click', go);
+            searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') go(); });
+        }
+
+        const ok = await tryAutoLoad();
+        if (!ok) {
+            document.getElementById('statusMsg').textContent = 'No saved folder access found. Open youvi_tags.html and grant folder access once.';
+        }
+    });
+    </script>
+</body>
+</html>

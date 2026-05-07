@@ -1,0 +1,303 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Kaomoji Picker Styles */
+.kaomoji-picker-container {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.kaomoji-picker-btn {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+}
+
+.kaomoji-picker-btn:hover {
+    background: #f5f5f5;
+    border-color: var(--channel-accent, #ff69b4);
+}
+
+.kaomoji-picker-btn.active {
+    background: var(--channel-accent, #ff69b4);
+    color: white;
+    border-color: var(--channel-accent, #ff69b4);
+}
+
+.kaomoji-picker-popup {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    width: 320px;
+    max-height: 400px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: none;
+    flex-direction: column;
+    z-index: 10000;
+    overflow: hidden;
+}
+
+/* When using fixed positioning (external trigger) */
+.kaomoji-picker-popup[style*="position: fixed"] {
+    position: fixed !important;
+    bottom: auto;
+    right: auto;
+}
+
+.kaomoji-picker-popup.show {
+    display: flex;
+}
+
+.kaomoji-picker-header {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+}
+
+.kaomoji-search {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+.kaomoji-search:focus {
+    outline: none;
+    border-color: var(--channel-accent, #ff69b4);
+}
+
+.kaomoji-tabs {
+    display: flex;
+    gap: 2px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+    overflow-x: auto;
+    flex-shrink: 0;
+    cursor: grab;
+    user-select: none;
+}
+
+.kaomoji-tabs.dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+}
+
+.kaomoji-tabs:not(.dragging) {
+    scroll-behavior: smooth;
+}
+
+.kaomoji-tabs::-webkit-scrollbar {
+    height: 4px;
+}
+
+.kaomoji-tabs::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 2px;
+}
+
+.kaomoji-tab {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.kaomoji-tab:hover {
+    background: #f5f5f5;
+    border-color: var(--channel-accent, #ff69b4);
+}
+
+.kaomoji-tab.active {
+    background: var(--channel-accent, #ff69b4);
+    color: white;
+    border-color: var(--channel-accent, #ff69b4);
+    font-weight: 600;
+}
+
+.kaomoji-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+}
+
+.kaomoji-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.kaomoji-content::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 3px;
+}
+
+.kaomoji-content::-webkit-scrollbar-thumb:hover {
+    background: #ccc;
+}
+
+.kaomoji-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 6px;
+}
+
+.kaomoji-item {
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 6px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 13px;
+    transition: all 0.2s;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kaomoji-item:hover {
+    background: var(--channel-accent, #ff69b4);
+    color: white;
+    border-color: var(--channel-accent, #ff69b4);
+    transform: scale(1.05);
+}
+
+.kaomoji-item:active {
+    transform: scale(0.95);
+}
+
+.kaomoji-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    font-size: 13px;
+}
+
+/* Dark theme support */
+body.dark-theme .kaomoji-picker-btn {
+    border-color: #555;
+    color: #ddd;
+}
+
+body.dark-theme .kaomoji-picker-btn:hover {
+    background: #333;
+    border-color: var(--channel-accent, #ff69b4);
+}
+
+body.dark-theme .kaomoji-picker-popup {
+    background: #222;
+    border-color: #444;
+}
+
+body.dark-theme .kaomoji-picker-header,
+body.dark-theme .kaomoji-tabs {
+    background: #2a2a2a;
+    border-color: #444;
+}
+
+body.dark-theme .kaomoji-search {
+    background: #1a1a1a;
+    border-color: #444;
+    color: #ddd;
+}
+
+body.dark-theme .kaomoji-search:focus {
+    border-color: var(--channel-accent, #ff69b4);
+}
+
+body.dark-theme .kaomoji-tab {
+    background: #1a1a1a;
+    border-color: #444;
+    color: #ddd;
+}
+
+body.dark-theme .kaomoji-tab:hover {
+    background: #333;
+    border-color: var(--channel-accent, #ff69b4);
+}
+
+body.dark-theme .kaomoji-tab.active {
+    background: var(--channel-accent, #ff69b4);
+    color: white;
+    border-color: var(--channel-accent, #ff69b4);
+}
+
+body.dark-theme .kaomoji-item {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #ddd;
+}
+
+body.dark-theme .kaomoji-item:hover {
+    background: var(--channel-accent, #ff69b4);
+    color: white;
+    border-color: var(--channel-accent, #ff69b4);
+}
+
+body.dark-theme .kaomoji-empty {
+    color: #777;
+}
+
+/* Compact mode for smaller inputs */
+.kaomoji-picker-container.compact .kaomoji-picker-btn,
+.kaomoji-picker-btn.compact {
+    width: 40px;
+    height: 26px;
+    padding: 5px 8px;
+    font-size: 14px;
+}
+
+/* Positioning adjustments for danmaku input */
+.danmaku-form .kaomoji-picker-popup {
+    bottom: auto;
+    top: calc(100% + 8px);
+}
+
+/* Higher z-index when inside fullscreen container */
+.video-container.fullscreen .kaomoji-picker-popup,
+#videoContainer.fullscreen .kaomoji-picker-popup,
+.fullscreen .kaomoji-picker-popup {
+    z-index: 100000 !important; /* Above everything in fullscreen */
+}
+
+/* Ensure popup is visible in fullscreen overlay */
+#fullscreenDanmakuFormOverlay .kaomoji-picker-popup {
+    z-index: 100000 !important;
+}

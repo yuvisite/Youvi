@@ -1,0 +1,140 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+(function () {
+  'use strict';
+
+  function getMarkup() {
+    return [
+      '<div class="youvi-mobile-video" id="mvv-root">',
+      '  <main class="mvv-app">',
+      '    <header class="mvv-top">',
+      '      <a class="mvv-top-btn" id="mvv-back" href="youvi_main.html" aria-label="Back">',
+      '        <svg viewBox="0 0 24 24"><path d="M15 18 9 12l6-6"></path></svg>',
+      '      </a>',
+      '      <div class="mvv-top-title" id="mvv-title-top">Video</div>',
+      '      <button class="mvv-top-btn" id="mvv-share" type="button" aria-label="Share">',
+      '        <svg viewBox="0 0 24 24"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"></path></svg>',
+      '      </button>',
+      '    </header>',
+      '',
+      '    <section class="mvv-player" id="mvv-player">',
+      '      <div class="mvv-player-bridge" id="mvv-player-bridge"></div>',
+      '      <span class="mvv-player-top-badge" id="mvv-quality">HD</span>',
+      '      <button class="mvv-big-play" id="mvv-big-play" type="button" aria-label="Play">',
+      '        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>',
+      '      </button>',
+      '      <div class="mvv-player-controls">',
+      '        <div class="mvv-progress"><div id="mvv-progress-fill"></div></div>',
+      '        <div class="mvv-player-row"><span id="mvv-time-label">0:00 / 0:00</span><span>⛶</span></div>',
+      '      </div>',
+      '      <span class="mvv-player-badge" id="mvv-duration">0:00</span>',
+      '    </section>',
+      '    <div class="mvv-player-placeholder" id="mvv-player-placeholder" aria-hidden="true"></div>',
+      '',
+      '    <section class="mvv-danmaku-box" aria-label="Danmaku input">',
+      '      <div class="mvv-danmaku-inline">',
+      '        <button class="mvv-dmk-btn" id="mvv-danmaku-color" type="button" aria-label="Color"><span class="mvv-dmk-dot" id="mvv-danmaku-dot"></span></button>',
+      '        <button class="mvv-dmk-btn" id="mvv-danmaku-pos" type="button" aria-label="Position">',
+      '          <svg id="mvv-danmaku-pos-icon" viewBox="0 0 24 24"><path d="M3 12h18"></path><path d="m14 7 5 5-5 5"></path></svg>',
+      '        </button>',
+      '        <input class="mvv-danmaku-input" id="mvv-danmaku-text" type="text" maxlength="50" placeholder="Danmaku...">',
+      '        <button class="mvv-danmaku-send" id="mvv-danmaku-send" type="button" aria-label="Send">',
+      '          <svg viewBox="0 0 24 24"><path d="M22 2 11 13"></path><path d="M22 2 15 22l-4-9-9-4Z"></path></svg>',
+      '        </button>',
+      '      </div>',
+      '    </section>',
+      '',
+      '    <div class="mvv-meta"><span id="mvv-views">0 views</span><span>•</span><span id="mvv-date">Today</span></div>',
+      '',
+      '    <section class="mvv-channel-row">',
+      '      <div class="mvv-avatar" id="mvv-avatar">U</div>',
+      '      <div class="mvv-channel-meta"><div class="mvv-channel-name" id="mvv-uploader">Channel</div></div>',
+      '      <button class="mvv-sub-btn" id="mvv-subscribe" type="button">Subscribe</button>',
+      '    </section>',
+      '',
+      '    <section class="mvv-actions">',
+      '      <button class="mvv-action" id="mvv-like" type="button" aria-label="Like"><svg viewBox="0 0 24 24"><path d="M12 4l-8 8h6v8h4v-8h6z"></path></svg><span class="mvv-action-count" id="mvv-like-count">0</span></button>',
+      '      <button class="mvv-action" id="mvv-dislike" type="button" aria-label="Dislike"><svg viewBox="0 0 24 24"><path d="M12 20l8-8h-6V4h-4v8H4z"></path></svg><span class="mvv-action-count" id="mvv-dislike-count">0</span></button>',
+      '      <button class="mvv-action" id="mvv-favorite" type="button" aria-label="Favorite"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.4-9.3-8A5.4 5.4 0 0 1 12 5.4 5.4 5.4 0 0 1 21.3 13C19 16.6 12 21 12 21Z"></path></svg></button>',
+      '      <button class="mvv-action" id="mvv-download" type="button" aria-label="Download"><svg viewBox="0 0 24 24"><path d="M12 3v12"></path><path d="m8 11 4 4 4-4"></path><path d="M5 21h14"></path></svg></button>',
+      '    </section>',
+      '',
+      '    <section class="mvv-tags" id="mvv-tags"></section>',
+      '',
+      '    <nav class="mvv-section-nav" id="mvv-nav" aria-label="Sections">',
+      '      <a href="#" data-target="mvv-panel-description">Description</a>',
+      '      <a href="#" data-target="mvv-panel-related" class="active">Related</a>',
+      '      <a href="#" data-target="mvv-panel-playlists">Playlists</a>',
+      '      <a href="#" data-target="mvv-panel-comments">Comments</a>',
+      '      <a href="#" data-target="mvv-panel-danmaku">Danmaku</a>',
+      '      <a href="#" data-target="mvv-panel-transcript">Transcript</a>',
+      '    </nav>',
+      '',
+      '    <section class="mvv-panel" id="mvv-panel-description">',
+      '      <article class="mvv-desc-card" id="mvv-desc-card">',
+      '        <button class="mvv-desc-head" id="mvv-desc-toggle" type="button"><span>Description</span><span class="mvv-desc-icon">⌄</span></button>',
+      '        <div class="mvv-desc-content" id="mvv-description">No description</div>',
+      '      </article>',
+      '      <article class="mvv-pc-mobile">',
+      '        <h3 class="mvv-pc-title">Video links</h3>',
+      '        <div class="mvv-pc-group"><div class="mvv-pc-label">Child</div><div class="mvv-pc-row" id="mvv-child"></div></div>',
+      '        <div class="mvv-pc-group"><div class="mvv-pc-label">Parent</div><div class="mvv-pc-row" id="mvv-parent"></div></div>',
+      '      </article>',
+      '    </section>',
+      '',
+      '    <section class="mvv-panel" id="mvv-panel-transcript"><div class="mvv-list" id="mvv-transcript"></div></section>',
+      '    <section class="mvv-panel" id="mvv-panel-danmaku"><div class="mvv-list" id="mvv-danmaku-list"></div></section>',
+      '',
+      '    <section class="mvv-panel" id="mvv-panel-comments">',
+      '      <div class="mvv-comments-toolbar"><span class="mvv-comments-sort">Sort: New</span></div>',
+      '      <div class="mvv-comments-list" id="mvv-comments"></div>',
+      '      <div class="mvv-compose" id="mvv-compose">',
+      '        <span class="mvv-compose-avatar" id="mvv-compose-avatar">M</span>',
+      '        <div class="mvv-compose-inner">',
+      '          <textarea class="mvv-compose-text" id="mvv-comment-input" rows="1" placeholder="Add a comment..."></textarea>',
+      '          <button class="mvv-compose-send" id="mvv-comment-send" type="button" aria-label="Send"></button>',
+      '        </div>',
+      '      </div>',
+      '    </section>',
+      '',
+      '    <section class="mvv-panel active" id="mvv-panel-related"><div class="mvv-related" id="mvv-related"></div></section>',
+      '    <section class="mvv-panel" id="mvv-panel-playlists">',
+      '      <div class="mvv-playlist-controls">',
+      '        <button class="mvv-playlist-btn mvv-playlist-source-btn" id="mvv-playlist-source-toggle" type="button">Site playlist</button>',
+      '        <button class="mvv-playlist-btn" id="mvv-playlist-invert" type="button">Invert</button>',
+      '        <button class="mvv-playlist-btn" id="mvv-playlist-loop" type="button">Loop</button>',
+      '        <button class="mvv-playlist-btn" id="mvv-playlist-shuffle" type="button">Shuffle</button>',
+      '      </div>',
+      '      <div class="mvv-playlist-groups">',
+      '        <article class="mvv-playlist-group" id="mvv-playlist-group-site">',
+      '          <h3 class="mvv-playlist-heading">Site playlist</h3>',
+      '          <div class="mvv-playlists" id="mvv-playlists-site"></div>',
+      '        </article>',
+      '        <article class="mvv-playlist-group" id="mvv-playlist-group-folder">',
+      '          <h3 class="mvv-playlist-heading">Folder playlist</h3>',
+      '          <div class="mvv-playlists" id="mvv-playlists-folder"></div>',
+      '        </article>',
+      '      </div>',
+      '    </section>',
+      '  </main>',
+      '</div>'
+    ].join('');
+  }
+
+  window.YouviMobileVideoTemplate = {
+    getMarkup: getMarkup
+  };
+})();

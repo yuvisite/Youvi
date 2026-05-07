@@ -1,0 +1,154 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Wide Screen Mode Styles */
+
+/* Expand main content to take full width (including right sidebar space) */
+body.wide-screen-mode .main-content {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+}
+
+/* Hide right sidebar in wide mode (it moves to bottom via JS) */
+body.wide-screen-mode .content-wrapper > .right-sidebar {
+    display: none;
+}
+
+/* Player section expands to full available width */
+body.wide-screen-mode .player-section {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Video player expands horizontally and grows taller to use more screen space */
+body.wide-screen-mode .video-player {
+    width: 100% !important;
+    max-width: 100% !important;
+    /* Calculate height: use available viewport minus header/nav/padding */
+    /* This makes video taller while maintaining aspect ratio */
+    min-height: 500px;
+    max-height: calc(100vh - 200px);
+}
+
+body.wide-screen-mode .video-container {
+    width: 100%;
+    height: 100%;
+}
+
+/* Danmaku content also expands */
+body.wide-screen-mode .danmaku-content,
+body.wide-screen-mode #danmakuContent {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Layout for content below player */
+.widescreen-bottom-layout {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    align-items: flex-start;
+}
+
+/* Initial state: add spacing before JS rearrangement */
+body.wide-screen-mode .main-content > .video-info {
+    margin-top: 10px !important;
+}
+
+/* Final state: remove spacing from element, let container handle it */
+body.wide-screen-mode .widescreen-left-column .video-info {
+    margin-top: 0 !important;
+}
+
+.widescreen-left-column {
+    flex: 1;
+    min-width: 0; /* Prevent flex item from overflowing */
+}
+
+.widescreen-right-column {
+    width: 402px;
+    flex-shrink: 0;
+}
+
+/* Match right-sidebar responsive widths */
+@media (min-width: 1400px) {
+    .widescreen-right-column {
+        width: 402px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .widescreen-right-column {
+        width: 402px;
+    }
+}
+
+/* Adjust right sidebar when inside the column */
+body.wide-screen-mode .right-sidebar {
+    width: 100% !important;
+    padding-top: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+/* Reset sidebar panel height in widescreen - let it flow naturally */
+body.wide-screen-mode #sidebarPanelCombined {
+    height: auto !important;
+    max-height: none !important;
+}
+
+/* Responsive: stack widescreen bottom layout on narrow viewports */
+@media (max-width: 1100px) {
+    .widescreen-bottom-layout {
+        flex-direction: column;
+    }
+
+    .widescreen-right-column {
+        width: 100% !important;
+    }
+}
+
+/* Limit playlist height in widescreen mode */
+body.wide-screen-mode #playlistTabContent {
+    max-height: 500px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+body.wide-screen-mode #playlistContent {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+/* Ensure sidebar sections look good */
+body.wide-screen-mode .sidebar-section-right {
+    margin-bottom: 15px;
+}
+
+/* Responsive adjustments for wide mode */
+@media (max-width: 1000px) {
+    .widescreen-bottom-layout {
+        flex-direction: column;
+    }
+    .widescreen-right-column {
+        width: 402px;
+    }
+}

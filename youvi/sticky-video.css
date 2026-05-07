@@ -1,0 +1,83 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Sticky layout tweaks for Youvi video page */
+
+/* Header sticks to top */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 10000; /* ensure header stays above monolithic content */
+}
+
+/* Monolith-safe fallback: force fixed header and compensate layout */
+body.monolith .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+}
+body.monolith .container {
+    padding-top: 40px; /* header height */
+}
+
+/* Only left sidebar (class 'sidebar' on video page) sticks under header */
+/* Only affect left sidebar column, not right panes */
+aside.sidebar:not(.chats-sidebar) {
+	position: sticky;
+	top: 40px; /* header height */
+	align-self: flex-start;
+	min-height: calc(100vh - 40px);
+}
+
+/* Dark theme: provide bottom filler so empty space stays dark */
+body.dark-theme aside.sidebar {
+	background: #111;
+}
+
+
+
+/* Cinema mode: override sticky behavior for sidebar */
+body.cinema-mode aside.sidebar,
+body.cinema-mode .sidebar {
+    position: fixed !important;
+    top: 40px !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 200px !important; /* Same as normal mode */
+    min-height: auto !important;
+    max-height: calc(100vh - 40px) !important;
+    z-index: 10001 !important; /* Above header (10000) and danmaku (9999) */
+    transform: translateX(-200px) !important;
+    transition: transform 0.3s ease !important;
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+    padding-top: 10px !important;
+    padding-left: 20px !important;
+}
+
+/* Show sidebar when open in cinema mode */
+body.cinema-mode.sidebar-open aside.sidebar,
+body.cinema-mode.sidebar-open .sidebar {
+    transform: translateX(0) !important;
+}
+
+
+/* Cinema mode: header stays fixed with proper z-index */
+body.cinema-mode .header {
+    position: fixed !important;
+    z-index: 10000 !important; /* Above sidebar (9998) */
+}

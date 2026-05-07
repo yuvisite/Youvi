@@ -1,0 +1,569 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+.unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-top: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 8px 20px;
+  min-height: 50px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 20px;
+}
+
+.logo a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  height: 100%;
+}
+
+.logo img {
+  max-height: 35px;
+  width: auto;
+  display: block;
+}
+
+.search-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 500px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 10px 6px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.1);
+  font-size: 13px;
+  min-width: 280px;
+  padding-right: 50px;
+  height: 28px;
+}
+
+.search-btn {
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 3px 6px;
+  font-size: 11px;
+  height: 22px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.search-btn:hover {
+  background: linear-gradient(180deg, var(--accent-dark), var(--accent));
+}
+
+body.theme-win95 .search-btn:hover {
+  background: linear-gradient(180deg, #808080, #404040);
+}
+
+body.theme-win95pink .search-btn:hover {
+  background: linear-gradient(180deg, #ff69b4, #ff1493);
+}
+
+body.theme-lilac .search-btn:hover {
+  background: linear-gradient(180deg, #dda0dd, #ba55d3);
+}
+
+body.theme-pink .search-btn:hover {
+  background: linear-gradient(180deg, #ff6fb5, #d94b88);
+}
+
+body.theme-lime .search-btn:hover {
+  background: linear-gradient(180deg, #32cd32, #228b22);
+}
+
+body.theme-red .search-btn:hover {
+  background: linear-gradient(180deg, #dc143c, #b22222);
+}
+
+body.theme-gold .search-btn:hover {
+  background: linear-gradient(180deg, #ffd700, #daa520);
+}
+
+body.theme-cyan .search-btn:hover {
+  background: linear-gradient(180deg, #00ffff, #008b8b);
+}
+
+body.theme-purple .search-btn:hover {
+  background: linear-gradient(180deg, #800080, #4b0082);
+}
+
+body.theme-cherry .search-btn:hover {
+  background: linear-gradient(180deg, #de3163, #b22222);
+}
+
+body.theme-darkblue .search-btn:hover {
+  background: linear-gradient(180deg, #191970, #000080);
+}
+
+body.theme-aqua .search-btn:hover {
+  background: linear-gradient(180deg, #00ced1, #008b8b);
+}
+
+body.theme-orange .search-btn:hover {
+  background: linear-gradient(180deg, #ff8c00, #ff4500);
+}
+
+body.theme-darkgreen .search-btn:hover {
+  background: linear-gradient(180deg, #006400, #004d00);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.btn {
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fff, var(--muted));
+  border: 1px solid rgba(0,0,0,0.06);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.btn.primary {
+  background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+  color: #fff;
+}
+
+.btn:hover {
+  background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+  color: #fff;
+}
+
+.video-navbar {
+  display: flex;
+  gap: 2px;
+  background: var(--muted);
+  padding: 2px 20px 4px 20px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.nav-item {
+  flex: 1;
+  padding: 4px 8px;
+  text-align: center;
+  text-decoration: none;
+  color: #333;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.nav-item:hover {
+  background: color-mix(in srgb, var(--accent) 15%, var(--panel));
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 25%, var(--panel));
+}
+
+.nav-item.active {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 20%, var(--panel)), color-mix(in srgb, var(--accent) 35%, var(--panel)));
+  color: var(--accent-dark);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--panel));
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.nav-item.active:hover {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 25%, var(--panel)), color-mix(in srgb, var(--accent) 40%, var(--panel)));
+  color: var(--accent-dark);
+}
+
+@media (max-width: 768px) {
+  .video-navbar {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .nav-item {
+    flex: 1 1 calc(50% - 2px);
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  
+  .search-container {
+    max-width: 300px;
+  }
+  
+  .header-top {
+    gap: 10px;
+    padding: 6px 15px;
+    min-height: 45px;
+  }
+  
+  .logo {
+    margin-left: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo img {
+    max-height: 30px;
+  }
+  
+  .header-top {
+    gap: 10px;
+    padding: 6px 15px;
+    min-height: 45px;
+  }
+  
+  .logo {
+    margin-left: 12px;
+  }
+}
+
+body.theme-win95 *,
+body.theme-win95pink * {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+body.theme-win95 [style*="border-radius"],
+body.theme-win95pink [style*="border-radius"],
+body.theme-win95 [style*="box-shadow"],
+body.theme-win95pink [style*="box-shadow"],
+body.theme-win95 [style*="transform"],
+body.theme-win95pink [style*="transform"],
+body.theme-win95 [style*="transition"],
+body.theme-win95pink [style*="transition"] {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+body.theme-win95 input,
+body.theme-win95pink input,
+body.theme-win95 textarea,
+body.theme-win95pink textarea,
+body.theme-win95 select,
+body.theme-win95pink select,
+body.theme-win95 button,
+body.theme-win95pink button {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+body.theme-win95 .unified-header {
+  background: #c0c0c0 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #808080 !important;
+  border: 2px outset #c0c0c0 !important;
+}
+
+body.theme-win95 .video-navbar {
+  background: #d4d0c8 !important;
+  border-top: 1px solid #808080 !important;
+  padding: 1px 20px 2px 20px !important;
+  border-radius: 0 !important;
+}
+
+body.theme-win95 .nav-item {
+  border-radius: 0 !important;
+  padding: 2px 6px !important;
+  font-size: 11px !important;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif !important;
+  background: #c0c0c0 !important;
+  border: 2px outset #c0c0c0 !important;
+  color: #000000 !important;
+  cursor: pointer !important;
+}
+
+body.theme-win95 .nav-item:hover {
+  background: #c0c0c0 !important;
+  border: 2px inset #c0c0c0 !important;
+}
+
+body.theme-win95 .nav-item.active {
+  background: #c0c0c0 !important;
+  box-shadow: inset 1px 1px 0px #808080, inset -1px -1px 0px #ffffff !important;
+  border: 2px inset #c0c0c0 !important;
+}
+
+body.theme-win95 .btn {
+  border-radius: 0 !important;
+  color: #000080 !important;
+  background: #c0c0c0 !important;
+  border: 2px outset #c0c0c0 !important;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif !important;
+  font-size: 11px !important;
+  padding: 2px 8px !important;
+}
+
+body.theme-win95 .btn:hover {
+  background: #c0c0c0 !important;
+  border: 2px inset #c0c0c0 !important;
+}
+
+body.theme-win95 .btn.primary {
+  color: #fff !important;
+  background: #000080 !important;
+  border: 2px outset #000080 !important;
+}
+
+body.theme-win95 .btn.primary:hover {
+  background: #000080 !important;
+  border: 2px inset #000080 !important;
+}
+
+body.theme-win95 .search-input-wrapper input {
+  background: #ffffff !important;
+  border: 2px inset #c0c0c0 !important;
+  border-radius: 0 !important;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif !important;
+  font-size: 11px !important;
+  color: #000000 !important;
+  padding: 2px 4px !important;
+  height: 22px !important;
+}
+
+body.theme-win95 .search-input-wrapper input:focus {
+  outline: none !important;
+  border: 2px inset #000080 !important;
+}
+
+body.theme-win95 .search-btn {
+  background: #c0c0c0 !important;
+  border: 2px outset #c0c0c0 !important;
+  border-radius: 0 !important;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif !important;
+  font-size: 11px !important;
+  color: #000000 !important;
+  height: 22px !important;
+  padding: 2px 6px !important;
+  right: 2px !important;
+  box-shadow: none !important;
+  transition: none !important;
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  box-sizing: border-box !important;
+  z-index: 10 !important;
+}
+
+body.theme-win95 .search-btn:hover {
+  background: #c0c0c0 !important;
+  border: 2px inset #c0c0c0 !important;
+  transform: translateY(-50%) !important;
+}
+
+body.theme-win95pink .unified-header {
+  background: #FFE3F1 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #808080 !important;
+  border: 2px outset #FFE3F1 !important;
+}
+
+body.theme-win95pink .video-navbar {
+  background: #FFD6EA !important;
+  border-top: 1px solid #808080 !important;
+  padding: 1px 20px 2px 20px !important;
+  border-radius: 0 !important;
+}
+
+body.theme-win95pink .nav-item {
+  padding: 2px 6px !important;
+  font-size: 11px !important;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif !important;
+  background: #FFE3F1 !important;
+  border: 2px outset #FFE3F1 !important;
+  border-radius: 0 !important;
+  color: #000000 !important;
+  cursor: pointer !important;
+}
+
+body.theme-win95pink .nav-item:hover {
+  background: #FFE3F1 !important;
+  border: 2px inset #FFE3F1 !important;
+}
+
+body.theme-win95pink .nav-item.active {
+  background: #FFE3F1 !important;
+  box-shadow: inset 1px 1px 0px #808080, inset -1px -1px 0px #ffffff !important;
+  border: 2px inset #FFE3F1 !important;
+}
+
+body.theme-win95pink .btn {
+  border-radius: 0 !important;
+  color: #E75899 !important;
+  background: #FFE3F1 !important;
+  border: 2px outset #FFE3F1 !important;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif !important;
+  font-size: 11px !important;
+  padding: 2px 8px !important;
+}
+
+body.theme-win95pink .btn:hover {
+  background: #FFE3F1 !important;
+  border: 2px inset #FFE3F1 !important;
+}
+
+body.theme-win95pink .btn.primary {
+  color: #fff !important;
+  background: #E75899 !important;
+  border: 2px outset #E75899 !important;
+}
+
+body.theme-win95pink .btn.primary:hover {
+  background: #E75899 !important;
+  border: 2px inset #E75899 !important;
+}
+
+body.theme-win95pink .search-input-wrapper input {
+  background: #ffffff !important;
+  border: 2px inset #FFE3F1 !important;
+  border-radius: 0 !important;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif !important;
+  font-size: 11px !important;
+  color: #000000 !important;
+  padding: 2px 4px !important;
+  height: 22px !important;
+}
+
+body.theme-win95pink .search-input-wrapper input:focus {
+  outline: none !important;
+  border: 2px inset #E75899 !important;
+}
+
+body.theme-win95pink .search-btn {
+  background: #FFE3F1 !important;
+  border: 2px outset #FFE3F1 !important;
+  border-radius: 0 !important;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif !important;
+  font-size: 11px !important;
+  color: #000000 !important;
+  height: 22px !important;
+  padding: 2px 6px !important;
+  right: 2px !important;
+  box-shadow: none !important;
+  transition: none !important;
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  box-sizing: border-box !important;
+  z-index: 10 !important;
+}
+
+body.theme-win95pink .search-btn:hover {
+  background: #FFE3F1 !important;
+  border: 2px inset #FFE3F1 !important;
+  transform: translateY(-50%) !important;
+}
+
+body.theme-lilac .unified-header {
+  background: linear-gradient(180deg, #f0e6ff, #e6ccff);
+}
+
+body.theme-lilac .video-navbar {
+  background: #e6ccff;
+}
+
+body.theme-lilac .nav-item.active {
+  background: linear-gradient(180deg, #d9b3ff, #cc99ff);
+}
+
+body.theme-lilac .btn {
+  border-radius: 8px;
+}
+
+body.theme-pink .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}
+
+body.theme-lime .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}
+
+body.theme-red .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}
+
+body.theme-gold .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}
+
+body.theme-cyan .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}
+
+body.theme-purple .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}
+
+body.theme-cherry .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}
+
+body.theme-darkblue .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}
+
+body.theme-aqua .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}
+
+body.theme-orange .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}
+
+body.theme-darkgreen .unified-header {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 15%, var(--panel)), var(--panel));
+}

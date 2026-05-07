@@ -1,0 +1,49 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Универсальный модуль скроллинга сайдбара */
+/* Исключаем chats-sidebar - у него своя логика */
+.sidebar:not(.chats-sidebar) {
+  align-self: flex-start;
+  position: sticky;
+  top: 0;
+  max-height: var(--sidebar-max-height, 100vh);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Пространство для прокрутки - только для nav sidebar */
+.sidebar:not(.chats-sidebar)::after {
+  content: '';
+  display: block;
+  height: 250px;
+  flex-shrink: 0;
+}
+
+body.cinema-mode .sidebar:not(.chats-sidebar)::after,
+html.cinema-mode .sidebar:not(.chats-sidebar)::after {
+  height: 0;
+}
+
+/* Скрываем скроллбар - только для nav sidebar */
+.sidebar:not(.chats-sidebar)::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+.sidebar:not(.chats-sidebar) {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
