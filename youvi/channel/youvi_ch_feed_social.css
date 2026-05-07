@@ -1,0 +1,200 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Timeline (Twitter-like) mode for channel feed – mirrors youvi_feed_all social mode */
+
+/* Container */
+.main-content.social-mode {
+    background: #fff;
+    border: none;
+    border-radius: 0;
+}
+
+/* Match width with feed-all timeline: center column ~740px with side padding */
+.main-content.social-mode #feedSection {
+    max-width: 740px;
+    margin: 0 auto !important; /* override inline margin */
+    padding: 0 15px;
+    background: #fff;
+}
+
+/* Each post item */
+.main-content.social-mode .feed-comment {
+    background: #fff;
+    border-bottom: 1px solid #e1e8ed;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-radius: 0;
+    padding: 9px 12px;
+    margin: 0;
+    box-shadow: none;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.main-content.social-mode .feed-comment:hover {
+    background-color: #f5f8fa;
+}
+
+/* Header row spacing */
+.main-content.social-mode .comment-header {
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+/* Avatar */
+.main-content.social-mode .comment-avatar,
+.main-content.social-mode .reply-avatar,
+.main-content.social-mode .nested-reply-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+/* Bubble becomes flat */
+.main-content.social-mode .comment-bubble {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 0;
+    min-width: 0;
+}
+.main-content.social-mode .comment-bubble::before,
+.main-content.social-mode .comment-bubble::after {
+    display: none;
+}
+
+/* Text */
+.main-content.social-mode .comment-text {
+    font-size: 14px;
+    line-height: 1.3125;
+    color: #14171a;
+    margin: 0;
+    word-wrap: break-word;
+}
+.main-content.social-mode .comment-text img {
+    max-width: 100% !important;
+    max-height: 400px !important;
+    height: auto !important;
+    border-radius: 0;
+    margin: 10px 0 0 0;
+    display: block;
+    border: 1px solid #e1e8ed;
+    transition: none;
+    object-fit: contain;
+}
+
+/* Actions */
+.main-content.social-mode .comment-actions,
+.main-content.social-mode .reply-actions,
+.main-content.social-mode .nested-reply-actions {
+    border-top: none;
+    padding-top: 8px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px; /* match all-feed tighter spacing */
+    flex-wrap: wrap;
+}
+
+.main-content.social-mode .like-btn,
+.main-content.social-mode .dislike-btn {
+    background: none;
+    border: none;
+    color: #657786;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    transition: color 0.15s ease-in-out;
+}
+.main-content.social-mode .like-btn:hover { color: #1da1f2; }
+.main-content.social-mode .dislike-btn:hover { color: #e1306c; }
+.main-content.social-mode .like-btn svg,
+.main-content.social-mode .dislike-btn svg { width: 16px; height: 16px; }
+
+/* Open/Reply links in timeline */
+.main-content.social-mode .open-post-btn {
+    background: none;
+    color: #ff69b4;
+    border: none;
+    cursor: pointer;
+    font-size: 10px !important;
+    padding: 0;
+    transition: all 0.2s;
+    text-decoration: none;
+    font-weight: 400;
+    margin-left: 0; /* keep with other actions on the left */
+}
+
+/* Ensure reply-related buttons are visible in timeline */
+.main-content.social-mode .reply-btn,
+.main-content.social-mode .nested-reply-btn,
+.main-content.social-mode .reply-to-reply-btn,
+.main-content.social-mode .collapse-btn,
+.main-content.social-mode .close-reply-btn,
+.main-content.social-mode .close-nested-reply-btn {
+    display: inline-block !important;
+}
+.main-content.social-mode .open-post-btn:hover { color: #d94b88; text-decoration: underline; }
+
+/* Hide image toggle button in social mode */
+.main-content.social-mode .delete-btn { display: inline-block !important; }
+.main-content.social-mode .comment-text img { cursor: default !important; }
+
+/* Hide Reply/Collapse buttons and show replies counter like feed-all */
+.main-content.social-mode .reply-btn,
+.main-content.social-mode .reply-to-reply-btn,
+.main-content.social-mode .collapse-btn,
+.main-content.social-mode .nested-delete-btn,
+.main-content.social-mode .close-reply-btn,
+.main-content.social-mode .close-nested-reply-btn,
+.main-content.social-mode .nested-reply-btn { display: none !important; }
+.main-content.social-mode .replies-count { display: inline !important; }
+
+/* Date */
+.main-content.social-mode .comment-date { color: #657786; font-size: 13px; font-weight: 400; }
+.main-content.social-mode .comment-date::before { content: "·"; margin: 0 4px; color: #657786; }
+
+/* Floating banner */
+.floating-banner {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 315px;
+    height: 420px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    cursor: pointer;
+    overflow: visible;
+}
+.floating-banner.visible { opacity: 1; visibility: visible; }
+.floating-banner img { width: 100%; height: 100%; object-fit: contain; border: none; outline: none; box-shadow: none; }
+.floating-banner-close { display: none; }
+
+
+

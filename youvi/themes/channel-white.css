@@ -1,0 +1,30 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+body.channel-theme-white {
+    --channel-accent: #6b7280;
+    --channel-accent-strong: #4b5563;
+    --channel-accent-border: #374151;
+    --channel-accent-soft: rgba(107, 114, 128, 0.2);
+    --channel-accent-soft-strong: rgba(107, 114, 128, 0.14);
+    --channel-accent-pale: #f9fafb;
+    --channel-accent-pale-border: #e5e7eb;
+    --channel-accent-link-hover: #374151;
+    --channel-accent-link-border: #9ca3af;
+    --channel-header-dark-bg: #2a2a2a;
+    --channel-header-dark-border: #474747;
+    --channel-nav-link-hover: #e5e7eb;
+    --channel-nav-link-active: #f3f4f6;
+}

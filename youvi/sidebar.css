@@ -1,0 +1,362 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Sidebar shared styles (icons, layout) */
+
+/* Base sidebar layout */
+.sidebar {
+    width: 200px;
+    flex-shrink: 1;
+    background: #f5f5f5;
+    margin-left: -20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 0;
+    transition: width 0.2s ease, padding 0.2s ease;
+    position: relative;
+    z-index: 10; /* Ensure sidebar appears above header */
+}
+
+@media (max-width: 1400px) {
+    body:not(.sidebar-collapsed) .sidebar,
+    html:not(.sidebar-collapsed) .sidebar {
+        width: 170px;
+    }
+}
+
+@media (max-width: 1200px) {
+    body:not(.sidebar-collapsed) .sidebar,
+    html:not(.sidebar-collapsed) .sidebar {
+        width: 160px;
+    }
+}
+
+.sidebar-section {
+    margin-bottom: 15px;
+}
+
+.sidebar-section:last-child {
+    margin-bottom: 0;
+}
+
+.sidebar-title {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+/* Base sidebar item */
+.sidebar-item {
+    display: block;
+    color: #666;
+    text-decoration: none;
+    padding: 6px 0;
+    font-size: 13px;
+    border-left: 3px solid transparent;
+    padding-left: 10px;
+    transition: color 0.2s, border-left-color 0.2s, padding 0.2s ease, gap 0.2s ease;
+    cursor: pointer;
+}
+
+.sidebar-item:hover {
+    color: var(--channel-accent-strong, #c2185b);
+    border-left-color: var(--channel-accent, #ff85b4);
+}
+
+.sidebar-item.active {
+    color: #000;
+    border-left-color: var(--channel-accent, #ff69b4);
+}
+
+/* Flex layout for items with icons */
+.sidebar .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* SVG icon sizing for inline icons */
+.sidebar .sidebar-item svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: width 0.2s ease, height 0.2s ease;
+}
+
+/* Favicons used in nav items */
+.sidebar .sidebar-item.nav-item img {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.sidebar .sidebar-item.nav-item:hover img {
+    opacity: 1;
+}
+
+/* Stroke colors for SVG-based nav icons */
+.sidebar .sidebar-item.nav-item svg {
+    stroke: #666;
+}
+
+.sidebar .sidebar-item.nav-item:hover svg {
+    stroke: var(--channel-accent-strong, #c2185b);
+}
+
+.sidebar .sidebar-item.nav-item.active svg {
+    stroke: var(--channel-accent, #ff69b4);
+}
+
+/* Library (YouVi) icons (SVG outline, thin) */
+.sidebar .sidebar-item.library-item svg {
+    stroke: #666;
+    transition: stroke 0.2s;
+}
+
+.sidebar .sidebar-item.library-item:hover svg {
+    stroke: var(--channel-accent-strong, #c2185b);
+}
+
+.sidebar .sidebar-item.library-item.active svg {
+    stroke: var(--channel-accent, #ff69b4);
+}
+
+/* Active library item left bar color */
+.sidebar .sidebar-item.library-item.active {
+    color: #000;
+    border-left-color: var(--channel-accent, #ff69b4);
+}
+
+/* Dark Theme Sidebar Styles */
+body.dark-theme .sidebar {
+    background: #1a1a1a; /* Dark grey, not black like the page */
+}
+
+body.dark-theme .sidebar-title {
+    color: #999;
+}
+
+body.dark-theme .sidebar-item {
+    color: #ccc;
+}
+
+body.dark-theme .sidebar-item:hover {
+    color: var(--channel-accent, #ffadcd);
+    border-left-color: var(--channel-accent, #ff85b4);
+}
+
+body.dark-theme .sidebar-item.active {
+    color: #fff;
+    border-left-color: var(--channel-accent, #ff69b4);
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item svg {
+    stroke: #999;
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item:hover svg {
+    stroke: var(--channel-accent, #ffadcd);
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item.active svg {
+    stroke: var(--channel-accent, #ff69b4);
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item svg {
+    stroke: #999;
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item:hover svg {
+    stroke: var(--channel-accent, #ffadcd);
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item.active svg {
+    stroke: var(--channel-accent, #ff69b4);
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item.active {
+    color: #fff;
+    border-left-color: var(--channel-accent, #ff69b4);
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item img {
+    opacity: 0.6;
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item:hover img {
+    opacity: 1;
+}
+
+/* Sidebar Toggle Button Styles */
+.sidebar-toggle-btn {
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    transition: background-color 0.2s;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.sidebar-toggle-btn:hover {
+    background: transparent;
+}
+
+.sidebar-toggle-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: #111;
+}
+
+/* Dark theme for toggle button */
+body.dark-theme .sidebar-toggle-btn {
+    color: #fff;
+}
+
+body.dark-theme .sidebar-toggle-btn svg {
+    fill: #fff;
+}
+
+/* Collapsed Sidebar States - Compact icon-only mode */
+.sidebar-collapsed .sidebar,
+body.sidebar-collapsed .sidebar,
+html.sidebar-collapsed .sidebar {
+    width: 60px;
+    padding: 10px 8px;
+    position: sticky;
+    top: 40px;
+    max-height: calc(var(--sidebar-max-height, 100vh) - 75px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Container/main shift when left sidebar is collapsed */
+.sidebar-collapsed .container {
+    padding-left: 20px;
+}
+
+.sidebar-collapsed .main-content {
+    margin-left: 0;
+}
+
+/* Hide text in collapsed mode - only left .sidebar, not .sidebar-right (tags) */
+.sidebar-collapsed .sidebar .sidebar-title {
+    display: none;
+}
+
+.sidebar-collapsed .sidebar .sidebar-item {
+    padding: 8px !important;
+    padding-left: 5px !important;
+    padding-right: 8px !important;
+    justify-content: center !important;
+    border-left: 3px solid transparent !important;
+    border-radius: 4px;
+}
+
+.sidebar-collapsed .sidebar .sidebar-item:hover {
+    background: var(--channel-accent-soft, rgba(255, 105, 180, 0.1));
+}
+
+.sidebar-collapsed .sidebar .sidebar-item.active {
+    background: var(--channel-accent-soft, rgba(255, 105, 180, 0.15));
+}
+
+/* Hide text, show only icons */
+.sidebar-collapsed .sidebar .sidebar-item svg,
+.sidebar-collapsed .sidebar .sidebar-item img {
+    margin: 0;
+}
+
+.sidebar-collapsed .sidebar .sidebar-item svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Hide all text nodes in sidebar items */
+.sidebar-collapsed .sidebar .sidebar-item {
+    font-size: 0;
+}
+
+.sidebar-collapsed .sidebar .sidebar-item svg,
+.sidebar-collapsed .sidebar .sidebar-item img {
+    font-size: 16px;
+}
+
+
+/* Autoplay toggle in collapsed mode */
+.sidebar-collapsed .sidebar #autoplayToggle {
+    padding: 8px !important;
+    justify-content: center !important;
+}
+
+.sidebar-collapsed .sidebar #autoplayToggle svg {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+}
+
+.sidebar-collapsed .sidebar #autoplayStatus {
+    display: none;
+}
+
+/* Subscribed channels avatars in collapsed mode */
+.sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item {
+    justify-content: center !important;
+}
+
+.sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item span {
+    display: none;
+}
+
+.sidebar-collapsed .sidebar #subscribedChannelsContainer .sidebar-item div {
+    margin: 0 !important;
+}
+
+/* Library items in collapsed mode - same alignment as subscriptions */
+.sidebar-collapsed .sidebar .library-item {
+    justify-content: center !important;
+    gap: 0 !important;
+}
+
+.sidebar-collapsed .sidebar .library-item span {
+    display: none;
+}
+
+.sidebar-collapsed .sidebar .library-item svg {
+    margin: 0 !important;
+}
+
+/* Nav items in collapsed mode - same alignment as subscriptions */
+.sidebar-collapsed .sidebar .nav-item {
+    justify-content: center !important;
+    gap: 0 !important;
+}
+
+.sidebar-collapsed .sidebar .nav-item span {
+    display: none;
+}
+
+.sidebar-collapsed .sidebar .nav-item svg {
+    margin: 0 !important;
+}

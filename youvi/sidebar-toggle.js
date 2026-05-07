@@ -1,0 +1,105 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * Global Sidebar Toggle System for YouVi
+ * Uses localStorage to persist sidebar state across all pages
+ */
+
+(function() {
+    'use strict';
+    
+    const SIDEBAR_STATE_KEY = 'sidebarCollapsed';
+    
+    /**
+     * Toggle sidebar collapsed state
+     */
+    function toggleSidebar() {
+        const body = document.body;
+        const html = document.documentElement;
+        const isCinemaMode = body.classList.contains('cinema-mode');
+        
+        if (isCinemaMode) {
+            body.classList.toggle('sidebar-open');
+        } else {
+            const isCollapsed = body.classList.contains('sidebar-collapsed') || html.classList.contains('sidebar-collapsed');
+            
+            if (isCollapsed) {
+                body.classList.remove('sidebar-collapsed');
+                html.classList.remove('sidebar-collapsed');
+                localStorage.setItem(SIDEBAR_STATE_KEY, 'false');
+            } else {
+                body.classList.add('sidebar-collapsed');
+                html.classList.add('sidebar-collapsed');
+                localStorage.setItem(SIDEBAR_STATE_KEY, 'true');
+            }
+            try {
+                window.dispatchEvent(new CustomEvent('youvi-sidebar-toggle', { detail: { collapsed: !isCollapsed } }));
+            } catch (e) {}
+        }
+    }
+    
+    /**
+     * Initialize sidebar state from localStorage on page load
+     */
+    function initializeSidebarState() {
+        const sidebarCollapsed = localStorage.getItem(SIDEBAR_STATE_KEY);
+        if (sidebarCollapsed === 'true') {
+            document.body.classList.add('sidebar-collapsed');
+            document.documentElement.classList.add('sidebar-collapsed');
+        }
+    }
+    
+    /**
+     * Setup sidebar toggle button event listener
+     */
+    function setupSidebarToggle() {
+        const toggleBtn = document.getElementById('sidebarToggle');
+        if (toggleBtn && !toggleBtn.dataset.listenerAttached) {
+            toggleBtn.addEventListener('click', toggleSidebar);
+            toggleBtn.dataset.listenerAttached = 'true';
+        }
+        
+        document.addEventListener('click', (e) => {
+            const body = document.body;
+            const isCinemaMode = body.classList.contains('cinema-mode');
+            const isSidebarOpen = body.classList.contains('sidebar-open');
+            
+            if (isCinemaMode && isSidebarOpen) {
+                const sidebar = document.querySelector('.sidebar');
+                const sidebarToggle = document.getElementById('sidebarToggle');
+                
+                if (sidebar && !sidebar.contains(e.target) && e.target !== sidebarToggle && !sidebarToggle.contains(e.target)) {
+                    body.classList.remove('sidebar-open');
+                }
+            }
+        });
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSidebarState();
+            setupSidebarToggle();
+        });
+    } else {
+        initializeSidebarState();
+        setupSidebarToggle();
+    }
+    
+    window.youviSidebar = {
+        toggle: toggleSidebar,
+        initialize: initializeSidebarState
+    };
+})();

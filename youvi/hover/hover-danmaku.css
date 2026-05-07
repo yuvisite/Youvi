@@ -1,0 +1,98 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * Hover Danmaku Styles
+ * Lightweight styling for danmaku on hover previews
+ */
+
+/* Danmaku overlay container */
+.hover-danmaku-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+  opacity: 0.85;
+  font-family: Arial, sans-serif;
+}
+
+/* Individual danmaku item */
+.hover-danmaku-item {
+  position: absolute;
+  font-weight: bold;
+  white-space: nowrap;
+  pointer-events: none;
+  line-height: 1.2;
+  will-change: transform;
+  text-shadow: 
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000,
+    0 0 3px rgba(0,0,0,0.9);
+}
+
+/* Scrolling animation for danmaku */
+@keyframes hoverDanmakuScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-200%);
+  }
+}
+
+/* Dark theme adjustments */
+body.dark-theme .hover-danmaku-overlay {
+  opacity: 0.9;
+}
+
+body.dark-theme .hover-danmaku-item {
+  text-shadow: 
+    -1.5px -1.5px 0 #000,
+    1.5px -1.5px 0 #000,
+    -1.5px 1.5px 0 #000,
+    1.5px 1.5px 0 #000,
+    0 0 4px rgba(0,0,0,0.95);
+}
+
+/* Reduce danmaku opacity on smaller screens */
+@media (max-width: 768px) {
+  .hover-danmaku-overlay {
+    opacity: 0.7;
+  }
+  
+  .hover-danmaku-item {
+    font-size: 11px !important;
+  }
+}
+
+/* Hide danmaku on very small screens */
+@media (max-width: 480px) {
+  .hover-danmaku-overlay {
+    display: none;
+  }
+}
+
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .hover-danmaku-item {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,392 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Tag Alias Manager Modal Styles */
+
+.tag-alias-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tag-alias-modal-content {
+  background-color: #fff;
+  border-radius: 4px;
+  width: 400px;
+  max-height: 500px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.tag-alias-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  background: #f5f5f5;
+}
+
+.tag-alias-header h3 {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+.tag-alias-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.tag-alias-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.current-tag-info {
+  background: #f0f8ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #333;
+}
+
+.current-tag-info strong {
+  color: #0066cc;
+  margin-right: 6px;
+}
+
+.current-tag-info span {
+  font-weight: 500;
+  color: #333;
+}
+
+.aliases-section {
+  margin-bottom: 16px;
+}
+
+.aliases-section h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.aliases-list {
+  min-height: 60px;
+}
+
+.no-aliases {
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+  margin: 20px 0;
+}
+
+.alias-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.alias-item:last-child {
+  margin-bottom: 0;
+}
+
+
+.alias-name {
+  font-size: 12px;
+  color: #333;
+  font-weight: 500;
+  flex: 1;
+}
+
+.btn-remove-alias {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 2px 6px;
+  cursor: pointer;
+  color: #666;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove-alias:hover {
+  background: #ff4444;
+  border-color: #ff4444;
+  color: #fff;
+}
+
+.add-alias-section h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-alias-form {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.alias-input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.alias-input:focus {
+  outline: none;
+  border-color: #ff69b4;
+}
+
+.btn-add-alias {
+  padding: 6px 12px;
+  background: #ff69b4;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+
+
+.alias-hint {
+  font-size: 11px;
+  color: #777;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.tag-alias-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  border-top: 1px solid #ddd;
+  background: #f5f5f5;
+}
+
+.btn-close {
+  padding: 6px 16px;
+  background: #fff;
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+/* Message notifications */
+.alias-message {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 1000;
+  min-width: 200px;
+  text-align: center;
+}
+
+.alias-message-success {
+  background: #4caf50;
+  color: #fff;
+}
+
+.alias-message-error {
+  background: #f44336;
+  color: #fff;
+}
+
+.alias-message-warning {
+  background: #ff9800;
+  color: #fff;
+}
+
+.alias-message-info {
+  background: #2196f3;
+  color: #fff;
+}
+
+/* Dark theme support */
+body.dark-theme .tag-alias-modal-content {
+  background-color: #2c2c2c;
+  color: #fff;
+  border-color: #444;
+}
+
+body.dark-theme .tag-alias-header {
+  background: #3a3a3a;
+  border-bottom-color: #444;
+}
+
+body.dark-theme .tag-alias-header h3 {
+  color: #fff;
+}
+
+body.dark-theme .tag-alias-close {
+  color: #fff;
+}
+
+body.dark-theme .current-tag-info {
+  background: #1a3a4a;
+  border-color: #2a5a7a;
+}
+
+body.dark-theme .current-tag-info strong {
+  color: #66b3ff;
+}
+
+body.dark-theme .current-tag-info span {
+  color: #fff;
+}
+
+body.dark-theme .aliases-section h4,
+body.dark-theme .add-alias-section h4 {
+  color: #ccc;
+}
+
+
+body.dark-theme .no-aliases {
+  color: #777;
+}
+
+body.dark-theme .alias-item {
+  background: #2a2a2a;
+  border-color: #444;
+}
+
+body.dark-theme .alias-name {
+  color: #fff;
+}
+
+body.dark-theme .btn-remove-alias {
+  background: #3a3a3a;
+  border-color: #555;
+  color: #ccc;
+}
+
+body.dark-theme .alias-input {
+  background: #3a3a3a;
+  border-color: #555;
+  color: #fff;
+}
+
+body.dark-theme .alias-input:focus {
+  outline: none;
+  border-color: #ff69b4;
+}
+
+body.dark-theme .alias-hint {
+  color: #aaa;
+}
+
+body.dark-theme .tag-alias-footer {
+  background: #3a3a3a;
+  border-top-color: #444;
+}
+
+body.dark-theme .btn-close {
+  background: #4a4a4a;
+  color: #fff;
+  border-color: #555;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .tag-alias-modal-content {
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .tag-alias-header {
+    padding: 12px 16px;
+  }
+  
+  .tag-alias-body {
+    padding: 16px;
+  }
+  
+  .add-alias-form {
+    flex-direction: column;
+  }
+  
+  .btn-add-alias {
+    width: 100%;
+  }
+}

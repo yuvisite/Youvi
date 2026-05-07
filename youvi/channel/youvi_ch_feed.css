@@ -1,0 +1,1539 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fff;
+    color: #111;
+}
+
+body.custom-background {
+    background: none !important;
+}
+
+body.custom-background::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+:root {
+    --header-height: 40px;
+    --footer-height: 200px;
+}
+
+/* Top Navigation Bar */
+.top-nav {
+    background: #d94b88;
+    border-bottom: 1px solid #c2185b;
+    padding: 4px 0;
+}
+
+.top-nav-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.top-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+    padding: 2px 0;
+    transition: color 0.2s;
+}
+
+.top-nav a:hover {
+    color: #ffd6ea;
+}
+
+.top-nav a.active {
+    color: #ffd6ea;
+    font-weight: 600;
+}
+
+/* Header */
+.header {
+    background: #FFE7F4;
+    padding: 0;
+    border-bottom: 1px solid #f2cfe1;
+    min-height: 40px;
+    width: 100%;
+}
+
+.header-content-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    box-sizing: border-box;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+    min-height: 40px;
+}
+
+.nav-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    margin-left: calc(200px + 20px + 20px);
+}
+
+.nav-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-links a {
+    color: #111;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 5px 0;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: #ff69b4;
+}
+
+.nav-links a.active {
+    color: #ff69b4;
+    font-weight: 600;
+}
+
+
+
+.search-btn {
+    padding: 8px 15px;
+    background: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.user-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.user-actions a {
+    color: #111;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.user-actions a:hover {
+    color: #ff69b4;
+}
+
+/* Main Container - matches youvi_main.html */
+.container {
+    width: 100%;
+    margin: 0;
+    padding: 0 20px 0 20px;
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    min-height: calc(100vh - 200px);
+}
+
+/* Sidebar - base styles only, sticky/scroll from sidebar.css + sidebar-scroll.css */
+.sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    background: #f5f5f5;
+    margin-left: -20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 0;
+}
+
+.sidebar-section {
+    margin-bottom: 15px;
+}
+
+.sidebar-section:last-child {
+    margin-bottom: 0;
+}
+
+.sidebar-title {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.sidebar-item {
+    display: block;
+    color: #666;
+    text-decoration: none;
+    padding: 6px 0;
+    font-size: 13px;
+    border-left: 3px solid transparent;
+    padding-left: 10px;
+}
+
+.sidebar-item:hover {
+    color: #c2185b;
+    border-left-color: #ff85b4;
+}
+
+.sidebar-item.active {
+    color: #000;
+    border-left-color: #ff69b4;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+/* Channel Header */
+.channel-header {
+    height: 200px;
+    background: linear-gradient(135deg, #d0d0d0, #f0f0f0);
+    border-radius: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+    margin-top: 0;
+    position: relative;
+}
+
+.channel-header.custom-bg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.channel-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+    padding: 20px;
+    display: flex;
+    align-items: end;
+    gap: 15px;
+}
+
+.channel-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    background: #ff69b4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.channel-avatar.custom-avatar {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-size: 0;
+}
+
+.channel-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.channel-name {
+    font-size: 32px;
+    font-weight: 600;
+    color: white;
+    text-shadow: none;
+    margin: 0;
+    transition: color 0.3s;
+}
+
+.channel-name.dark-text {
+    color: #222;
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+}
+
+.channel-stats {
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+    margin-top: 4px;
+}
+
+.channel-controls {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    gap: 6px;
+}
+
+.control-btn {
+    width: 32px;
+    height: 32px;
+    background: rgba(0,0,0,0.7);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.control-btn:hover {
+    background: #ff69b4;
+}
+
+.subscribe-btn {
+    background: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.subscribe-btn:hover {
+    background: #d94b88;
+}
+
+.subscribe-btn.subscribed {
+    background: #666;
+}
+
+.subscribe-btn.subscribed:hover {
+    background: #555;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    background: #FFE7F4;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    box-shadow: none;
+    justify-content: flex-start;
+    gap: 0;
+    position: relative;
+    z-index: 2;
+    border-bottom: 1px solid #f2cfe1;
+}
+
+.tab {
+    flex: none;
+    padding: 6px 20px;
+    background: none;
+    border: none;
+    border-radius: 0;
+    font-size: 13px;
+    font-weight: normal;
+    cursor: pointer;
+    transition: none; /* Убрана анимация */
+    color: #111;
+    min-width: auto;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.tab:last-child {
+    border-right: none;
+}
+
+.tab.active {
+    background: #d94b88;
+    color: white;
+    box-shadow: none;
+    text-shadow: none;
+    transition: none; /* Убрана анимация */
+}
+
+.tab:hover:not(.active) {
+    background: rgba(255, 105, 180, 0.15);
+    box-shadow: none;
+    transition: none; /* Убрана анимация */
+}
+
+.tab:active:not(.active) {
+    background: rgba(255, 111, 181, 0.2);
+    box-shadow: none;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    background: #fff;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    min-height: 400px;
+    margin-top: 0;
+    flex: 1;
+    transition: none; /* Убрана анимация */
+}
+
+.tab-content.active {
+    display: block;
+    transition: none; /* Убрана анимация */
+}
+
+/* Dark theme tab content */
+body.dark-theme .tab-content {
+    background: #000;
+}
+
+/* Feed Form */
+.feed-form {
+    background: #fff;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 10px 20px;
+    border: 1px solid #eee;
+}
+
+/* Editor Toolbar */
+.compact-editor-toolbar {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+    padding: 4px;
+    background: #f8f8f8;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+
+.compact-editor-toolbar button {
+    padding: 3px 6px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 10px;
+    transition: all 0.2s;
+    min-width: 20px;
+    text-align: center;
+}
+
+.compact-editor-toolbar button:hover {
+    background: #f0f0f0;
+    border-color: #ccc;
+}
+
+.compact-editor-toolbar button.active {
+    background: #ff69b4;
+    border-color: #d94b88;
+    color: white;
+}
+
+/* Editor */
+.compact-editor {
+    min-height: 60px;
+    max-height: 120px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 6px 8px;
+    background: #fff;
+    overflow-y: auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+    resize: vertical;
+    color: #333;
+}
+
+.compact-editor:focus {
+    outline: none;
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.1);
+}
+
+/* Text Formatting */
+.compact-editor strong,
+.compact-editor b,
+.comment-text strong,
+.reply-text strong,
+.nested-reply-text strong {
+    font-weight: bold !important;
+    color: #000 !important;
+}
+
+.compact-editor em,
+.compact-editor i,
+.comment-text em,
+.reply-text em,
+.nested-reply-text em {
+    font-style: italic !important;
+}
+
+.compact-editor u,
+.compact-editor span[style*="text-decoration: underline"],
+.comment-text u,
+.reply-text u,
+.nested-reply-text u {
+    text-decoration: underline !important;
+}
+
+/* Lists */
+.compact-editor ul,
+.comment-text ul,
+.reply-text ul,
+.nested-reply-text ul {
+    margin: 5px 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.compact-editor ol,
+.comment-text ol,
+.reply-text ol,
+.nested-reply-text ol {
+    margin: 5px 0;
+    padding-left: 20px;
+    list-style-type: decimal;
+}
+
+.compact-editor li,
+.comment-text li,
+.reply-text li,
+.nested-reply-text li {
+    margin: 2px 0;
+    line-height: 1.4;
+}
+
+.compact-editor ol ol {
+    list-style-type: lower-alpha;
+}
+
+.compact-editor ol ol ol {
+    list-style-type: lower-roman;
+}
+
+.compact-editor ul ul {
+    list-style-type: circle;
+}
+
+.compact-editor ul ul ul {
+    list-style-type: square;
+}
+
+/* Buttons */
+.btn {
+    padding: 4px 8px;
+    border-radius: 0;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    font-size: 12px;
+}
+
+.btn.primary {
+    background: #ff69b4;
+    color: #fff;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.load-more-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    color: #666;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.load-more-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.load-more-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Comments Base Styles */
+.feed-comment {
+    margin-bottom: 8px;
+    padding: 0 4px;
+}
+
+.feed-comment:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 8px;
+}
+
+/* Remove divider/gap for a comment that has visible replies under it */
+.feed-comment:has(.replies-container),
+.feed-comment:has(.nested-replies) {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.comment-container,
+.reply-item,
+.nested-reply-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    width: 100%;
+    clear: both;
+    margin-left: 0;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 3;
+}
+
+/* Avatar Base Styles */
+.comment-avatar,
+.reply-avatar,
+.nested-reply-avatar {
+    border-radius: 4px;
+    background: #ff69b4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.comment-avatar.custom-avatar,
+.reply-avatar.custom-avatar,
+.nested-reply-avatar.custom-avatar {
+    background: none;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-size: 0;
+}
+
+/* Avatar Image Styles */
+.comment-avatar-img,
+.reply-avatar-img,
+.nested-reply-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Avatar Sizes */
+.comment-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+}
+
+.reply-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+}
+
+.nested-reply-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+}
+
+/* Bubble Base Styles */
+.comment-bubble,
+.reply-bubble,
+.nested-reply-bubble {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    min-width: 0;
+}
+
+.comment-bubble {
+    background: white;
+    border-radius: 0;
+}
+
+.reply-bubble,
+.nested-reply-bubble {
+    background: #f5f5f5;
+    border-radius: 0;
+    border: none;
+}
+
+/* Bubble Arrows */
+.comment-bubble::before,
+.comment-bubble::after {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 12px;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+}
+
+.comment-bubble::before {
+    border-right: 6px solid white;
+    z-index: 2;
+}
+
+.comment-bubble::after {
+    left: -7px;
+    border-right: 6px solid #e0e0e0;
+    z-index: 1;
+}
+
+.reply-bubble::before,
+.nested-reply-bubble::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 8px;
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 4px solid #f5f5f5;
+    z-index: 2;
+}
+
+.reply-bubble::after,
+.nested-reply-bubble::after {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 8px;
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 4px solid #f0f0f0;
+    z-index: 1;
+}
+
+.nested-reply-bubble::before {
+    left: -3px;
+    top: 6px;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-right: 3px solid #f5f5f5;
+}
+
+.nested-reply-bubble::after {
+    left: -4px;
+    top: 6px;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-right: 3px solid #f0f0f0;
+}
+
+/* Header Base Styles */
+.comment-header,
+.reply-header,
+.nested-reply-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+/* Nick Base Styles */
+.comment-nick,
+.reply-nick,
+.nested-reply-nick {
+    font-weight: 600;
+    font-size: 12px;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s;
+}
+
+.comment-nick:hover,
+.reply-nick:hover,
+.nested-reply-nick:hover {
+    text-decoration-color: currentColor;
+}
+
+/* Channel nick (ка) - pink color */
+.comment-nick.channel-nick,
+.reply-nick.channel-nick,
+.nested-reply-nick.channel-nick {
+    color: #ff69b4;
+}
+
+/* Social mode nick style to visually match all-feed timeline */
+.main-content.social-mode .comment-nick,
+.main-content.social-mode .reply-nick,
+.main-content.social-mode .nested-reply-nick {
+    font-size: 14px;
+    font-weight: 700;
+    color: #14171a;
+    text-decoration: none;
+}
+.main-content.social-mode .comment-nick:hover,
+.main-content.social-mode .reply-nick:hover,
+.main-content.social-mode .nested-reply-nick:hover {
+    text-decoration: underline;
+}
+
+/* Channel nick (ка) in social mode - pink color */
+.main-content.social-mode .comment-nick.channel-nick,
+.main-content.social-mode .reply-nick.channel-nick,
+.main-content.social-mode .nested-reply-nick.channel-nick {
+    color: #ff69b4;
+}
+
+/* Date Base Styles */
+.comment-date,
+.reply-date,
+.nested-reply-date {
+    color: #999;
+    font-size: 10px;
+    margin-left: 0;
+}
+
+/* Text Base Styles */
+.comment-text,
+.reply-text,
+.nested-reply-text {
+    color: #333;
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.comment-text {
+    line-height: 1.3;
+}
+
+/* Action Base Styles */
+.comment-actions,
+.reply-actions,
+.nested-reply-actions {
+    display: flex;
+    justify-content: flex-start; /* keep actions grouped on the left */
+    gap: 12px;
+    margin-top: 4px;
+    opacity: 1;
+    width: 100%;
+}
+
+/* Show only likes/dislikes + replies count + Open (hide everything else) */
+.comment-actions .nested-delete-btn,
+.comment-actions .close-reply-btn,
+.comment-actions .close-nested-reply-btn,
+.comment-actions .delete-btn,
+.comment-actions .reply-btn,
+.comment-actions .nested-reply-btn,
+.comment-actions .reply-to-reply-btn { display: none !important; }
+
+/* Replies counter visible in both modes */
+.replies-count { display: inline !important; }
+
+/* Remove post dividers only in compact mode: disable border when not in social-mode */
+.main-content:not(.social-mode) .feed-comment { border-bottom: none; padding-bottom: 6px; }
+
+/* Open button style (compact mode) to mirror feed-all */
+.open-post-btn {
+    background: #ff69b4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 3px;
+    transition: all 0.2s;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.open-post-btn:hover {
+    background: #d94b88;
+    color: white;
+}
+
+/* Channel compact mode: place Open on the right */
+.main-content:not(.social-mode) .open-post-btn { margin-left: auto !important; }
+
+/* Timeline sizing for channel "Открыть" to match all-feed */
+.main-content.social-mode .open-post-btn {
+    background: none;
+    color: #ff69b4;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 0;
+    text-decoration: none;
+    font-weight: 400;
+}
+.main-content.social-mode .open-post-btn:hover { color: #d94b88; text-decoration: underline; }
+
+/* Ensure complaint/delete button is visible in all modes */
+.comment-actions .delete-btn { display: inline-block !important; }
+
+/* Clickable channel nicks: show pointer cursor */
+[data-channel-name] { cursor: pointer; }
+
+/* Hide collapse buttons globally */
+.collapse-btn { display: none !important; }
+
+/* Compact mode: default collapsed images (CSS-driven to avoid JS flicker) */
+.main-content:not(.social-mode) .comment-text img,
+.main-content:not(.social-mode) .reply-text img,
+.main-content:not(.social-mode) .nested-reply-text img {
+    max-width: 120px;
+    max-height: 80px;
+    object-fit: cover;
+    display: block;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    margin: 4px 0;
+}
+
+/* Author Badge */
+.author-badge {
+    background: #d94b88;
+    color: white;
+    padding: 1px 4px;
+    border-radius: 0;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Button Base Styles */
+.delete-btn,
+.reply-btn,
+.nested-reply-btn,
+.reply-to-reply-btn,
+.close-reply-btn,
+.close-nested-reply-btn,
+.nested-delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    transition: all 0.2s;
+}
+
+.delete-btn,
+.close-reply-btn,
+.close-nested-reply-btn,
+.nested-delete-btn {
+    color: #999;
+}
+
+.reply-btn,
+.nested-reply-btn,
+.reply-to-reply-btn {
+    color: #ff69b4;
+}
+
+.delete-btn:hover,
+.close-reply-btn:hover,
+.close-nested-reply-btn:hover,
+.nested-delete-btn:hover {
+    color: #666;
+}
+
+.reply-btn:hover,
+.nested-reply-btn:hover,
+.reply-to-reply-btn:hover {
+    color: #d94b88;
+}
+
+/* Collapse Button */
+.collapse-btn {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.collapse-btn:hover {
+    color: #333;
+}
+
+.collapse-btn .icon {
+    font-size: 8px;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    text-align: center;
+    line-height: 8px;
+}
+
+.collapse-btn.collapsed .icon {
+    transform: rotate(-90deg);
+}
+
+.collapse-btn:not(.collapsed) .icon {
+    transform: rotate(0deg);
+}
+
+.collapse-btn.hidden {
+    display: none;
+}
+
+/* Replies Container */
+.replies-container {
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: 16px;
+    border-left: 2px solid #f0f0f0;
+}
+
+.nested-replies {
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: 20px;
+    border-left: 2px solid #f0f0f0;
+    clear: both;
+    width: 100%;
+    display: block;
+}
+
+/* Nested Depth */
+.nested-replies .nested-replies {
+    padding-left: 15px;
+    margin-left: 0;
+    margin-top: 0;
+    clear: both;
+    width: 100%;
+    display: block;
+}
+
+.nested-replies .nested-replies .nested-replies {
+    padding-left: 12px;
+    margin-left: 0;
+    margin-top: 0;
+    clear: both;
+    width: 100%;
+    display: block;
+}
+
+.nested-replies .nested-replies .nested-replies .nested-replies {
+    padding-left: 10px;
+    margin-left: 0;
+    margin-top: 0;
+    clear: both;
+    width: 100%;
+    display: block;
+}
+
+.nested-replies .nested-replies .nested-replies .nested-replies .nested-replies {
+    padding-left: 8px;
+    margin-left: 0;
+    margin-top: 0;
+    border-left: none;
+    clear: both;
+    width: 100%;
+    display: block;
+}
+
+/* Ensure proper spacing for nested replies at reply-item level */
+.reply-item .nested-replies {
+    margin-top: 0;
+    margin-left: 0;
+    clear: both;
+    width: 100%;
+    display: block;
+    padding-left: 20px;
+    border-left: 2px solid #f0f0f0;
+    flex: 0 0 100%; /* occupy full width under the row */
+}
+
+.nested-reply-item .nested-replies {
+    margin-top: 0;
+    margin-left: 0;
+    clear: both;
+    width: 100%;
+    display: block;
+    padding-left: 20px;
+    border-left: 2px solid #f0f0f0;
+    flex: 0 0 100%; /* occupy full width under the row */
+}
+
+/* Fix nested replies positioning */
+.nested-replies {
+    clear: both;
+    width: 100%;
+    display: block;
+    margin-left: 0;
+    padding-left: 20px;
+    border-left: 2px solid #f0f0f0;
+    margin-top: 0;
+    position: static; /* avoid creating stacking context that can overlap children */
+    z-index: auto;
+}
+
+/* Ensure spacing between a reply and its first nested reply list */
+.reply-item > .nested-replies,
+.nested-reply-item > .nested-replies {
+    padding-top: 0;
+}
+
+/* Prevent the first nested reply from visually colliding with its parent */
+.nested-replies > .nested-reply-item:first-child,
+.nested-replies > .reply-item:first-child,
+.replies-container > .reply-item:first-child,
+.replies-container > .nested-reply-item:first-child {
+    margin-top: 0;
+}
+
+.nested-reply-item {
+    clear: both;
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-left: 0;
+    margin-bottom: 6px;
+    margin-top: 0;
+    position: static; /* keep normal flow to prevent overlay */
+    z-index: auto;
+}
+
+/* Collapsed Replies */
+.replies-container.collapsed,
+.nested-replies.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.reply-item,
+.nested-reply-item {
+    margin-bottom: 0;
+    width: 100%;
+    clear: both;
+    margin-left: 0;
+    margin-top: 0;
+    position: static; /* keep normal flow to prevent overlay */
+    z-index: auto;
+    flex-wrap: wrap; /* allow nested replies to move to next line */
+}
+
+/* Remove gap when a reply contains nested replies directly under it */
+.reply-item:has(> .nested-replies),
+.nested-reply-item:has(> .nested-replies) {
+    margin-bottom: 0;
+}
+
+/* Reply Forms */
+.reply-form {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    padding: 8px;
+}
+
+.nested-reply-form {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    padding: 8px;
+    margin-top: 8px;
+}
+
+.nested-reply-form .compact-editor {
+    min-height: 50px;
+    max-height: 100px;
+    font-size: 12px;
+    padding: 8px 10px;
+}
+
+.nested-reply-form .compact-editor-toolbar {
+    margin-bottom: 0px;
+    padding: 6px;
+}
+
+.nested-reply-form .compact-editor-toolbar button {
+    padding: 4px 8px;
+    font-size: 11px;
+    min-width: 24px;
+}
+
+/* Nested Forms Size Adjustment - Now handled by main .nested-reply-form styles above */
+
+/* Image Styles */
+.comment-image,
+.reply-image,
+.nested-reply-image {
+    border-radius: 0;
+    cursor: pointer;
+    object-fit: cover;
+    margin: 4px 0;
+    flex-shrink: 0;
+    border: 1px solid #ddd;
+    transition: none;
+}
+
+.comment-image {
+    max-width: 200px;
+    max-height: 150px;
+}
+
+.reply-image {
+    max-width: 120px;
+    max-height: 90px;
+}
+
+.nested-reply-image {
+    max-width: 120px;
+    max-height: 90px;
+}
+
+/* Lazy loading styles */
+.lazy {
+    opacity: 0.7;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.lazy.loaded {
+    opacity: 1;
+    background: transparent;
+}
+
+.lazy.error {
+    opacity: 0.5;
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+}
+
+.lazy-avatar {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 0.3s ease;
+}
+
+.lazy-avatar.loaded {
+    opacity: 1;
+}
+
+.lazy-avatar.error {
+    opacity: 0.5;
+    background: #f5f5f5;
+}
+
+.image-center {
+    display: block;
+    margin: 8px auto;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+    text-align: center;
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    max-width: 95%;
+    max-height: 95%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    object-fit: contain;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+}
+
+.close {
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    cursor: pointer;
+    z-index: 101;
+}
+
+.close:hover { 
+    opacity: 0.7; 
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Footer */
+.footer {
+    background: #2c2c2c;
+    color: #fff;
+    padding: 25px 0 15px 0;
+    margin-top: 0;
+}
+
+.footer-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.footer-logo {
+    flex-shrink: 0;
+    width: 200px;
+}
+
+.footer-logo img {
+    height: 40px;
+    width: auto;
+}
+
+.footer-logo p {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #ccc;
+    line-height: 1.3;
+}
+
+.footer-sections {
+    display: flex;
+    gap: 30px;
+    flex: 1;
+}
+
+.footer-main {
+    display: flex;
+    gap: 30px;
+    flex: 1;
+}
+
+.footer-right {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.footer-section {
+    flex: 1;
+}
+
+.footer-section h3 {
+    font-size: 13px;
+    margin-bottom: 10px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section li {
+    margin-bottom: 6px;
+}
+
+.footer-section a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 11px;
+    transition: color 0.2s;
+}
+
+.footer-section a:hover {
+    color: #ff69b4;
+}
+
+.footer-bottom {
+    border-top: 1px solid #444;
+    margin-top: 20px;
+    padding-top: 15px;
+    text-align: center;
+    color: #999;
+    font-size: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .channel-header {
+        height: 140px;
+    }
+    
+    .comment-container {
+        gap: 6px;
+    }
+    
+    .comment-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+    
+    .comment-bubble {
+        padding: 6px 8px;
+        border-radius: 0;
+    }
+    
+    .comment-bubble::before,
+    .comment-bubble::after {
+        left: -5px;
+        border-right-width: 5px;
+        border-top-width: 5px;
+        border-bottom-width: 5px;
+    }
+}
+
+/* Post Buttons */
+#postFeed, #authorPostBtn {
+    height: 22px;
+    min-width: 100px;
+}
+
+/* Адаптивная система - расширение контейнеров на широких экранах */
+@media (min-width: 1700px) {
+    .header-content-wrapper,
+    .top-nav-content {
+        max-width: 1700px !important;
+    }
+    .footer-content {
+        max-width: 1700px !important;
+    }
+}
+
+@media (min-width: 2000px) {
+    .header-content-wrapper,
+    .top-nav-content {
+        max-width: 1800px !important;
+    }
+    .footer-content {
+        max-width: 1800px !important;
+    }
+}

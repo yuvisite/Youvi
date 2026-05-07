@@ -1,0 +1,100 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * YouVi Pagination System
+ * Unified pagination styles for all pages
+ */
+
+/* Pagination Container */
+.pagination {
+    margin-top: auto; /* Push to bottom of flex container */
+    padding-top: 20px; /* Space above pagination */
+    padding-bottom: 20px; /* Space below pagination */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    color: #111;
+}
+
+/* Pagination Info Text */
+.pagination-info {
+    font-size: 12px;
+    color: #666;
+    margin-right: 10px;
+}
+
+/* Pagination Buttons */
+.pagination-btn {
+    min-width: 30px;
+    padding: 4px 8px;
+    margin: 1px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.1s;
+    background: #ff69b4;
+    color: white;
+    border: none;
+}
+
+.pagination-btn.active {
+    background: #d94b88;
+    color: #fff;
+    font-weight: bold;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    background: #e0e0e0;
+    color: #777;
+}
+
+/* Dark Theme Support */
+body.dark-theme .pagination {
+    color: #fff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+body.dark-theme .pagination-info {
+    color: #ccc;
+}
+
+body.dark-theme .pagination-btn {
+    background: #ff69b4;
+    color: #fff;
+    border: none;
+}
+
+body.dark-theme .pagination-btn.active {
+    background: #d94b88;
+    color: #fff;
+    font-weight: bold;
+}
+
+body.dark-theme .pagination-btn:hover:not(:disabled) {
+    background: #d94b88;
+}
+
+body.dark-theme .pagination-btn:disabled {
+    background: #555;
+    color: #999;
+    opacity: 0.6;
+    cursor: not-allowed;
+}

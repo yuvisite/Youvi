@@ -1,0 +1,137 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * Drag-to-Seek Styles
+ * Visual feedback for drag-to-seek functionality
+ */
+
+.drag-seek-preview {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+    z-index: 10001;
+    opacity: 0.95;
+    transition: left 0.05s ease-out;
+}
+
+.drag-seek-indicator {
+    width: 0;
+    height: 0;
+    border-left: 20px solid var(--channel-accent, #ff69b4);
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+    transition: border-left-color 0.2s ease;
+}
+
+.drag-seek-time {
+    background: rgba(0, 0, 0, 0.85);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Segoe UI', 'Roboto', monospace;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    min-width: 80px;
+    text-align: center;
+}
+
+/* Visual feedback during drag */
+.video-container.dragging-seek,
+.video-player.dragging-seek {
+    cursor: ew-resize !important;
+}
+
+/* Smooth transition for preview movement */
+.drag-seek-preview.moving {
+    transition: left 0.1s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .drag-seek-indicator {
+        border-left-width: 15px;
+        border-top-width: 9px;
+        border-bottom-width: 9px;
+    }
+    
+    .drag-seek-time {
+        font-size: 14px;
+        padding: 6px 12px;
+        min-width: 70px;
+    }
+}
+
+/* Fullscreen mode adjustments */
+.video-container.fullscreen .drag-seek-time,
+:-webkit-full-screen .drag-seek-time,
+:-moz-full-screen .drag-seek-time,
+:fullscreen .drag-seek-time {
+    font-size: 24px;
+    padding: 12px 24px;
+    min-width: 120px;
+}
+
+.video-container.fullscreen .drag-seek-indicator,
+:-webkit-full-screen .drag-seek-indicator,
+:-moz-full-screen .drag-seek-indicator,
+:fullscreen .drag-seek-indicator {
+    border-left-width: 30px;
+    border-top-width: 18px;
+    border-bottom-width: 18px;
+}
+
+/* Animation for when preview appears */
+@keyframes dragSeekFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.drag-seek-preview {
+    animation: dragSeekFadeIn 0.15s ease-out;
+}
+
+/* Disable user selection while dragging */
+.video-container.dragging-seek *,
+.video-player.dragging-seek * {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+}
+
+/* Hide speed HUD during drag-seeking to avoid visual conflicts */
+.video-container.drag-seeking .speed-hud,
+.video-player.drag-seeking .speed-hud,
+.video-container.drag-seeking #seekHud,
+.video-player.drag-seeking #seekHud {
+    display: none !important;
+}
+

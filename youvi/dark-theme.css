@@ -1,0 +1,1492 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Dark Theme for Youvi - Based on Screen colors */
+body.dark-theme {
+    background: #0d0d0d;
+    color: #fff;
+}
+
+/* Header */
+body.dark-theme .header {
+    background: #2c1810;
+    border-bottom: 1px solid #444;
+}
+
+body.dark-theme .nav-links a {
+    color: #fff;
+}
+
+body.dark-theme .user-actions a {
+    color: #fff;
+}
+
+body.dark-theme .user-actions a:hover {
+    color: #ff69b4;
+}
+
+/* Sidebar Toggle Button */
+body.dark-theme .sidebar-toggle-btn {
+    color: #fff;
+}
+
+body.dark-theme .sidebar-toggle-btn svg {
+    fill: #fff;
+}
+
+/* Search Input */
+body.dark-theme .search-input {
+    background: #4a3a34;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+body.dark-theme .search-input::placeholder {
+    color: #c8b9b4;
+    opacity: 1;
+}
+
+body.dark-theme .search-input:-ms-input-placeholder {
+    color: #c8b9b4;
+}
+
+body.dark-theme .search-input::-ms-input-placeholder {
+    color: #c8b9b4;
+}
+
+body.dark-theme .search-input:focus {
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 2px rgba(255,105,180,0.2);
+    background: #544339;
+}
+
+/* Search Button */
+body.dark-theme .search-btn {
+    background: #ff69b4;
+    color: #fff;
+    border: none;
+}
+
+body.dark-theme .search-btn:hover {
+    background: #ff85c3;
+}
+
+/* Sidebar */
+body.dark-theme .sidebar {
+    background: #1a1a1a;
+}
+
+body.dark-theme .sidebar-title {
+    color: #999;
+}
+  
+body.dark-theme .sidebar-item {
+    color: #ccc;
+}
+
+body.dark-theme .sidebar-item:hover {
+    color: #ffadcd;
+    border-left-color: #ff85b4;
+}
+
+body.dark-theme .sidebar-item.active {
+    color: #fff;
+    border-left-color: #ff69b4;
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item svg {
+    stroke: #999;
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item:hover svg {
+    stroke: #ffadcd;
+}
+
+body.dark-theme .sidebar .sidebar-item.nav-item.active svg {
+    stroke: #ff69b4;
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item svg {
+    stroke: #999;
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item:hover svg {
+    stroke: #ffadcd;
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item.active svg {
+    stroke: #ff69b4;
+}
+
+body.dark-theme .sidebar .sidebar-item.library-item.active {
+    color: #fff;
+    border-left-color: #ff69b4;
+}
+
+/* Sidebar SVG icons - generic stroke color */
+body.dark-theme .sidebar svg {
+    stroke: #999;
+}
+
+body.dark-theme .sidebar .sidebar-item:hover svg {
+    stroke: #ffadcd;
+}
+
+body.dark-theme .sidebar .sidebar-item.active svg {
+    stroke: #ff69b4;
+}
+
+/* Video Player */
+body.dark-theme .video-player {
+    background: #000;
+}
+
+body.dark-theme .video-meta {
+    color: #ccc;
+}
+
+/* Section Titles */
+body.dark-theme .section-title,
+body.dark-theme .playlist-section-title,
+body.dark-theme .latest-title,
+body.dark-theme .playlists-header-title,
+body.dark-theme .results-title {
+    color: #fff;
+}
+
+/* View and Type Switcher Buttons */
+body.dark-theme .view-btn,
+body.dark-theme .type-btn {
+    background: #2a2a2a;
+    color: #ccc;
+    border: 1px solid #444;
+}
+
+body.dark-theme .view-btn:hover,
+body.dark-theme .type-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+body.dark-theme .view-btn.active,
+body.dark-theme .type-btn.active {
+    background: #ff69b4;
+    color: #fff;
+    border-color: #ff69b4;
+}
+
+/* Feed Mode Toggle Buttons (Сетка/Список on subscriptions) */
+body.dark-theme .feed-mode-toggle-buttons {
+    background: #2a2a2a;
+    border: 1px solid #444;
+}
+
+body.dark-theme .feed-mode-btn {
+    background: transparent;
+    color: #ccc;
+}
+
+body.dark-theme .feed-mode-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+body.dark-theme .feed-mode-btn.active {
+    background: #ff69b4;
+    color: #fff;
+}
+
+/* Grid Switcher Buttons */
+body.dark-theme .grid-switcher .grid-btn {
+    background: #2a2a2a;
+    color: #ccc;
+    border: 1px solid #444;
+}
+
+body.dark-theme .grid-switcher .grid-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+body.dark-theme .grid-switcher .grid-btn.active {
+    background: #ff69b4;
+    color: #fff;
+    border-color: #ff69b4;
+}
+
+/* Tags */
+body.dark-theme .tag-item {
+    color: #999;
+}
+
+body.dark-theme .tag-item:hover {
+    color: #ff69b4;
+    background: rgba(255, 105, 180, 0.15);
+}
+
+body.dark-theme .tag-item.active {
+    color: #ff69b4;
+}
+
+/* Video Cards */
+body.dark-theme .video-card {
+    background: transparent !important; /* Match page background, NO GREY */
+}
+
+body.dark-theme .video-thumbnail {
+    background: #444;
+}
+
+body.dark-theme .video-card-title,
+body.dark-theme .video-title {
+    color: #fff !important; /* Force white titles */
+}
+
+body.dark-theme .video-title-link {
+    color: #fff !important; /* Force white title links */
+}
+
+body.dark-theme .video-category {
+    color: #999;
+}
+
+body.dark-theme .video-tag-link,
+body.dark-theme .video-category-link {
+    color: #999;
+}
+
+body.dark-theme .video-info {
+    background: transparent !important; /* Match page background */
+}
+
+body.dark-theme .video-meta,
+body.dark-theme .video-views,
+body.dark-theme .video-date {
+    color: #aaa;
+}
+
+/* Latest Videos Grid */
+body.dark-theme .latest-thumb {
+    background: #444;
+}
+
+body.dark-theme .latest-card-title {
+    color: #fff;
+}
+
+body.dark-theme .latest-info {
+    color: #999;
+}
+
+/* Video Meta and Description */
+body.dark-theme .video-meta-line {
+    color: #999;
+}
+
+body.dark-theme .video-desc {
+    color: #aaa;
+}
+
+body.dark-theme .playlist-channel {
+    color: #ff69b4;
+}
+
+body.dark-theme .playlist-channel-link {
+    color: #ff69b4;
+}
+
+body.dark-theme .video-channel-row {
+    color: #ccc;
+}
+
+/* Playlist Items */
+body.dark-theme .playlist-item {
+    background: transparent; /* No card background, blend with page */
+    border: none;
+}
+
+body.dark-theme .playlist-thumb {
+    background: #444;
+    color: #888;
+    border: none;
+}
+
+body.dark-theme .playlist-info {
+    background: transparent; /* Same as page background */
+    border: none;
+}
+
+body.dark-theme .playlist-title {
+    color: #fff;
+}
+
+body.dark-theme .playlist-meta {
+    color: #aaa;
+}
+
+/* Playlist View Page */
+body.dark-theme .playlist-view-header h1 {
+    color: #fff !important;
+}
+
+body.dark-theme .playlist-view-meta {
+    color: rgba(255,255,255,0.8) !important;
+}
+
+body.dark-theme .playlist-view-categories {
+    color: rgba(255,255,255,0.8) !important;
+}
+
+body.dark-theme .category-tag {
+    color: #aaa;
+}
+
+/* Channel Cards */
+body.dark-theme .channel-card {
+    background: #1a1a1a;
+    border: 1px solid #444;
+}
+
+body.dark-theme .channel-avatar {
+    border: 2px solid #333;
+}
+
+body.dark-theme .channel-name {
+    color: #fff;
+}
+
+body.dark-theme .channel-stats {
+    color: #999;
+}
+
+body.dark-theme .subscribe-toggle-btn.subscribed {
+    background: #666;
+    color: #fff;
+}
+
+/* Channel List/Compact Rows */
+body.dark-theme .channel-row {
+    background: #1a1a1a;
+    border: 1px solid #444;
+}
+
+/* Sidebar Subscribed Channels */
+body.dark-theme #subscribedChannelsList .channel-name {
+    color: #ccc;
+}
+
+body.dark-theme #subscribedChannelsList .channel-name:hover {
+    color: #ff69b4;
+}
+
+body.dark-theme #subscribedChannelsContainer .sidebar-item {
+    color: #ccc;
+}
+
+body.dark-theme #subscribedChannelsContainer .sidebar-item:hover {
+    color: #ffadcd;
+}
+
+body.dark-theme #subscribedChannelsContainer .sidebar-item span {
+    color: inherit;
+}
+
+/* Footer */
+body.dark-theme .footer {
+    background: #2c2c2c;
+    color: #fff;
+}
+
+body.dark-theme .footer-logo p {
+    color: #ccc;
+}
+
+body.dark-theme .footer-section h3 {
+    color: #fff;
+}
+
+body.dark-theme .footer-section a {
+    color: #ccc;
+}
+
+body.dark-theme .footer-section a:hover {
+    color: #ff69b4;
+}
+
+body.dark-theme .footer-bottom {
+    border-top: 1px solid #444;
+    color: #999;
+}
+
+/* Add spacing before footer */
+body.dark-theme .container {
+    margin-bottom: 0;
+}
+
+/* Empty State and Loading */
+body.dark-theme .empty-state {
+    color: #aaa;
+}
+
+body.dark-theme .loading {
+    color: #ccc;
+}
+
+/* Playlist Section All Link */
+body.dark-theme .playlist-section-all-link {
+    color: white;
+}
+
+/* List View Mode - Date Groups and Titles */
+body.dark-theme .date-group-title {
+    color: #fff;
+}
+
+body.dark-theme .list-views {
+    color: #aaa;
+}
+
+body.dark-theme .list-item {
+    background: transparent !important; /* Match page background */
+}
+
+body.dark-theme .list-item:hover {
+    background: #1a1a1a !important;
+}
+
+body.dark-theme .list-thumbnail {
+    background: #444;
+}
+
+body.dark-theme .list-title {
+    color: #fff !important;
+}
+
+body.dark-theme .list-channel {
+    color: #ff69b4;
+}
+
+body.dark-theme .list-meta {
+    color: #aaa;
+}
+
+body.dark-theme .list-date,
+body.dark-theme .list-views {
+    color: #999;
+}
+
+/* History and Favorites Pages */
+body.dark-theme .history-item,
+body.dark-theme .fav-item {
+    background: transparent !important; /* Match page background */
+}
+
+body.dark-theme .history-item:hover {
+    background: #1a1a1a !important;
+}
+
+body.dark-theme .history-thumbnail {
+    background: #444;
+}
+
+body.dark-theme .history-title {
+    color: #fff !important;
+}
+
+body.dark-theme .history-title a {
+    color: #fff !important;
+}
+
+body.dark-theme .history-channel {
+    color: #ff69b4;
+}
+
+body.dark-theme .history-meta,
+body.dark-theme .meta-small,
+body.dark-theme .meta-desc,
+body.dark-theme .meta-stat {
+    color: #aaa;
+}
+
+body.dark-theme .history-date,
+body.dark-theme .watch-count,
+body.dark-theme .fav-stats {
+    color: #888;
+}
+
+body.dark-theme .remove-btn {
+    background: #2a2a2a;
+    color: #aaa;
+}
+
+body.dark-theme .remove-btn:hover {
+    background: #ff69b4;
+    color: white;
+}
+
+body.dark-theme .action-btn {
+    color: #ccc;
+}
+
+body.dark-theme .action-btn:hover {
+    color: #ff69b4;
+}
+
+
+body.dark-theme .stats-box {
+    color: #ccc;
+}
+
+body.dark-theme .pagination-info {
+    color: #aaa;
+}
+
+/* Group Titles */
+body.dark-theme .group-title {
+    color: #fff;
+}
+
+/* ============================================
+   VIDEO PAGE SPECIFIC DARK THEME STYLES
+   ============================================ */
+
+/* Video Info Section */
+body.dark-theme .video-info {
+    background: #1a1a1a;
+    border-color: #444;
+}
+
+body.dark-theme .video-title {
+    color: #fff;
+}
+
+body.dark-theme .video-tags {
+    /* Keep existing */
+}
+
+body.dark-theme .video-tag {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #ccc;
+}
+
+body.dark-theme .edit-tags-btn {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #ccc;
+}
+
+body.dark-theme .edit-tags-btn:hover {
+    background: #3a3a3a;
+    border-color: #ff69b4;
+    color: #ff69b4;
+}
+
+body.dark-theme .tags-edit-form {
+    background: #2a2a2a;
+    border-color: #444;
+}
+
+body.dark-theme .tags-edit-controls input {
+    background: #1a1a1a;
+    border-color: #555;
+    color: #fff;
+}
+
+body.dark-theme .tags-edit-cancel {
+    background: #333;
+    color: #ccc;
+    border-color: #555;
+}
+
+body.dark-theme .tags-edit-cancel:hover {
+    background: #444;
+}
+
+/* Video Actions */
+body.dark-theme .video-actions {
+    /* Inherits */
+}
+
+body.dark-theme .video-actions .action-btn,
+body.dark-theme .action-btn {
+    background: #2a2a2a !important;
+    border-color: #444 !important;
+    color: #ccc !important;
+}
+
+body.dark-theme .video-actions .action-btn:hover,
+body.dark-theme .action-btn:hover {
+    background: #3a3a3a !important;
+    border-color: #ff69b4 !important;
+    color: #ff69b4 !important;
+}
+
+/* Video Description */
+body.dark-theme .video-description {
+    background: #1a1a1a;
+    border-color: #444;
+}
+
+body.dark-theme .description-header h3 {
+    color: #fff;
+}
+
+body.dark-theme .description-toggle {
+    color: #ccc;
+}
+
+body.dark-theme .description-toggle:hover {
+    background: #2a2a2a;
+    color: #ff69b4;
+}
+
+body.dark-theme .description-text {
+    color: #ccc;
+}
+
+body.dark-theme .uploader-name {
+    color: #fff;
+}
+
+body.dark-theme .subscribe-btn {
+    /* Keep pink */
+}
+
+body.dark-theme .subscribe-btn.subscribed {
+    background: #666;
+}
+
+body.dark-theme .edit-description-btn {
+    color: #ccc;
+}
+
+body.dark-theme .edit-description-btn:hover {
+    background: #2a2a2a;
+    color: #ff69b4;
+}
+
+body.dark-theme .description-edit-form {
+    background: #2a2a2a;
+    border-color: #444;
+}
+
+body.dark-theme .description-edit-controls textarea {
+    background: #1a1a1a;
+    border-color: #555;
+    color: #fff;
+}
+
+body.dark-theme .description-edit-cancel {
+    background: #333;
+    color: #ccc;
+    border-color: #555;
+}
+
+body.dark-theme .description-edit-cancel:hover {
+    background: #444;
+}
+
+/* Right Sidebar */
+body.dark-theme .right-sidebar {
+    /* Keep transparent or match page */
+}
+
+body.dark-theme .sidebar-section-right {
+    background: #1a1a1a;
+    border-color: #444;
+}
+
+body.dark-theme .section-title-right {
+    background: #2a2a2a;
+    border-bottom-color: #444;
+    color: #fff;
+}
+
+body.dark-theme .playlist-toggle-btn {
+    color: #ccc;
+}
+
+body.dark-theme .playlist-toggle-btn:hover {
+    color: #ff69b4;
+}
+
+/* ============================================
+   COMMENT REPLY FORMS - DARK THEME ADAPTATION
+   ============================================ */
+
+/* Reply form container */
+body.dark-theme .reply-form {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Reply nickname input */
+body.dark-theme .reply-nick-input {
+    background: #1a1a1a !important;
+    border-color: #555 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .reply-nick-input:focus {
+    border-color: #ff69b4 !important;
+    background: #1a1a1a !important;
+}
+
+body.dark-theme .reply-nick-input::placeholder {
+    color: #888 !important;
+}
+
+/* Reply textarea */
+body.dark-theme .reply-textarea {
+    background: #1a1a1a !important;
+    border-color: #555 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .reply-textarea:focus {
+    border-color: #ff69b4 !important;
+    background: #1a1a1a !important;
+}
+
+body.dark-theme .reply-textarea::placeholder {
+    color: #888 !important;
+}
+
+/* Reply buttons */
+body.dark-theme .reply-cancel-btn {
+    color: #aaa !important;
+}
+
+body.dark-theme .reply-cancel-btn:hover {
+    color: #fff !important; /* keep text brighter */
+    background: #333 !important; /* avoid white hover */
+}
+
+body.dark-theme .reply-submit-btn {
+    background: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .reply-submit-btn:hover {
+    background: #d94b88 !important;
+}
+
+/* Reply to reply form */
+body.dark-theme .reply-to-reply-form {
+    background: transparent !important;
+    border: none !important;
+}
+
+body.dark-theme .reply-to-reply-form .reply-nick-input {
+    background: #1a1a1a !important;
+    border-color: #555 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .reply-to-reply-form .reply-textarea {
+    background: #1a1a1a !important;
+    border-color: #555 !important;
+    color: #fff !important;
+}
+
+body.dark-theme .reply-to-reply-form .reply-cancel-btn {
+    color: #aaa !important;
+}
+
+/* Dark hover for cancel inside nested reply form */
+body.dark-theme .reply-to-reply-form .reply-cancel-btn:hover {
+    color: #fff !important;
+    background: #333 !important;
+}
+
+body.dark-theme .reply-to-reply-form .reply-submit-btn {
+    background: #ff69b4 !important;
+    color: #fff !important;
+}
+
+/* ============================================
+   DANMAKU PANEL SCROLLBAR - DARK THEME
+   ============================================ */
+
+/* Danmaku panel scrollbar styling */
+body.dark-theme .danmaku-content::-webkit-scrollbar,
+body.dark-theme #danmakuContent::-webkit-scrollbar {
+    width: 8px;
+}
+
+body.dark-theme .danmaku-content::-webkit-scrollbar-track,
+body.dark-theme #danmakuContent::-webkit-scrollbar-track {
+    background: #2a2a2a;
+    border-radius: 4px;
+}
+
+body.dark-theme .danmaku-content::-webkit-scrollbar-thumb,
+body.dark-theme #danmakuContent::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+body.dark-theme .danmaku-content::-webkit-scrollbar-thumb:hover,
+body.dark-theme #danmakuContent::-webkit-scrollbar-thumb:hover {
+    background: #ff69b4;
+}
+
+body.dark-theme .danmaku-content::-webkit-scrollbar-corner,
+body.dark-theme #danmakuContent::-webkit-scrollbar-corner {
+    background: #2a2a2a;
+}
+
+/* Firefox scrollbar styling for danmaku panel */
+body.dark-theme .danmaku-content,
+body.dark-theme #danmakuContent {
+    scrollbar-width: thin;
+    scrollbar-color: #555 #2a2a2a;
+}
+
+body.dark-theme .danmaku-content:hover,
+body.dark-theme #danmakuContent:hover {
+    scrollbar-color: #ff69b4 #2a2a2a;
+}
+
+/* Related Videos */
+body.dark-theme .related-video {
+    /* transparent background */
+}
+
+body.dark-theme .related-video:hover {
+    /* Keep transparent */
+}
+
+body.dark-theme .related-thumb {
+    background: #444;
+}
+
+body.dark-theme .related-title {
+    color: #fff;
+}
+
+body.dark-theme .related-meta {
+    color: #aaa;
+}
+
+body.dark-theme .related-video.current-video {
+    background: transparent;
+    border-color: var(--channel-accent) !important;
+}
+
+body.dark-theme .related-video.current-video .related-title {
+    color: var(--channel-accent);
+}
+
+/* Player Section */
+body.dark-theme .player-section {
+    background: #1a1a1a;
+}
+
+/* Autoplay Toggle */
+body.dark-theme .autoplay-toggle-section {
+    background: #2a2a2a;
+    border-color: #444;
+}
+
+body.dark-theme .autoplay-toggle-text {
+    color: #ccc;
+}
+
+body.dark-theme .autoplay-toggle {
+    background: #444;
+}
+
+body.dark-theme .autoplay-toggle.active {
+    background: #ff69b4;
+}
+
+/* Video Carousel & Grid (if present on video page) */
+body.dark-theme .video-section {
+    /* Inherits */
+}
+
+body.dark-theme .video-card {
+    background: transparent !important;
+}
+
+body.dark-theme .video-carousel .video-card:hover {
+    background: rgba(255, 105, 180, 0.1) !important;
+}
+
+body.dark-theme .video-carousel .video-card:hover .video-card-title,
+body.dark-theme .video-carousel .video-card:hover .video-playlist a {
+    color: #ffadcd !important;
+}
+
+body.dark-theme .video-thumbnail {
+    background: #444;
+}
+
+body.dark-theme .video-card-title {
+    color: #fff !important;
+}
+
+body.dark-theme .video-category {
+    color: #999;
+}
+
+body.dark-theme .video-playlist {
+    color: #ff69b4;
+}
+
+/* Danmaku Section */
+body.dark-theme .danmaku-content,
+body.dark-theme #danmakuContent {
+    background: #1a1a1a !important;
+    border-color: #444;
+}
+
+body.dark-theme .danmaku-form {
+    background: #2a2a2a !important;
+    border-color: #444 !important;
+}
+
+body.dark-theme #danmakuText,
+body.dark-theme #danmakuColor,
+body.dark-theme #danmakuSize,
+body.dark-theme #danmakuPos {
+    background: #1a1a1a;
+    border-color: #555;
+    color: #fff;
+}
+
+body.dark-theme .danmaku-input input {
+    background: #1a1a1a !important;
+    border-color: #555 !important;
+    border-radius: 4px !important;
+}
+
+body.dark-theme .danmaku-input input::placeholder {
+    color: #888;
+}
+
+body.dark-theme .danmaku-input input:focus {
+    background: #1a1a1a !important;
+    border-color: #ff69b4 !important;
+}
+
+body.dark-theme .danmaku-controls select {
+    background: #1a1a1a !important;
+    border-color: #555 !important;
+    border-radius: 4px !important;
+}
+
+body.dark-theme .danmaku-controls select:not(#danmakuColor) {
+    color: #fff !important;
+}
+
+body.dark-theme .danmaku-controls select option {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+body.dark-theme .danmaku-controls select:focus {
+    border-color: #ff69b4 !important;
+}
+
+body.dark-theme #sendDanmaku {
+    background: #ff69b4;
+}
+
+body.dark-theme #sendDanmaku:hover {
+    background: #d94b88;
+}
+
+/* Danmaku Comments in Sidebar */
+body.dark-theme .danmaku-comment-item {
+    background: transparent;
+    color: #ccc;
+}
+
+body.dark-theme .danmaku-comment-item:hover {
+    background: #2a2a2a !important;
+}
+
+body.dark-theme .danmaku-comment-text {
+    color: #ccc;
+}
+
+body.dark-theme .danmaku-comment-date {
+    color: #888;
+}
+
+body.dark-theme .danmaku-comment-meta {
+    color: #999;
+}
+
+body.dark-theme .danmaku-comment-time {
+    color: #ff69b4;
+}
+
+/* Comments Section - Full Adaptation */
+body.dark-theme #commentsContainer {
+    background: transparent;
+}
+
+body.dark-theme .comments-section {
+    background: transparent;
+    border-color: #444;
+}
+
+body.dark-theme .comments-title {
+    color: #fff;
+}
+
+/* Компактное выпадающее меню сортировки комментариев - темная тема */
+body.dark-theme .comments-sort-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.dark-theme .comments-sort-label {
+    font-size: 11px;
+    color: #ccc;
+    font-weight: 500;
+}
+
+body.dark-theme .comments-sort {
+    padding: 4px 6px;
+    font-size: 11px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #2a2a2a;
+    color: #fff;
+    height: 24px;
+    min-width: 80px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+body.dark-theme .comments-sort:hover {
+    border-color: #777;
+    background: #3a3a3a;
+}
+
+body.dark-theme .comments-sort:focus {
+    outline: none;
+    border-color: #999;
+    background: #3a3a3a;
+}
+
+body.dark-theme .comments-sort option {
+    background: #2a2a2a;
+    color: #fff;
+    padding: 4px 6px;
+}
+
+body.dark-theme .comment-input {
+    background: transparent;
+}
+
+body.dark-theme .comment-input label {
+    color: #ff69b4;
+}
+
+body.dark-theme .comment-input input[type="text"] {
+    background: #2a2a2a;
+    border-color: #555;
+    color: #fff;
+}
+
+body.dark-theme .comment-input input[type="text"]:focus {
+    background: #1a1a1a;
+    border-color: #ff69b4;
+}
+
+body.dark-theme .simple-editor {
+    background: #2a2a2a;
+    border-color: #555;
+    color: #fff;
+}
+
+body.dark-theme .simple-editor:focus {
+    background: #1a1a1a;
+    border-color: #ff69b4;
+}
+
+body.dark-theme .simple-editor::placeholder {
+    color: #888;
+}
+
+body.dark-theme .comment-submit,
+body.dark-theme .comment-btn {
+    background: #ff69b4;
+    color: #fff;
+}
+
+body.dark-theme .comment-submit:hover,
+body.dark-theme .comment-btn:hover {
+    background: #d94b88;
+}
+
+body.dark-theme .comment-cancel {
+    background: #333;
+    color: #ccc;
+    border-color: #555;
+}
+
+body.dark-theme .comment-cancel:hover {
+    background: #444;
+}
+
+/* Comment Items */
+body.dark-theme .comment-item {
+    background: transparent;
+}
+
+body.dark-theme .comment-bubble {
+    background: transparent;
+    border: none;
+}
+
+body.dark-theme .comment-bubble::before {
+    border-right-color: #2a2a2a;
+}
+
+body.dark-theme .comment-bubble::after {
+    border-right-color: #444;
+}
+
+body.dark-theme .comment-nick {
+    color: #fff;
+}
+
+body.dark-theme .comment-nick.channel-nick {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .comment-text {
+    color: #ccc;
+}
+
+body.dark-theme .comment-text strong,
+body.dark-theme .comment-text b {
+    color: #fff !important;
+}
+
+body.dark-theme .comment-date {
+    color: #888;
+}
+
+body.dark-theme .comment-meta {
+    color: #888;
+}
+
+/* Like/Dislike Buttons */
+body.dark-theme .like-btn,
+body.dark-theme .dislike-btn {
+    color: #ccc;
+    background: transparent;
+}
+
+body.dark-theme .like-btn:hover {
+    color: #ff69b4;
+}
+
+body.dark-theme .dislike-btn:hover {
+    color: #aaa;
+}
+
+body.dark-theme .like-count,
+body.dark-theme .dislike-count {
+    color: inherit;
+}
+
+body.dark-theme .reply-btn {
+    color: #ff69b4;
+}
+
+body.dark-theme .delete-btn {
+    color: #999;
+}
+
+body.dark-theme .delete-btn:hover {
+    color: #ff4444;
+}
+
+body.dark-theme .report-text,
+body.dark-theme .report-btn {
+    color: #999;
+}
+
+body.dark-theme .report-text:hover,
+body.dark-theme .report-btn:hover {
+    color: #ff6b35;
+}
+
+/* Reply Items */
+body.dark-theme .replies-container {
+    border-left-color: #444;
+}
+
+body.dark-theme .reply-item {
+    background: transparent;
+}
+
+body.dark-theme .reply-bubble {
+    background: transparent;
+    border: none;
+}
+
+body.dark-theme .reply-bubble::before {
+    border-right-color: #1a1a1a;
+}
+
+body.dark-theme .reply-bubble::after {
+    border-right-color: #444;
+}
+
+body.dark-theme .reply-nick {
+    color: #fff;
+}
+
+body.dark-theme .reply-nick.channel-nick {
+    color: #ff69b4 !important;
+}
+
+body.dark-theme .reply-text {
+    color: #ccc;
+}
+
+body.dark-theme .reply-text strong,
+body.dark-theme .reply-text b {
+    color: #fff !important;
+}
+
+body.dark-theme .reply-date {
+    color: #888;
+}
+
+/* Timecode links in comments */
+body.dark-theme .timecode {
+    color: #ff69b4;
+}
+
+body.dark-theme .timecode:hover {
+    background-color: rgba(255, 105, 180, 0.2);
+}
+
+/* Reply Form */
+body.dark-theme .reply-form {
+    background: transparent;
+    border: none;
+}
+
+body.dark-theme .reply-input,
+body.dark-theme .reply-nick-input {
+    background: #1a1a1a;
+    border-color: #555;
+    color: #fff;
+}
+
+body.dark-theme .reply-input:focus,
+body.dark-theme .reply-nick-input:focus {
+    border-color: #ff69b4;
+}
+
+body.dark-theme .reply-input::placeholder {
+    color: #888;
+}
+
+/* Mentions */
+body.dark-theme .mention {
+    color: #fff;
+    background: #3a3a3a;
+}
+
+body.dark-theme .mention:hover {
+    background: #444;
+}
+
+/* Channel Preview */
+body.dark-theme .channel-avatar-preview {
+    background: #2a2a2a;
+    border-color: #444;
+}
+
+body.dark-theme .channel-name-small {
+    color: #ccc;
+}
+
+body.dark-theme .load-more-btn {
+    background: #2a2a2a;
+    color: #ccc;
+    border-color: #444;
+}
+
+body.dark-theme .load-more-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+}
+
+/* Right Sidebar Recommendations */
+body.dark-theme .right-sidebar {
+    background: transparent;
+}
+
+body.dark-theme .sidebar-section-right {
+    background: #1a1a1a;
+    border-color: #444;
+}
+
+body.dark-theme .section-title-right {
+    background: #2a2a2a;
+    border-bottom-color: #444;
+    color: #fff;
+}
+
+/* Recommendations block only - transparent background */
+body.dark-theme #recommendationsSidebar {
+    background: transparent !important;
+    border-color: transparent !important;
+}
+
+body.dark-theme #recommendationsSidebar .section-title-right {
+    background: transparent !important;
+    border-bottom-color: transparent !important;
+}
+
+body.dark-theme .related-video {
+    background: transparent;
+    border-color: transparent;
+}
+
+body.dark-theme .related-video:hover {
+    background: var(--channel-accent-soft) !important;
+    border-color: transparent !important;
+}
+
+body.dark-theme .related-video:hover .related-title,
+body.dark-theme .related-video:hover .related-meta,
+body.dark-theme .related-video:hover .related-channel {
+    color: var(--channel-accent-strong) !important;
+}
+
+body.dark-theme .related-thumb {
+    background: #444;
+}
+
+body.dark-theme .related-title {
+    color: #fff;
+}
+
+body.dark-theme .related-meta {
+    color: #aaa;
+}
+
+body.dark-theme .related-duration {
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+}
+
+body.dark-theme .related-video.current-video {
+    background: transparent;
+    border-color: var(--channel-accent) !important;
+}
+
+body.dark-theme .related-video.current-video .related-title {
+    color: var(--channel-accent);
+}
+
+/* Playlist in Right Sidebar */
+body.dark-theme #playlistContainer {
+    background: transparent;
+}
+
+body.dark-theme .playlist-toggle-btn {
+    color: #ccc;
+}
+
+body.dark-theme .playlist-toggle-btn:hover {
+    color: #ff69b4;
+}
+
+/* ============================================
+   CINEMA MODE - DARK THEME ADAPTATION
+   ============================================ */
+
+body.cinema-mode.dark-theme {
+    background: #0a0a0a !important;
+}
+
+body.cinema-mode.dark-theme .header {
+    background: #2c1810 !important;
+    border-bottom: 1px solid #444 !important;
+}
+
+body.cinema-mode.dark-theme .sidebar {
+    background: #1a1a1a !important;
+}
+
+body.cinema-mode.dark-theme .player-section {
+    background: #000 !important;
+}
+
+body.cinema-mode.dark-theme .video-player {
+    background: #000 !important;
+}
+
+body.cinema-mode.dark-theme .video-container {
+    background: #000 !important;
+}
+
+body.cinema-mode.dark-theme .danmaku-content,
+body.cinema-mode.dark-theme #danmakuContent {
+    background: transparent !important;
+}
+
+body.cinema-mode.dark-theme .danmaku-form {
+    background: rgba(0, 0, 0, 0.95) !important;
+    border: none !important;
+}
+
+body.cinema-mode.dark-theme .danmaku-input input {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+}
+
+body.cinema-mode.dark-theme .danmaku-input input::placeholder {
+    color: #aaa !important;
+}
+
+body.cinema-mode.dark-theme .danmaku-controls select,
+body.cinema-mode.dark-theme .danmaku-controls button {
+    background: #222 !important;
+    color: #fff !important;
+    border: 1px solid #444 !important;
+}
+
+body.cinema-mode.dark-theme .danmaku-controls select option {
+    color: #fff;
+    background: #222;
+}
+
+body.cinema-mode.dark-theme #sendDanmaku {
+    background: #ff69b4 !important;
+    color: #fff !important;
+}
+
+body.cinema-mode.dark-theme #sendDanmaku:hover {
+    background: #d94b88 !important;
+}

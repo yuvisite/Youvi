@@ -1,0 +1,82 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/* Timecode Context Menu - Light Theme (default) */
+.timecode-context-menu {
+    position: fixed;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 4px;
+    min-width: 180px;
+    display: none;
+    z-index: 99999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    pointer-events: auto;
+}
+
+.timecode-context-menu.show {
+    display: block !important;
+}
+
+.timecode-context-menu-item {
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: block;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s;
+}
+
+.timecode-context-menu-item:hover {
+    background: #f0f0f0;
+    color: #000;
+}
+
+.timecode-context-menu-item.active {
+    background: var(--channel-accent, #ff69b4);
+    color: #ffffff;
+}
+
+.timecode-context-menu-item:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Dark Theme */
+body.dark-theme .timecode-context-menu {
+    background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-theme .timecode-context-menu-item {
+    color: #cccccc;
+}
+
+body.dark-theme .timecode-context-menu-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+body.dark-theme .timecode-context-menu-item.active {
+    background: var(--channel-accent, #ff69b4);
+    color: #ffffff;
+}

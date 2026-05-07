@@ -1,0 +1,502 @@
+<!--
+  Youvi Player - Copyright (C) 2026 Yuvisite
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n-title="pageTitle.sitemap">Site Map | Youvi</title>
+  <link rel="stylesheet" href="youvi/header/youvi-header.css">
+  <script>
+    (function () {
+      var theme = localStorage.getItem('youvi-theme');
+      var sidebar = localStorage.getItem('sidebarCollapsed');
+      var htmlClasses = [];
+      if (theme === 'dark') htmlClasses.push('dark-theme');
+      else if (theme === 'skeuo') htmlClasses.push('skeuo-theme');
+      if (sidebar === 'true') htmlClasses.push('sidebar-collapsed');
+      if (htmlClasses.length) document.documentElement.className = htmlClasses.join(' ');
+    })();
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #111;
+    }
+
+    .top-nav { background: #d94b88; border-bottom: 1px solid #c2185b; padding: 4px 0; }
+    .top-nav-content {
+      max-width: none !important; margin: 0 !important; padding: 0 20px;
+      display: flex; gap: 20px; align-items: center;
+    }
+    .top-nav a { color: #fff; text-decoration: none; font-size: 12px; padding: 2px 0; transition: color .2s; }
+    .top-nav a:hover  { color: #ffd6ea; }
+    .top-nav a.active { color: #ffd6ea; font-weight: 600; }
+    .lang-switcher { margin-left: auto; }
+    .lang-select {
+      background: transparent; border: 1px solid rgba(255,255,255,.3);
+      color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; cursor: pointer; outline: none;
+    }
+    .lang-select:hover { border-color: rgba(255,255,255,.5); }
+    .lang-select option { background: #d94b88; color: #fff; }
+
+    .header-content-wrapper {
+      max-width: none !important;
+      margin: 0 !important;
+    }
+
+    .sidebar-collapsed .sidebar,
+    html.sidebar-collapsed .sidebar {
+      width: 60px !important; padding: 10px 8px !important;
+      display: block !important; position: sticky !important; top: 40px !important;
+      max-height: calc(var(--sidebar-max-height, 100vh) - 75px) !important;
+      overflow-y: auto !important; overflow-x: hidden !important;
+    }
+    .sidebar-collapsed .sidebar-title, html.sidebar-collapsed .sidebar-title { display: none !important; }
+    .sidebar-collapsed .sidebar-item, html.sidebar-collapsed .sidebar-item {
+      padding: 8px !important; padding-left: 5px !important; padding-right: 8px !important;
+      justify-content: center !important; border-left: 3px solid transparent !important;
+      border-radius: 4px; font-size: 0 !important;
+    }
+    .sidebar-collapsed .sidebar-item svg, html.sidebar-collapsed .sidebar-item svg {
+      margin: 0 !important; width: 20px !important; height: 20px !important;
+    }
+    .sidebar-collapsed .library-item, .sidebar-collapsed .nav-item,
+    html.sidebar-collapsed .library-item, html.sidebar-collapsed .nav-item {
+      justify-content: center !important; gap: 0 !important;
+    }
+    .sidebar-collapsed .library-item span, .sidebar-collapsed .nav-item span,
+    html.sidebar-collapsed .library-item span, html.sidebar-collapsed .nav-item span { display: none !important; }
+    .sidebar-collapsed .library-item svg, .sidebar-collapsed .nav-item svg,
+    html.sidebar-collapsed .library-item svg, html.sidebar-collapsed .nav-item svg { margin: 0 !important; }
+    .sidebar-collapsed .container, html.sidebar-collapsed .container { padding-left: 20px; }
+    .sidebar-collapsed .content-wrapper, html.sidebar-collapsed .content-wrapper { max-width: 1500px; }
+
+    .container {
+      width: 100%; margin: 0; padding: 0 20px;
+      display: flex; gap: 20px; align-items: stretch;
+      min-height: calc(100vh - 200px);
+    }
+    .content-wrapper { display: flex; flex: 1; max-width: 1400px; margin: 0 auto; gap: 20px; }
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 40px;
+    }
+
+    .page-header {
+      width: 100%;
+      max-width: 760px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #e5e5e5;
+      border-radius: 0;
+      padding: 10px 0 12px 0;
+      margin: 14px 0 10px 0;
+    }
+    .page-title { font-size: 20px; font-weight: 700; color: #111; margin-bottom: 4px; }
+    .page-desc { font-size: 13px; color: #666; }
+
+    /* Sitemap list */
+    .sitemap-list {
+      width: 100%;
+      max-width: 760px;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      padding: 0;
+    }
+    .sitemap-group + .sitemap-group {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #efefef;
+    }
+    .sitemap-group-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #c24f83;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      margin-bottom: 10px;
+    }
+    .sitemap-group ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      columns: 1;
+      column-gap: 0;
+    }
+    .sitemap-group.wiki-group ul {
+      columns: 1;
+    }
+    .sitemap-subgroup + .sitemap-subgroup {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #e9e9e9;
+    }
+    .sitemap-subgroup-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      margin-bottom: 6px;
+    }
+    .sitemap-group li {
+      break-inside: avoid;
+      margin: 0;
+      border-bottom: 1px solid #f2f2f2;
+    }
+    .sitemap-group li:last-child {
+      border-bottom: none;
+    }
+    .sitemap-group a {
+      display: block;
+      padding: 6px 0;
+      color: #222;
+      text-decoration: none;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .sitemap-group a::before {
+      content: "- ";
+      color: #7b7b7b;
+    }
+    .sitemap-group a:hover {
+      color: #d94b88;
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    .footer { background: #2c2c2c; color: #fff; padding: 25px 0 15px 0; }
+    .footer-content {
+      max-width: 1600px !important; margin: 0 auto !important; padding: 0 20px !important;
+      display: flex; gap: 30px; align-items: flex-start;
+    }
+    .footer-main { display: flex; gap: 30px; flex: 1; }
+    .footer-logo { flex-shrink: 0; width: 200px; }
+    .footer-logo img { height: 40px; width: auto; }
+    .footer-logo p { margin-top: 8px; font-size: 11px; color: #ccc; line-height: 1.3; }
+    .footer-sections { display: flex; gap: 30px; flex: 1; }
+    .footer-right { display: flex; gap: 20px; align-items: flex-start; }
+    .footer-section { flex: 1; }
+    .footer-section h3 { font-size: 13px; margin-bottom: 10px; color: #fff; font-weight: 600; }
+    .footer-section ul { list-style: none; padding: 0; margin: 0; }
+    .footer-section li { margin-bottom: 6px; }
+    .footer-section a { color: #ccc; text-decoration: none; font-size: 11px; transition: color .2s; }
+    .footer-section a:hover { color: #ff69b4; }
+    .footer-bottom {
+      border-top: 1px solid #444; margin-top: 20px; padding-top: 15px;
+      text-align: center; color: #999; font-size: 10px;
+    }
+
+    /* Dark theme overrides */
+    body.dark-theme { background: #0a0a0a; color: #ddd; }
+    body.dark-theme .page-header { background: transparent; border-color: #2a2a2a; }
+    body.dark-theme .page-title { color: #eee; }
+    body.dark-theme .page-desc { color: #888; }
+    body.dark-theme .sitemap-list { background: transparent; border-color: transparent; }
+    body.dark-theme .sitemap-group + .sitemap-group { border-color: #222; }
+    body.dark-theme .sitemap-group-title { color: #ff8aba; }
+    body.dark-theme .sitemap-group li { border-bottom-color: #1e1e1e; }
+    body.dark-theme .sitemap-subgroup + .sitemap-subgroup { border-top-color: #2a2a2a; }
+    body.dark-theme .sitemap-subgroup-title { color: #9a9a9a; }
+    body.dark-theme .sitemap-group a {
+      color: #ccc;
+    }
+    body.dark-theme .sitemap-group a::before {
+      color: #7f7f7f;
+    }
+    body.dark-theme .sitemap-group a:hover {
+      color: #ff8aba;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column; padding: 10px; }
+      .sitemap-group ul { columns: 1; }
+      .footer-content { flex-direction: column; gap: 20px; }
+      .footer-sections { flex-direction: column; gap: 15px; }
+    }
+  </style>
+
+  <link rel="stylesheet" href="youvi/sidebar.css">
+  <link rel="stylesheet" href="youvi/sidebar-scroll.css">
+  <link rel="stylesheet" href="youvi/themes/dark-theme.css">
+  <link rel="stylesheet" href="youvi/themes/skeuo-theme.css">
+  <link rel="stylesheet" href="youvi/themes/theme-dropdown.css">
+  <link rel="stylesheet" href="youvi/sticky-video.css">
+  <link rel="icon" href="favicon/youvi/favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+  <div class="top-nav">
+    <div class="top-nav-content">
+      <a href="youvi_main.html" data-i18n="nav.video">Видео</a>
+      <a href="index.html" data-i18n="nav.management">Управление</a>
+      <a href="youvi_ch_list.html" data-i18n="nav.channels">Каналы</a>
+      <a href="youvi_playlists_list.html" data-i18n="nav.playlists">Плейлисты</a>
+      <a href="forum/forum.html" data-i18n="nav.forums">Forums</a>
+      <a href="download/youvi_download.html" data-i18n="nav.download">Download</a>
+      <a href="https://yuvisite.moe/docs" data-i18n="nav.wiki">Wiki</a>
+      <a href="youvi_sitemap.html" class="active" data-i18n="nav.more">Ещё</a>
+      <div class="lang-switcher">
+        <select id="langSwitcher" class="lang-select">
+  <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                    <option value="uk">Українська</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh_cn">中文 (简体)</option>
+                    <option value="zh_tw">中文 (繁體)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-content-wrapper">
+      <div class="header-left">
+        <button id="sidebarToggle" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
+        <div class="logo">
+          <a href="youvi_main.html"><img src="images/logo_youvi_ind.png" alt="Youvi logo"></a>
+        </div>
+      </div>
+      <div class="header-center">
+        <div class="search-area autocomplete-wrapper">
+          <input type="text" id="headerSearchInput" data-i18n-placeholder="search.placeholder" placeholder="Поиск видео..." class="search-input">
+          <button id="doSearch" class="search-btn" data-i18n="search.button">Найти</button>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="user-actions">
+          <div class="settings-container">
+            <a href="#" class="settings-btn">&#9881;</a>
+            <div class="theme-dropdown">
+              <button class="theme-dropdown-item" data-theme="light" data-i18n="themes.light">Белая</button>
+              <button class="theme-dropdown-item" data-theme="dark" data-i18n="themes.dark">Черная</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title" data-i18n="sidebar.navigation">Навигация</div>
+        <a href="youvi_main.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+          <span data-i18n="sidebar.home">Главная</span>
+        </a>
+        <a href="youvi_tags.html" class="sidebar-item nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          <span data-i18n="sidebar.allTagsLink">Все теги</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title" data-i18n="sidebar.library">Библиотека</div>
+        <a href="youvi_history.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+          </svg>
+          <span data-i18n="sidebar.history">История</span>
+        </a>
+        <a href="youvi_fav.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span data-i18n="sidebar.favorites">Избранное</span>
+        </a>
+        <a href="youvi_playlists_list.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="16" y2="16"/>
+          </svg>
+          <span data-i18n="sidebar.playlists">Плейлисты</span>
+        </a>
+        <a href="youvi_ch_list.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 1-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span data-i18n="sidebar.channels">Каналы</span>
+        </a>
+        <a href="youvi_subscriptions.html" class="sidebar-item library-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+            <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/>
+            <polyline points="17,2 12,7 7,2"/>
+          </svg>
+          <span data-i18n="sidebar.subscriptions">Подписки</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="content-wrapper">
+      <main class="main-content">
+
+        <div class="page-header">
+          <div class="page-title" data-i18n="sitemap.title">Site Map</div>
+          <div class="page-desc" data-i18n="sitemap.description">All pages of the Youvi platform</div>
+        </div>
+
+        <div class="sitemap-list">
+          <div class="sitemap-group">
+            <div class="sitemap-group-title" data-i18n="sitemap.groups.video">Video</div>
+            <ul>
+              <li><a href="youvi_main.html" data-i18n="sitemap.links.home">Home</a></li>
+              <li><a href="youvi_search.html" data-i18n="sitemap.links.search">Search</a></li>
+              <li><a href="youvi_tags.html" data-i18n="sitemap.links.tags">Tags</a></li>
+            </ul>
+          </div>
+
+          <div class="sitemap-group">
+            <div class="sitemap-group-title" data-i18n="sitemap.groups.library">Library</div>
+            <ul>
+              <li><a href="youvi_history.html" data-i18n="sitemap.links.history">History</a></li>
+              <li><a href="youvi_fav.html" data-i18n="sitemap.links.favorites">Favorites</a></li>
+              <li><a href="youvi_playlists_list.html" data-i18n="sitemap.links.playlists">Playlists</a></li>
+              <li><a href="youvi_subscriptions.html" data-i18n="sitemap.links.subscriptions">Subscriptions</a></li>
+            </ul>
+          </div>
+
+          <div class="sitemap-group">
+            <div class="sitemap-group-title" data-i18n="sitemap.groups.tagLists">Tag Lists</div>
+            <ul>
+              <li><a href="wiki/tags/aliases-list.html" data-i18n="sitemap.links.aliasesList">Aliases List</a></li>
+              <li><a href="wiki/tags/implications-list.html" data-i18n="sitemap.links.implicationsList">Implications List</a></li>
+              <li><a href="wiki/tags/relations-list.html" data-i18n="sitemap.links.relations">Relations</a></li>
+            </ul>
+          </div>
+
+          <div class="sitemap-group">
+            <div class="sitemap-group-title" data-i18n="sitemap.groups.channels">Channels</div>
+            <ul>
+              <li><a href="youvi_ch_list.html" data-i18n="sitemap.links.channelList">Channel List</a></li>
+            </ul>
+          </div>
+
+          <div class="sitemap-group">
+            <div class="sitemap-group-title" data-i18n="sitemap.groups.forum">Forum</div>
+            <ul>
+              <li><a href="forum/forum.html" data-i18n="sitemap.links.forumHome">Forum Home</a></li>
+              <li><a href="forum/forum_main.html" data-i18n="sitemap.links.forumMain">Forum Main</a></li>
+              <li><a href="forum/forum_board.html" data-i18n="sitemap.links.board">Board</a></li>
+              <li><a href="forum/forum_thread.html" data-i18n="sitemap.links.thread">Thread</a></li>
+              <li><a href="forum/forum_recent.html" data-i18n="sitemap.links.recentPosts">Recent Posts</a></li>
+              <li><a href="forum/forum_search.html" data-i18n="sitemap.links.forumSearch">Forum Search</a></li>
+              <li><a href="forum/forum_members.html" data-i18n="sitemap.links.members">Members</a></li>
+              <li><a href="forum/forum_fav.html" data-i18n="sitemap.links.forumFavorites">Forum Favorites</a></li>
+            </ul>
+          </div>
+
+          <div class="sitemap-group">
+            <div class="sitemap-group-title" data-i18n="sitemap.groups.download">Download</div>
+            <ul>
+              <li><a href="download/youvi_download.html" data-i18n="sitemap.links.download">Download</a></li>
+            </ul>
+          </div>
+
+          <div class="sitemap-group">
+            <div class="sitemap-group-title" data-i18n="sitemap.groups.management">Management</div>
+            <ul>
+              <li><a href="index.html" data-i18n="sitemap.links.managementPanel">Management Panel</a></li>
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-main">
+        <div class="footer-logo">
+          <img src="images/logo_youvi_ind_ex.png" alt="Youvi" loading="lazy">
+          <p data-i18n="footer.description">Платформа для просмотра видео контента. Сохраняйте, категоризируйте и смотрите видео.</p>
+        </div>
+        <div class="footer-sections">
+          <div class="footer-section">
+            <h3 data-i18n="footer.sections">Разделы</h3>
+            <ul>
+              <li><a href="youvi_main.html" data-i18n="footer.video">Видео</a></li>
+              <li><a href="youvi_tags.html" data-i18n="sidebar.tags">Теги</a></li>
+              <li><a href="forum/forum.html">Форумы</a></li>
+              <li><a href="index.html" data-i18n="nav.management">Управление</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3 data-i18n="sidebar.library">Библиотека</h3>
+            <ul>
+              <li><a href="youvi_ch_list.html" data-i18n="sidebar.channels">Каналы</a></li>
+              <li><a href="youvi_playlists_list.html" data-i18n="sidebar.playlists">Плейлисты</a></li>
+              <li><a href="youvi_subscriptions.html" data-i18n="sidebar.subscriptions">Подписки</a></li>
+              <li><a href="youvi_fav.html" data-i18n="sidebar.favorites">Избранное</a></li>
+              <li><a href="youvi_history.html" data-i18n="sidebar.history">История</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="youvi/sidebar-scroll.js"></script>
+  <script src="youvi/sidebar-toggle.js"></script>
+  <script src="youvi/header/youvi-header.js"></script>
+  <script src="youvi/themes/theme-toggle.js"></script>
+
+  <script src="youvi/i18n/ru.js"></script>
+  <script src="youvi/i18n/en.js"></script>
+  <script src="youvi/i18n/uk.js"></script>
+  <script src="youvi/i18n/ja.js"></script>
+  <script src="youvi/i18n/zh_cn.js"></script>
+  <script src="youvi/i18n/zh_tw.js"></script>
+  <script src="youvi/i18n/i18n.js"></script>
+
+
+  <script>
+    document.getElementById('doSearch').addEventListener('click', function () {
+      var q = document.getElementById('headerSearchInput').value.trim();
+      if (q) window.location.href = 'youvi_search.html?q=' + encodeURIComponent(q);
+    });
+    document.getElementById('headerSearchInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') document.getElementById('doSearch').click();
+    });
+
+    const langSwitcher = document.getElementById('langSwitcher');
+    if (langSwitcher && typeof i18n !== 'undefined') {
+      langSwitcher.value = i18n.getCurrentLanguage();
+      langSwitcher.addEventListener('change', async (e) => {
+        await i18n.setLanguage(e.target.value);
+      });
+    }
+  </script>
+
+</body>
+</html>

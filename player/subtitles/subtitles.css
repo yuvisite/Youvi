@@ -1,0 +1,196 @@
+/* 
+   Youvi Player - Copyright (C) 2026 Yuvisite 
+   This program is free software: you can redistribute it and/or modify 
+   it under the terms of the GNU General Public License as published by 
+   the Free Software Foundation, either version 3 of the License, or 
+   (at your option) any later version. 
+  
+   This program is distributed in the hope that it will be useful, 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+   GNU General Public License for more details. 
+  
+   You should have received a copy of the GNU General Public License 
+   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
+ * Subtitle Track Module Styles
+ */
+
+/* Subtitle container */
+.subtitle-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    top: 0;
+    pointer-events: none;
+    z-index: 15;
+    overflow: hidden;
+    transition: bottom 0.3s ease;
+}
+
+/* When controls are visible */
+.subtitle-container.controls-visible {
+    bottom: 45px;
+}
+
+/* Fullscreen adjustments */
+.video-container.fullscreen .subtitle-container {
+    bottom: 15px;
+}
+
+.video-container.fullscreen .subtitle-container.controls-visible {
+    bottom: 60px;
+}
+
+/* Cinema mode adjustments */
+body.cinema-mode .subtitle-container {
+    bottom: 10px;
+}
+
+body.cinema-mode .subtitle-container.controls-visible {
+    bottom: 50px;
+}
+
+/* Subtitle line */
+.subtitle-line {
+    position: absolute;
+    font-family: "Arial", "Segoe UI", sans-serif;
+    font-size: 22px;
+    color: #ffffff;
+    text-shadow: 
+        1px 0 0 #000,
+        -1px 0 0 #000,
+        0 1px 0 #000,
+        0 -1px 0 #000;
+    white-space: pre-wrap;
+    text-align: center;
+    line-height: 1.3;
+    padding: 2px 6px;
+    max-width: calc(100% - 40px);
+    word-wrap: break-word;
+}
+
+/* Default bottom-center positioning */
+.subtitle-line.default {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Subtitle button active state */
+#subtitleTracksBtn.active,
+#subtitleTracksBtn[data-active="true"] {
+    color: #ff69b4 !important;
+}
+
+/* Subtitle menu styling (inherits from settings-menu) */
+#subtitleTracksMenu {
+    min-width: 180px;
+}
+
+#subtitleTracksMenu .settings-option {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+#subtitleTracksMenu .settings-option.active {
+    background: rgba(255, 105, 180, 0.15);
+    color: #ff69b4;
+}
+
+/* Dark theme support */
+.dark-theme .subtitle-line {
+    text-shadow: 
+        2px 2px 0 #000,
+        -2px 2px 0 #000,
+        2px -2px 0 #000,
+        -2px -2px 0 #000,
+        2px 2px 6px rgba(0,0,0,0.8);
+}
+
+/* Responsive font sizes */
+@media (max-width: 768px) {
+    .subtitle-line {
+        font-size: 18px;
+        padding: 2px 4px;
+    }
+    
+    .subtitle-container {
+        bottom: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .subtitle-line {
+        font-size: 14px;
+    }
+    
+    .subtitle-container {
+        bottom: 40px;
+    }
+}
+
+/* Hide subtitles when controls are hidden in fullscreen */
+.video-container.fullscreen.controls-hidden .subtitle-container {
+    bottom: 20px;
+}
+
+/* Karaoke effect support (for ASS) */
+.subtitle-line .karaoke {
+    display: inline;
+}
+
+.subtitle-line .karaoke-fill {
+    color: #ff69b4;
+}
+
+/* Ruby text support (for Asian languages) */
+.subtitle-line ruby {
+    ruby-align: center;
+}
+
+.subtitle-line rt {
+    font-size: 0.5em;
+}
+
+/* Fade animations */
+.subtitle-line.fade-in {
+    animation: subtitleFadeIn 0.2s ease-out;
+}
+
+.subtitle-line.fade-out {
+    animation: subtitleFadeOut 0.2s ease-in;
+}
+
+@keyframes subtitleFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes subtitleFadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Subtitle container in mini-player */
+.mini-player-active .subtitle-container {
+    display: none;
+}
+
+/* PiP mode - hide subtitles (browser handles them) */
+.pip-active .subtitle-container {
+    display: none;
+}
